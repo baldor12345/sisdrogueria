@@ -56,19 +56,19 @@ class MenuoptionSeeder extends Seeder
 				),
 				array(
 					'name' => 'Categorias',
-					'link'   => 'category'
+					'link'   => 'categoria'
 				),
 				array(
 					'name' => 'Marcas',
-					'link'   => 'mark'
+					'link'   => 'marca'
 				),
 				array(
 					'name' => 'Unidades',
-					'link'   => 'unit'
+					'link'   => 'unidad'
 				),
 				array(
 					'name' => 'Productos',
-					'link'   => 'product'
+					'link'   => 'producto'
 				)
 			);
 
@@ -89,19 +89,19 @@ class MenuoptionSeeder extends Seeder
 		$datos = array(
 				array(
 					'name' => 'Tipo trabajador',
-					'link'   => 'workertype'
+					'link'   => 'tipotrabajador'
 				),
 				array(
 					'name' => 'Clientes',
-					'link'   => 'customer'
+					'link'   => 'clientes'
 				),
 				array(
 					'name' => 'Proveedores',
-					'link'   => 'provider'
+					'link'   => 'proveedores'
 				),
 				array(
 					'name' => 'Trabajadores',
-					'link'   => 'employee'
+					'link'   => 'trabajadores'
 				)
 			);
 
