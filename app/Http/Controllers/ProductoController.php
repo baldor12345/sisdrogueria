@@ -7,8 +7,11 @@ use Validator;
 use App\Http\Requests;
 use App\Producto;
 use App\Categoria;
+use App\Laboratorio;
 use App\Unidad;
 use App\Marca;
+use App\User;
+use App\Proveedor;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +26,14 @@ class ProductoController extends Controller
     protected $tituloModificar = 'Modificar producto';
     protected $tituloEliminar  = 'Eliminar producto';
     protected $rutas           = array('create' => 'producto.create', 
-            'edit'   => 'producto.edit', 
-            'delete' => 'producto.eliminar',
-            'search' => 'producto.buscar',
-            'index'  => 'producto.index',
+            'edit'          => 'producto.edit', 
+            'delete'        => 'producto.eliminar',
+            'search'        => 'producto.buscar',
+            'index'         => 'producto.index',
+            'listmarcas'    => 'producto.listmarcas',
+            'listunidades'    => 'producto.listunidades',
+            'listcategorias'     => 'producto.listcategorias',
+            'listproveedores'    => 'producto.listproveedores',
         );
 
     /**
@@ -54,8 +61,11 @@ class ProductoController extends Controller
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Codigo', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Precio venta', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Disponible', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha de Caducidad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marca', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Unidad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
@@ -101,16 +111,17 @@ class ProductoController extends Controller
     {
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Producto';
-        $producto        = null;
-        $cboMarca = array('' => 'Seleccione') + Marca::pluck('name', 'id')->all();
-        $user = Auth::user();
-        $empresa_id = $user->empresa_id;
-        $cboCategoria = array('' => 'Seleccione') + Categoria::where('empresa_id', '=', $empresa_id)->pluck('name', 'id')->all();
-        $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
+        $producto       = null;
+        $cboMarca       = array(0=>'Seleccione Marca...');
+        $cboCategoria   = array(0=>'Seleccione Categoria...');
+        $cboUnidad      = array(0=>'Seleccione Unidad...');
+        $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
+        $cboProveedor   = array(0=>'Seleccione Proveedor...');
         $formData       = array('producto.store');
+        $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'entidad', 'boton', 'listar', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'ruta', 'entidad', 'boton', 'listar','cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -265,4 +276,67 @@ class ProductoController extends Controller
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
+    //METOS PARA EL COMBO SELECT
+    public function listmarcas(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Marca::where('name','LIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    public function listunidades(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Unidad::where("name",'LIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    public function listcategorias(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Categoria::where("name",'LIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+    
+
+    public function listproveedores(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Categoria::where("name",'ILIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+
 }

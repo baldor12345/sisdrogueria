@@ -56,10 +56,11 @@
 
 {!! Html::script('assets/js/jquery.core.js') !!}
 {!! Html::script('assets/js/jquery.app.js') !!}
+{!! Html::script('assets/js/select2.min.js') !!}
+{!! Html::script('assets/js/select2.full.min.js') !!}
 
 
 {!! Html::script('js/funciones.js') !!}
-{!! Html::script('js/sweetalert2.all.min.js') !!}
 
 {{-- jquery.inputmask: para mascaras en cajas de texto --}}
 {!! Html::script('plugins/input-mask/jquery.inputmask.js') !!}

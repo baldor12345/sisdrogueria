@@ -84,21 +84,31 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usuario/guardarSucursal','UsuarioController@guardarSucursal')->name('usuario.guardarSucursal');
     Route::resource('usuario', 'UsuarioController', array('except' => array('show')));
 
+    //CATEGORIAS
     Route::post('categoria/buscar','CategoriaController@buscar')->name('categoria.buscar');
     Route::get('categoria/eliminar/{id}/{listarluego}','CategoriaController@eliminar')->name('categoria.eliminar');
     Route::resource('categoria', 'CategoriaController', array('except' => array('show')));
 
+    //UNIDADES
     Route::post('unidad/buscar','UnidadController@buscar')->name('unidad.buscar');
     Route::get('unidad/eliminar/{id}/{listarluego}','UnidadController@eliminar')->name('unidad.eliminar');
     Route::resource('unidad', 'UnidadController', array('except' => array('show')));
 
-    Route::post('producto/buscar','ProductoController@buscar')->name('producto.buscar');
-    Route::get('producto/eliminar/{id}/{listarluego}','ProductoController@eliminar')->name('producto.eliminar');
-    Route::resource('producto', 'ProductoController', array('except' => array('show')));
-
+    //MARCAS
     Route::post('marca/buscar','MarcaController@buscar')->name('marca.buscar');
     Route::get('marca/eliminar/{id}/{listarluego}','MarcaController@eliminar')->name('marca.eliminar');
     Route::resource('marca', 'MarcaController', array('except' => array('show')));
+
+    //PRODUCTO
+    Route::post('producto/buscar','ProductoController@buscar')->name('producto.buscar');
+    Route::get('producto/eliminar/{id}/{listarluego}','ProductoController@eliminar')->name('producto.eliminar');
+    Route::resource('producto', 'ProductoController', array('except' => array('show')));
+    Route::get('producto/listmarcas',  'ProductoController@listmarcas')->name('producto.listmarcas');
+    Route::get('producto/listunidades',  'ProductoController@listunidades')->name('producto.listunidades');
+    Route::get('producto/listcategorias',  'ProductoController@listcategorias')->name('producto.listcategorias');
+    Route::get('producto/listproveedores',  'ProductoController@listproveedores')->name('producto.listproveedores');
+    //Route::get('producto/listpersonas',  'ProductoController@listpersonas')->name('producto.listpersonas');
+    
 
 });
 
