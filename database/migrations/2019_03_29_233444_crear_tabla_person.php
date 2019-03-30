@@ -30,8 +30,6 @@ Schema::create('person', function (Blueprint $table) {
     $table->char('estado',1)->nullable();//A=Activo, I=Inactivo
     $table->integer('tipo_persona_id')->unsigned()->nullable();
     $table->foreign('tipo_persona_id')->references('id')->on('tipo_persona')->onUpdate('restrict')->onDelete('restrict');
-    // $table->integer('sucursal_id')->unsigned()->nullable(); 
-    // $table->foreign('sucursal_id')->references('id')->on('sucursal')->onUpdate('restrict')->onDelete('restrict');
     $table->timestamps();
     $table->softDeletes();
 });

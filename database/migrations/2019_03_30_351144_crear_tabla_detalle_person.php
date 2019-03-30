@@ -22,6 +22,7 @@ class CrearTablaDetallePerson extends Migration
             $table->foreign('person_id')->references('id')->on('person')->onUpdate('restrict')->onDelete('restrict');
             $table->foreign('sucursal_id')->references('id')->on('sucursal')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
