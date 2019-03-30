@@ -19,7 +19,7 @@
     <div class="col-sm-12">
         <div class="card-box table-responsive">
 
-            <div class="row m-b-10">
+            <div class="row m-b-5">
                 <div class="col-sm-12">
 					{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
