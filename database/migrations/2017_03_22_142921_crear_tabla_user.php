@@ -21,7 +21,7 @@ class CrearTablaUser extends Migration
             $table->integer('usertype_id')->unsigned();
             $table->integer('person_id')->unsigned();
             $table->foreign('usertype_id')->references('id')->on('usertype')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('person_id')->references('id')->on('person')->onDelete('restrict')->onUpdate('restrict');
+            // $table->foreign('person_id')->references('id')->on('person')->onDelete('restrict')->onUpdate('restrict');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
