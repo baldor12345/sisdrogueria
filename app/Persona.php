@@ -21,8 +21,7 @@ class Persona extends Model
 		            		$subquery->where('name', 'LIKE', '%'.$name.'%');
 		            	}
 		            })
-        			->orderBy('menuoptioncategory_id', 'ASC')
-        			->orderBy('order', 'ASC');
+        			->orderBy('nombres', 'ASC');
     }
 /*
     public function scopelistar($query, $name, $type)
@@ -60,3 +59,4 @@ class Persona extends Model
     }*/
 
 }
+
