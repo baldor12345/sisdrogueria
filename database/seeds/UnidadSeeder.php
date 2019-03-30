@@ -15,17 +15,17 @@ class UnidadSeeder extends Seeder
 
 		DB::table('unidad')->insert(array(
             array(
-                'name' => 'Tabletas',
+                'name' => 'TABLETAS',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Unidad',
+                'name' => 'UNIDAD',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Frasco',
+                'name' => 'FRASCO',
                 'created_at' => $now,
                 'updated_at' => $now
             )
