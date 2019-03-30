@@ -17,7 +17,7 @@ class PersonSeeder extends Seeder
 		$now = new DateTime;
 		DB::table('person')->insert(array(
                
-                'lastname'       =>'Administrador',
+                'nombres'       =>'Administrador',
 				'created_at'     => $now,
 				'updated_at'     => $now
             ));

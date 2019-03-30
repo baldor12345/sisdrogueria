@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CrearTablaTipoPropiedades extends Migration
+class CrearTablaPropiedades extends Migration
 {
     /**
      * Run the migrations.
@@ -16,9 +16,7 @@ class CrearTablaTipoPropiedades extends Migration
         Schema::create('propiedades', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('num_decimales');
-
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
