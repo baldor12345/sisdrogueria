@@ -50,30 +50,30 @@ class MenuoptionSeeder extends Seeder
 		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Administración')->first()->id;
 
 		$datos = array(
-				array(
-					'name' => 'Tipo de cambio',
-					'link'   => 'changetype'
-				),
-				array(
-					'name' => 'Categorias',
-					'link'   => 'categoria'
-				),
-				array(
-					'name' => 'Marcas',
-					'link'   => 'marca'
-				),
-				array(
-					'name' => 'Unidades',
-					'link'   => 'unidad'
-				),
-				array(
-					'name' => 'Productos',
-					'link'   => 'producto'
-				),
-				array(
-					'name' => 'Sucursales',
-					'link'   => 'sucursal'
-				)
+			array(
+				'name' => 'Sucursales',
+				'link'   => 'sucursal'
+			),
+			array(
+				'name' => 'Proveedores',
+				'link'   => 'proveedores'
+			),
+			array(
+				'name' => 'Categorias',
+				'link'   => 'categoria'
+			),
+			array(
+				'name' => 'Marcas',
+				'link'   => 'marca'
+			),
+			array(
+				'name' => 'Unidades',
+				'link'   => 'unidad'
+			),
+			array(
+				'name' => 'Productos',
+				'link'   => 'producto'
+			)
 			);
 
 		for ($i=0; $i < count($datos); $i++) { 
@@ -98,10 +98,6 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Clientes',
 					'link'   => 'clientes'
-				),
-				array(
-					'name' => 'Proveedores',
-					'link'   => 'proveedores'
 				),
 				array(
 					'name' => 'Trabajadores',
