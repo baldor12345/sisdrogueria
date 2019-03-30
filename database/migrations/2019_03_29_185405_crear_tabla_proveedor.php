@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CrearTablaSucursal extends Migration
+class CrearTablaProveedor extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CrearTablaSucursal extends Migration
      */
     public function up()
     {
-        Schema::create('sucursal', function (Blueprint $table) {
+        Schema::create('proveedor', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('direccion',100);
-            $table->string('telefono',15);
+            $table->string('nombre', 50)->unique();
+            $table->string('direccion', 100);
+            $table->string('nombre_contacto', 100);
+            $table->string('telefono', 14)->nullable();
+            $table->string('celular', 14)->nullable();
+            $table->char('estado', 2)->nullable();
             $table->integer('empresa_id')->unsigned();
             $table->foreign('empresa_id')->references('id')->on('empresa')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
@@ -31,6 +35,6 @@ class CrearTablaSucursal extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sucursal');
+        Schema::dropIfExists('proveedor');
     }
 }
