@@ -15,14 +15,15 @@ class CrearTablaProveedor extends Migration
     {
         Schema::create('proveedor', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre', 50)->unique();
-            $table->string('direccion', 100);
-            $table->string('nombre_contacto', 100);
+            $table->string('nombre', 100);//empresa tal
+            $table->string('direccion', 100)->nullable();
+            $table->string('persona_contacto', 100);
             $table->string('telefono', 14)->nullable();
             $table->string('celular', 14)->nullable();
-            $table->char('estado', 2)->nullable();
-            $table->integer('empresa_id')->unsigned();
-            $table->foreign('empresa_id')->references('id')->on('empresa')->onDelete('restrict')->onUpdate('restrict');
+            $table->char('estado', 1)->nullable();
+            $table->string('descripcion', 200)->nullable();
+            $table->integer('distrito_id')->unsigned();
+            $table->foreign('distrito_id')->references('id')->on('distrito')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

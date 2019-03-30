@@ -26,13 +26,11 @@ class CrearTablaProducto extends Migration
             $table->integer('marca_id')->unsigned()->nullable();
             $table->integer('unidad_id')->unsigned()->nullable();
             $table->integer('categoria_id')->unsigned()->nullable();
-            $table->integer('laboratorio_id')->unsigned()->nullable();
             $table->integer('proveedor_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('unidad_id')->references('id')->on('unidad')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('laboratorio_id')->references('id')->on('laboratorio')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
