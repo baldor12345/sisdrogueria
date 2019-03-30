@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PersonSeeder extends Seeder
 {
@@ -11,15 +12,15 @@ class PersonSeeder extends Seeder
      */
     public function run()
     {
-        $now = new DateTime;
+        
 
+		$now = new DateTime;
 		DB::table('person')->insert(array(
-				array(
-					'lastname' => 'Principal',
-					'firstname' => 'Administrador',
-					'created_at' => $now,
-					'updated_at' => $now
-				)
-		));
+               
+                'lastname'       =>'Administrador',
+				'created_at'     => $now,
+				'updated_at'     => $now
+            ));
+
     }
 }

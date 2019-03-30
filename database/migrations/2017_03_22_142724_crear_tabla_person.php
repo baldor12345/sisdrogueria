@@ -15,21 +15,22 @@ class CrearTablaPerson extends Migration
     {
         Schema::create('person', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('lastname',100)->nullable();
-            $table->string('firstname',100)->nullable();
-            $table->string('bussinesname',100)->nullable();
+            $table->string('nombres',100)->nullable();
+            $table->string('apellidos',100)->nullable();
+            // $table->string('bussinesname',100)->nullable();
             $table->char('dni',8)->nullable();
             $table->char('ruc',11)->nullable();
-            $table->string('address',120)->nullable();
-            $table->string('phonenumber',15)->nullable();
-            $table->string('cellnumber',15)->nullable();
+            $table->string('direccion',120)->nullable();
+            $table->string('telefono',15)->nullable();
+            $table->string('celular',15)->nullable();
             $table->string('email',30)->nullable();
-            $table->date('birthdate')->nullable();
-            $table->integer('workertype_id')->unsigned()->nullable();
-            $table->text('observation')->nullable();
-            $table->char('type',1)->nullable(); // customer C, provider P, employee E
-            $table->char('secondtype',1)->nullable(); // company C , person P.
-            $table->foreign('workertype_id')->references('id')->on('workertype')->onUpdate('restrict')->onDelete('restrict');
+            $table->date('fecha_nacimiento')->nullable();
+            $table->integer('tipo_persona_id')->unsigned();
+            $table->text('observacion')->nullable();
+            $table->integer('sucursal_id',1)->nullable();
+            $table->char('estado',1)->nullable();//A=Activo, I=Inactivo
+            $table->foreign('tipo_persona_id')->references('id')->on('tipo_persona')->onUpdate('restrict')->onDelete('restrict');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });
