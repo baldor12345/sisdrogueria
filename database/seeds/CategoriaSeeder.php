@@ -15,32 +15,32 @@ class CategoriaSeeder extends Seeder
 
 		DB::table('categoria')->insert(array(
             array(
-                'name' => 'Ampolla',
+                'name' => 'AMPOLLA',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Capsulas',
+                'name' => 'CAPSULAS',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Crema',
+                'name' => 'CREMA',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Efervecente',
+                'name' => 'EFERVECENTE',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Gel',
+                'name' => 'GEL',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Gotas',
+                'name' => 'GOTAS',
                 'created_at' => $now,
                 'updated_at' => $now
             )

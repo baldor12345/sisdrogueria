@@ -6,6 +6,7 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Categoria;
+use App\Producto;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -109,9 +110,6 @@ class CategoriaController extends Controller
         $error = DB::transaction(function() use($request){
             $categoria       = new Categoria();
             $categoria->name = strtoupper($request->input('name'));
-            $user           = Auth::user();
-            $empresa_id     = $user->empresa_id;
-            $categoria->empresa_id = $empresa_id;
             $categoria->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -171,9 +169,6 @@ class CategoriaController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $categoria       = Categoria::find($id);
             $categoria->name = strtoupper($request->input('name'));
-            $user           = Auth::user();
-            $empresa_id     = $user->empresa_id;
-            $categoria->empresa_id = $empresa_id;
             $categoria->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -214,10 +209,15 @@ class CategoriaController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
+        $count_producto = Producto::where('categoria_id', $id)->count();
         $modelo   = Categoria::find($id);
         $entidad  = 'Categoria';
-        $formData = array('route' => array('categoria.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        if(($count_producto==0)){
+            $formData = array('route' => array('categoria.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+            return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }else{
+            return view($this->folderview.'.messagecategoria')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }
     }
 }

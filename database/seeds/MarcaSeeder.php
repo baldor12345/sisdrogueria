@@ -15,32 +15,32 @@ class MarcaSeeder extends Seeder
 
 		DB::table('marca')->insert(array(
             array(
-                'name' => 'Paracetamol',
+                'name' => 'PARACETAMOL',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Atropina',
+                'name' => 'ATROPINA',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Baclofeno',
+                'name' => 'BACLOFENO',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Cefotaxima',
+                'name' => 'CEFOTAXINA',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Cetirizina',
+                'name' => 'CETIRISINA',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
-                'name' => 'Cloroquina',
+                'name' => 'CLOROQUINA',
                 'created_at' => $now,
                 'updated_at' => $now
             )
