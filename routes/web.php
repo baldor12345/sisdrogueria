@@ -108,7 +108,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('producto/listcategorias',  'ProductoController@listcategorias')->name('producto.listcategorias');
     Route::get('producto/listproveedores',  'ProductoController@listproveedores')->name('producto.listproveedores');
     //Route::get('producto/listpersonas',  'ProductoController@listpersonas')->name('producto.listpersonas');
-    
+
+    //SUCURSAL
+    Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
+    Route::get('sucursal/eliminar/{id}/{listarluego}','SucursalController@eliminar')->name('sucursal.eliminar');
+    Route::resource('sucursal', 'SucursalController', array('except' => array('show')));
 
 });
 
