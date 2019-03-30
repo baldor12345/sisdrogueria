@@ -13,6 +13,7 @@ class CrearTablaUser extends Migration
      */
     public function up()
     {
+        
         Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('login', 20)->unique();
