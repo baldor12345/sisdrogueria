@@ -134,12 +134,17 @@ class ProductoController extends Controller
     {
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'descripcion' => 'required|max:50|unique:producto,descripcion,NULL,id,deleted_at,NULL',
-            'precioventa'    => 'required',
+            'codigo' => 'required|max:30|unique:producto,codigo,NULL,id,deleted_at,NULL',
+            'nombre' => 'required|max:100|unique:producto,nombre,NULL,id,deleted_at,NULL',
+            'cantidad' => 'required|integer',
+            'precio_venta'    => 'required',
+            'fecha_llegada' => 'required',
+            'fecha_caducidad' => 'required',
+            'sitio' => 'required',
             'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
-           
+            //'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -147,14 +152,21 @@ class ProductoController extends Controller
         }
         $error = DB::transaction(function() use($request){
             $producto               = new Producto();
-            $producto->descripcion = strtoupper($request->input('descripcion'));
-            $producto->precioventa = $request->input('precioventa');
+            $producto->codigo = strtoupper($request->input('codigo'));
+            $producto->nombre = $request->input('nombre');
+            $producto->cantidad = $request->input('cantidad');
+            $producto->precio_venta = $request->input('precio_venta');
+            $producto->fecha_llegada = $request->input('fecha_llegada').date(" H:i:s");
+            $producto->fecha_caducidad = $request->input('fecha_caducidad');
+            $producto->sitio = $request->input('sitio');
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
-            $user           = Auth::user();
-            $empresa_id     = $user->empresa_id;
-            $producto->empresa_id = $empresa_id;
+            //$producto->proveedor_id = $request->input('proveedor_id');
+            //$user           = Auth::user();
+            //$empresa_id     = $user->empresa_id;
+            //$producto->user_id = $user->id;
+            $producto->descripcion = $request->input('descripcion');
             $producto->save();
         });
         return is_null($error) ? "OK" : $error;

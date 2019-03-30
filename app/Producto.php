@@ -22,18 +22,32 @@ class Producto extends Model
 	 * @param  [type] $query [description]
 	 * @return [type]        [description]
 	 */
+    public function marca(){
+        return $this->belongsTo('App\Marca','marca_id');
+    } 
+
+    public function unidad(){
+            return $this->belongsTo('App\Unidad','unidad_id');
+    } 
+
+    public function categoria(){
+            return $this->belongsTo('App\Categoria','categoria_id');
+    } 
+
+    //public function proveedor(){
+    //    return $this->belongsTo('App\Proveedor','proveedor_id');
+    //}
+
+
 	public function scopelistar($query, $descripcion)
     {
-        $user = Auth::user();
-		$empresa_id = $user->empresa_id;
         return $query->where(function($subquery) use($descripcion)
 		            {
 		            	if (!is_null($descripcion)) {
-							$subquery->where('descripcion', 'LIKE', '%'.$descripcion.'%');
+							$subquery->where('nombre', 'LIKE', '%'.$descripcion.'%');
 		            	}
                     })
-                    ->where('empresa_id', "=", $empresa_id)
-        			->orderBy('descripcion', 'ASC');
+        			->orderBy('nombre', 'ASC');
 	}
 	
 	public static function boot()
@@ -79,16 +93,5 @@ class Producto extends Model
             $binnacle->save();
         });
     }
-
-   public function marca(){
-   		return $this->belongsTo('App\Marca','marca_id');
-   } 
-
-   public function unidad(){
-   		return $this->belongsTo('App\Unidad','unidad_id');
-   } 
-
-   public function categoria(){
-   		return $this->belongsTo('App\Categoria','categoria_id');
-   } 
+   
 }

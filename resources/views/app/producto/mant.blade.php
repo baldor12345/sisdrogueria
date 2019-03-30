@@ -9,7 +9,7 @@
 			</div>
 			<div class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
 				{!! Form::label('nombre', 'Nombre:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('nombre', null, array('class' => 'form-control input-xs input-number', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre...')) !!}
+				{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre...')) !!}
 			</div>
 			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
 				{!! Form::label('cantidad', 'Cantidad:') !!}<div class="" style="display: inline-block;color: red;">*</div>
@@ -22,7 +22,7 @@
 		<div class="form-group">
 			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
 				{!! Form::label('precio_venta', 'Precio de Venta:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::number('precio_venta', null, array('class' => 'form-control input-xs input-number', 'id' => 'precio_venta', 'placeholder' => 'Ingrese precio v.')) !!}
+				{!! Form::text('precio_venta', null, array('class' => 'form-control input-xs', 'id' => 'precio_venta', 'placeholder' => 'Ingrese precio v.', 'onkeypress'=>'return filterFloat(event,this);')) !!}
 			</div>
 			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12" >
 				{!! Form::label('fecha_llegada', 'Fecha de LLegada:') !!}<div class="" style="display: inline-block;color: red;">*</div>
@@ -34,7 +34,7 @@
 			</div>
 			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
 				{!! Form::label('sitio', 'Sitio:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('sitio', null, array('class' => 'form-control input-xs input-number', 'id' => 'sitio', 'placeholder' => 'sitio...')) !!}
+				{!! Form::text('sitio', null, array('class' => 'form-control input-xs', 'id' => 'sitio', 'placeholder' => 'sitio...')) !!}
 			</div>
 		</div>
 		<?php
@@ -211,7 +211,42 @@ $(document).ready(function() {
 			
 		}
 	});
-	
 
 }); 
+
+function filterFloat(evt,input){
+	// Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+	var key = window.Event ? evt.which : evt.keyCode;    
+	var chark = String.fromCharCode(key);
+	var tempValue = input.value+chark;
+	if(key >= 48 && key <= 57){
+		if(filter(tempValue)=== false){
+			return false;
+		}else{       
+			return true;
+		}
+	}else{
+		if(key == 8 || key == 13 || key == 0) {     
+			return true;              
+		}else if(key == 46){
+				if(filter(tempValue)=== false){
+					return false;
+				}else{       
+					return true;
+				}
+		}else{
+			return false;
+		}
+	}
+}
+function filter(__val__){
+	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+	if(preg.test(__val__) === true){
+		return true;
+	}else{
+	return false;
+	}
+	
+}
+
 </script>
