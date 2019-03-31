@@ -67,9 +67,13 @@
 
 	<div class="row">
 		<div class="form-group">
-			<div class="col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="col-5 col-lg-5 col-md-5 col-sm-12 col-xs-12" >
+				{!! Form::label('sucursal_id', 'Sucursal:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+				{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id')) !!}
+			</div>
+			<div class="col-7 col-lg-7 col-md-7 col-sm-12 col-xs-12">
 				{!! Form::label('proveedor_id', 'Proveedor:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('proveedor_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
+				{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
 			</div>
 		</div>
 	</div>
@@ -211,6 +215,30 @@ $(document).ready(function() {
 			
 		}
 	});
+
+	$('#sucursal_id').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listsucursales'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+
 
 }); 
 

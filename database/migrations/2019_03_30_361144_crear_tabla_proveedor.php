@@ -20,6 +20,7 @@ class CrearTablaProveedor extends Migration
             $table->string('persona_contacto', 100);
             $table->string('telefono', 14)->nullable();
             $table->string('celular', 14)->nullable();
+            $table->timestamp('fecha')->nullable();
             $table->char('estado', 1)->nullable();
             $table->string('descripcion', 200)->nullable();
             $table->integer('distrito_id')->unsigned();

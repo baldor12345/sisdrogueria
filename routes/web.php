@@ -84,6 +84,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('usuario/guardarSucursal','UsuarioController@guardarSucursal')->name('usuario.guardarSucursal');
     Route::resource('usuario', 'UsuarioController', array('except' => array('show')));
 
+    //PROVEEDOR
+    Route::post('proveedor/buscar','ProveedorController@buscar')->name('proveedor.buscar');
+    Route::get('proveedor/eliminar/{id}/{listarluego}','ProveedorController@eliminar')->name('proveedor.eliminar');
+    Route::resource('proveedor', 'ProveedorController', array('except' => array('show')));
+    Route::get('proveedor/listdistritos',  'ProveedorController@listdistritos')->name('proveedor.listdistritos');
+
     //CATEGORIAS
     Route::post('categoria/buscar','CategoriaController@buscar')->name('categoria.buscar');
     Route::get('categoria/eliminar/{id}/{listarluego}','CategoriaController@eliminar')->name('categoria.eliminar');
@@ -107,7 +113,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('producto/listunidades',  'ProductoController@listunidades')->name('producto.listunidades');
     Route::get('producto/listcategorias',  'ProductoController@listcategorias')->name('producto.listcategorias');
     Route::get('producto/listproveedores',  'ProductoController@listproveedores')->name('producto.listproveedores');
-    //Route::get('producto/listpersonas',  'ProductoController@listpersonas')->name('producto.listpersonas');
+    Route::get('producto/listsucursales',  'ProductoController@listsucursales')->name('producto.listsucursales');
 
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');

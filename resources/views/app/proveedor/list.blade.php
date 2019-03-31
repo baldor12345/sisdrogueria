@@ -18,13 +18,17 @@
 		@foreach ($lista as $key => $value)
 		<tr>
 			<td>{{ $contador }}</td>
-			<td>{{ $value->ruc ? $value->ruc : $value->dni }}</td>
-			<td>{{ $value->razonsocial ? $value->razonsocial : $value->nombres.' '.$value->apellidos}}</td>
-			<td>{{ $value->celular}}</td>
+			<td>{{ $value->nombre }}</td>
+			<td>{{ $value->persona_contacto}}</td>
 			<td>{{ $value->telefono}}</td>
-			<td>{{ $value->direccion}}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->personamaestro_id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->personamaestro_id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+			<td>{{ $value->celular}}</td>
+			@if($value->estado == 'A')
+			<td>Activo</td>
+			@else
+			<td>Inactivo</td>
+			@endif
+			<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;
