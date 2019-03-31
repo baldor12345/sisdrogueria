@@ -56,7 +56,7 @@ class MenuoptionSeeder extends Seeder
 			),
 			array(
 				'name' => 'Proveedores',
-				'link'   => 'proveedores'
+				'link'   => 'proveedor'
 			),
 			array(
 				'name' => 'Categorias',

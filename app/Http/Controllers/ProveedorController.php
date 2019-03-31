@@ -11,7 +11,8 @@ use App\Distrito;
 use App\Provincia;
 use App\Departamento;
 use App\Persona;
-use App\Personamaestro;
+use App\Producto;
+use App\Proveedor;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class ProveedorController extends Controller
             'delete' => 'proveedor.eliminar',
             'search' => 'proveedor.buscar',
             'index'  => 'proveedor.index',
+            'listdistritos' => 'proveedor.listdistritos'
         );
 
     /**
@@ -52,16 +54,16 @@ class ProveedorController extends Controller
         $filas            = $request->input('filas');
         $entidad          = 'Proveedor';
         $name             = Libreria::getParam($request->input('name'));
-        $type             = 'P';
-        $resultado        = Personamaestro::listar($name,$type);
+        $type             = Libreria::getParam($request->input('estado_id'));
+        $resultado        = Proveedor::listar($name,$type);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nombres y Apellidos/Razón Social', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nombre/Rason Social', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Pesona De Contacto', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -92,7 +94,8 @@ class ProveedorController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+        $cboEstado      = array('A'=>'Activo','I'=>'Inactivo');
+        return view($this->folderview.'.admin')->with(compact('entidad', 'cboEstado', 'title', 'titulo_registrar', 'ruta'));
     }
 
     /**
@@ -104,13 +107,14 @@ class ProveedorController extends Controller
     {
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Proveedor'; //es personamaestro
-        $cliente        = null;
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
+        $proveedor        = null;
+        $cboEstado          = array('A'=>'Activo','I'=>'Inactivo');
+        $cboDistrito       = array(0=>'Seleccione Distrito...');
+        $ruta             = $this->rutas;
         $formData       = array('proveedor.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        $accion = 0;
-        return view($this->folderview.'.mant')->with(compact('accion' , 'cliente', 'formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
+        return view($this->folderview.'.mant')->with(compact( 'proveedor', 'cboEstado', 'ruta','formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
     }
 
     /**
@@ -122,68 +126,31 @@ class ProveedorController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $documento = $request->input('documento');
-        $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,NULL,id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                'celular'    => 'required|max:15',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,NULL,id,deleted_at,NULL',
-            'razonsocial'    => 'required|max:100',
+
+        $reglas = array(
+            'nombre'       => 'required|max:200|unique:proveedor,nombre,NULL,id,deleted_at,NULL',
+            'persona_contacto'    => 'required|max:100',
+            'telefono'    => 'required|max:100',
             'celular'    => 'required|max:15',
-            );
-        }
+            'fecha'    => 'required',
+            'distrito_id'    => 'required',
+        );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function() use($request,$tamCadena){
-            $cliente               = new Personamaestro();
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
-            $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->telefono    = $request->input('telefono');
-            $cliente->celular     = $request->input('celular');
-            $cliente->email       = $request->input('email');
-            //$value =Libreria::getParam($request->input('fechanacimiento'));
-            //$cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
-            $cliente->save();
-
-
-            /*REGISTRAMOS LA PERSONA EN LA EMPRESA */
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $cliente->id;
-            
-            $persona->comision = 0;
-            $persona->type        = 'P';
-
-            $tipocliente = $request->input('cliente');
-            $tipotrabajador = $request->input('trabajador');
-            
-            if( $tipocliente !== null && $tipotrabajador == null){
-                $persona->secondtype  = $tipocliente;
-            }else if( $tipocliente == null && $tipotrabajador !== null){
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }else if( $tipocliente !== null && $tipotrabajador !== null){
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            $persona->save();
+        $error = DB::transaction(function() use($request){
+            $proveedor               = new Proveedor();
+            $proveedor->nombre     = strtoupper($request->input('nombre'));
+            $proveedor->direccion   = $request->input('direccion');
+            $proveedor->persona_contacto = $request->input('persona_contacto'); 
+            $proveedor->telefono    = $request->input('telefono');
+            $proveedor->celular     = $request->input('celular');
+            $proveedor->fecha       = $request->input('fecha');
+            $proveedor->estado       = $request->input('estado');
+            $proveedor->descripcion       = $request->input('descripcion');
+            $proveedor->distrito_id  = $request->input('distrito_id');
+            $proveedor->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -207,19 +174,20 @@ class ProveedorController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'proveedor');
         if ($existe !== true) {
             return $existe;
         }
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
-        $cliente        = personamaestro::find($id);
+        $cboEstado          = array('A'=>'Activo','I'=>'Inactivo');
+        $proveedor        = Proveedor::find($id);
+        $ruta             = $this->rutas;
         $entidad        = 'Proveedor';
         $formData       = array('proveedor.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        $accion = 1;
-        return view($this->folderview.'.mant')->with(compact('accion' ,'cliente', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
+        return view($this->folderview.'.mant')->with(compact('cboEstado', 'proveedor', 'ruta', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
     }
 
     /**
@@ -231,104 +199,34 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'proveedor');
         if ($existe !== true) {
             return $existe;
         }
-        $documento = $request->input('documento');
-        $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,'.$id.',id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                'celular'    => 'required|max:15',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,'.$id.',id,deleted_at,NULL',
-            'razonsocial'    => 'required|max:100',
+        $reglas = array(
+            'nombre'       => 'required|max:200|unique:proveedor,nombre,'.$id.',id,deleted_at,NULL',
+            'persona_contacto'    => 'required|max:100',
+            'telefono'    => 'required|max:100',
             'celular'    => 'required|max:15',
-            );
-        }
+            'fecha'    => 'required',
+            'distrito_id'    => 'required',
+        );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
-        $error = DB::transaction(function() use($request, $id, $tamCadena){
-            $cliente               = Personamaestro::find($id);
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
-            $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->telefono    = $request->input('telefono');
-            $cliente->celular     = $request->input('celular');
-            $cliente->email       = $request->input('email');
-            //$value =Libreria::getParam($request->input('fechanacimiento'));
-            //$cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
-            $cliente->save();
-
-                       
-            $user = Auth::user();
-            $empresa_id = $user->empresa_id;
-            $persona = Persona::where('empresa_id', '=', $empresa_id)
-                                ->where('personamaestro_id', '=', $id)->first();
-
-            $tipocliente = $request->input('cliente');
-            $tipoproveedor = $request->input('proveedor');
-            $tipotrabajador = $request->input('trabajador');
-
-
-            if( $tipocliente !==null && $tipoproveedor == null && $tipotrabajador == null ){
-                //CLIENTE
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //PROVEEDOR
-                $persona->type  = $tipoproveedor;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor == null && $tipotrabajador !== null ){
-                //TRABAJADOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor == null && $tipotrabajador !== null ){
-                // CLIENTE Y TRABAJADOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //CLIENTE Y PROVEEDOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TRABAJADOR Y PROVEEDOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TODOS
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-
-            $persona->save();
+        $error = DB::transaction(function() use($request, $id){
+            $proveedor               = Proveedor::find($id);
+            $proveedor->nombre     = strtoupper($request->input('nombre'));
+            $proveedor->direccion   = $request->input('direccion');
+            $proveedor->persona_contacto = $request->input('persona_contacto'); 
+            $proveedor->telefono    = $request->input('telefono');
+            $proveedor->celular     = $request->input('celular');
+            $proveedor->fecha       = $request->input('fecha');
+            $proveedor->estado       = $request->input('estado');
+            $proveedor->descripcion       = $request->input('descripcion');
+            $proveedor->distrito_id  = $request->input('distrito_id');
+            $proveedor->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -341,17 +239,13 @@ class ProveedorController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'proveedor');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $cliente = Personamaestro::find($id);
-            $persona = Persona::where('personamaestro_id','=',$id)->get()->first();
-            if(!is_null($persona)){
-                $persona->delete();
-            }
-            $cliente->delete();
+            $proveedor = Proveedor::find($id);
+            $proveedor->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -364,7 +258,7 @@ class ProveedorController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'proveedor');
         if ($existe !== true) {
             return $existe;
         }
@@ -372,51 +266,33 @@ class ProveedorController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Personamaestro::find($id);
+        $count_producto = Producto::where('proveedor_id', $id)->count();
+        $modelo   = Proveedor::find($id);
         $entidad  = 'Proveedor';
-        $formData = array('route' => array('proveedor.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        if(($count_producto==0)){
+            $formData = array('route' => array('proveedor.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+            return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }else{
+            return view($this->folderview.'.messageproveedor')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }
     }
 
 
-    public function repetido($id, $listarLuego){
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $listar = "SI";
-        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
-            $listar = $listarLuego;
-        }
 
-        $modelo   = Personamaestro::find($id);
-
-        if($modelo->distrito_id != null){
-            $distrito = Distrito::find($modelo->distrito_id);
-            $provincia = Provincia::find($distrito->provincia_id);
-            $departamento = Departamento::find($provincia->departamento_id);
+    public function listdistritos(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Distrito::where('nombre','LIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombre];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
-
-        $entidad  = 'Proveedor';
-        $formData = array('route' => array('proveedor.guardarrepetido', $id), 'method' => 'POST', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        return view('app.personarepetida')->with(compact('modelo', 'distrito', 'provincia', 'departamento' , 'formData', 'entidad', 'listar'));
+        return \Response::json($formatted_tags);
     }
 
-    public function guardarrepetido(Request $request){
-
-        $persona_id = $request->input('persona_id');
-        
-        $error = DB::transaction(function() use($persona_id){
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $persona_id;
-            $persona->comision = 0;
-            $persona->type        = 'P';
-            $persona->save();
-        });
-        return is_null($error) ? "OK" : $error;
-
-    }
 }

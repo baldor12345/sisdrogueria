@@ -23,6 +23,10 @@ class Proveedor extends Model
      * @param  string $name  nombre
      * @return sql        sql
      */
+    public function distrito(){
+        return $this->belongsTo('App\Distrito','distrito_id');
+    } 
+
     public function scopelistar($query, $nombre, $estado)
     {
         return $query->where(function($subquery) use($nombre)

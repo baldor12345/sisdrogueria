@@ -34,21 +34,30 @@ class Producto extends Model
             return $this->belongsTo('App\Categoria','categoria_id');
     } 
 
-    //public function proveedor(){
-    //    return $this->belongsTo('App\Proveedor','proveedor_id');
-    //}
+    public function proveedor(){
+        return $this->belongsTo('App\Proveedor','proveedor_id');
+    }
 
+    public function sucursal(){
+        return $this->belongsTo('App\Sucursal','sucursal_id');
+    }
 
-	public function scopelistar($query, $descripcion)
+	public function scopelistar($query, $nombre, $codigo)
     {
-        return $query->where(function($subquery) use($descripcion)
-		            {
-		            	if (!is_null($descripcion)) {
-							$subquery->where('nombre', 'LIKE', '%'.$descripcion.'%');
-		            	}
-                    })
-        			->orderBy('nombre', 'ASC');
-	}
+        return $query->where(function($subquery) use($nombre)
+            {
+                if (!is_null($nombre)) {
+                    $subquery->where('nombre', 'LIKE', '%'.$nombre.'%');
+                }
+            })
+            ->where(function($subquery) use($codigo)
+            {
+                if (!is_null($codigo)) {
+                    $subquery->where('codigo', '=', $codigo);
+                }
+            })
+            ->orderBy('nombre', 'ASC');
+    }
 	
 	public static function boot()
     {

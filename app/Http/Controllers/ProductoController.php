@@ -12,6 +12,7 @@ use App\Unidad;
 use App\Marca;
 use App\User;
 use App\Proveedor;
+use App\Sucursal;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,7 @@ class ProductoController extends Controller
             'listunidades'    => 'producto.listunidades',
             'listcategorias'     => 'producto.listcategorias',
             'listproveedores'    => 'producto.listproveedores',
+            'listsucursales'    => 'producto.listsucursales'
         );
 
     /**
@@ -57,7 +59,8 @@ class ProductoController extends Controller
         $filas            = $request->input('filas');
         $entidad          = 'Producto';
         $descripcion      = Libreria::getParam($request->input('name'));
-        $resultado        = Producto::listar($descripcion);
+        $codigo      = Libreria::getParam($request->input('codigo'));
+        $resultado        = Producto::listar($descripcion, $codigo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -117,11 +120,12 @@ class ProductoController extends Controller
         $cboUnidad      = array(0=>'Seleccione Unidad...');
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
+        $cboSucursal    = array(0=>'Seleccione Sucursal...');
         $formData       = array('producto.store');
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'ruta', 'entidad', 'boton', 'listar','cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -144,7 +148,8 @@ class ProductoController extends Controller
             'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
-            //'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
+            'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
+            'sucursal_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -162,10 +167,10 @@ class ProductoController extends Controller
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
-            //$producto->proveedor_id = $request->input('proveedor_id');
-            //$user           = Auth::user();
-            //$empresa_id     = $user->empresa_id;
-            //$producto->user_id = $user->id;
+            $producto->proveedor_id = $request->input('proveedor_id');
+            $producto->sucursal_id = $request->input('sucursal_id');
+            $user           = Auth::user();
+            $producto->user_id = $user->id;
             $producto->descripcion = $request->input('descripcion');
             $producto->save();
         });
@@ -199,13 +204,16 @@ class ProductoController extends Controller
         $cboMarca = array('' => 'Seleccione') + Marca::pluck('name', 'id')->all();
         $cboCategoria = array('' => 'Seleccione') + Categoria::pluck('name', 'id')->all();
         $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
+        $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
+        $cboSucursal    = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
         
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
         $formData       = array('producto.update', $id);
+        $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'entidad', 'boton', 'listar', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('ruta', 'producto', 'formData', 'entidad', 'boton', 'listar', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -222,11 +230,18 @@ class ProductoController extends Controller
             return $existe;
         }
         $reglas = array(
-            'descripcion'       => 'required|max:50|unique:producto,descripcion,'.$id.',id,deleted_at,NULL',
-            'precioventa' => 'required',
-            'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
-            'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
-            'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL'
+            'codigo'       => 'required|max:50|unique:producto,codigo,'.$id.',id,deleted_at,NULL',
+            'nombre' => 'required',
+            'cantidad' => 'required|integer',
+            'precio_venta'    => 'required',
+            'fecha_llegada' => 'required',
+            'fecha_caducidad' => 'required',
+            'sitio' => 'required',
+            'marca_id' => 'required',
+            'categoria_id' => 'required',
+            'unidad_id' => 'required',
+            'proveedor_id' => 'required',
+            'sucursal_id' => 'required',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -234,14 +249,21 @@ class ProductoController extends Controller
         } 
         $error = DB::transaction(function() use($request, $id){
             $producto                 = Producto::find($id);
-            $producto->descripcion = strtoupper($request->input('descripcion'));
-            $producto->precioventa = $request->input('precioventa');
-            $producto->marca_id = $request->input('marca_id');
+            $producto->codigo = strtoupper($request->input('codigo'));
+            $producto->nombre = $request->input('nombre');
+            $producto->cantidad = $request->input('cantidad');
+            $producto->precio_venta = $request->input('precio_venta');
+            $producto->fecha_llegada = $request->input('fecha_llegada').date(" H:i:s");
+            $producto->fecha_caducidad = $request->input('fecha_caducidad');
+            $producto->sitio = $request->input('sitio');
+            $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
+            $producto->proveedor_id = $request->input('proveedor_id');
+            $producto->sucursal_id = $request->input('sucursal_id');
             $user           = Auth::user();
-            $empresa_id     = $user->empresa_id;
-            $producto->empresa_id = $empresa_id;
+            $producto->user_id = $user->id;
+            $producto->descripcion = $request->input('descripcion');
             $producto->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -333,17 +355,31 @@ class ProductoController extends Controller
 
         return \Response::json($formatted_tags);
     }
-    
 
     public function listproveedores(Request $request){
         $term = trim($request->q);
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = Categoria::where("name",'ILIKE', '%'.$term.'%')->limit(5)->get();
+        $tags = Proveedor::where("nombre",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombre];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    public function listsucursales(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Sucursal::where("nombre",'LIKE', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombre];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

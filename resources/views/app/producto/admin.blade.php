@@ -25,8 +25,13 @@
                     {!! Form::hidden('acion','listar', array('id'=>'accion')) !!}
 
                     <div class="form-group">
-                        {!! Form::label('name','Descripcion:') !!}
+                        {!! Form::label('name','Nombre:') !!}
                         {!! Form::text('name','', array('class'=>'form-control input-xs','id'=>'name')) !!}
+                    </div>
+
+                    <div class="form-group">
+                        {!! Form::label('codigo','Codigo:') !!}
+                        {!! Form::text('codigo','', array('class'=>'form-control input-xs','id'=>'codigo')) !!}
                     </div>
 
                     <div class="form-group">
