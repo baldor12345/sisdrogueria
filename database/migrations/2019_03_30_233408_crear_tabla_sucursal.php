@@ -16,6 +16,7 @@ class CrearTablaSucursal extends Migration
         Schema::create('sucursal', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre',100);
+            $table->string('telefono',15);
             $table->string('direccion',100);
             $table->integer('distrito_id')->unsigned();
             $table->foreign('distrito_id')->references('id')->on('distrito')->onUpdate('restrict')->onDelete('restrict');

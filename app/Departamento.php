@@ -10,19 +10,15 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 use App\Librerias\Libreria;
 use Illuminate\Support\Facades\Auth;
 
-class Sucursal extends Model
+class Departamento extends Model
 {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
     
-    protected $table='sucursal';
+    protected $table='departamento';
 
     protected $primaryKey='id';
-
-    public function distrito(){
-        return $this->belongsTo('App\Distrito','distrito_id');
-    } 
-
+    
     /**
      * Método para listar
      * @param  model $query modelo
@@ -41,7 +37,7 @@ class Sucursal extends Model
         return $query->where(function($subquery) use($nombre)
 		            {
 		            	if (!is_null($nombre)) {
-		            		$subquery->where('nombre', 'LIKE', '%'.$name.'%');
+		            		$subquery->where('nombre', 'LIKE', '%'.$nombre.'%');
 		            	}
 		            })
         			->orderBy('nombre', 'ASC');

@@ -102,6 +102,18 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Trabajadores',
 					'link'   => 'trabajadores'
+				),
+				array(
+					'name' => 'Departamentos',
+					'link'   => 'departamento'
+				),
+				array(
+					'name' => 'Provincias',
+					'link'   => 'provincia'
+				),
+				array(
+					'name' => 'Distritos',
+					'link'   => 'distrito'
 				)
 			);
 

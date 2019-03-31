@@ -46,13 +46,13 @@ class SucursalController extends Controller
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Distrito', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Serie venta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
-        $titulo_serie_venta = $this->tituloSerieVenta;
+        // $titulo_serie_venta = $this->tituloSerieVenta;
         $ruta             = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -63,7 +63,7 @@ class SucursalController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'titulo_serie_venta', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -96,17 +96,19 @@ class SucursalController extends Controller
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar'; 
         $user = Auth::user();
-        $empresa_id = $user->empresa_id;
-        $serienueva = Sucursal::where('empresa_id', $empresa_id)->count('id');
-        $serienueva = $serienueva + 1;
-        $serienueva = (string) $serienueva;
-        $cant = strlen($serienueva);
-        $ceros = 4 - $cant;
-        while($ceros != 0){
-            $serienueva = "0". $serienueva;
-            $ceros = $ceros - 1;
-        }
-        return view($this->folderview.'.mant')->with(compact('sucursal', 'serienueva','formData', 'entidad', 'boton', 'listar'));
+        // $empresa_id = $user->empresa_id;
+        // $serienueva = Sucursal::where('empresa_id', $empresa_id)->count('id');
+        // $serienueva = $serienueva + 1;
+        // $serienueva = (string) $serienueva;
+        // $cant = strlen($serienueva);
+        // $ceros = 4 - $cant;
+        // while($ceros != 0){
+        //     $serienueva = "0". $serienueva;
+        //     $ceros = $ceros - 1;
+        // }
+
+        $cboDistritos = array();
+        return view($this->folderview.'.mant')->with(compact('sucursal','formData', 'entidad', 'boton', 'listar','cboDistritos'));
     }
 
     public function store(Request $request)
@@ -114,8 +116,7 @@ class SucursalController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array('nombre' => 'required|max:50',
                             'direccion' => 'required|max:100',
-                            'telefono' => 'required|max:15',
-                            'serieventa' => 'required|max:4');
+                            'telefono' => 'required|max:15');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -127,14 +128,15 @@ class SucursalController extends Controller
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
             $sucursal->telefono = $request->input('telefono');
-            $user = Auth::user();
-            $sucursal->empresa_id = $user->empresa_id;
+            $sucursal->distrito = $request->input('distrito');
+            // $user = Auth::user();
+            // $sucursal->empresa_id = $user->empresa_id;
             $sucursal->save();
 
-            $serie       = new Serieventa();
-            $serie->serie = strtoupper($request->input('serieventa'));
-            $serie->sucursal_id = $sucursal->id;
-            $serie->save();
+            // $serie       = new Serieventa();
+            // $serie->serie = strtoupper($request->input('serieventa'));
+            // $serie->sucursal_id = $sucursal->id;
+            // $serie->save();
         });
         return is_null($error) ? "OK" : $error;
     }

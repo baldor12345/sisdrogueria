@@ -2,26 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Departamento;
+use App\Distrito;
 use App\Provincia;
+// use App\Serieventa;
+// use App\Movimiento;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
-class ProvinciaController extends Controller
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
+class DistritoController extends Controller
 {
-    protected $folderview      = 'app.provincia';
-    protected $tituloAdmin     = 'Provincia';
-    protected $tituloRegistrar = 'Registrar provincia';
-    protected $tituloModificar = 'Modificar provincia';
-    protected $tituloEliminar  = 'Eliminar provincia';
+
+    protected $folderview      = 'app.distrito';
+    protected $tituloAdmin     = 'distrito';
+    protected $tituloRegistrar = 'Registrar distrito';
+    protected $tituloModificar = 'Modificar distrito';
+    protected $tituloEliminar  = 'Eliminar distrito';
     protected $tituloSerieVenta  = 'Serie venta';
-    protected $rutas           = array('create' => 'provincia.create', 
-            'edit'     => 'provincia.edit', 
-            'delete'   => 'provincia.eliminar',
-            'search'   => 'provincia.buscar',
-            'index'    => 'provincia.index',
+    protected $rutas           = array('create' => 'distrito.create', 
+            'edit'     => 'distrito.edit', 
+            'delete'   => 'distrito.eliminar',
+            'search'   => 'distrito.buscar',
+            'index'    => 'distrito.index',
         );
 
     public function __construct()
@@ -33,9 +39,9 @@ class ProvinciaController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'Provincia';
+        $entidad          = 'Distrito';
         $nombre           = Libreria::getParam($request->input('nombre'));
-        $resultado        = Provincia::listar($nombre);
+        $resultado        = Distrito::listar($nombre);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -67,12 +73,11 @@ class ProvinciaController extends Controller
      */
     public function index()
     {
-        $entidad          = 'Provincia';
+        $entidad          = 'Distrito';
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $cboDepartamentos = Departamento::listar("");
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta','cboDepartamentos'));
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
     }
 
     /**
@@ -83,14 +88,14 @@ class ProvinciaController extends Controller
     public function create(Request $request)
     {
         $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Provincia';
+        $entidad      = 'Distrito';
         $distrito  = null;
-        $formData     = array('provincia.store');
+        $formData     = array('distrito.store');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar';
-        $cboDepartamentos = Departamento::listar("");
+        $cboProvincias = Provincia::listar("");
         
-        return view($this->folderview.'.mant')->with(compact('distrito','formData', 'entidad', 'boton', 'listar','cboDepartamentos'));
+        return view($this->folderview.'.mant')->with(compact('distrito','formData', 'entidad', 'boton', 'listar','cboProvincias'));
     }
 
     public function store(Request $request)
@@ -104,10 +109,10 @@ class ProvinciaController extends Controller
         }
         
         $error = DB::transaction(function() use($request){
-            $provincia       = new Provincia();
-            $provincia->nombre = strtoupper($request->input('nombre'));
-            $provincia->provincia_id = strtoupper($request->input('cboDepartamento'));
-            $provincia->save();
+            $distrito       = new Distrito();
+            $distrito->nombre = strtoupper($request->input('nombre'));
+            $distrito->provincia_id = strtoupper($request->input('cboProvincia'));
+            $distrito->save();
 
         });
         return is_null($error) ? "OK" : $error;
@@ -132,19 +137,19 @@ class ProvinciaController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'provincia');
+        $existe = Libreria::verificarExistencia($id, 'distrito');
         if ($existe !== true) {
             return $existe;
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        $provincia = Provincia::find($id);
-        $cboDepartamentos = Departamento::listar("");
-        $entidad  = 'Provincia';
-        $formData = array('provincia.update', $id);
+        $distrito = Distrito::find($id);
+        $cboProvincias = Provincia::listar("");
+        $entidad  = 'Distrito';
+        $formData = array('distrito.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
 
-        return view($this->folderview.'.mant')->with(compact('provincia', 'formData', 'entidad', 'boton', 'listar','cboDepartamentos'));
+        return view($this->folderview.'.mant')->with(compact('distrito', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     /**
@@ -156,7 +161,7 @@ class ProvinciaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'provincia');
+        $existe = Libreria::verificarExistencia($id, 'distrito');
         if ($existe !== true) {
             return $existe;
         }
@@ -168,11 +173,11 @@ class ProvinciaController extends Controller
         } 
        
         $error = DB::transaction(function() use($request, $id, $serie){
-            $provincia       = Provincia::find($id);
-            $provincia->nombre = strtoupper($request->input('nombre'));
-            $provincia->provincia_id = strtoupper($request->input('cboDepartamento'));
+            $distrito       = Distrito::find($id);
+            $distrito->nombre = strtoupper($request->input('nombre'));
+            $distrito->provincia_id = strtoupper($request->input('cboProvincia'));
           
-            $provincia->save();
+            $distrito->save();
 
         });
         return is_null($error) ? "OK" : $error;
@@ -186,13 +191,13 @@ class ProvinciaController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'provincia');
+        $existe = Libreria::verificarExistencia($id, 'distrito');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $provincia = Provincia::find($id);
-            $provincia->delete();
+            $distrito = Distrito::find($id);
+            $distrito->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -205,7 +210,7 @@ class ProvinciaController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'provincia');
+        $existe = Libreria::verificarExistencia($id, 'distrito');
         if ($existe !== true) {
             return $existe;
         }
@@ -213,38 +218,10 @@ class ProvinciaController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Provincia::find($id);
-        $entidad  = 'Provincia';
-        $formData = array('route' => array('provincia.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $modelo   = Distrito::find($id);
+        $entidad  = 'Distrito';
+        $formData = array('route' => array('distrito.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
-
-    public function cboprovincia($departamento_id = null)
-    {
-        $existe = Libreria::verificarExistencia($departamento_id, 'departamento');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $departamento = Departamento::find($departamento_id);
-        $provincias = $departamento->provincias;
-        if (count($provincias)>0) {
-            $cadena = '';
-            foreach ($provincias as $key => $value) {
-                $cadena .= '<option value="'.$value->id.'">'.$value->nombre.'</option>';
-            }
-            return $cadena;
-        } else {
-            return '';
-        }
-    }
-
-    public function getProvincias(Request $request, $id){
-        if($request->ajax()){
-            $provincias = Provincia::provincias($id);
-            return response()->json($provincias);
-        }
-    }
-
 }
-

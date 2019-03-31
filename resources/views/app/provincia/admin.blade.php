@@ -2,13 +2,6 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="page-title-box">
-            {{--
-            <ol class="breadcrumb pull-right">
-                <li><a href="#">Minton</a></li>
-                <li><a href="#">Tables</a></li>
-                <li class="active">Datatable</li>
-            </ol>
-            --}}
             <h4 class="page-title">{{ $title }}</h4>
         </div>
     </div>
@@ -24,8 +17,12 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						{!! Form::label('name', 'Nombre:') !!}
-						{!! Form::text('name', '', array('class' => 'form-control input-xs', 'id' => 'name')) !!}
+						{!! Form::label('nombre', 'Nombre:') !!}
+						{!! Form::text('nombre', '', array('class' => 'form-control input-xs', 'id' => 'nombre')) !!}
+					</div>
+					<div class="form-group">
+							{!! Form::label('cboDepartamento', 'Departamento: ', array('class' => 'aval')) !!}
+							{!! Form::select('cboDepartamento', $cboDepartamentos, 0, array('class' => 'form-control input-sm', 'id' => 'cboDepartamento')) !!}
 					</div>
 					<div class="form-group">
 						{!! Form::label('filas', 'Filas a mostrar:')!!}

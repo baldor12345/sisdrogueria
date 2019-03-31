@@ -1,31 +1,18 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($sucursal, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+
+	<div class="form-group col-12 col-md-12">
+			{!! Form::label('cboDepartamento', 'Deaprtamento: ', array('class' => 'aval')) !!}
+			{!! Form::select('cboDepartamento', $cboDepartamentos, 0, array('class' => 'form-control input-sm', 'id' => 'cboDepartamento')) !!}
+	</div>
+
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
 		<div class="col-lg-9 col-md-9 col-sm-9">
 			{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
 		</div>
 	</div>
-	<div class="form-group">
-		{!! Form::label('telefono', 'Teléfono:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
-			{!! Form::text('telefono', null, array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese telefono')) !!}
-		</div>
-	</div>
-	<div class="form-group">
-		{!! Form::label('direccion', 'Dirección:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
-			{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese dirección')) !!}
-		</div>
-	</div>
-	
-		<div class="form-group col-12 col-md-12">
-				{!! Form::label('selecdistrito', 'Distrito: ', array('class' => 'aval')) !!}
-				{!! Form::select('selecdistrito', $cboDistritos, 0, array('class' => 'form-control input-sm', 'id' => 'selecdistrito')) !!}
-		</div>
-
-
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}

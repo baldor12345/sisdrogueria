@@ -113,6 +113,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
     Route::get('sucursal/eliminar/{id}/{listarluego}','SucursalController@eliminar')->name('sucursal.eliminar');
     Route::resource('sucursal', 'SucursalController', array('except' => array('show')));
+    //Departamento
+    Route::post('departamento/buscar','DepartamentoController@buscar')->name('departamento.buscar');
+    Route::get('departamento/eliminar/{id}/{listarluego}','DepartamentoController@eliminar')->name('departamento.eliminar');
+    Route::resource('departamento', 'DepartamentoController', array('except' => array('show')));
+    //Provincia
+    Route::post('provincia/buscar','ProvinciaController@buscar')->name('provincia.buscar');
+    Route::get('provincia/eliminar/{id}/{listarluego}','ProvinciaController@eliminar')->name('provincia.eliminar');
+    Route::resource('provincia', 'ProvinciaController', array('except' => array('show')));
+    //Distrito
+    Route::post('distrito/buscar','DistritoController@buscar')->name('distrito.buscar');
+    Route::get('distrito/eliminar/{id}/{listarluego}','DsitritoController@eliminar')->name('distrito.eliminar');
+    Route::resource('distrito', 'DistritoController', array('except' => array('show')));
 
 });
 
