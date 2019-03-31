@@ -30,13 +30,7 @@ class Distrito extends Model
      */
     public function scopelistar($query, $nombre)
     {
-        // $results = DB::table('sucursal')
-        // ->where('nombre','LIKE', '%'.$nombre.'%')
-        // ->where('deleted_at','=',null)
-        // ->orderBy('nombre', 'ASC');
-        // return $results;
-
-
+     
         return $query->where(function($subquery) use($nombre)
 		            {
 		            	if (!is_null($nombre)) {

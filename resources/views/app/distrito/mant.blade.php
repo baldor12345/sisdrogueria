@@ -1,5 +1,5 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($sucursal, $formData) !!}	
+{!! Form::model($distrito, $formData) !!}	
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group col-12 col-md-12">
 			{!! Form::label('cboDepartamento', 'Deaprtamento: ', array('class' => 'aval')) !!}
