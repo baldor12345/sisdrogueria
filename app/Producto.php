@@ -47,7 +47,7 @@ class Producto extends Model
         return $query->where(function($subquery) use($nombre)
             {
                 if (!is_null($nombre)) {
-                    $subquery->where('nombre', 'LIKE', '%'.$nombre.'%');
+                    $subquery->where('descripcion', 'LIKE', '%'.$descripcion.'%');
                 }
             })
             ->where(function($subquery) use($codigo)
@@ -56,7 +56,7 @@ class Producto extends Model
                     $subquery->where('codigo', '=', $codigo);
                 }
             })
-            ->orderBy('nombre', 'ASC');
+            ->orderBy('descripcion', 'ASC');
     }
 	
 	public static function boot()

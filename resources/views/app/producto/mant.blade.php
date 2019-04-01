@@ -1,93 +1,152 @@
 
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($producto, $formData) !!}
-	<div class="row">
-		<div class="form-group">
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12" >
-				{!! Form::label('codigo', 'Codigo:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('codigo', null , array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
+<div class="row">
+	<fieldset class="col-md-6">    	
+		<div class="panel panel-default">
+			<div class="form-group">
+				{!! Form::label('codigo', 'Codigo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo')) !!}
+				</div>
 			</div>
-			<div class="col-6 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-				{!! Form::label('nombre', 'Nombre:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre...')) !!}
+			<div class="form-group">
+				{!! Form::label('descripcion', 'Descripcion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion')) !!}
+				</div>
 			</div>
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
-				{!! Form::label('cantidad', 'Cantidad:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::number('cantidad', null, array('class' => 'form-control input-xs input-number', 'id' => 'cantidad', 'placeholder' => 'Ingrese cantidad...')) !!}
+			<div class="form-group ">
+				{!! Form::label('sustancia_activa', 'Sustancia Activa*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('sustancia_activa', null, array('class' => 'form-control input-xs', 'id' => 'sustancia_activa', 'placeholder' => 'Inrese sustancia activa')) !!}
+				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="form-group">
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
-				{!! Form::label('precio_venta', 'Precio de Venta:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('precio_venta', null, array('class' => 'form-control input-xs', 'id' => 'precio_venta', 'placeholder' => 'Ingrese precio v.', 'onkeypress'=>'return filterFloat(event,this);')) !!}
-			</div>
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12" >
-				{!! Form::label('fecha_llegada', 'Fecha de LLegada:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::date('fecha_llegada', null , array('class' => 'form-control input-xs', 'id' => 'fecha_llegada', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
-			</div>
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
-				{!! Form::label('fecha_caducidad', 'Fecha de Caducidad:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::date('fecha_caducidad', null, array('class' => 'form-control input-xs input-number', 'id' => 'fecha_caducidad', 'placeholder' => 'Ingrese nombre...')) !!}
-			</div>
-			<div class="col-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
-				{!! Form::label('sitio', 'Sitio:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::text('sitio', null, array('class' => 'form-control input-xs', 'id' => 'sitio', 'placeholder' => 'sitio...')) !!}
+			<div class="form-group ">
+				{!! Form::label('uso_terapeutico', 'Uso Terapeutico*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('uso_terapeutico', null, array('class' => 'form-control input-xs', 'id' => 'uso_terapeutico', 'placeholder' => 'Ingrese uso terapeutico')) !!}
+				</div>
 			</div>
 		</div>
-		<?php
-			if($producto != null){
-				echo "<input type='hidden' id='fechaTempLleg' value='".Date::parse($producto->fecha_llegada )->format('d/m/Y')."'>";
-				echo "<input type='hidden' id='fechaTempCad' value='".Date::parse($producto->fecha_caducidad)->format('d/m/Y')."'>";
-			}else{
-				echo "<input type='hidden' id='fechaTempLleg' value=''>";
-				echo "<input type='hidden' id='fechaTempCad' value=''>";
-			}
-		?>
-	</div>
-
-	<div class="row">
-		<div class="form-group">
-			<div class="col-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-				{!! Form::label('marca_id', 'Marca/Laboratorio:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('marca_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'marca_id')) !!}
-			</div>
-			<div class="col-4 col-lg-4 col-md-4 col-sm-12 col-xs-12" >
-				{!! Form::label('unidad_id', 'Unidad:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-xs', 'id' => 'unidad_id')) !!}
-			</div>
-			<div class="col-4 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-				{!! Form::label('categoria_id', 'Categoria:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('categoria_id', $cboCategoria, null, array('class' => 'form-control input-xs', 'id' => 'categoria_id')) !!}
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="form-group">
-			<div class="col-5 col-lg-5 col-md-5 col-sm-12 col-xs-12" >
-				{!! Form::label('sucursal_id', 'Sucursal:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id')) !!}
-			</div>
-			<div class="col-7 col-lg-7 col-md-7 col-sm-12 col-xs-12">
-				{!! Form::label('proveedor_id', 'Proveedor:') !!}<div class="" style="display: inline-block;color: red;">*</div>
-				{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="form-group">
-			<div class="col-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				{!! Form::label('descripcion', 'Descripcion:') !!}
-				{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion')) !!}
-			</div>
-		</div>
-	</div>
+	</fieldset>	
 	
+	<fieldset class="col-md-6">   
+		<div class="panel panel-default">
+			<div class="form-group">
+				{!! Form::label('tipo', 'Tipo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
+				</div>
+			</div>
 
+			<div class="form-group ">
+				{!! Form::label('proveedor_id', 'Proveedor*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
+				</div>
+			</div>
+	
+			<div class="form-group ">
+				{!! Form::label('marca_id', 'Marc/Lab:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::select('marca_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'marca_id')) !!}
+				</div>
+			</div>
+			<div class="form-group ">
+				{!! Form::label('sucursal_id', 'Sucursal*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id')) !!}
+				</div>
+			</div>
+			<div class="form-group ">
+				{!! Form::label('ubicacion', 'Ubicacion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('ubicacion', null, array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese Ubicacion')) !!}
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</div>
+
+<div class="row">
+	<fieldset class="col-md-6">    	
+		<div class="panel panel-default">
+			<div class="form-group ">
+				{!! Form::label('unidad_id', 'Unidad*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-6 col-xs-12">
+					{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-xs', 'id' => 'unidad_id')) !!}
+				</div>
+				<div class="col-sm-3 col-xs-12">
+					{!! Form::text('concentracion', null, array('class' => 'form-control input-xs', 'id' => 'concentracion', 'placeholder' => 'Concentracion')) !!}
+				</div>
+			</div>
+
+			<div class="form-group ">
+				{!! Form::label('categoria_id', 'Cat/Present:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-6 col-xs-12">
+					{!! Form::select('categoria_id', $cboCategoria, null, array('class' => 'form-control input-xs', 'id' => 'categoria_id')) !!}
+				</div>
+				<div class="col-sm-3 col-xs-12">
+					{!! Form::text('unidad_presentacion', null, array('class' => 'form-control input-xs', 'id' => 'unidad_presentacion', 'placeholder' => 'Presentacion')) !!}
+				</div>
+			</div>
+
+			<div class="form-group ">
+				{!! Form::label('stock_minimo', 'Stock Minimo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => 'Ingrese Stock min')) !!}
+				</div>
+			</div>
+			<div class="form-group ">
+				{!! Form::label('existencia', 'Existencia*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('existencia', null, array('class' => 'form-control input-xs input-number', 'id' => 'existencia', 'placeholder' => 'Ingrese Existencia')) !!}
+				</div>
+			</div>
+		</div>
+	</fieldset>	
+	
+	<fieldset > 
+		<div class="panel panel-default">
+			<div class="form-group ">
+				{!! Form::label('fecha_llegada', 'Fecha de LLegada*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::date('fecha_llegada', null , array('class' => 'form-control input-xs', 'id' => 'fecha_llegada', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
+				</div>
+			</div>
+			<div class="form-group ">
+				{!! Form::label('fecha_caducidad', 'Fecha de Caducidad*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::date('fecha_caducidad', null , array('class' => 'form-control input-xs', 'id' => 'fecha_caducidad', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
+				</div>
+			</div>
+			<?php
+				if($producto != null){
+					echo "<input type='hidden' id='fechaTempLleg' value='".Date::parse($producto->fecha_llegada )->format('d/m/Y')."'>";
+					echo "<input type='hidden' id='fechaTempCad' value='".Date::parse($producto->fecha_caducidad)->format('d/m/Y')."'>";
+				}else{
+					echo "<input type='hidden' id='fechaTempLleg' value=''>";
+					echo "<input type='hidden' id='fechaTempCad' value=''>";
+				}
+			?>
+			<div class="form-group">
+				{!! Form::label('costo', 'Compra*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('costo', null, array('class' => 'form-control input-xs', 'id' => 'costo', 'placeholder' => 'Ingrese precio de compra', 'onkeypress'=>'return filterFloat(event,this);')) !!}
+				</div>
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('precio_publico', 'Precio Publico*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				<div class="col-sm-9 col-xs-12">
+					{!! Form::text('precio_publico', null, array('class' => 'form-control input-xs', 'id' => 'precio_publico', 'placeholder' => 'Ingrese precio de venta', 'onkeypress'=>'return filterFloat(event,this);')) !!}
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</div>
+	
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
@@ -97,7 +156,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('750');
+	configurarAnchoModal('950');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	var fechaActual = new Date();
 	var day = ("0" + fechaActual.getDate()).slice(-2);

@@ -59,15 +59,15 @@ class MenuoptionSeeder extends Seeder
 				'link'   => 'proveedor'
 			),
 			array(
-				'name' => 'Categorias',
+				'name' => 'Categoria/Presentacion',
 				'link'   => 'categoria'
 			),
 			array(
-				'name' => 'Marcas',
+				'name' => 'Marca/Laboratorio',
 				'link'   => 'marca'
 			),
 			array(
-				'name' => 'Unidades',
+				'name' => 'Unidades de Medida',
 				'link'   => 'unidad'
 			),
 			array(
