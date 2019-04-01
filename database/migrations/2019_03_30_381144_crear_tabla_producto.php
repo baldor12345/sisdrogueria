@@ -36,13 +36,7 @@ class CrearTablaProducto extends Migration
 
 
             $table->decimal('costo',10,2)->nullable();//precio por la unidad de medida
-            $table->decimal('costo_igv',10,2)->nullable();//precio por unidad de medida incluyendo igv
             $table->decimal('precio_publico',10,2)->nullable();//precio al publico
-            $table->decimal('precio_publico_igv',10,2)->nullable();//precio que se vende al publico incluye iva
-            $table->decimal('descuento',10,2)->nullable();//por defecto 10%
-            $table->decimal('comision',10,2)->nullable();//porcentaje
-            $table->decimal('precio_publico_final',10,2)->nullable();
-
 
             $table->timestamp('fecha_llegada')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();

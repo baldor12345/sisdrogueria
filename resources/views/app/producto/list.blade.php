@@ -19,9 +19,9 @@
 			<tr>
 				<td>{{ $contador }}</td>
 				<td>{{ $value->codigo }} </td>
-				<td>{{ $value->nombre }} </td>
-				<td>{{ $value->precio_venta }}</td>
-				<td>{{ $value->cantidad }} </td>
+				<td>{{ $value->descripcion }} </td>
+				<td>{{ $value->precio_publico }}</td>
+				<td>{{ $value->existencia }} </td>
 				<td>{{ Date::parse( $value->fecha_caducidad )->format('Y-m-d') }} </td>
 				<td>{{ $value->marca->name }}</td>
 				<td>{{ $value->unidad->name }}</td>

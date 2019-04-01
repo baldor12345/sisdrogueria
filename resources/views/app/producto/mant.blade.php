@@ -5,25 +5,25 @@
 	<fieldset class="col-md-6">    	
 		<div class="panel panel-default">
 			<div class="form-group">
-				{!! Form::label('codigo', 'Codigo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('codigo', 'Codigo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo')) !!}
 				</div>
 			</div>
 			<div class="form-group">
-				{!! Form::label('descripcion', 'Descripcion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('descripcion', 'Descripcion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion')) !!}
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('sustancia_activa', 'Sustancia Activa:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('sustancia_activa', 'Sustancia Activa*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::text('sustancia_activa', null, array('class' => 'form-control input-xs', 'id' => 'sustancia_activa', 'placeholder' => 'Inrese sustancia activa')) !!}
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('uso_terapeutico', 'Uso Terapeutico:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('uso_terapeutico', 'Uso Terapeutico*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::text('uso_terapeutico', null, array('class' => 'form-control input-xs', 'id' => 'uso_terapeutico', 'placeholder' => 'Ingrese uso terapeutico')) !!}
 				</div>
@@ -34,14 +34,14 @@
 	<fieldset class="col-md-6">   
 		<div class="panel panel-default">
 			<div class="form-group">
-				{!! Form::label('tipo', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('tipo', 'Tipo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
 				</div>
 			</div>
 
 			<div class="form-group ">
-				{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('proveedor_id', 'Proveedor*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
 				</div>
@@ -54,13 +54,13 @@
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('sucursal_id', 'Sucursal:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('sucursal_id', 'Sucursal*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id')) !!}
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('ubicacion', 'Ubicacion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::text('ubicacion', null, array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese Ubicacion')) !!}
 				</div>
@@ -73,7 +73,7 @@
 	<fieldset class="col-md-6">    	
 		<div class="panel panel-default">
 			<div class="form-group ">
-				{!! Form::label('unidad_id', 'Unidad:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('unidad_id', 'Unidad*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-6 col-xs-12">
 					{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-xs', 'id' => 'unidad_id')) !!}
 				</div>
@@ -93,25 +93,30 @@
 			</div>
 
 			<div class="form-group ">
-				{!! Form::label('stock_minimo', 'Stock Minimo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('stock_minimo', 'Stock Minimo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
-					{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs', 'id' => 'stock_minimo', 'placeholder' => 'Ingrese Stock min')) !!}
+					{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => 'Ingrese Stock min')) !!}
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('existencia', 'Existencia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('existencia', 'Existencia*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
-					{!! Form::text('existencia', null, array('class' => 'form-control input-xs', 'id' => 'existencia', 'placeholder' => 'Ingrese Existencia')) !!}
+					{!! Form::text('existencia', null, array('class' => 'form-control input-xs input-number', 'id' => 'existencia', 'placeholder' => 'Ingrese Existencia')) !!}
 				</div>
 			</div>
+		</div>
+	</fieldset>	
+	
+	<fieldset > 
+		<div class="panel panel-default">
 			<div class="form-group ">
-				{!! Form::label('existencia', 'Fecha de LLegada:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('fecha_llegada', 'Fecha de LLegada*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::date('fecha_llegada', null , array('class' => 'form-control input-xs', 'id' => 'fecha_llegada', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('existencia', 'Fecha de Caducidad:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('fecha_caducidad', 'Fecha de Caducidad*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
 					{!! Form::date('fecha_caducidad', null , array('class' => 'form-control input-xs', 'id' => 'fecha_caducidad', 'placeholder' => 'Ingrese Codigo', 'maxlength' => '22')) !!}
 				</div>
@@ -125,36 +130,17 @@
 					echo "<input type='hidden' id='fechaTempCad' value=''>";
 				}
 			?>
-		</div>
-	</fieldset>	
-	
-	<fieldset class="col-md-6"> 
-		<legend>Producto Grava IGV?</legend>  
-		<div class="panel panel-default">
 			<div class="form-group">
-				{!! Form::label('tipo', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('costo', 'Compra*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
-					{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
+					{!! Form::text('costo', null, array('class' => 'form-control input-xs', 'id' => 'costo', 'placeholder' => 'Ingrese precio de compra', 'onkeypress'=>'return filterFloat(event,this);')) !!}
 				</div>
 			</div>
 
-			<div class="form-group ">
-				{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+			<div class="form-group">
+				{!! Form::label('precio_publico', 'Precio Publico*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
-					{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id')) !!}
-				</div>
-			</div>
-	
-			<div class="form-group ">
-				{!! Form::label('marca_id', 'Marc/Lab:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-				<div class="col-sm-9 col-xs-12">
-					{!! Form::select('marca_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'marca_id')) !!}
-				</div>
-			</div>
-			<div class="form-group ">
-				{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-				<div class="col-sm-9 col-xs-12">
-					{!! Form::text('ubicacion', null, array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese Ubicacion')) !!}
+					{!! Form::text('precio_publico', null, array('class' => 'form-control input-xs', 'id' => 'precio_publico', 'placeholder' => 'Ingrese precio de venta', 'onkeypress'=>'return filterFloat(event,this);')) !!}
 				</div>
 			</div>
 		</div>
