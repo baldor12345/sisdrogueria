@@ -6,9 +6,8 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Distrito;
+use App\Departamento;
 use App\Provincia;
-// use App\Serieventa;
-// use App\Movimiento;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -46,6 +45,8 @@ class DistritoController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Provincia', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Departamento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -93,9 +94,9 @@ class DistritoController extends Controller
         $formData     = array('distrito.store');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar';
-        $cboProvincias = Provincia::listar("");
-        
-        return view($this->folderview.'.mant')->with(compact('distrito','formData', 'entidad', 'boton', 'listar','cboProvincias'));
+        $cboProvincias =[''=>'Seleccione'] + Provincia::pluck('nombre', 'id')->all();
+        $cboDepartamentos = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.mant')->with(compact('distrito','formData', 'entidad', 'boton', 'listar','cboProvincias','cboDepartamentos'));
     }
 
     public function store(Request $request)
@@ -143,13 +144,14 @@ class DistritoController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $distrito = Distrito::find($id);
-        $cboProvincias = Provincia::listar("");
+        $cboProvincias = [''=>'Seleccione'] + Provincia::pluck('nombre', 'id')->all();
+        $cboDepartamentos = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         $entidad  = 'Distrito';
         $formData = array('distrito.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
 
-        return view($this->folderview.'.mant')->with(compact('distrito', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('distrito', 'formData', 'entidad', 'boton', 'listar','cboProvincias','cboDepartamentos'));
     }
 
     /**
@@ -210,6 +212,7 @@ class DistritoController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
+        $mensaje = null;
         $existe = Libreria::verificarExistencia($id, 'distrito');
         if ($existe !== true) {
             return $existe;
@@ -222,6 +225,6 @@ class DistritoController extends Controller
         $entidad  = 'Distrito';
         $formData = array('route' => array('distrito.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
 }

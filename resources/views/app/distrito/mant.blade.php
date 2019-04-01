@@ -3,11 +3,11 @@
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group col-12 col-md-12">
 			{!! Form::label('cboDepartamento', 'Deaprtamento: ', array('class' => 'aval')) !!}
-			{!! Form::select('cboDepartamento', $cboDepartamentos, 0, array('class' => 'form-control input-sm', 'id' => 'cboDepartamento')) !!}
+			{!! Form::select('cboDepartamento', $cboDepartamentos, $distrito != null? $distrito->provincia->departamento_id: 0, array('class' => 'form-control input-sm', 'id' => 'cboDepartamento')) !!}
 	</div>
 	<div class="form-group col-12 col-md-12">
 			{!! Form::label('cboProvincia', 'Provincia: ', array('class' => 'aval')) !!}
-			{!! Form::select('cboProvincia', $cboProvincias, 0, array('class' => 'form-control input-sm', 'id' => 'cboProvincia')) !!}
+			{!! Form::select('cboProvincia', $cboProvincias, $distrito != null? $distrito->provincia_id: 0, array('class' => 'form-control input-sm', 'id' => 'cboProvincia')) !!}
 	</div>
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}

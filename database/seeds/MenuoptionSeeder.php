@@ -92,8 +92,8 @@ class MenuoptionSeeder extends Seeder
 
 		$datos = array(
 				array(
-					'name' => 'Tipo trabajador',
-					'link'   => 'tipotrabajador'
+					'name' => 'Tipo personal',
+					'link'   => 'tipopersona'
 				),
 				array(
 					'name' => 'Clientes',
@@ -101,7 +101,7 @@ class MenuoptionSeeder extends Seeder
 				),
 				array(
 					'name' => 'Trabajadores',
-					'link'   => 'trabajadores'
+					'link'   => 'trabajador'
 				),
 				array(
 					'name' => 'Departamentos',

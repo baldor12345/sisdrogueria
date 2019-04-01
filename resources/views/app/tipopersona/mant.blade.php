@@ -1,18 +1,15 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($provincia, $formData) !!}	
-	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-
-	<div class="form-group col-12 col-md-12">
-			{!! Form::label('departamento_id', 'Deaprtamento: ', array('class' => 'aval')) !!}
-			{!! Form::select('departamento_id', $cboDepartamentos, $provincia != null?$provincia->departamento_id: 0, array('class' => 'form-control input-sm', 'id' => 'departamento_id')) !!}
-	</div>
-
+{!! Form::model($tipo_persona, $formData) !!}	
+{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	
+	
 	<div class="form-group">
-		{!! Form::label('nombre', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
+		{!! Form::label('titulo', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
 		<div class="col-lg-9 col-md-9 col-sm-9">
-			{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
+			{!! Form::text('titulo', null, array('class' => 'form-control input-xs', 'id' => 'titulo', 'placeholder' => 'Ingrese nombre')) !!}
 		</div>
 	</div>
+
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
@@ -20,7 +17,6 @@
 		</div>
 	</div>
 {!! Form::close() !!}
-
 <script type="text/javascript">
 $(document).ready(function() {
 	configurarAnchoModal('450');

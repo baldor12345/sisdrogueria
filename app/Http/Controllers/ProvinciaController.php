@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Validator;
 use App\Http\Requests;
 use App\Departamento;
 use App\Provincia;
+use App\Distrito;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 class ProvinciaController extends Controller
 {
     protected $folderview      = 'app.provincia';
@@ -40,6 +42,7 @@ class ProvinciaController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Departamento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -71,7 +74,7 @@ class ProvinciaController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $cboDepartamentos = Departamento::listar("");
+        $cboDepartamentos = [''=>'Todos'] + Departamento::pluck('nombre', 'id')->all();
         return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta','cboDepartamentos'));
     }
 
@@ -84,13 +87,14 @@ class ProvinciaController extends Controller
     {
         $listar       = Libreria::getParam($request->input('listar'), 'NO');
         $entidad      = 'Provincia';
-        $distrito  = null;
+        $provincia  = null;
         $formData     = array('provincia.store');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar';
-        $cboDepartamentos = Departamento::listar("");
+        $cboDepartamentos = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         
-        return view($this->folderview.'.mant')->with(compact('distrito','formData', 'entidad', 'boton', 'listar','cboDepartamentos'));
+        
+        return view($this->folderview.'.mant')->with(compact('provincia','formData', 'entidad', 'boton', 'listar','cboDepartamentos'));
     }
 
     public function store(Request $request)
@@ -106,7 +110,7 @@ class ProvinciaController extends Controller
         $error = DB::transaction(function() use($request){
             $provincia       = new Provincia();
             $provincia->nombre = strtoupper($request->input('nombre'));
-            $provincia->provincia_id = strtoupper($request->input('cboDepartamento'));
+            $provincia->departamento_id = $request->input('departamento_id');
             $provincia->save();
 
         });
@@ -138,7 +142,7 @@ class ProvinciaController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $provincia = Provincia::find($id);
-        $cboDepartamentos = Departamento::listar("");
+        $cboDepartamentos = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         $entidad  = 'Provincia';
         $formData = array('provincia.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
@@ -205,9 +209,14 @@ class ProvinciaController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
+        $mensaje = null;
         $existe = Libreria::verificarExistencia($id, 'provincia');
         if ($existe !== true) {
             return $existe;
+        }
+        $distritos = count(Distrito::where('provincia_id', '=', $id)->where('deleted_at','=',null)->get());
+        if($distritos > 0){
+            $mensaje = "No se puede eliminar, existen registros en la tabla distritos relacionados con esta provincia";
         }
         $listar = "NO";
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
@@ -217,7 +226,7 @@ class ProvinciaController extends Controller
         $entidad  = 'Provincia';
         $formData = array('route' => array('provincia.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
 
     public function cboprovincia($departamento_id = null)
@@ -226,6 +235,7 @@ class ProvinciaController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+       
         $departamento = Departamento::find($departamento_id);
         $provincias = $departamento->provincias;
         if (count($provincias)>0) {

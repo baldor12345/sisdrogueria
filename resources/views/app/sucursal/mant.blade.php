@@ -21,8 +21,8 @@
 	</div>
 	
 		<div class="form-group col-12 col-md-12">
-				{!! Form::label('selecdistrito', 'Distrito: ', array('class' => 'aval')) !!}
-				{!! Form::select('selecdistrito', $cboDistritos, 0, array('class' => 'form-control input-sm', 'id' => 'selecdistrito')) !!}
+				{!! Form::label('distrito_id', 'Distrito: ', array('class' => 'aval')) !!}
+				{!! Form::select('distrito_id', $cboDistritos, $sucursal !=null? $sucursal->distrito_id: 0 , array('class' => 'form-control input-sm', 'id' => 'distrito_id')) !!}
 		</div>
 
 

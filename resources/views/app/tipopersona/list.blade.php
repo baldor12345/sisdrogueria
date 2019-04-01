@@ -1,4 +1,7 @@
 @if(count($lista) == 0)
+<?php
+		echo('Lista:  '.$lista);
+		?>
 <h3 class="text-warning">No se encontraron resultados.</h3>
 @else
 {!! $paginacion or '' !!}
@@ -14,16 +17,13 @@
 		</thead>
 		<tbody>
 			<?php
+			
 			$contador = $inicio + 1;
 			?>
 			@foreach ($lista as $key => $value)
 			<tr>
 				<td>{{ $contador }}</td>
-				<td>{{ $value->nombre }}</td>
-				<td>{{ $value->direccion}}</td>
-				<td>{{ $value->distrito->nombre }}</td>
-				<td>{{ $value->telefono}}</td>
-				
+				<td>{{ $value->titulo }}</td>
 				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
 				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 			</tr>

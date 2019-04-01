@@ -11,52 +11,26 @@ class Persona extends Model
     protected $table = 'person';
     protected $dates = ['deleted_at'];
     
-
+    public function tipo_persona(){
+        return $this->belongsTo('App\Tipo_persona','tipo_persona_id');
+    } 
     
-    public function scopelistar($query, $name)
+    public function scopelistar($query, $nombre, $dni, $tipo_persona_id)
     {
-        return $query->where(function($subquery) use($name)
+        return $query->where(function($subquery) use($nombre, $dni, $tipo_persona_id)
 		            {
-		            	if (!is_null($name)) {
-		            		$subquery->where('name', 'LIKE', '%'.$name.'%');
-		            	}
-		            })
-        			->orderBy('nombres', 'ASC');
-    }
-/*
-    public function scopelistar($query, $name, $type)
-    {   
-        $sql = "(CONCAT(apellidos,'',nombres) LIKE '%.$name.%' OR RAZONSOCIAL LIKE '%.$name.%')";
-        $sql = $sql." AND TYPE = '.$type.' AND SECONDTYPE IN('N','S') OR CASE '.$type.' WHEN 'C' THEN (TYPE IN ('P','T') AND SECONDTYPE = 'S') WHEN 'P' THEN (TYPE = 'C' AND SECONDTYPE = 'S') ELSE (TYPE = 'C' AND SECONDTYPE = 'S') END";
-        //echo $sql;        
-        $user = Auth::user();
-        $empresa_id = $user->empresa_id;
-        return $query->where(function($subquery) use($name)
-		            {
-		            	if (!is_null($name)) {
-                            $subquery->where(DB::raw('CONCAT(apellidos," ",nombres)'), 'LIKE', '%'.$name.'%')->orWhere('razonsocial','LIKE','%'.$name.'%');
-		            	}
-                    })
-                    ->leftJoin('persona', 'personamaestro.id', '=', 'persona.personamaestro_id')
-        			->where(function($subquery) use($type)
-		            {
-		            	if (!is_null($type)) {
-                            //$subquery->where('type', '=', $type)->orWhere('secondtype','=','S');
-                            //$IN = " ('P','T')";
-                            if($type == 'C'){
-                                $subquery->where('persona.type', '=', $type)->orwhere('persona.secondtype','=', $type)->orwhere('persona.type','=', 'T');
-                            }else if($type == 'P'){
-                                $subquery->where('persona.type', '=', $type)->orwhere('persona.secondtype','=', $type)->orwhere('persona.type','=', 'T');
-                            }else if($type == 'E'){
-                                $subquery->where('persona.type', '=', $type)->orwhere('persona.secondtype','=', $type)->orwhere('persona.type','=', 'T');
+                        if($tipo_persona_id == 0){
+                            $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni)->where('tipo_persona_id','=', 1);
+                        }else{
+                            if (!is_null($nombre)) {
+                                $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni)->where('tipo_persona_id','=',$tipo_persona_id);
                             }
-                        }		            		
+                        }
                     })
-                    ->where('persona.empresa_id', '=', $empresa_id)
-                    ->where('persona.personamaestro_id', '!=', 2)
-                    ->whereNull('personamaestro.deleted_at')
-                    ->orderBy('nombres', 'ASC')->orderBy('apellidos', 'ASC')->orderBy('razonsocial', 'ASC');                   
-    }*/
+                    ->where('deleted_at','=',null)
+        			->orderBy('nombres', 'ASC');
+        			
+    }
 
 }
 

@@ -6,7 +6,8 @@ use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Sucursal;
-use App\Serieventa;
+use App\Distrito;
+
 use App\Movimiento;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
@@ -96,18 +97,7 @@ class SucursalController extends Controller
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar'; 
         $user = Auth::user();
-        // $empresa_id = $user->empresa_id;
-        // $serienueva = Sucursal::where('empresa_id', $empresa_id)->count('id');
-        // $serienueva = $serienueva + 1;
-        // $serienueva = (string) $serienueva;
-        // $cant = strlen($serienueva);
-        // $ceros = 4 - $cant;
-        // while($ceros != 0){
-        //     $serienueva = "0". $serienueva;
-        //     $ceros = $ceros - 1;
-        // }
-
-        $cboDistritos = array();
+        $cboDistritos = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
         return view($this->folderview.'.mant')->with(compact('sucursal','formData', 'entidad', 'boton', 'listar','cboDistritos'));
     }
 
@@ -128,15 +118,11 @@ class SucursalController extends Controller
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
             $sucursal->telefono = $request->input('telefono');
-            $sucursal->distrito = $request->input('distrito');
-            // $user = Auth::user();
-            // $sucursal->empresa_id = $user->empresa_id;
+            $sucursal->distrito_id = $request->input('distrito_id');
+           
             $sucursal->save();
 
-            // $serie       = new Serieventa();
-            // $serie->serie = strtoupper($request->input('serieventa'));
-            // $serie->sucursal_id = $sucursal->id;
-            // $serie->save();
+           
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -166,13 +152,13 @@ class SucursalController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $sucursal = Sucursal::find($id);
-        $serieventa = Serieventa::where('sucursal_id' , '=' , $id)->first();
+        $cboDistritos = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
         $entidad  = 'Sucursal';
         $formData = array('sucursal.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
-        $serienueva = null;
-        return view($this->folderview.'.mant')->with(compact('sucursal', 'serienueva',  'serieventa', 'formData', 'entidad', 'boton', 'listar'));
+       
+        return view($this->folderview.'.mant')->with(compact('sucursal', 'formData', 'entidad', 'boton', 'listar','cboDistritos'));
     }
 
     /**
@@ -190,24 +176,19 @@ class SucursalController extends Controller
         }
         $reglas     = array('nombre' => 'required|max:50',
                             'direccion' => 'required|max:100',
-                            'telefono' => 'required|max:15',
-                            'serieventa' => 'required|max:4');
+                            'telefono' => 'required|max:15');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
-        $serie = Serieventa::where('sucursal_id', $id)->first();
-        $error = DB::transaction(function() use($request, $id, $serie){
+       
+        $error = DB::transaction(function() use($request, $id){
             $sucursal       = Sucursal::find($id);
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
             $sucursal->telefono = $request->input('telefono');
             $sucursal->save();
-
-            $serie->serie = strtoupper($request->input('serieventa'));
-            $serie->sucursal_id = $sucursal->id;
-            $serie->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -239,6 +220,7 @@ class SucursalController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
+        $mensaje = null;
         $existe = Libreria::verificarExistencia($id, 'sucursal');
         if ($existe !== true) {
             return $existe;
@@ -251,6 +233,6 @@ class SucursalController extends Controller
         $entidad  = 'Sucursal';
         $formData = array('route' => array('sucursal.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
 }

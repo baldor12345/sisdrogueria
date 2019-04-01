@@ -129,8 +129,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('provincia', 'ProvinciaController', array('except' => array('show')));
     //Distrito
     Route::post('distrito/buscar','DistritoController@buscar')->name('distrito.buscar');
-    Route::get('distrito/eliminar/{id}/{listarluego}','DsitritoController@eliminar')->name('distrito.eliminar');
+    Route::get('distrito/eliminar/{id}/{listarluego}','DistritoController@eliminar')->name('distrito.eliminar');
     Route::resource('distrito', 'DistritoController', array('except' => array('show')));
+    //Tipo Persona
+    Route::post('tipopersona/buscar','TipopersonaController@buscar')->name('tipopersona.buscar');
+    Route::get('tipopersona/eliminar/{id}/{listarluego}','TipopersonaController@eliminar')->name('tipopersona.eliminar');
+    Route::resource('tipopersona', 'TipopersonaController', array('except' => array('show')));
+    //Trabajador
+    Route::post('trabajador/buscar','TrabajadorController@buscar')->name('trabajador.buscar');
+    Route::get('trabajador/eliminar/{id}/{listarluego}','TrabajadorController@eliminar')->name('trabajador.eliminar');
+    Route::resource('trabajador', 'TrabajadorController', array('except' => array('show')));
 
 });
 

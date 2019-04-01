@@ -17,16 +17,8 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						{!! Form::label('nombre', 'Nombre:') !!}
-						{!! Form::text('nombre', '', array('class' => 'form-control input-xs', 'id' => 'nombre')) !!}
-					</div>
-					<div class="form-group">
-						{!! Form::label('dni', 'Nombre:') !!}
-						{!! Form::text('dni', '', array('class' => 'form-control input-xs', 'id' => 'dni')) !!}
-					</div>
-					<div class="form-group">
-							{!! Form::label('cbotipo_persona', 'Departamento: ', array('class' => 'aval')) !!}
-							{!! Form::select('cbotipo_persona', $cbotipo_personas, 0, array('class' => 'form-control input-sm', 'id' => 'cbotipo_persona')) !!}
+						{!! Form::label('nombreTipo', 'Nombre:') !!}
+						{!! Form::text('nombreTipo', '', array('class' => 'form-control input-xs', 'id' => 'nombreTipo')) !!}
 					</div>
 					<div class="form-group">
 						{!! Form::label('filas', 'Filas a mostrar:')!!}
@@ -49,7 +41,7 @@
 	$(document).ready(function () {
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombre"]').keyup(function (e) {
+		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombreTipo"]').keyup(function (e) {
 			var key = window.event ? e.keyCode : e.which;
 			if (key == '13') {
 				buscar('{{ $entidad }}');
