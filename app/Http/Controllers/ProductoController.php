@@ -115,6 +115,7 @@ class ProductoController extends Controller
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Producto';
         $producto       = null;
+        $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $cboMarca       = array(0=>'Seleccione Marca...');
         $cboCategoria   = array(0=>'Seleccione Categoria...');
         $cboUnidad      = array(0=>'Seleccione Unidad...');
@@ -125,7 +126,7 @@ class ProductoController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('producto', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('producto', 'cboTipo', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -334,7 +335,7 @@ class ProductoController extends Controller
         $tags = Unidad::where("name",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name.' ('.$tag->simbolo.')'];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
