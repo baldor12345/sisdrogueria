@@ -7,11 +7,9 @@ use Illuminate\Http\Request;
 use Hash;
 use Validator;
 use App\Http\Requests;
-use App\Distrito;
-use App\Provincia;
-use App\Departamento;
-use App\Persona;
-use App\Personamaestro;
+
+use App\Cliente;
+// use App\Personamaestro;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -24,12 +22,11 @@ class ClienteController extends Controller
     protected $tituloRegistrar = 'Registrar Cliente';
     protected $tituloModificar = 'Modificar Cliente';
     protected $tituloEliminar  = 'Eliminar Cliente';
-    protected $rutas           = array('create' => 'cliente.create', 
-            'edit'   => 'cliente.edit', 
-            'delete' => 'cliente.eliminar',
-            'search' => 'cliente.buscar',
-            'index'  => 'cliente.index',
-            'repetido' => 'cliente.repetido'
+    protected $rutas           = array('create' => 'clientes.create', 
+            'edit'   => 'clientes.edit', 
+            'delete' => 'clientes.eliminar',
+            'search' => 'clientes.buscar',
+            'index'  => 'clientes.index'
         );
 
     /**
@@ -53,13 +50,13 @@ class ClienteController extends Controller
         $filas            = $request->input('filas');
         $entidad          = 'Cliente';
         $name             = Libreria::getParam($request->input('name'));
-        $type             = 'C';
-        $resultado        = Personamaestro::listar($name,$type);
+        $dni             = Libreria::getParam($request->input('dni'));
+        $resultado        = Cliente::listar($name, $dni);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI/RUC', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nombres y Apellidos/Razón Social', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'DNI', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nombres y Apellidos', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
@@ -104,15 +101,15 @@ class ClienteController extends Controller
     public function create(Request $request)
     {
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad        = 'cliente'; //es personamaestro
+        $entidad        = 'cliente';
         $cliente        = null;
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
-        $formData       = array('cliente.store');
+        // $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
+        $formData       = array('clientes.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
         $ruta             = $this->rutas;
         $accion = 0;
-        return view($this->folderview.'.mant')->with(compact( 'accion' , 'ruta', 'cliente', 'formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
+        return view($this->folderview.'.mant')->with(compact( 'accion' , 'ruta', 'cliente', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     /**
@@ -124,67 +121,26 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $documento = $request->input('documento');
-        $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,NULL,id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,NULL,id,deleted_at,NULL',
-            'razonsocial'    => 'required|max:100',
+        $reglas = array(
+            'dni'       => 'required|max:8',
+            'nombres'    => 'required|max:100',
+            'apellidos'    => 'required|max:100',
             );
-        }
-        $validacion = Validator::make($request->all(),$reglas);
+            $mensajes   = array();
+            $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function() use($request,$tamCadena){
-            $cliente               = new Personamaestro();
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
+        $error = DB::transaction(function() use($request){
+            $cliente  = new Cliente();
+            $cliente->dni        = $request->input('dni');
             $cliente->nombres    = strtoupper($request->input('nombres'));
             $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
             $cliente->direccion   = strtoupper($request->input('direccion'));
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');
             $cliente->email       = $request->input('email');
-            $value =Libreria::getParam($request->input('fechanacimiento'));
-            $cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
             $cliente->save();
-
-
-            /*REGISTRAMOS LA PERSONA EN LA EMPRESA */
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $cliente->id;
-
-            $persona->comision = 0;
-            $persona->type        = 'C';
-
-            $tipoproveedor = $request->input('proveedor');
-            $tipotrabajador = $request->input('trabajador');
-            
-            if( $tipoproveedor !== null && $tipotrabajador == null){
-                $persona->secondtype  = $tipoproveedor;
-            }else if( $tipoproveedor == null && $tipotrabajador !== null){
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }else if( $tipoproveedor !== null && $tipotrabajador !== null){
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            $persona->save();
-
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -207,20 +163,30 @@ class ClienteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id, Request $request)
-    {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
-        if ($existe !== true) {
-            return $existe;
+    { 
+        $listar     = Libreria::getParam($request->input('listar'), 'NO');
+        $reglas = array(
+            'dni'       => 'required|max:8',
+            'nombres'    => 'required|max:100',
+            'apellidos'    => 'required|max:100',
+            );
+            $mensajes   = array();
+            $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
         }
-        $listar         = Libreria::getParam($request->input('listar'), 'NO');
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
-        $cliente        = personamaestro::find($id);
-        $entidad        = 'cliente';
-        $formData       = array('cliente.update', $id);
-        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton          = 'Modificar';
-        $accion = 1;
-        return view($this->folderview.'.mant')->with(compact( 'accion' ,'cliente', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
+        $error = DB::transaction(function() use($request){
+            $cliente  =Cliente::find($id);
+            $cliente->dni        = $request->input('dni');
+            $cliente->nombres    = strtoupper($request->input('nombres'));
+            $cliente->apellidos  = strtoupper($request->input('apellidos'));
+            $cliente->direccion   = strtoupper($request->input('direccion'));
+            $cliente->telefono    = $request->input('telefono');
+            $cliente->celular     = $request->input('celular');
+            $cliente->email       = $request->input('email');
+            $cliente->save();
+        });
+        return is_null($error) ? "OK" : $error;
     }
 
     /**
@@ -232,102 +198,27 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $documento = $request->input('documento');
-        $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,'.$id.',id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,'.$id.',id,deleted_at,NULL',
-            'razonsocial'    => 'required|max:100',
+        $listar     = Libreria::getParam($request->input('listar'), 'NO');
+        $reglas = array(
+            'dni'       => 'required|max:8',
+            'nombres'    => 'required|max:100',
+            'apellidos'    => 'required|max:100',
             );
-        }
-        $validacion = Validator::make($request->all(),$reglas);
+            $mensajes   = array();
+            $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
-        } 
-        $error = DB::transaction(function() use($request, $id, $tamCadena){
-            $cliente               = Personamaestro::find($id);
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
+        }
+        $error = DB::transaction(function() use($request){
+            $cliente  =Cliente::find($id);
+            $cliente->dni        = $request->input('dni');
             $cliente->nombres    = strtoupper($request->input('nombres'));
             $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
             $cliente->direccion   = strtoupper($request->input('direccion'));
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');
             $cliente->email       = $request->input('email');
-            $value =Libreria::getParam($request->input('fechanacimiento'));
-            $cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
             $cliente->save();
-
-                       
-            $user = Auth::user();
-            $empresa_id = $user->empresa_id;
-            $persona = Persona::where('empresa_id', '=', $empresa_id)
-                                ->where('personamaestro_id', '=', $id)->first();
-
-            $tipocliente = $request->input('cliente');
-            $tipoproveedor = $request->input('proveedor');
-            $tipotrabajador = $request->input('trabajador');
-
-
-            if( $tipocliente !==null && $tipoproveedor == null && $tipotrabajador == null ){
-                //CLIENTE
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //PROVEEDOR
-                $persona->type  = $tipoproveedor;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor == null && $tipotrabajador !== null ){
-                //TRABAJADOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor == null && $tipotrabajador !== null ){
-                // CLIENTE Y TRABAJADOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //CLIENTE Y PROVEEDOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TRABAJADOR Y PROVEEDOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TODOS
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-
-            $persona->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -340,15 +231,14 @@ class ClienteController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'cliente');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $cliente = Personamaestro::find($id);
-            $persona = Persona::where('personamaestro_id','=',$id)->get()->first();
-            if(!is_null($persona)){
-                $persona->delete();
+            $cliente = Cliente::find($id);
+            if(!is_null($cliente)){
+                $cliente->delete();
             }
             $cliente->delete();
         });
@@ -363,7 +253,8 @@ class ClienteController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $mensaje=null;
+        $existe = Libreria::verificarExistencia($id, 'client6e');
         if ($existe !== true) {
             return $existe;
         }
@@ -371,92 +262,11 @@ class ClienteController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Personamaestro::find($id);
+        $modelo   = Cliente::find($id);
         $entidad  = 'cliente';
+        $cliente = null;
         $formData = array('route' => array('cliente.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
-    }
-
-    public function verificarpersona(Request $request){
-        $documento = $request->input('documento');
-        $tipo = $request->input('tipo');
-        $persona = null;
-
-        if($tipo == "dni"){
-            $persona = Personamaestro::where('dni', '=', $request->input('documento'))->first();
-        }else if($tipo == "ruc"){
-            $persona = Personamaestro::where('ruc', '=', $request->input('documento'))->first();
-        }
-
-        $distrito = null;
-        $departamento = null;
-        $provincia = null;
-
-        if($persona->distrito_id != null){
-            $distrito = Distrito::find($persona->distrito_id);
-            $provincia = Provincia::find($distrito->provincia_id);
-            $departamento = Departamento::find($provincia->departamento_id);
-        }
-
-        $user = Auth::user();
-        $empresa_id = $user->empresa_id;
-
-        $existe = Persona::where('empresa_id', '=', $empresa_id)
-                        ->where('personamaestro_id','=', $persona->id)->count('id');
-
-        if($persona != null && $distrito != null && $existe == 0){
-            return array(
-                'persona' => $persona,
-                'distrito' => $distrito,
-                'departamento' => $departamento,
-                'provincia' => $provincia,
-                'existe' => $existe,
-                        );
-        }else{
-            return array(
-                'existe' => $existe,
-                        );
-        }
-    }
-
-    public function repetido($id, $listarLuego){
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $listar = "SI";
-        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
-            $listar = $listarLuego;
-        }
-
-        $modelo   = Personamaestro::find($id);
-
-        if($modelo->distrito_id != null){
-            $distrito = Distrito::find($modelo->distrito_id);
-            $provincia = Provincia::find($distrito->provincia_id);
-            $departamento = Departamento::find($provincia->departamento_id);
-        }
-
-
-        $entidad  = 'cliente';
-        $formData = array('route' => array('cliente.guardarrepetido', $id), 'method' => 'POST', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        return view('app.personarepetida')->with(compact('modelo', 'distrito', 'provincia', 'departamento' , 'formData', 'entidad', 'listar'));
-    }
-
-    public function guardarrepetido(Request $request){
-
-        $persona_id = $request->input('persona_id');
-        
-        $error = DB::transaction(function() use($persona_id){
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $persona_id;
-            $persona->comision = 0;
-            $persona->type        = 'C';
-            $persona->save();
-        });
-        return is_null($error) ? "OK" : $error;
-
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
 }

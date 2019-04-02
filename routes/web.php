@@ -149,6 +149,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('trabajador/buscar','TrabajadorController@buscar')->name('trabajador.buscar');
     Route::get('trabajador/eliminar/{id}/{listarluego}','TrabajadorController@eliminar')->name('trabajador.eliminar');
     Route::resource('trabajador', 'TrabajadorController', array('except' => array('show')));
+    //Trabajador
+    Route::post('clientes/buscar','ClienteController@buscar')->name('clientes.buscar');
+    Route::get('clientes/eliminar/{id}/{listarluego}','ClienteController@eliminar')->name('clientes.eliminar');
+    Route::resource('clientes', 'ClienteController', array('except' => array('show')));
 
 });
 
