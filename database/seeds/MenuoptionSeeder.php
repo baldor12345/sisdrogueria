@@ -47,7 +47,7 @@ class MenuoptionSeeder extends Seeder
 			);
 		}
 
-		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Administración')->first()->id;
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Mantenimientos')->first()->id;
 
 		$datos = array(
 			array(
@@ -114,6 +114,35 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Distritos',
 					'link'   => 'distrito'
+				)
+			);
+
+		for ($i=0; $i < count($datos); $i++) { 
+			DB::table('menuoption')->insert(array(
+					'name'                 => $datos[$i]['name'],
+					'link'                   => $datos[$i]['link'],
+					'order'                  => $i+1,
+					'menuoptioncategory_id' => $menuoptioncategory_id,
+					'created_at'             => $now,
+					'updated_at'             => $now
+				)
+			);
+		}
+
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Movimientos')->first()->id;
+
+		$datos = array(
+				array(
+					'name' => 'Caja',
+					'link'   => 'caja'
+				),
+				array(
+					'name' => 'Ventas',
+					'link'   => 'ventas'
+				),
+				array(
+					'name' => 'Reportes',
+					'link'   => 'reportes'
 				)
 			);
 

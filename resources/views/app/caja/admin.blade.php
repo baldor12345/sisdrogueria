@@ -1,47 +1,3 @@
-<!-- Page-Title -->
-<?php
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Menuoption;
-use App\Movimiento;
-use App\OperacionMenu;
-use App\Sucursal;
-
-$user = Auth::user();
-$sucursal = Sucursal::find($user->sucursal_id);
-/*
-SELECT operacion_menu.operacion_id
-FROM  operacion_menu 
-inner join permiso_operacion
-on permiso_operacion.operacionmenu_id = operacion_menu.id
-where po.usertype_id = 4 and om.menuoption_id = 9
-*/
-/*$operaciones = DB::table('operacion_menu')
-					->join('permiso_operacion','operacion_menu.id','=','permiso_operacion.operacionmenu_id')
-					->select('operacion_menu.operacion_id')
-					->where([
-						['permiso_operacion.usertype_id','=',$user->usertype_id],
-						['operacion_menu.menuoption_id','=', 6 ],
-					])->get();*/
-$opcionmenu = Menuoption::where('link','=',$entidad)->orderBy('id','ASC')->first();
-$operaciones = OperacionMenu::join('permiso_operacion','operacion_menu.id','=','permiso_operacion.operacionmenu_id')
-					->select('operacion_menu.*')
-					->where([
-						['permiso_operacion.usertype_id','=',$user->usertype_id],
-						['operacion_menu.menuoption_id','=', $opcionmenu->id ],
-					])->get();					
-$operacionesnombres = array();
-foreach($operaciones as $key => $value){
-	$operacionesnombres[] = $value->operacion_id;
-}
-/*
-operaciones 
-1 nuevo
-2 editar
-3 eliminar
-*/
-?>
 
 <div class="row">
     <div class="col-sm-12">
@@ -67,24 +23,15 @@ operaciones
 				{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 				{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 				<div class="form-group">
-				@if($sucursal !== null)
-					@if($user->usertype_id == 3)
-						{!! Form::label('sucursal_id', 'Sucursal:') !!}
-						{!! Form::text('sucursalnombre', $sucursal->nombre , array('class' => 'form-control input-xs', 'id' => 'sucursalnombre' , 'readOnly')) !!}
-						{!! Form::hidden('sucursal_id', $user->sucursal_id , array('id' => 'sucursal_id')) !!}
-					@else
-						{!! Form::label('sucursal_id', 'Sucursal:') !!}
-						{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id' , 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
-					@endif
-				@else
-					{!! Form::label('sucursal_id', 'Sucursal:') !!}
-					{!! Form::select('sucursal_id', $cboSucursal, null, array('class' => 'form-control input-xs', 'id' => 'sucursal_id' , 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
-				@endif
+					{!! Form::label('titulo', 'Titulo:', array('class' => 'input-sm')) !!}
+					{!! Form::text('titulo', '', array('class' => 'form-control input-sm', 'id' => 'titulo')) !!}
 				</div>
 				<div class="form-group">
 					{!! Form::label('filas', 'Filas a mostrar:')!!}
 					{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 				</div>
+				{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-md', 'id' => 'btnBuscar1', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
+				{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Apertura Caja', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocaja', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
 				{!! Form::close() !!}
 			</div>
 			<div id="listado{{ $entidad }}"></div>

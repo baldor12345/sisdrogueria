@@ -16,7 +16,7 @@ class MenuoptioncategorySeeder extends Seeder
 
 		DB::table('menuoptioncategory')->insert(array(
 				array(
-					'name'     => 'Administración',
+					'name'     => 'Movimientos',
 					'order'      => 1,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -24,7 +24,7 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Personas',
+					'name'     => 'Mantenimientos',
 					'order'      => 2,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -32,8 +32,16 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Usuarios',
+					'name'     => 'Personas',
 					'order'      => 3,
+					'icon'      => 'fa fa-bank',
+					'position'      => 'V',
+					'created_at' => $now,
+					'updated_at' => $now
+				),
+				array(
+					'name'     => 'Usuarios',
+					'order'      => 4,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
 					'created_at' => $now,
