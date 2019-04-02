@@ -18,17 +18,17 @@ class Persona extends Model
     public function scopelistar($query, $nombre, $dni, $tipo_persona_id)
     {
         return $query->where(function($subquery) use($nombre, $dni, $tipo_persona_id)
-		            {
-                        if($tipo_persona_id == 0){
-                            $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni)->where('tipo_persona_id','=', 1);
-                        }else{
-                            if (!is_null($nombre)) {
-                                $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni)->where('tipo_persona_id','=',$tipo_persona_id);
-                            }
-                        }
-                    })
-                    ->where('deleted_at','=',null)
-        			->orderBy('nombres', 'ASC');
+            {
+                if($tipo_persona_id == 0){
+                    $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni);//->where('tipo_persona_id','=', 1);
+                }else{
+                    if (!is_null($nombre)) {
+                        $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni)->where('tipo_persona_id','=',$tipo_persona_id);
+                    }
+                }
+            })
+            ->where('deleted_at','=',null)
+            ->orderBy('nombres', 'ASC');
         			
     }
 

@@ -21,11 +21,11 @@
 						{!! Form::text('nombre', '', array('class' => 'form-control input-xs', 'id' => 'nombre')) !!}
 					</div>
 					<div class="form-group">
-						{!! Form::label('dni', 'Nombre:') !!}
+						{!! Form::label('dni', 'DNI:') !!}
 						{!! Form::text('dni', '', array('class' => 'form-control input-xs', 'id' => 'dni')) !!}
 					</div>
 					<div class="form-group">
-							{!! Form::label('cbotipo_persona', 'Departamento: ', array('class' => 'aval')) !!}
+							{!! Form::label('cbotipo_persona', 'Tipo trabajador: ', array('class' => 'aval')) !!}
 							{!! Form::select('cbotipo_persona', $cbotipo_personas, 0, array('class' => 'form-control input-sm', 'id' => 'cbotipo_persona')) !!}
 					</div>
 					<div class="form-group">
