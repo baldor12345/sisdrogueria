@@ -18,6 +18,7 @@ class CrearTablaVenta extends Migration
             $table->integer('cantidad')->nullable();
             $table->decimal('precio_unitario',20, 2)->nullable();
             $table->decimal('descuento',20, 2)->nullable();
+            $table->decimal('importe',20, 2)->nullable();
             $table->string('descripcion', 400)->nullable();
             $table->timestamp('fecha_hora')->nullable();
             $table->char('estado', 1)->nullable();// A=>abierto; C=>cerrado
