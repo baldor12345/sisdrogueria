@@ -163,30 +163,19 @@ class ClienteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id, Request $request)
-    { 
-        $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas = array(
-            'dni'       => 'required|max:8',
-            'nombres'    => 'required|max:100',
-            'apellidos'    => 'required|max:100',
-            );
-            $mensajes   = array();
-            $validacion = Validator::make($request->all(), $reglas, $mensajes);
-        if ($validacion->fails()) {
-            return $validacion->messages()->toJson();
+    {   
+         $existe = Libreria::verificarExistencia($id, 'cliente');
+        if ($existe !== true) {
+            return $existe;
         }
-        $error = DB::transaction(function() use($request){
-            $cliente  =Cliente::find($id);
-            $cliente->dni        = $request->input('dni');
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->telefono    = $request->input('telefono');
-            $cliente->celular     = $request->input('celular');
-            $cliente->email       = $request->input('email');
-            $cliente->save();
-        });
-        return is_null($error) ? "OK" : $error;
+        $listar         = Libreria::getParam($request->input('listar'), 'NO');
+        $cliente        = Cliente::find($id);
+        $entidad        = 'Cliente';
+        $formData       = array('clientes.update', $id);
+        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton          = 'Modificar';
+        $accion = 1;
+        return view($this->folderview.'.mant')->with(compact( 'accion' , 'cliente', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     /**
