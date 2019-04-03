@@ -229,7 +229,7 @@ class ClienteController extends Controller
             if(!is_null($cliente)){
                 $cliente->delete();
             }
-            $cliente->delete();
+           
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -243,7 +243,7 @@ class ClienteController extends Controller
     public function eliminar($id, $listarLuego)
     {
         $mensaje=null;
-        $existe = Libreria::verificarExistencia($id, 'client6e');
+        $existe = Libreria::verificarExistencia($id, 'cliente');
         if ($existe !== true) {
             return $existe;
         }
@@ -252,9 +252,9 @@ class ClienteController extends Controller
             $listar = $listarLuego;
         }
         $modelo   = Cliente::find($id);
-        $entidad  = 'cliente';
+        $entidad  = 'Cliente';
         $cliente = null;
-        $formData = array('route' => array('cliente.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData = array('route' => array('clientes.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }

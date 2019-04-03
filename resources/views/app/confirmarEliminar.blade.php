@@ -1,7 +1,7 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($modelo, $formData) !!}
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-<blockquote><p class="text-danger">{{ ($mensaje ==null?"¿Esta seguro de eliminar el registro? ALEX":$mensaje) }}</p></blockquote>
+<blockquote><p class="text-danger">{{ ($mensaje ==null?"¿Esta seguro de eliminar el registro?":$mensaje) }}</p></blockquote>
 <div class="form-group">
 	<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 		@if($mensaje == null)
