@@ -208,10 +208,6 @@ class TipopersonaController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        // $distritos = count(Distrito::where('provincia_id', '=', $id)->where('deleted_at','=',null)->get());
-        // if($distritos > 0){
-        //     $mensaje = "No se puede eliminar, existen registros en la tabla distritos relacionados con esta provincia";
-        // }
         $listar = "NO";
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;

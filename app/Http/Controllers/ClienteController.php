@@ -253,7 +253,7 @@ class ClienteController extends Controller
         }
         $modelo   = Cliente::find($id);
         $entidad  = 'Cliente';
-        $cliente = null;
+     
         $formData = array('route' => array('clientes.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
