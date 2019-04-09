@@ -32,15 +32,15 @@
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('email', 'Email:', array('class' => 'control-label')) !!}
-			{!! Form::text('email', null, array('class' => 'form-control input-xs', 'id' => 'email', 'placeholder' => 'Ingrese correo electronico')) !!}
+		{!! Form::text('email', null, array('class' => 'form-control input-xs', 'id' => 'email', 'placeholder' => 'Ingrese correo electronico')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6">
 		{!! Form::label('fecha_nacimiento', 'Fecha de nacimiento: ', array('class' => '')) !!}
-		{!! Form::date('fecha_nacimiento', null, array('class' => 'form-control input-xs', 'id' => 'fecha_nacimiento', 'placeholder' => '')) !!}
+		{!! Form::date('fecha_nacimiento', $trabajador ==null?$fecha_default:$trabajador->fecha_nacimiento, array('class' => 'form-control input-xs', 'id' => 'fecha_nacimiento', 'placeholder' => '')) !!}
 </div>
 <div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('fecha_ingreso', 'Fecha de ingreso: ', array('class' => '')) !!}
-		{!! Form::date('fecha_ingreso', null, array('class' => 'form-control input-xs', 'id' => 'fecha_ingreso', 'placeholder' => '')) !!}
+		{!! Form::date('fecha_ingreso', $trabajador ==null?$fecha_default:$detalle_trabajador->fecha_ingreso, array('class' => 'form-control input-xs', 'id' => 'fecha_ingreso', 'placeholder' => '')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('cboTipoPersona', 'Sucursal: ', array('class' => '')) !!}
@@ -57,7 +57,7 @@
 
 <div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 	{!! Form::label('observacion', 'Observación:', array('class' => 'control-label')) !!}
-		{!! Form::text('observacion', null, array('class' => 'form-control input-xs', 'id' => 'observacion', 'placeholder' => 'Ingrese una observacion')) !!}
+		{!! Form::text('observacion', $trabajador != null? $trabajador->observacion:'' , array('class' => 'form-control input-xs', 'id' => 'observacion', 'placeholder' => 'Ingrese una observacion')) !!}
 </div>
 <div class="form-group ">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">

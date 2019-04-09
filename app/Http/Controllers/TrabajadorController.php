@@ -118,8 +118,9 @@ class TrabajadorController extends Controller
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
         $accion = 0;
+        $fecha_default = date('Y-m-d');
         $cboTipo_personas = ['' =>'Seleccione'] + Tipo_persona::pluck('titulo', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('accion' ,'trabajador', 'formData', 'entidad', 'boton', 'cboestados', 'listar','cboSucursales','detalle_trabajador','cboTipo_personas'));
+        return view($this->folderview.'.mant')->with(compact('accion','fecha_default' ,'trabajador', 'formData', 'entidad', 'boton', 'cboestados', 'listar','cboSucursales','detalle_trabajador','cboTipo_personas'));
     }
 
     /**
@@ -194,15 +195,16 @@ class TrabajadorController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $listar         = Libreria::getParam($request->input('listar'), 'NO');
+        $listar = Libreria::getParam($request->input('listar'), 'NO');
         $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
-        $cliente        = Persona::find($id);
-        $entidad        = 'Trabajador';
+        $trabajador = Persona::find($id);
+        $entidad = 'Trabajador';
+        $detalle_trabajador = Detalle_persona::where('person_id','=',$id)->where('fecha_salida','=',null)->where('deleted_at','=',null)[0];
         $formData       = array('trabajador.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
         $accion = 1;
-        return view($this->folderview.'.mant')->with(compact( 'accion' , 'cliente', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
+        return view($this->folderview.'.mant')->with(compact( 'accion' , 'trabajador', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito','detalle_trabajador'));
     }
 
     /**

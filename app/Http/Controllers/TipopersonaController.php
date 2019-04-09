@@ -97,7 +97,7 @@ class TipopersonaController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas     = array('titulo' => 'required|max:50');
+        $reglas     = array('titulo' => 'required|max:50|unique:tipo_persona');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -160,7 +160,7 @@ class TipopersonaController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('titulo' => 'required|max:50');
+        $reglas     = array('titulo' => 'required|max:50|unique:tipo_persona');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
