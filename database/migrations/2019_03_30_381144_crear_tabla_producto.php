@@ -16,6 +16,7 @@ class CrearTablaProducto extends Migration
         Schema::create('producto', function (Blueprint $table) {
             $table->increments('id');
             $table->string('codigo',100)->nullable();
+            $table->string('codigo_barra',100)->nullable();
             $table->string('descripcion',100)->nullable();//ACAROBOSA 50MG 30 TABLETAS
             $table->string('sustancia_activa',100)->nullable();//ACAROBOSA, 
             $table->string('uso_terapeutico',100)->nullable();//ANTHIPERTENSIVO, PARA PRESION ALTA
@@ -27,8 +28,6 @@ class CrearTablaProducto extends Migration
             $table->integer('unidad_id')->unsigned()->nullable();//MG LTRS,
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)
             $table->integer('stock_minimo')->nullable();
-            $table->string('concentracion', 10,2)->nullable();//50 MG //CONCENTRACION POR UNIDAD
-            $table->integer('unidad_presentacion')->nullable();//5 POR TABLETAS
             $table->integer('existencia')->nullable();
 
             $table->char('estado', 1)->nullable();// check
@@ -36,24 +35,14 @@ class CrearTablaProducto extends Migration
 
 
             $table->decimal('costo',10,2)->nullable();//precio por la unidad de medida
-            $table->decimal('precio_publico',10,2)->nullable();//precio al publico
-
-            $table->timestamp('fecha_llegada')->nullable();
-            $table->timestamp('fecha_caducidad')->nullable();
+            $table->decimal('precio_publico',10,2)->nullable();//precio al publico            
             
-            
-             
-            
-            $table->integer('sucursal_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('lote_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('unidad_id')->references('id')->on('unidad')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('lote_id')->references('id')->on('lote')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

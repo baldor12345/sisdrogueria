@@ -132,7 +132,6 @@ class ProveedorController extends Controller
             'persona_contacto'    => 'required|max:100',
             'telefono'    => 'required|max:100',
             'celular'    => 'required|max:15',
-            'fecha'    => 'required',
             'distrito_id'    => 'required',
         );
         $validacion = Validator::make($request->all(),$reglas);
@@ -142,13 +141,12 @@ class ProveedorController extends Controller
         $error = DB::transaction(function() use($request){
             $proveedor               = new Proveedor();
             $proveedor->nombre     = strtoupper($request->input('nombre'));
+            $proveedor->ruc     = strtoupper($request->input('ruc'));
             $proveedor->direccion   = $request->input('direccion');
             $proveedor->persona_contacto = $request->input('persona_contacto'); 
             $proveedor->telefono    = $request->input('telefono');
             $proveedor->celular     = $request->input('celular');
-            $proveedor->fecha       = $request->input('fecha');
             $proveedor->estado       = $request->input('estado');
-            $proveedor->descripcion       = $request->input('descripcion');
             $proveedor->distrito_id  = $request->input('distrito_id');
             $proveedor->save();
         });
@@ -208,7 +206,6 @@ class ProveedorController extends Controller
             'persona_contacto'    => 'required|max:100',
             'telefono'    => 'required|max:100',
             'celular'    => 'required|max:15',
-            'fecha'    => 'required',
             'distrito_id'    => 'required',
         );
         $validacion = Validator::make($request->all(),$reglas);
@@ -218,13 +215,12 @@ class ProveedorController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $proveedor               = Proveedor::find($id);
             $proveedor->nombre     = strtoupper($request->input('nombre'));
+            $proveedor->ruc     = strtoupper($request->input('ruc'));
             $proveedor->direccion   = $request->input('direccion');
             $proveedor->persona_contacto = $request->input('persona_contacto'); 
             $proveedor->telefono    = $request->input('telefono');
             $proveedor->celular     = $request->input('celular');
-            $proveedor->fecha       = $request->input('fecha');
             $proveedor->estado       = $request->input('estado');
-            $proveedor->descripcion       = $request->input('descripcion');
             $proveedor->distrito_id  = $request->input('distrito_id');
             $proveedor->save();
         });

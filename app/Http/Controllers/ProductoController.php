@@ -68,9 +68,7 @@ class ProductoController extends Controller
         $cabecera[]       = array('valor' => 'Codigo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Precio venta', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Disponible', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Fecha de Caducidad', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Marca', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Unidad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
@@ -122,7 +120,6 @@ class ProductoController extends Controller
         $cboUnidad      = array(0=>'Seleccione Unidad...');
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
-        $cboSucursal    = array(0=>'Seleccione Sucursal...');
         $formData       = array('producto.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
@@ -148,20 +145,12 @@ class ProductoController extends Controller
             'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
             'costo'    => 'required',
-            'concentracion'    => 'required',
-            'unidad_presentacion'    => 'required',
             'stock_minimo'    => 'required',
-            'existencia'    => 'required',
-            'precio_publico'    => 'required',
-            'fecha_llegada' => 'required',
-            'fecha_caducidad' => 'required',
 
             'tipo' => 'required',
             'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
-            'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
-            'sucursal_id' => 'required|integer|exists:Sucursal,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -169,18 +158,14 @@ class ProductoController extends Controller
         }
         $error = DB::transaction(function() use($request){
             $producto               = new Producto();
-            $producto->codigo = strtoupper($request->input('codigo'));
+            $producto->codigo = $request->input('codigo');
+            $producto->codigo_barra = $request->input('codigo_barra');
             $producto->descripcion = $request->input('descripcion');
             $producto->sustancia_activa = $request->input('sustancia_activa');
             $producto->uso_terapeutico = $request->input('uso_terapeutico');
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
-            $producto->concentracion = $request->input('concentracion');
-            $producto->unidad_presentacion = $request->input('unidad_presentacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->existencia = $request->input('existencia');
-            $producto->fecha_llegada = $request->input('fecha_llegada').date(" H:i:s");
-            $producto->fecha_caducidad = $request->input('fecha_caducidad');
             $producto->costo = $request->input('costo');
             $producto->precio_publico = $request->input('precio_publico');
 
@@ -188,7 +173,6 @@ class ProductoController extends Controller
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
             $producto->proveedor_id = $request->input('proveedor_id');
-            $producto->sucursal_id = $request->input('sucursal_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();
@@ -224,7 +208,7 @@ class ProductoController extends Controller
         $cboCategoria = array('' => 'Seleccione') + Categoria::pluck('name', 'id')->all();
         $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
         $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
-        $cboSucursal    = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
+        //$cboSucursal    = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
@@ -254,18 +238,12 @@ class ProductoController extends Controller
             'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
             'costo'    => 'required',
-            'concentracion'    => 'required',
-            'unidad_presentacion'    => 'required',
             'stock_minimo'    => 'required',
-            'existencia'    => 'required',
             'precio_publico'    => 'required',
-            'fecha_llegada' => 'required',
-            'fecha_caducidad' => 'required',
             'marca_id' => 'required',
             'categoria_id' => 'required',
             'unidad_id' => 'required',
             'proveedor_id' => 'required',
-            'sucursal_id' => 'required',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -273,18 +251,14 @@ class ProductoController extends Controller
         } 
         $error = DB::transaction(function() use($request, $id){
             $producto                 = Producto::find($id);
-            $producto->codigo = strtoupper($request->input('codigo'));
+            $producto->codigo = $request->input('codigo');
+            $producto->codigo_barra = $request->input('codigo_barra');
             $producto->descripcion = $request->input('descripcion');
             $producto->sustancia_activa = $request->input('sustancia_activa');
             $producto->uso_terapeutico = $request->input('uso_terapeutico');
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
-            $producto->concentracion = $request->input('concentracion');
-            $producto->unidad_presentacion = $request->input('unidad_presentacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->existencia = $request->input('existencia');
-            $producto->fecha_llegada = $request->input('fecha_llegada').date(" H:i:s");
-            $producto->fecha_caducidad = $request->input('fecha_caducidad');
             $producto->costo = $request->input('costo');
             $producto->precio_publico = $request->input('precio_publico');
 
@@ -292,7 +266,6 @@ class ProductoController extends Controller
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
             $producto->proveedor_id = $request->input('proveedor_id');
-            $producto->sucursal_id = $request->input('sucursal_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();

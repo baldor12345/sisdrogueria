@@ -12,6 +12,12 @@
 </div>
 
 <div class="form-group col-sm-12">
+	{!! Form::label('ruc', 'Ruc:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::text('ruc', null, array('class' => 'form-control input-xs', 'id' => 'ruc', 'placeholder' => 'Ingrese Direccion')) !!}
+	</div>
+</div>
+<div class="form-group col-sm-12">
 	{!! Form::label('direccion', 'Direccion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
 		{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese Direccion')) !!}
@@ -48,19 +54,6 @@
 	</div>
 </div>
 
-<div class="form-group col-sm-12">
-	{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha', 'placeholder' => 'Ingrese Descripcion')) !!}
-	</div>
-	<?php
-			if($proveedor != null){
-				echo "<input type='hidden' id='fechaTemp' value='".Date::parse($proveedor->fecha )->format('d/m/Y')."'>";
-			}else{
-				echo "<input type='hidden' id='fechaTemp' value=''>";
-			}
-		?>
-</div>
 
 <div class="form-group col-sm-12">
 	{!! Form::label('distrito_id', 'Distrito:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
@@ -69,12 +62,6 @@
 	</div>
 </div>
 
-<div class="form-group col-sm-12">
-	{!! Form::label('descripcion', 'Descripcion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese Descripcion')) !!}
-	</div>
-</div>
 
 <div class="form-group">
 	<div class="col-sm-12 text-right">
@@ -90,20 +77,6 @@
 		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="nombre"]').focus();
 		configurarAnchoModal('500');
-		var fechaActual = new Date();
-		var day = ("0" + fechaActual.getDate()).slice(-2);
-		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-		var fecha = (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-		$('#fecha').val(fecha);
-		if($('#fechaTemp').val() !== ""){
-			// DD/MM/YYYY
-			var valores_fecha = $('#fechaTemp').val().split('/');
-			//yyy/MM/DD
-			var fecha_lleg = valores_fecha[2] + "-" + valores_fecha[1] + "-" + valores_fecha[0];
-			$('#fecha').val(fecha_lleg);
-		}else{
-			$('#fecha').val(fecha);
-		}
 
 		$('.input-number').on('input', function () { 
 				this.value = this.value.replace(/[^0-9]/g,'');
