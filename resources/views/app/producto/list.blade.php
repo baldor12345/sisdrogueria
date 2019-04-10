@@ -21,8 +21,6 @@
 				<td>{{ $value->codigo }} </td>
 				<td>{{ $value->descripcion }} </td>
 				<td>{{ $value->precio_publico }}</td>
-				<td>{{ $value->existencia }} </td>
-				<td>{{ Date::parse( $value->fecha_caducidad )->format('Y-m-d') }} </td>
 				<td>{{ $value->marca->name }}</td>
 				<td>{{ $value->unidad->name }}</td>
 				<td>{{ $value->categoria->name }}</td>

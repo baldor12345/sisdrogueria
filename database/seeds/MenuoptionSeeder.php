@@ -51,6 +51,10 @@ class MenuoptionSeeder extends Seeder
 
 		$datos = array(
 			array(
+				'name' => 'Propiedades',
+				'link'   => 'propiedades'
+			),
+			array(
 				'name' => 'Sucursales',
 				'link'   => 'sucursal'
 			),
@@ -67,7 +71,7 @@ class MenuoptionSeeder extends Seeder
 				'link'   => 'marca'
 			),
 			array(
-				'name' => 'Unidades de Medida',
+				'name' => 'Unidades',
 				'link'   => 'unidad'
 			),
 			array(
@@ -135,6 +139,10 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Caja',
 					'link'   => 'caja'
+				),
+				array(
+					'name' => 'Compras',
+					'link'   => 'compras'
 				),
 				array(
 					'name' => 'Ventas',
