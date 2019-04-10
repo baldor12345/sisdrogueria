@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
-class Caja extends Model
+class Compra extends Model
 {
     use SoftDeletes;
-    protected $table = 'caja';
+    protected $table = 'compra';
     protected $dates = ['deleted_at'];
     /**
      * Método para listar
@@ -22,15 +22,9 @@ class Caja extends Model
      * @param  string $name  nombre
      * @return sql        sql
      */
-    public function user(){
-        return $this->belongsTo('App\User', 'user_id');
+    public function producto(){
+        return $this->belongsTo('App\Producto', 'producto_id');
     } 
-
-    public static function getIdUser()
-    {
-        $id = Auth::id();
-        return $id;
-    }
 
     public function scopelistar($query, $titulo)
     {
@@ -55,7 +49,7 @@ class Caja extends Model
             $binnacle->date      = date('Y-m-d H:i:s');
             $binnacle->ip         = Libreria::get_client_ip();
             $binnacle->user_id =  Auth::user()->id;
-            $binnacle->table      = 'caja';
+            $binnacle->table      = 'compra';
             $binnacle->detail    = $producto->toJson(JSON_UNESCAPED_UNICODE);
             $binnacle->recordid = $producto->id;
             $binnacle->save();
@@ -68,7 +62,7 @@ class Caja extends Model
             $binnacle->date      = date('Y-m-d H:i:s');
             $binnacle->ip         = Libreria::get_client_ip();
             $binnacle->user_id = Auth::user()->id;
-            $binnacle->table      = 'caja';
+            $binnacle->table      = 'compra';
             $binnacle->detail    =$producto->toJson(JSON_UNESCAPED_UNICODE);
             $binnacle->recordid = $producto->id;
             $binnacle->save();
@@ -80,10 +74,12 @@ class Caja extends Model
             $binnacle->date      = date('Y-m-d H:i:s');
             $binnacle->ip         = Libreria::get_client_ip();
             $binnacle->user_id = Auth::user()->id;
-            $binnacle->table      = 'caja';
+            $binnacle->table      = 'compra';
             $binnacle->detail    = $producto->toJson(JSON_UNESCAPED_UNICODE);
             $binnacle->recordid = $producto->id;
             $binnacle->save();
         });
     }
+
+
 }
