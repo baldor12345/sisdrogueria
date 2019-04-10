@@ -141,6 +141,10 @@ class MenuoptionSeeder extends Seeder
 					'link'   => 'caja'
 				),
 				array(
+					'name' => 'Compras',
+					'link'   => 'compras'
+				),
+				array(
 					'name' => 'Ventas',
 					'link'   => 'ventas'
 				),
