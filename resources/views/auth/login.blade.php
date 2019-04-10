@@ -1,3 +1,8 @@
+<?php
+use App\Sucursal;
+$cboSucursales = Sucursal::pluck('nombre', 'id')->all();
+?>
+
 @include('auth.header')
 <div class="wrapper-page">
     <div class="card-box">
@@ -15,6 +20,10 @@
                 </ul>
             </div>
             @endif
+            <div class="form-group col-12 col-md-12">
+                {!! Form::label('cboSucursal', 'Sucursal: ', array('class' => 'aval')) !!}
+                {!! Form::select('cboSucursal', $cboSucursales, 1 , array('class' => 'form-control input-sm', 'id' => 'cboSucursal')) !!}
+            </div>
             <div class="form-group">
                 <div class="col-xs-12">
                     <input name="login" class="form-control" type="text" required="" placeholder="Usuario">
@@ -56,3 +65,4 @@
     </div>
 </div>
 @include('auth.footer')
+

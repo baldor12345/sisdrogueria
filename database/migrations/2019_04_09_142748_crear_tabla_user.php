@@ -13,7 +13,7 @@ class CrearTablaUser extends Migration
      */
     public function up()
     {
-        
+         
         Schema::create('user', function (Blueprint $table) {
             $table->increments('id');
             $table->string('login', 20)->unique();
@@ -21,8 +21,10 @@ class CrearTablaUser extends Migration
             $table->char('state', 1)->default('H');
             $table->integer('usertype_id')->unsigned();
             $table->integer('person_id')->unsigned();
+            $table->integer('sucursal_id')->unsigned();
             $table->foreign('usertype_id')->references('id')->on('usertype')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('person_id')->references('id')->on('person')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('restrict');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
@@ -39,3 +41,4 @@ class CrearTablaUser extends Migration
         Schema::dropIfExists('user');
     }
 }
+

@@ -23,21 +23,21 @@ class CrearTablaProducto extends Migration
             $table->integer('proveedor_id')->unsigned()->nullable();
             $table->integer('marca_id')->unsigned()->nullable();//MARCA O LABORATORIO
             $table->string('ubicacion',100)->nullable();
-
+        
             $table->integer('unidad_id')->unsigned()->nullable();//MG LTRS,
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)
             $table->integer('stock_minimo')->nullable();
             $table->string('concentracion', 10,2)->nullable();//50 MG //CONCENTRACION POR UNIDAD
             $table->integer('unidad_presentacion')->nullable();//5 POR TABLETAS
             $table->integer('existencia')->nullable();
-
+        
             $table->char('estado', 1)->nullable();// check
             $table->char('refrigerado', 1)->nullable();//check
-
-
+        
+        
             $table->decimal('costo',10,2)->nullable();//precio por la unidad de medida
             $table->decimal('precio_publico',10,2)->nullable();//precio al publico
-
+        
             $table->timestamp('fecha_llegada')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();
             

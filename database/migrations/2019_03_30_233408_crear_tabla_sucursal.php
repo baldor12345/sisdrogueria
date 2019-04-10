@@ -35,3 +35,4 @@ class CrearTablaSucursal extends Migration
         Schema::dropIfExists('sucursal');
     }
 }
+
