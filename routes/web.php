@@ -121,9 +121,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('caja', 'CajaController', array('except' => array('show')));
     
     //VENTA
-    Route::post('venta/buscar','VentaController@buscar')->name('venta.buscar');
-    Route::get('venta/eliminar/{id}/{listarluego}','VentaController@eliminar')->name('venta.eliminar');
-    Route::resource('venta', 'VentaController', array('except' => array('show')));
+    Route::post('ventas/buscar','VentasController@buscar')->name('ventas.buscar');
+    Route::get('ventas/eliminar/{id}/{listarluego}','VentasController@eliminar')->name('ventas.eliminar');
+    Route::resource('ventas', 'VentasController', array('except' => array('show')));
 
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
