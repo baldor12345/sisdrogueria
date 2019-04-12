@@ -57,7 +57,7 @@ class CompraController extends Controller
         $proveedor      = Libreria::getParam($request->input('proveedor'));
         $fechai      = Libreria::getParam($request->input('fechai'));
         $fechaf      = Libreria::getParam($request->input('fechaf'));
-        $resultado        = Producto::listar($numero, $proveedor, $fechai, $fechaf);
+        $resultado        = Compra::listarcompra($numero, $proveedor, $fechai, $fechaf);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');

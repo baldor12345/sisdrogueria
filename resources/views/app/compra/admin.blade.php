@@ -19,7 +19,7 @@
     <div class="col-sm-12">
         <div class="card-box table-responsive">
 
-            <div class="row m-b-10">
+            <div class="row m-b-5">
                 <div class="col-sm-12">
 					{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
@@ -59,6 +59,13 @@
 </div>
 <script>
 	$(document).ready(function () {
+		var fechaActual = new Date();
+		var day = ("0" + fechaActual.getDate()).slice(-2);
+		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
+		var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
+		var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
+		$('#fechai').val(fechai);
+		$('#fechaf').val(fechaf);
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="name"]').keyup(function (e) {
@@ -67,5 +74,6 @@
 				buscar('{{ $entidad }}');
 			}
 		});
+
 	});
 </script>

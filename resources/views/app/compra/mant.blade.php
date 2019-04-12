@@ -203,13 +203,13 @@ function agregar(){
 								'</tr>';
 							$("#tabla").append(d);
 							//vaciar datos
-							//$('#producto_id').val(0);
-							//$('#producto_id').value="Seleccione Producto...";
-							//$('#preciocompra').val("");
-							//$('#precioventa').val("");
-							//$('#cantidad').val("");
-							//$('#fechavencimiento').val("");
-							//$('#lote').val("");
+							$('#producto_id').val(0);
+							$('#producto_id').value="Seleccione Producto...";
+							$('#preciocompra').val("");
+							$('#precioventa').val("");
+							$('#cantidad').val("");
+							$('#fechavencimiento').val("");
+							$('#lote').val("");
 						}else{
 							window.alert("ingrese lote!");
 							$('#lote').focus();
