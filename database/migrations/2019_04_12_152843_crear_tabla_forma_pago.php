@@ -15,7 +15,9 @@ class CrearTablaFormaPago extends Migration
     {
         Schema::create('forma_pago', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('nombre', 150)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
