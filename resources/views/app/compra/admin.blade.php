@@ -25,15 +25,27 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						{!! Form::label('name', 'Nombre:') !!}
-						{!! Form::text('name', '', array('class' => 'form-control input-xs', 'id' => 'name')) !!}
+						<label for="numero" class="input-sm">Nro:</label>
+						{!! Form::text('numero', '', array('class' => 'form-control input-sm', 'id' => 'numero')) !!}
 					</div>
 					<div class="form-group">
-						{!! Form::label('filas', 'Filas a mostrar:')!!}
-						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-xs', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+						<label for="proveedor" class="input-sm">Proveedor:</label>
+						{!! Form::text('proveedor', '', array('class' => 'form-control input-sm', 'id' => 'proveedor')) !!}
 					</div>
-					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-md', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
-					{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
+					<div class="form-group">
+						<label for="fechai" class="input-sm">Fecha Inicio:</label>
+						{!! Form::date('fechai', '', array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
+					</div>
+					<div class="form-group">
+						<label for="fechaf" class="input-sm">Fecha Fin:</label>
+						{!! Form::date('fechaf', '', array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
+					</div>
+					<div class="form-group">
+						<label for="filas" class="input-sm">Filas a Mostrar:</label>
+						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+					</div>
+					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-xs', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
+					{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-xs', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
 					{!! Form::close() !!}
 		 		</div>
             </div>

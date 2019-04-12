@@ -31,10 +31,12 @@ class CrearTablaCompra extends Migration
             $table->decimal('igv',10,2)->nullable();//precio por la unidad de medida
             
             $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('caja_id')->unsigned()->nullable();
+            //$table->integer('caja_id')->unsigned()->nullable();
+            $table->integer('sucursal_id')->unsigned()->nullable();
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('caja_id')->references('id')->on('caja')->onDelete('restrict')->onUpdate('restrict');
+            //$table->foreign('caja_id')->references('id')->on('caja')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

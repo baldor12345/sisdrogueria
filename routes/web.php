@@ -119,6 +119,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('caja/buscar','CajaController@buscar')->name('caja.buscar');
     Route::get('caja/eliminar/{id}/{listarluego}','CajaController@eliminar')->name('caja.eliminar');
     Route::resource('caja', 'CajaController', array('except' => array('show')));
+
+    //COMPRA
+    Route::post('compra/buscar','CompraController@buscar')->name('compra.buscar');
+    Route::get('compra/eliminar/{id}/{listarluego}','CompraController@eliminar')->name('compra.eliminar');
+    Route::resource('compra', 'CompraController', array('except' => array('show')));
+    Route::get('compra/listproveedores',  'CompraController@listproveedores')->name('compra.listproveedores');
+    Route::get('compra/listproductos',  'CompraController@listproductos')->name('compra.listproductos');
+    
     
     //VENTA
     Route::post('venta/buscar','VentaController@buscar')->name('venta.buscar');

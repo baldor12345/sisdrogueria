@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MarcaSeeder::class);
         $this->call(UnidadSeeder::class);
         $this->call(PropiedadesSeeder::class);
+        $this->call(CajaSeeder::class);
         //$this->call(LaboratorioSeeder::class);
 
     }
