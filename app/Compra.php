@@ -40,7 +40,6 @@ class Compra extends Model
     public static function listarcompra($numero, $proveedor, $fechai, $fechaf){
         return  DB::table('compra')
                 ->join('proveedor', 'compra.proveedor_id', '=', 'proveedor.id')
-                ->join('detalle_compra', 'detalle_compra.compra_id', '=', 'compra.id')
                 ->select(
                         'compra.id as compra_id', 
                         'compra.fecha as compra_fecha', 
@@ -56,6 +55,18 @@ class Compra extends Model
                 ->where('compra.fecha', '<=', $fechaf)
                 ->where('compra.deleted_at',null)
                 ->orderBy('compra.fecha', 'DSC');
+    }
+    public static function listardetallecompra($id){
+        return  DB::table('detalle_compra')
+                ->join('producto', 'detalle_compra.producto_id', '=', 'producto.id')
+                ->select(
+                        'producto.descripcion as descripcion', 
+                        'detalle_compra.fecha_caducidad as fecha_caducidad', 
+                        'detalle_compra.cantidad as cantidad', 
+                        'detalle_compra.precio_compra as precio_compra'
+                )
+                ->where('detalle_compra.compra_id', '=', $id)
+                ->where('detalle_compra.deleted_at',null);
     }
 
 

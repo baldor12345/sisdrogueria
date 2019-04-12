@@ -126,6 +126,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('compra', 'CompraController', array('except' => array('show')));
     Route::get('compra/listproveedores',  'CompraController@listproveedores')->name('compra.listproveedores');
     Route::get('compra/listproductos',  'CompraController@listproductos')->name('compra.listproductos');
+    Route::get('compra/verdetalle/{id?}',  'CompraController@verdetalle')->name('compra.verdetalle');
     
     
     //VENTA

@@ -70,7 +70,7 @@
 			<div class="form-group" >
 				{!! Form::label('numero_dias', 'Nro Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs', 'id' => 'numero_dias', 'placeholder' => 'Ingrese descripcion')) !!}
+					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -99,6 +99,16 @@
 				{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-sm', 'id' => 'proveedor_id')) !!}
+				</div>
+			</div>
+			<div class="form-group" >
+				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+					{!! Form::text('igv', $igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
 				</div>
 			</div>
 			<br>
@@ -193,15 +203,23 @@ function agregar(){
 						if(lote!=""){
 							var subtotal ="";
 							subtotal = parseInt(cantidad)*parseFloat(preciocompra);
+							var t_parcial =0;
+							if($('#total').val() != ""){
+								t_parcial = parseFloat($('#total').val());
+							}else{
+								t_parcial=0;
+							}
+							var total = t_parcial+subtotal;
 							var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 								'<td class="input-sm" width="50%">'+producto_dat+'</td>'+
 								'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
 								'<td class="input-sm" width="10%" align="center">'+cantidad+'</td>'+
 								'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
 								'<td class="input-sm" width="15%" align="center">'+subtotal+'</td>'+
-								'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar" class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+								'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 								'</tr>';
 							$("#tabla").append(d);
+							$('#total').val(total);
 							//vaciar datos
 							$('#producto_id').val(0);
 							$('#producto_id').value="Seleccione Producto...";
@@ -237,7 +255,7 @@ function agregar(){
 	
 }
 
-function quitar(t){
+function quitar(t, subtotal){
 	var mensaje;
     var opcion = confirm("Desea ELiminar el producto registrado?");
     if (opcion == true) {
@@ -245,7 +263,10 @@ function quitar(t){
 		var tr = td.parentNode;
 		var table = tr.parentNode;
 		table.removeChild(tr);
+		var total_parcial = parseFloat($('#total').val());
+		$('#total').val(parseFloat(total_parcial)-subtotal);
 	}
+
 }
 
 function guardar_compra(entidad, idboton) {

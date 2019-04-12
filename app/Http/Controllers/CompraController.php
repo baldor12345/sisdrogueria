@@ -23,13 +23,15 @@ class CompraController extends Controller
     protected $tituloRegistrar = 'Registrar Compra';
     protected $tituloModificar = 'Modificar Compra';
     protected $tituloEliminar  = 'Eliminar Compra';
+    protected $titulo_ver  = 'Detalle de Compra';
     protected $rutas           = array('create' => 'compra.create', 
             'edit'          => 'compra.edit', 
             'delete'        => 'compra.eliminar',
             'search'        => 'compra.buscar',
             'index'         => 'compra.index',
+            'verdetalle'         => 'compra.verdetalle',
             'listproveedores'    => 'compra.listproveedores',
-            'listproductos'    => 'compra.listproductos',
+            'listproductos'    => 'compra.listproductos'
         );
 
     /**
@@ -70,6 +72,7 @@ class CompraController extends Controller
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
+        $titulo_ver  = $this->titulo_ver;
         $ruta             = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -80,7 +83,7 @@ class CompraController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta','titulo_ver'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -265,6 +268,26 @@ class CompraController extends Controller
         });
         return is_null($error) ? "OK" : $error;
     }
+    //para vista de ver detalle
+    public function verdetalle($id, Request $request)
+    {
+        $existe = Libreria::verificarExistencia($id, 'compra');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = Libreria::getParam($request->input('listar'), 'NO');
+        $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
+        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
+        $compra       = Compra::find($id);
+        $list_detalle_c = Compra::listardetallecompra($id)->get();
+        $proveedor      = Proveedor::find($compra->proveedor_id);
+        $entidad        = 'Compra';
+        $formData       = array('compra.update', $id);
+        $ruta           = $this->rutas;
+        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton          = 'Modificar';
+        return view($this->folderview.'.verdetalle')->with(compact('ruta', 'compra', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_c','cboDocumento','cboCredito'));
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -274,12 +297,12 @@ class CompraController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'producto');
+        $existe = Libreria::verificarExistencia($id, 'compra');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $producto = Producto::find($id);
+            $producto = Compra::find($id);
             $producto->delete();
         });
         return is_null($error) ? "OK" : $error;
@@ -293,7 +316,7 @@ class CompraController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'producto');
+        $existe = Libreria::verificarExistencia($id, 'compra');
         if ($existe !== true) {
             return $existe;
         }
@@ -301,9 +324,9 @@ class CompraController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Producto::find($id);
-        $entidad  = 'Producto';
-        $formData = array('route' => array('producto.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $modelo   = Compra::find($id);
+        $entidad  = 'Compra';
+        $formData = array('route' => array('compra.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
