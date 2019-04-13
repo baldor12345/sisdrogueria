@@ -49,4 +49,6 @@ class Distrito extends Model
         })->orderBy('nombre', 'ASC');
     }
 
+   
+
 }

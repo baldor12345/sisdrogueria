@@ -18,6 +18,8 @@ class CrearTablaCliente extends Migration
             $table->string('nombres',100)->nullable();
             $table->string('apellidos',100)->nullable();
             $table->char('dni',8)->nullable();
+            $table->char('ruc',20)->nullable();
+            $table->string('razon_social',100)->nullable();
             $table->string('direccion',120)->nullable();
             $table->string('telefono',15)->nullable();
             $table->string('celular',15)->nullable();

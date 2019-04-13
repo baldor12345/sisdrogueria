@@ -22,8 +22,6 @@
                 </div>
             @endif
 
-
-
                 <div class="form-group{{ $errors->has('ruc') ? ' has-error' : '' }}">
                     <div class="col-xs-12">
                         <input name="ruc" class="form-control" type="text" placeholder="RUC" autofocus>
@@ -54,7 +52,6 @@
                         @endif
                     </div>
                 </div>
-
                 <div class="form-group">
                     <div class="col-xs-12">
                         <input name="telefonosucursal" class="form-control" type="text" placeholder="Teléfono">
@@ -68,8 +65,6 @@
                         <i class="md md-place form-control-feedback l-h-34"></i>
                     </div>
                 </div>
-
-
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
 

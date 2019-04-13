@@ -9,7 +9,8 @@
 		</div>
 		<div class="form-group col-2 col-md-2" style="magin-left: 10px">
 				{!! Form::label('btnadd', 'Nuevo: ', array('class' => 'control-label col-12 col-md-12')) !!}
-			{!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!}
+			{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!} --}}
+			{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
 		</div>
 		<div class="form-group col-6 col-md-6">
 			{!! Form::label('cboForma_pago', 'Forma de pago: ', array('class' => '')) !!}
@@ -27,8 +28,8 @@
 			{!! Form::select('cboProducto', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
-			{!! Form::label('cboUnidad', 'Medida: ', array('class' => '')) !!}
-			{!! Form::select('cboUnidad', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboUnidad')) !!}
+			{!! Form::label('cboPresentacion', 'Presentacion: ', array('class' => '')) !!}
+			{!! Form::select('cboPresentacion', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cantidad', 'Cantidad:', array('class' => 'control-label')) !!}
@@ -67,5 +68,56 @@
 $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+
+
+	$('#cboProducto').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listproductos'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+	$('#cboCliente').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listclientes'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+
+
+
 }); 
+
+
+
 </script>

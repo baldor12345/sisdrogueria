@@ -154,6 +154,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('ventas/buscar','VentasController@buscar')->name('ventas.buscar');
     Route::get('ventas/eliminar/{id}/{listarluego}','VentasController@eliminar')->name('ventas.eliminar');
     Route::resource('ventas', 'VentasController', array('except' => array('show')));
+    Route::get('ventas/listclientes',  'VentasController@listclientes')->name('ventas.listclientes');
 
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
