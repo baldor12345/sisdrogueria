@@ -28,21 +28,20 @@ class CrearTablaProducto extends Migration
             $table->integer('unidad_id')->unsigned()->nullable();//MG LTRS,
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)
             $table->integer('stock_minimo')->nullable();
-            $table->integer('existencia')->nullable();
         
             $table->char('estado', 1)->nullable();// check
-            $table->char('refrigerado', 1)->nullable();//check
-        
         
             $table->decimal('costo',10,2)->nullable();//precio por la unidad de medida
             $table->decimal('precio_publico',10,2)->nullable();//precio al publico            
             
             $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('presentacion_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('unidad_id')->references('id')->on('unidad')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

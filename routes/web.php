@@ -100,6 +100,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('unidad/eliminar/{id}/{listarluego}','UnidadController@eliminar')->name('unidad.eliminar');
     Route::resource('unidad', 'UnidadController', array('except' => array('show')));
 
+    //PRESENTACION
+    Route::post('presentacion/buscar','PresentacionController@buscar')->name('presentacion.buscar');
+    Route::get('presentacion/eliminar/{id}/{listarluego}','PresentacionController@eliminar')->name('presentacion.eliminar');
+    Route::resource('presentacion', 'PresentacionController', array('except' => array('show')));
+
     //MARCAS
     Route::post('marca/buscar','MarcaController@buscar')->name('marca.buscar');
     Route::get('marca/eliminar/{id}/{listarluego}','MarcaController@eliminar')->name('marca.eliminar');
@@ -135,6 +140,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('compra/listproveedores',  'CompraController@listproveedores')->name('compra.listproveedores');
     Route::get('compra/listproductos',  'CompraController@listproductos')->name('compra.listproductos');
     Route::get('compra/verdetalle/{id?}',  'CompraController@verdetalle')->name('compra.verdetalle');
+    
+    //PRESENTACION PRODUCTO
+    Route::post('presentacionproducto/buscar','PresentacionProductoController@buscar')->name('presentacionproducto.buscar');
+    Route::get('presentacionproducto/eliminar/{id}/{listarluego}','PresentacionProductoController@eliminar')->name('presentacionproducto.eliminar');
+    Route::resource('presentacionproducto', 'PresentacionProductoController', array('except' => array('show')));
+    Route::get('presentacionproducto/listproveedores',  'PresentacionProductoController@listproveedores')->name('presentacionproducto.listproveedores');
+    Route::get('presentacionproducto/listproductos',  'PresentacionProductoController@listproductos')->name('presentacionproducto.listproductos');
+    Route::get('presentacionproducto/verdetalle/{id?}',  'PresentacionProductoController@verdetalle')->name('presentacionproducto.verdetalle');
     
     
     //VENTA
