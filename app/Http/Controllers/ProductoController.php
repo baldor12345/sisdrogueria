@@ -10,6 +10,7 @@ use App\Categoria;
 use App\Laboratorio;
 use App\Unidad;
 use App\Marca;
+use App\Presentacion;
 use App\User;
 use App\Proveedor;
 use App\Sucursal;
@@ -120,13 +121,14 @@ class ProductoController extends Controller
         $cboUnidad      = array(0=>'Seleccione Unidad...');
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
+        $cboPresentacion =[''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $formData       = array('producto.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('producto', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -151,6 +153,7 @@ class ProductoController extends Controller
             'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
+            'presentacion_id' => 'required|integer|exists:presentacion,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -172,6 +175,7 @@ class ProductoController extends Controller
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
+            $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
@@ -209,6 +213,7 @@ class ProductoController extends Controller
         $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
         $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
         //$cboSucursal    = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
+        $cboPresentacion =[''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
@@ -216,7 +221,7 @@ class ProductoController extends Controller
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('ruta', 'producto', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**

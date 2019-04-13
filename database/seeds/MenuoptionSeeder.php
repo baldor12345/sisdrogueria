@@ -63,6 +63,10 @@ class MenuoptionSeeder extends Seeder
 				'link'   => 'proveedor'
 			),
 			array(
+				'name' => 'Presentacion',
+				'link'   => 'presentacion'
+			),
+			array(
 				'name' => 'Categoria',
 				'link'   => 'categoria'
 			),
@@ -143,6 +147,10 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Compras',
 					'link'   => 'compra'
+				),
+				array(
+					'name' => 'Presentacion',
+					'link'   => 'presentacion'
 				),
 				array(
 					'name' => 'Ventas',
