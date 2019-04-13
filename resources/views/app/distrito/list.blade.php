@@ -4,7 +4,6 @@
 {!! $paginacion or '' !!}
 <div class="table_responsive">
 	<table id="example1" class="table table-bordered table-striped table-condensed table-hover">
-
 		<thead>
 			<tr>
 				@foreach($cabecera as $key => $value)

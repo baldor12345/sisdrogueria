@@ -3,7 +3,6 @@
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	{!! Form::hidden('total', 0, array('id' => 'total')) !!}
 	<div class="row card-box">
-
 		<div class="form-group col-9 col-md-9">
 			{!! Form::label('cboCliente', 'Cliente: ', array('class' => '')) !!}
 			{!! Form::select('cboCliente', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboCliente')) !!}
@@ -20,8 +19,8 @@
 			{!! Form::label('cboComprobante', 'Comprobante Pago: ', array('class' => '')) !!}
 			{!! Form::select('cboComprobante', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboComprobante')) !!}
 		</div>
-
 	</div>
+	
 	<div class="row card-box">
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cboProducto', 'Producto: ', array('class' => '')) !!}
@@ -52,7 +51,6 @@
 					<tbody id="tabla_productos">
 
 					</tbody>
-					
 				</table>
 			</div>
 		</div>
@@ -60,7 +58,6 @@
 	
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{{-- {!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!} --}}
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => '')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
