@@ -121,7 +121,6 @@ class ProductoController extends Controller
         $cboUnidad      = array(0=>'Seleccione Unidad...');
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
-        $cboPresentacion =[''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $formData       = array('producto.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
@@ -142,18 +141,15 @@ class ProductoController extends Controller
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
             'codigo' => 'required|max:30|unique:producto,codigo,NULL,id,deleted_at,NULL',
-            'descripcion' => 'required|max:100|unique:producto,descripcion,NULL,id,deleted_at,NULL',
+            'descripcion' => 'required|max:400|unique:producto,descripcion,NULL,id,deleted_at,NULL',
             'sustancia_activa' => 'required',
             'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
-            'costo'    => 'required',
             'stock_minimo'    => 'required',
 
             'tipo' => 'required',
-            'marca_id' => 'required|integer|exists:marca,id,deleted_at,NULL',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
-            'presentacion_id' => 'required|integer|exists:presentacion,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -175,7 +171,6 @@ class ProductoController extends Controller
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $producto->unidad_id = $request->input('unidad_id');
-            $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
@@ -212,8 +207,6 @@ class ProductoController extends Controller
         $cboCategoria = array('' => 'Seleccione') + Categoria::pluck('name', 'id')->all();
         $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
         $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
-        //$cboSucursal    = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
-        $cboPresentacion =[''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
@@ -242,13 +235,9 @@ class ProductoController extends Controller
             'sustancia_activa' => 'required',
             'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
-            'costo'    => 'required',
             'stock_minimo'    => 'required',
-            'precio_publico'    => 'required',
-            'marca_id' => 'required',
             'categoria_id' => 'required',
             'unidad_id' => 'required',
-            'proveedor_id' => 'required',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {

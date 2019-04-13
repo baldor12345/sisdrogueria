@@ -35,13 +35,11 @@ class CrearTablaProducto extends Migration
             $table->decimal('precio_publico',10,2)->nullable();//precio al publico            
             
             $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('presentacion_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('unidad_id')->references('id')->on('unidad')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

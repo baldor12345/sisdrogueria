@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PropiedadesSeeder::class);
         $this->call(CajaSeeder::class);
         $this->call(PresentacionSeeder::class);
+        $this->call(ProveedorSeeder::class);
+        $this->call(ProductoSeeder::class);
         //$this->call(LaboratorioSeeder::class);
 
     }

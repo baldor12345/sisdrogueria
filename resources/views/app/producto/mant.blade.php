@@ -57,12 +57,6 @@
 				</div>
 			</div>
 			<div class="form-group ">
-				{!! Form::label('presentacion_id', 'Presentacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-				<div class="col-sm-9 col-xs-12">
-					{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-xs', 'id' => 'presentacion_id')) !!}
-				</div>
-			</div>
-			<div class="form-group ">
 				{!! Form::label('stock_minimo', 'Stock Min*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-2 col-xs-12">
 					{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '')) !!}
