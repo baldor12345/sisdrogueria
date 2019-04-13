@@ -32,11 +32,23 @@ class Distrito extends Model
     {
      
         return $query->where(function($subquery) use($nombre)
-		            {
-		            	if (!is_null($nombre)) {
-		            		$subquery->where('nombre', 'LIKE', '%'.$nombre.'%');
-		            	}
-		            })
-        			->orderBy('nombre', 'ASC');
+            {
+                if (!is_null($nombre)) {
+                    $subquery->where('nombre', 'LIKE', '%'.$nombre.'%');
+                }
+            })
+            ->orderBy('nombre', 'ASC');
     }
+
+    public function listarDistritosProvincia($departamento_id){
+        return $query->where(function($subquery) use($provincia_id)
+        {
+            if (!is_null($provincia_id)) {
+                $subquery->where('provincia_id', '=', $provincia_id)->where('deleted_at','=',null);
+            }
+        })->orderBy('nombre', 'ASC');
+    }
+
+   
+
 }

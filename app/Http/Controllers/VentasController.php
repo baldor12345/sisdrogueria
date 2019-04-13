@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Sucursal;
 use App\Distrito;
 use App\Venta;
+use App\Cliente;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -29,6 +30,9 @@ class VentasController extends Controller
             'delete'   => 'ventas.eliminar',
             'search'   => 'ventas.buscar',
             'index'    => 'ventas.index',
+            'listclientes'    => 'ventas.listclientes',
+            'listproductos'    => 'compra.listproductos',
+            'create_new' => 'clientes.create',
         );
 
     public function __construct()
@@ -55,7 +59,7 @@ class VentasController extends Controller
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
         // $titulo_serie_venta = $this->tituloSerieVenta;
-        $ruta             = $this->rutas;
+        $ruta  = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
             $paramPaginacion = $clsLibreria->generarPaginacion($lista, $pagina, $filas, $entidad);
@@ -99,8 +103,9 @@ class VentasController extends Controller
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar'; 
         $user = Auth::user();
+        $ruta  = $this->rutas;
         $cboComprobante = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante'));
+        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta'));
     }
 
     public function store(Request $request)
@@ -267,5 +272,18 @@ class VentasController extends Controller
         $formData = array('route' => array('ventas.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
+    }
+
+    public function listclientes(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Cliente::listarclientes($term);
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombres." ".$tag->apellidos];
+        }
+        return \Response::json($formatted_tags);
     }
 }

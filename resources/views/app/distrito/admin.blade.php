@@ -6,7 +6,6 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-sm-12">
         <div class="card-box">
@@ -31,7 +30,6 @@
 					{!! Form::close() !!}
                 </div>
             </div>
-
 			<div id="listado{{ $entidad }}"></div>
         </div>
     </div>

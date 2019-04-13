@@ -36,18 +36,18 @@ class DistritoController extends Controller
 
     public function buscar(Request $request)
     {
-        $pagina           = $request->input('page');
-        $filas            = $request->input('filas');
-        $entidad          = 'Distrito';
-        $nombre           = Libreria::getParam($request->input('nombre'));
-        $resultado        = Distrito::listar($nombre);
-        $lista            = $resultado->get();
-        $cabecera         = array();
-        $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Provincia', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Departamento', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $pagina  = $request->input('page');
+        $filas = $request->input('filas');
+        $entidad  = 'Distrito';
+        $nombre  = Libreria::getParam($request->input('nombre'));
+        $resultado  = Distrito::listar($nombre);
+        $lista  = $resultado->get();
+        $cabecera   = array();
+        $cabecera[] = array('valor' => '#', 'numero' => '1');
+        $cabecera[] = array('valor' => 'Nombre', 'numero' => '1');
+        $cabecera[] = array('valor' => 'Provincia', 'numero' => '1');
+        $cabecera[] = array('valor' => 'Departamento', 'numero' => '1');
+        $cabecera[] = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;

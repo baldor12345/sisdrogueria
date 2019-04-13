@@ -3,14 +3,14 @@
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	{!! Form::hidden('total', 0, array('id' => 'total')) !!}
 	<div class="row card-box">
-
 		<div class="form-group col-9 col-md-9">
 			{!! Form::label('cboCliente', 'Cliente: ', array('class' => '')) !!}
 			{!! Form::select('cboCliente', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboCliente')) !!}
 		</div>
 		<div class="form-group col-2 col-md-2" style="magin-left: 10px">
 				{!! Form::label('btnadd', 'Nuevo: ', array('class' => 'control-label col-12 col-md-12')) !!}
-			{!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!}
+			{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!} --}}
+			{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
 		</div>
 		<div class="form-group col-6 col-md-6">
 			{!! Form::label('cboForma_pago', 'Forma de pago: ', array('class' => '')) !!}
@@ -20,16 +20,16 @@
 			{!! Form::label('cboComprobante', 'Comprobante Pago: ', array('class' => '')) !!}
 			{!! Form::select('cboComprobante', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboComprobante')) !!}
 		</div>
-
 	</div>
+	
 	<div class="row card-box">
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cboProducto', 'Producto: ', array('class' => '')) !!}
 			{!! Form::select('cboProducto', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
-			{!! Form::label('cboUnidad', 'Medida: ', array('class' => '')) !!}
-			{!! Form::select('cboUnidad', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboUnidad')) !!}
+			{!! Form::label('cboPresentacion', 'Presentacion: ', array('class' => '')) !!}
+			{!! Form::select('cboPresentacion', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cantidad', 'Cantidad:', array('class' => 'control-label')) !!}
@@ -52,7 +52,6 @@
 					<tbody id="tabla_productos">
 
 					</tbody>
-					
 				</table>
 			</div>
 		</div>
@@ -60,7 +59,6 @@
 	
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{{-- {!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!} --}}
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => '')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
@@ -70,5 +68,56 @@
 $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+
+
+	$('#cboProducto').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listproductos'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+	$('#cboCliente').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listclientes'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+
+
+
 }); 
+
+
+
 </script>
