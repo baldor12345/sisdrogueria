@@ -11,6 +11,9 @@ use App\Venta;
 use App\Cliente;
 use App\Comprobante;
 use App\FormaPago;
+use App\Producto;
+use App\DetalleCompra;
+use App\Presentacion;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -108,7 +111,8 @@ class VentasController extends Controller
         $ruta  = $this->rutas;
         $cboComprobante = [''=>'Seleccione'] + Comprobante::pluck('nombre', 'id')->all();
         $cboFormaPago = [''=>'Seleccione'] + FormaPago::pluck('nombre', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta','cboFormaPago'));
+        $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta','cboFormaPago','cboPresentacion'));
     }
 
     public function store(Request $request)
