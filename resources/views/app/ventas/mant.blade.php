@@ -30,16 +30,19 @@
 			{!! Form::label('cboProducto', 'Producto: ', array('class' => '')) !!}
 			{!! Form::select('cboProducto', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
 		</div>
+		{!! Form::hidden('precio_unidad', 0.0, array('id' => 'precio_unidad')) !!}
+		{{-- {!! Form::hidden('nombre_temporal', "", array('id' => 'nombre_temporal')) !!}
+		{!! Form::hidden('nombre_presentacion_temp', "", array('id' => 'nombre_presentacion_temp')) !!} --}}
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cboPresentacion', 'Presentacion: ', array('class' => '')) !!}
-			{!! Form::select('cboPresentacion', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
+			{!! Form::select('cboPresentacion', $cboPresentacion, '0' , array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cantidad', 'Cantidad:', array('class' => 'control-label')) !!}
 			{!! Form::text('cantidad', null, array('class' => 'form-control input-xs', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
 		</div>
 		<div class="form-group col-3 col-md-3">
-				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Add', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => '')) !!}
+				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Add', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar_producto()')) !!}
 		</div>
 		<div class="form-group col-12 col-md-12">
 			<div class="table-responsive">
@@ -48,8 +51,9 @@
 						<tr>
 							<th>Nombre</th>
 							<th>Cantidad</th>
+							<th>Unidad/Medida</th>
 							<th>Precio Unitario</th>
-							<th>Total S/.</th>
+							<th>Sub Total S/.</th>
 						</tr>
 					</thead>
 					<tbody id="tabla_productos">
@@ -101,13 +105,21 @@ $(document).ready(function() {
                 var stock = response[1];
                 var precio_unidad = response[2];
                  var presentacion_id = response[3];
-            
-                    $("#persona_id").val(persona[0].id);
-                    var msj = "<div class='alert alert-light'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
+				 $('#nombre_temporal').val(""+producto.descripcion);
+				 $('#precio_unidad').val(""+precio_unidad);
+                    var msj = "<div class='alert alert-success'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
                     msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
 					$('#divInfoProducto').html(msj);
 					$('#divInfoProducto').show();
             });
+        });
+	$('#cboPresentacion').change(function(){
+                
+				// //  $('#nombre_temporal').val(""+producto.descripcion);
+                //     var msj = "<div class='alert alert-success'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
+                //     msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
+				// 	$('#divInfoProducto').html(msj);
+				// 	$('#divInfoProducto').show();
         });
 
 	$('#cboCliente').select2({
@@ -135,6 +147,19 @@ $(document).ready(function() {
 }); 
 
 function agregar_producto(){
+
+	// var nombre = $('#nombre_temp').val();
+	// var nombre_presentacion = $('#nombre_presentacion_temp').val();
+
+	var nombre_producto = $('#cboProducto').text();
+	var nombre_presentacion = $('#cboPresentacion').text();
+	var producto_id = $('#cboProducto').val();
+	var presentacion_id = $('#cboPresentacion').val();
+	var precio_unidad = $('#precio_unidad').val();
+	var cantidad = $('#cantidad').val();
+	var subtotal = cantidad * precio_unidad;
+	var fila = "<tr><td>"+nombre_producto+"</td><td>"+cantidad+"</td><td>"+nombre_presentacion+"</td><td>"+precio_unidad+"</td><td>"+subtotal+"</td></tr>";
+	$("#tabla_productos").append(fila);
 
 }
 
