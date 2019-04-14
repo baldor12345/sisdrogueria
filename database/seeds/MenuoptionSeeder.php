@@ -145,24 +145,21 @@ class MenuoptionSeeder extends Seeder
 			);
 		}
 
-		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Movimientos')->first()->id;
+		//compras
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Compras')->first()->id;
 
 		$datos = array(
-				array(
-					'name' => 'Caja',
-					'link'   => 'caja'
-				),
 				array(
 					'name' => 'Compras',
 					'link'   => 'compra'
 				),
 				array(
-					'name' => 'Ventas',
-					'link'   => 'ventas'
+					'name' => 'Lotes y Caducidad',
+					'link'   => 'lotes_caducidad'
 				),
 				array(
-					'name' => 'Reportes',
-					'link'   => 'reportes'
+					'name' => 'Stock',
+					'link'   => 'stock'
 				)
 			);
 
@@ -177,5 +174,66 @@ class MenuoptionSeeder extends Seeder
 				)
 			);
 		}
+
+		//ventas
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Ventas')->first()->id;
+
+		$datos = array(
+				array(
+					'name' => 'Ventas',
+					'link'   => 'ventas'
+				),
+				array(
+					'name' => 'Productos mas Vendidas',
+					'link'   => 'productos_mas_vendidas'
+				),
+				array(
+					'name' => 'Devoluciones',
+					'link'   => 'devoluciones'
+				)
+			);
+
+		for ($i=0; $i < count($datos); $i++) { 
+			DB::table('menuoption')->insert(array(
+					'name'                 => $datos[$i]['name'],
+					'link'                   => $datos[$i]['link'],
+					'order'                  => $i+1,
+					'menuoptioncategory_id' => $menuoptioncategory_id,
+					'created_at'             => $now,
+					'updated_at'             => $now
+				)
+			);
+		}
+	
+
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Caja')->first()->id;
+
+		$datos = array(
+				array(
+					'name' => 'Caja',
+					'link'   => 'caja'
+				),
+				array(
+					'name' => 'Caja Diaria',
+					'link'   => 'ventas'
+				),
+				array(
+					'name' => 'Mov. Anulados',
+					'link'   => 'anulados'
+				)
+			);
+
+		for ($i=0; $i < count($datos); $i++) { 
+			DB::table('menuoption')->insert(array(
+					'name'                 => $datos[$i]['name'],
+					'link'                   => $datos[$i]['link'],
+					'order'                  => $i+1,
+					'menuoptioncategory_id' => $menuoptioncategory_id,
+					'created_at'             => $now,
+					'updated_at'             => $now
+				)
+			);
+		}
+
     }
 }

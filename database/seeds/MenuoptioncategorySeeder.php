@@ -16,7 +16,7 @@ class MenuoptioncategorySeeder extends Seeder
 
 		DB::table('menuoptioncategory')->insert(array(
 				array(
-					'name'     => 'Movimientos',
+					'name'     => 'Caja',
 					'order'      => 1,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -24,15 +24,7 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Mantenimientos',
-					'order'      => 2,
-					'icon'      => 'fa fa-bank',
-					'position'      => 'V',
-					'created_at' => $now,
-					'updated_at' => $now
-				),
-				array(
-					'name'     => 'Personas',
+					'name'     => 'Compras',
 					'order'      => 3,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -40,8 +32,32 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Usuarios',
+					'name'     => 'Ventas',
 					'order'      => 4,
+					'icon'      => 'fa fa-bank',
+					'position'      => 'V',
+					'created_at' => $now,
+					'updated_at' => $now
+				),
+				array(
+					'name'     => 'Mantenimientos',
+					'order'      => 5,
+					'icon'      => 'fa fa-bank',
+					'position'      => 'V',
+					'created_at' => $now,
+					'updated_at' => $now
+				),
+				array(
+					'name'     => 'Personas',
+					'order'      => 6,
+					'icon'      => 'fa fa-bank',
+					'position'      => 'V',
+					'created_at' => $now,
+					'updated_at' => $now
+				),
+				array(
+					'name'     => 'Usuarios',
+					'order'      => 7,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
 					'created_at' => $now,
