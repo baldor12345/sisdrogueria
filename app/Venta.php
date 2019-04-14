@@ -16,6 +16,15 @@ class Venta extends Model
     public function caja(){
         return $this->belongsTo('App\Caja','caja_id');
     } 
+    public function sucursal(){
+        return $this->belongsTo('App\Sucursal','sucursal_id');
+    } 
+    public function comprobante(){
+        return $this->belongsTo('App\Comprobante','comprobante_id');
+    } 
+    public function formapago(){
+        return $this->belongsTo('App\FormaPago','forma_pago_id');
+    } 
 
     /**
      * Método para listar

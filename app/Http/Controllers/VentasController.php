@@ -14,6 +14,8 @@ use App\FormaPago;
 use App\Producto;
 use App\DetalleCompra;
 use App\Presentacion;
+use App\Caja;
+use App\Detalle_venta;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -58,6 +60,8 @@ class VentasController extends Controller
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total S/.', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
         // $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
@@ -133,18 +137,19 @@ class VentasController extends Controller
             $user = Auth::user();
             $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
 
-            $venta = new Ventas();
+            $venta = new Venta();
             $venta->total = $request->input('total');
-            $venta->descuento = $request->input('descuento');
+            $venta->descuento = 0;//$request->input('descuento');
             $venta->igv = 0.18;//IGV= de configuraciones
-            $venta->descripcion = $request->input('descripcion');
+            $venta->descripcion = "";//$request->input('descripcion');
             $venta->fecha_hora = date('Y-m-d');
-            $venta->estado = 'P';//P=Pendiente, C=cancelado
+            $venta->estado = 'C';//P=Pendiente, C=cancelado
             $venta->user_id = $user->id;
             $venta->caja_id = $caja->id;
             $venta->sucursal_id = $user->sucursal_id;
             $venta->cliente_id =  $request->input('cboCliente');
-            $venta->comprobante =  $request->input('cboComprobante');
+            $venta->forma_pago_id =  $request->input('cboForma_pago');
+            $venta->comprobante_id =  $request->input('cboComprobante');
             $venta->save();
 
             $cantidad = $request->input('cantidad_registros');
@@ -155,14 +160,15 @@ class VentasController extends Controller
 
                 $cant =$request->get('cantidad'.$i);
                 $precio_unit = $producto->precio; 
-                $descuento = $request->get('descuento'.$i);
-                $unidad_id = $request->get('unidad_id'.$i);
+                // $descuento = $request->get('descuento'.$i);
+                $unidad_id = $request->get('presentacion_id'.$i);
+                $subtotal = $request->get('subtotal'.$i);
 
                 $detalle_venta->producto_id =$producto->id; 
                 $detalle_venta->cantidad = $cant;
                 $detalle_venta->precio_unitario =$precio_unit;
-                $detalle_venta->descuento = $descuento ; 
-                $detalle_venta->total = $cantidad*$precio_unit - $descuento;
+                // $detalle_venta->descuento = $descuento ; 
+                $detalle_venta->total = $subtotal;
                 $detalle_venta->unidad_id = $unidad_id;
                 $detalle_venta->ventas_id = $venta->id;
                 $detalle_venta->sucursal_id = $user->sucursal_id;

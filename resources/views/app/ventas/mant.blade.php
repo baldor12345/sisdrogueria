@@ -71,7 +71,7 @@
 	
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => '')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar_venta(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
@@ -155,7 +155,7 @@ function agregar_producto(){
 
 	// var nombre = $('#nombre_temp').val();
 	// var nombre_presentacion = $('#nombre_presentacion_temp').val();
-	if($("#tabla_productos").val() != '0' && $('#cboPresentacion').val() != '0' && $('#cantidad').val() != ""){
+	if($("#cboProducto").val() != '0' && $('#cboPresentacion').val() != '0' && $('#cantidad').val() != ""){
 		var nombre_producto = $('#cboProducto option:selected').html();
 		var nombre_presentacion = $('#cboPresentacion option:selected').html();
 		var producto_id = $('#cboProducto').val();
@@ -166,7 +166,7 @@ function agregar_producto(){
 		var total = parseFloat($('#total').val()) + cantidad;
 		$('#total_p').text('Total: '+total);
 		$('#total').val(total);
-		var fila = '<tr class="datos-producto" producto_id='+producto_id+' presentacion_id='+presentacion_id+' cantidad='+cantidad+'><td>'+nombre_producto+"</td><td>"+cantidad+"</td><td>"+nombre_presentacion+"</td><td>"+precio_unidad+"</td><td>"+subtotal+"</td>";
+		var fila = '<tr class="producto_venta" producto_id='+producto_id+' presentacion_id='+presentacion_id+' cantidad='+cantidad+'  subtotal='+subtotal+'><td>'+nombre_producto+"</td><td>"+cantidad+"</td><td>"+nombre_presentacion+"</td><td>"+precio_unidad+"</td><td>"+subtotal+"</td>";
 		fila += '<td width="5%" align="center"><button id="btnQuitarProd" name="btnQuitarprod"  class="btn btn-danger btn-sm" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td></tr>';
 		$("#tabla_productos").append(fila);
 		$('#cboProducto').val(null);
@@ -194,5 +194,69 @@ function quitar(t, subtotal){
 		 $('#total_p').text('Total: '+total_parcial);
 	}
 }
+
+
+function guardar_venta(entidad, idboton) {
+	var idformulario = IDFORMMANTENIMIENTO + entidad;
+	var data         = submitForm_venta(idformulario);
+	var respuesta    = '';
+	var listar       = 'NO';
+	if ($(idformulario + ' :input[id = "listar"]').length) {
+		var listar = $(idformulario + ' :input[id = "listar"]').val()
+	};
+	data.done(function(msg) {
+		respuesta = msg;
+		$(idboton).button('loading');
+	}).fail(function(xhr, textStatus, errorThrown) {
+		respuesta = 'ERROR';
+		$(idboton).removeClass('disabled');
+		$(idboton).removeAttr('disabled');
+		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+	}).always(function() {
+		if(respuesta === 'ERROR'){
+		}else{
+			if (respuesta === 'OK') {
+				cerrarModal();
+				if (listar === 'SI') {
+					
+					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+					
+				}        
+			} else {
+				mostrarErrores(respuesta, idformulario, entidad);
+				$(idboton).removeClass('disabled');
+				$(idboton).removeAttr('disabled');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+			}
+		}
+	});
+}
+function submitForm_venta(idformulario) {
+	var i=0;
+	var datos="";
+	$('.producto_venta').each(function() {
+		datos += 	"&producto_id"		+i+"="+$(this).attr("producto_id")+
+					"&presentacion_id"	+i+"="+$(this).attr("presentacion_id")+
+					"&subtotal"	+i+"="+$(this).attr("subtotal")+
+					"&cantidad"	+i+"="+$(this).attr("cantidad");
+		i++;
+	});
+	datos += "&cantidad_registros="+i;
+	var parametros = $(idformulario).serialize();
+	parametros += datos;
+	var accion     = $(idformulario).attr('action').toLowerCase();
+	console.log('Accion: form: '+accion+'   param: '+parametros);
+	var metodo     = $(idformulario).attr('method').toLowerCase();
+	console.log('Metodo: '+metodo);
+	var respuesta  = $.ajax({
+		url : accion,
+		type: metodo,
+		data: parametros
+	});
+	console.log('Respuesta: '+respuesta);
+	return respuesta;
+}
+
+
 
 </script>
