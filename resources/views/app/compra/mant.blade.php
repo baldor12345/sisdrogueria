@@ -42,8 +42,8 @@
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Producto</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">Presentacion</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="45%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
@@ -223,8 +223,8 @@ function agregar(){
 								}
 								var total = t_parcial+subtotal;
 								var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+presentacion_id+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-									'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
-									'<td class="input-sm" width="20%">'+presentacion_dat+'</td>'+
+									'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
+									'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 									'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
 									'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 									'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
