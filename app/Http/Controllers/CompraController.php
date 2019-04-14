@@ -356,10 +356,10 @@ class CompraController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = Producto::where("codigo",'LIKE', '%'.$term.'%')->orWhere("codigo_barra",'LIKE', '%'.$term.'%')->orWhere("descripcion",'LIKE', '%'.$term.'%')->orWhere("sustancia_activa",'LIKE', '%'.$term.'%')->orWhere("uso_terapeutico",'LIKE', '%'.$term.'%')->orWhere('deleted_at',null)->limit(5)->get();
+        $tags = Producto::where("codigo",'LIKE', '%'.$term.'%')->orWhere("codigo_barra",'LIKE', '%'.$term.'%')->orWhere("descripcion",'LIKE', '%'.$term.'%')->orWhere('deleted_at',null)->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.' - '.$tag->uso_terapeutico];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

@@ -42,11 +42,12 @@
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="50%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">Presentacion</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Subtotal</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 		                </tr>
 		            </thead>
@@ -185,13 +186,20 @@ $(document).ready(function() {
 }); 
 
 function agregar(){
+	//datos del producto
 	var producto_dat ="";
 	var select = "";
 	var select = document.getElementById('producto_id');
 	producto_dat = select.options[select.selectedIndex].innerText;
+	//datos de la presentacion
+	var presentacion_dat ="";
+	var select_p = "";
+	var select_p = document.getElementById('presentacion_id');
+	presentacion_dat = select_p.options[select_p.selectedIndex].innerText;
+
 
 	var preciocompra 		= $('#preciocompra').val();
-	var presentacion_id 		= $('#presentacion_id').val();
+	var presentacion_id 	= $('#presentacion_id').val();
 	var laboratorio_id 		= $('#laboratorio_id').val();
 	var precioventa 		= $('#precioventa').val();
 	var cantidad 			= $('#cantidad').val();
@@ -215,17 +223,20 @@ function agregar(){
 								}
 								var total = t_parcial+subtotal;
 								var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+presentacion_id+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-									'<td class="input-sm" width="50%">'+producto_dat+'</td>'+
+									'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
+									'<td class="input-sm" width="20%">'+presentacion_dat+'</td>'+
 									'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
-									'<td class="input-sm" width="10%" align="center">'+cantidad+'</td>'+
+									'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 									'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
-									'<td class="input-sm" width="15%" align="center">'+subtotal+'</td>'+
+									'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
 									'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 									'</tr>';
 								$("#tabla").append(d);
 								$('#total').val(total);
 								//vaciar datos
 								$('#producto_id').val(0);
+								$('#presentacion_id').val(0);
+								$('#laboratorio_id').val(0);
 								$('#producto_id').value="Seleccione Producto...";
 								$('#preciocompra').val("");
 								$('#precioventa').val("");

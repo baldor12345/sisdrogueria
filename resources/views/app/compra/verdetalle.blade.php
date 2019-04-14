@@ -31,8 +31,12 @@
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 card-box">    	
 			<div class="form-group">
 				{!! Form::label('credito', 'Credito:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
 					{!! Form::select('credito', $cboCredito, $compra->credito, array('class' => 'form-control input-sm', 'id' => 'credito')) !!}
+				</div>
+				{!! Form::label('numero_dias', 'Nro dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+					{!! Form::text('numero_dias', $proveedor->numero_dias, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '','readonly')) !!}
 				</div>
 			</div>
 			<div class="form-group " >
@@ -55,21 +59,23 @@
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="50%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">Presentacion</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">F. Venc.</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Subtotal</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
 		                </tr>
 		            </thead>
                     <tbody>
                         @foreach ($list_detalle_c as $key => $value)
                             <tr>
-                                <td>{{ $value->descripcion }}</td>
-                                <td>{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
-                                <td>{{ $value->cantidad }}</td>
-                                <td>{{ $value->precio_compra }}</td>
-                                <td>{{ number_format($value->precio_compra*$value->cantidad,2) }}</td>
+                                <td class="text-center input-sm">{{ $value->descripcion }}</td>
+                                <td class="text-center input-sm">{{ $value->presentacion_nombre }}</td>
+                                <td class="text-center input-sm">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
+                                <td class="text-center input-sm">{{ $value->cantidad }}</td>
+                                <td class="text-center input-sm">{{ $value->precio_compra }}</td>
+                                <td class="text-center input-sm">{{ number_format($value->precio_compra*$value->cantidad,2) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -85,7 +91,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('800');
+	configurarAnchoModal('900');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	var fechaActual = new Date();
