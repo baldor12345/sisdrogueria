@@ -109,9 +109,9 @@ class VentasController extends Controller
         $boton        = 'Registrar'; 
         $user = Auth::user();
         $ruta  = $this->rutas;
-        $cboComprobante = [''=>'Seleccione'] + Comprobante::pluck('nombre', 'id')->all();
-        $cboFormaPago = [''=>'Seleccione'] + FormaPago::pluck('nombre', 'id')->all();
-        $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboComprobante = ['0'=>'Seleccione'] + Comprobante::pluck('nombre', 'id')->all();
+        $cboFormaPago = ['0'=>'Seleccione'] + FormaPago::pluck('nombre', 'id')->all();
+        $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta','cboFormaPago','cboPresentacion'));
     }
 
