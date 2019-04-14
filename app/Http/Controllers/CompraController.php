@@ -9,6 +9,8 @@ use App\Producto;
 use App\Compra;
 use App\DetalleCompra;
 use App\User;
+use App\Presentacion;
+use App\Marca;
 use App\Proveedor;
 use App\Propiedades;
 use App\Librerias\Libreria;
@@ -116,13 +118,15 @@ class CompraController extends Controller
         $cboCredito       = array('S'=>'SI', 'N'=>'NO');
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
+        $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboLaboratorio = [''=>'Seleccione'] + Marca::pluck('name', 'id')->all();
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('compra', 'cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -178,6 +182,8 @@ class CompraController extends Controller
                     $detalle_compra->cantidad = $request->input("cant".$i);
                     $detalle_compra->lote = $request->input("lot".$i);
                     $detalle_compra->producto_id = $request->input("id_producto".$i);
+                    $detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
+                    $detalle_compra->marca_id = $request->input("id_laboratorio".$i);
                     $detalle_compra->compra_id = $compra_last->id;
                     $detalle_compra->save();
                 }
@@ -353,7 +359,7 @@ class CompraController extends Controller
         $tags = Producto::where("codigo",'LIKE', '%'.$term.'%')->orWhere("codigo_barra",'LIKE', '%'.$term.'%')->orWhere("descripcion",'LIKE', '%'.$term.'%')->orWhere("sustancia_activa",'LIKE', '%'.$term.'%')->orWhere("uso_terapeutico",'LIKE', '%'.$term.'%')->orWhere('deleted_at',null)->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.' - '.$tag->sustancia_activa];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.' - '.$tag->uso_terapeutico];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
