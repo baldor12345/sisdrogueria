@@ -9,6 +9,8 @@ use App\Sucursal;
 use App\Distrito;
 use App\Venta;
 use App\Cliente;
+use App\Comprobante;
+use App\FormaPago;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -104,9 +106,9 @@ class VentasController extends Controller
         $boton        = 'Registrar'; 
         $user = Auth::user();
         $ruta  = $this->rutas;
-        $cboComprobante = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        $cboFormaPago = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta'));
+        $cboComprobante = [''=>'Seleccione'] + Comprobante::pluck('nombre', 'id')->all();
+        $cboFormaPago = [''=>'Seleccione'] + FormaPago::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta','cboFormaPago'));
     }
 
     public function store(Request $request)
@@ -286,5 +288,21 @@ class VentasController extends Controller
             $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombres." ".$tag->apellidos];
         }
         return \Response::json($formatted_tags);
+    }
+
+    public function getProducto(Request $request, $producto_id){
+        if($request->ajax()){
+            $producto = Producto::find($producto_id);
+            $detalle_compras = DetalleCompra::where('producto_id','=',$producto_id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+            $stock = 0;
+            $precio_unidad = $detalle_compras[0]->precio_venta | 0;
+            $presentacion_id = $detalle_compras[0]->presentacion_id | 0;
+
+            foreach ($detalle_compras as $key => $value) {
+                $stock += $value->cantidad;
+            }
+            $res = array($producto, $stock, $precio_unidad,$presentacion_id);
+            return response()->json($res);
+        }
     }
 }

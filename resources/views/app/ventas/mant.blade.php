@@ -8,20 +8,23 @@
 			{!! Form::select('cboCliente', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboCliente')) !!}
 		</div>
 		<div class="form-group col-2 col-md-2" style="magin-left: 10px">
-				{!! Form::label('btnadd', 'Nuevo: ', array('class' => 'control-label col-12 col-md-12')) !!}
+			{!! Form::label('btnadd', 'Nuevo: ', array('class' => 'control-label col-12 col-md-12')) !!}
 			{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!} --}}
 			{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
 		</div>
 		<div class="form-group col-6 col-md-6">
 			{!! Form::label('cboForma_pago', 'Forma de pago: ', array('class' => '')) !!}
-			{!! Form::select('cboForma_pago', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboForma_pago')) !!}
+			{!! Form::select('cboForma_pago', $cboFormaPago, '0' , array('class' => 'form-control input-sm', 'id' => 'cboForma_pago')) !!}
 		</div>
 		<div class="form-group col-6 col-md-6"  style="magin-left: 10px">
 			{!! Form::label('cboComprobante', 'Comprobante Pago: ', array('class' => '')) !!}
-			{!! Form::select('cboComprobante', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboComprobante')) !!}
+			{!! Form::select('cboComprobante', $cboComprobante, '0' , array('class' => 'form-control input-sm', 'id' => 'cboComprobante')) !!}
 		</div>
 	</div>
-	
+	<div class="row">
+		<div id="divInfoProducto" class="col-12 col-md-12" ></div>
+	</div>
+
 	<div class="row card-box">
 		<div class="form-group col-3 col-md-3">
 			{!! Form::label('cboProducto', 'Producto: ', array('class' => '')) !!}
@@ -68,8 +71,6 @@
 $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
-
-
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		minimumInputLenght: 2,
@@ -91,6 +92,24 @@ $(document).ready(function() {
 			
 		}
 	});
+
+	$('#cboProducto').change(function(){
+            // $('#selectaval').select2("val", "0");
+            $.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
+                // console.log("Respuesta persona: "+response[3]);
+                var producto = response[0];
+                var stock = response[1];
+                var precio_unidad = response[2];
+                 var presentacion_id = response[3];
+            
+                    $("#persona_id").val(persona[0].id);
+                    var msj = "<div class='alert alert-light'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
+                    msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
+					$('#divInfoProducto').html(msj);
+					$('#divInfoProducto').show();
+            });
+        });
+
 	$('#cboCliente').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		
@@ -113,11 +132,11 @@ $(document).ready(function() {
 			
 		}
 	});
-
-
-
 }); 
 
+function agregar_producto(){
+
+}
 
 
 </script>

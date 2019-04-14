@@ -186,6 +186,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('clientes', 'ClienteController', array('except' => array('show')));
 
 });
-
+Route::get('ventas/{producto_id?}','VentasController@getProducto');
 Route::get('provincias/{id}','ProvinciaController@getProvincias');
 Route::get('distritos/{id}','DistritoController@getDistritos');
