@@ -1,7 +1,6 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-	{!! Form::hidden('total', 0, array('id' => 'total')) !!}
 	<div class="row card-box">
 		<div class="form-group col-9 col-md-9">
 			{!! Form::label('cboCliente', 'Cliente: ', array('class' => '')) !!}
@@ -163,7 +162,7 @@ function agregar_producto(){
 		var precio_unidad = parseFloat($('#precio_unidad').val());
 		var cantidad = parseFloat($('#cantidad').val());
 		var subtotal = cantidad * precio_unidad;
-		var total = parseFloat($('#total').val()) + cantidad;
+		var total = parseFloat($('#total').val()) + subtotal;
 		$('#total_p').text('Total: '+total);
 		$('#total').val(total);
 		var fila = '<tr class="producto_venta" producto_id='+producto_id+' presentacion_id='+presentacion_id+' cantidad='+cantidad+'  subtotal='+subtotal+'><td>'+nombre_producto+"</td><td>"+cantidad+"</td><td>"+nombre_presentacion+"</td><td>"+precio_unidad+"</td><td>"+subtotal+"</td>";

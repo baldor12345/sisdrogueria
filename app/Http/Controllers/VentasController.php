@@ -305,8 +305,8 @@ class VentasController extends Controller
             $producto = Producto::find($producto_id);
             $detalle_compras = DetalleCompra::where('producto_id','=',$producto_id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
-            $precio_unidad = $detalle_compras[0]->precio_venta | 0;
-            $presentacion_id = $detalle_compras[0]->presentacion_id | 0;
+            $precio_unidad = round($detalle_compras[0]->precio_venta,2);
+            $presentacion_id = $detalle_compras[0]->presentacion_id;
 
             foreach ($detalle_compras as $key => $value) {
                 $stock += $value->cantidad;
