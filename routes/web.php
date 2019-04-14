@@ -141,13 +141,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('compra/listproductos',  'CompraController@listproductos')->name('compra.listproductos');
     Route::get('compra/verdetalle/{id?}',  'CompraController@verdetalle')->name('compra.verdetalle');
     
-    //PRESENTACION PRODUCTO
-    Route::post('presentacionproducto/buscar','PresentacionProductoController@buscar')->name('presentacionproducto.buscar');
-    Route::get('presentacionproducto/eliminar/{id}/{listarluego}','PresentacionProductoController@eliminar')->name('presentacionproducto.eliminar');
-    Route::resource('presentacionproducto', 'PresentacionProductoController', array('except' => array('show')));
-    Route::get('presentacionproducto/listproveedores',  'PresentacionProductoController@listproveedores')->name('presentacionproducto.listproveedores');
-    Route::get('presentacionproducto/listproductos',  'PresentacionProductoController@listproductos')->name('presentacionproducto.listproductos');
-    Route::get('presentacionproducto/verdetalle/{id?}',  'PresentacionProductoController@verdetalle')->name('presentacionproducto.verdetalle');
+    //LOTES Y CADUCIDAD
+    Route::post('lotes_caducidad/buscar','lotescaducidadController@buscar')->name('lotes_caducidad.buscar');
+    Route::get('lotes_caducidad/eliminar/{id}/{listarluego}','lotescaducidadController@eliminar')->name('lotes_caducidad.eliminar');
+    Route::resource('lotes_caducidad', 'lotescaducidadController', array('except' => array('show')));
+    
+    //STOCK
+    Route::post('stock_producto/buscar','StockController@buscar')->name('stock_producto.buscar');
+    Route::get('stock_producto/eliminar/{id}/{listarluego}','StockController@eliminar')->name('stock_producto.eliminar');
+    Route::resource('stock_producto', 'StockController', array('except' => array('show')));
     
     
     //VENTA

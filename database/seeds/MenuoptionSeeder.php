@@ -159,7 +159,7 @@ class MenuoptionSeeder extends Seeder
 				),
 				array(
 					'name' => 'Stock',
-					'link'   => 'stock'
+					'link'   => 'stock_producto'
 				)
 			);
 
