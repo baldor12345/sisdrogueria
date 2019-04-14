@@ -142,7 +142,7 @@ class VentasController extends Controller
             $venta->descuento = 0;//$request->input('descuento');
             $venta->igv = 0.18;//IGV= de configuraciones
             $venta->descripcion = "";//$request->input('descripcion');
-            $venta->fecha_hora = date('Y-m-d');
+            $venta->fecha_hora = date('Y-m-d H:i:s');
             $venta->estado = 'C';//P=Pendiente, C=cancelado
             $venta->user_id = $user->id;
             $venta->caja_id = $caja->id;
@@ -173,7 +173,23 @@ class VentasController extends Controller
                 $detalle_venta->ventas_id = $venta->id;
                 $detalle_venta->sucursal_id = $user->sucursal_id;
                 $detalle_venta->save();
+
+                $detalle_compras = DetalleCompra::where('producto_id','=',$producto->id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                foreach ($detalle_compras as $key => $value) {
+                    $cant_actual = $value->cantidad;
+                    if($cant > $cant_actual){
+                        $value->cantidad = 0;
+                        $value->save();
+                        $cant = $cant - $cant_actual;
+                    }else{
+                        $value->cantidad = $cant_actual - $cant;;
+                        $value->save();
+                        $cant = 0;
+                        break;
+                    }
+                }
             }
+
         });
         return is_null($error) ? "OK" : $error;
     }
