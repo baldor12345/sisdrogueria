@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
         $this->call(PropiedadesSeeder::class);
         $this->call(CajaSeeder::class);
         $this->call(PresentacionSeeder::class);
+
+        $this->call(ComprobanteSeeder::class);
+        $this->call(FormaPagoSeeder::class);
         //$this->call(LaboratorioSeeder::class);
 
     }

@@ -105,6 +105,7 @@ class VentasController extends Controller
         $user = Auth::user();
         $ruta  = $this->rutas;
         $cboComprobante = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
+        $cboFormaPago = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
         return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta'));
     }
 
