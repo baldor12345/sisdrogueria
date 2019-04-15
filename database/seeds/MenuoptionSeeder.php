@@ -79,10 +79,6 @@ class MenuoptionSeeder extends Seeder
 				'link'   => 'marca'
 			),
 			array(
-				'name' => 'Unidades',
-				'link'   => 'unidad'
-			),
-			array(
 				'name' => 'Productos',
 				'link'   => 'producto'
 			),

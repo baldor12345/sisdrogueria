@@ -23,7 +23,7 @@ class ProductoSeeder extends Seeder
                 'proveedor_id' => 1,
                 'marca_id' => 1,
                 'ubicacion' => 'STAND 001',
-                'unidad_id' => 4,
+                'presentacion_id' => 3,
                 'categoria_id' => 2,
                 'stock_minimo' => 2,
                 'estado' => 'A',

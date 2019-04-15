@@ -20,11 +20,6 @@ class CategoriaSeeder extends Seeder
                 'updated_at' => $now
             ),
             array(
-                'name' => 'TABLETAS',
-                'created_at' => $now,
-                'updated_at' => $now
-            ),
-            array(
                 'name' => 'CAPSULAS',
                 'created_at' => $now,
                 'updated_at' => $now

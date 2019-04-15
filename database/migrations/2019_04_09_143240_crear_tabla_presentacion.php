@@ -16,6 +16,7 @@ class CrearTablaPresentacion extends Migration
         Schema::create('presentacion', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre',100)->nullable();
+            $table->string('sigla',20)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

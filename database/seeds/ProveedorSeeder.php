@@ -23,6 +23,8 @@ class ProveedorSeeder extends Seeder
                 'celular' => '12312321',
                 'estado' => 'A',
                 'distrito_id' => 1,
+                'provincia_id' => 1,
+                'departamento_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now
             )

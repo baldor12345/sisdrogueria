@@ -25,7 +25,7 @@ class CrearTablaProducto extends Migration
             $table->integer('marca_id')->unsigned()->nullable();//MARCA O LABORATORIO
             $table->string('ubicacion',100)->nullable();
         
-            $table->integer('unidad_id')->unsigned()->nullable();//MG LTRS,
+            $table->integer('presentacion_id')->unsigned()->nullable();//MG LTRS,
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)
             $table->integer('stock_minimo')->nullable();
         
@@ -36,7 +36,7 @@ class CrearTablaProducto extends Migration
             
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('unidad_id')->references('id')->on('unidad')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');

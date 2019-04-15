@@ -74,9 +74,9 @@
 	<fieldset class="col-md-6">    	
 		<div class="panel panel-default">
 			<div class="form-group ">
-				{!! Form::label('unidad_id', 'Unidad*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+				{!! Form::label('presentacion_id', 'Presentacion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 				<div class="col-sm-9 col-xs-12">
-					{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-xs', 'id' => 'unidad_id')) !!}
+					{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-xs', 'id' => 'presentacion_id')) !!}
 				</div>
 			</div>
 
