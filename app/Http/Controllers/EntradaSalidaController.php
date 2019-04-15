@@ -15,6 +15,8 @@ use App\Proveedor;
 use App\Propiedades;
 use App\Entrada;
 use App\Salida;
+use App\DetalleEntrada;
+use App\DetalleSalida;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -140,55 +142,83 @@ class EntradaSalidaController extends Controller
     {
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'documento' => 'required|max:60',
             'numero_documento' => 'required',
-            'serie_documento' => 'required',
-            'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function() use($request){
-            $compra               = new Compra();
-            $compra->documento = $request->input('documento');
-            $compra->numero_documento = $request->input('numero_documento');
-            $compra->serie_documento = $request->input('serie_documento');
-            $compra->credito = $request->input('credito');
-            $compra->numero_dias = $request->input('numero_dias');
-            $compra->ruc = $request->input('ruc');
-            $compra->proveedor_id = $request->input('proveedor_id');
-            $compra->estado = $request->input('estado');
-            $compra->fecha = $request->input('fecha');
-            $compra->fecha_caducidad = $request->input('fecha_caducidad');
-            $compra->total  = $request->input('total');
-            $compra->igv = $request->input('igv');
-            $user           = Auth::user();
-            $compra->user_id = $user->id;
-            $compra->sucursal_id = $user->sucursal_id;
-            //$compra->caja_id = $user->caja_id;
-            $compra->save();
-
-            $cantidad = $request->input('cantidad');
-            $compra_last = Compra::All()->last();
-
-            if($cantidad >0){
-                for($i=0;$i<$cantidad; $i++){
-                    $detalle_compra = new DetalleCompra();
-                    $detalle_compra->fecha_caducidad = $request->input("fecha_vencim".$i);
-                    $detalle_compra->ubicacion = 'STAND0001';
-                    $detalle_compra->precio_compra = $request->input("precio_compra".$i);
-                    $detalle_compra->precio_venta = $request->input("precio_venta".$i);
-                    $detalle_compra->cantidad = $request->input("cant".$i);
-                    $detalle_compra->lote = $request->input("lot".$i);
-                    $detalle_compra->producto_id = $request->input("id_producto".$i);
-                    $detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
-                    $detalle_compra->marca_id = $request->input("id_laboratorio".$i);
-                    $detalle_compra->compra_id = $compra_last->id;
-                    $detalle_compra->save();
+        $error =null;
+        $tipo = $request->input('tipo');
+        if($tipo == 'E'){
+            $error = DB::transaction(function() use($request){
+                $entrada               = new Entrada();
+                $entrada->documento = $request->input('documento');
+                $entrada->numero_documento = $request->input('numero_documento');
+                $entrada->fecha = $request->input('fecha');
+                $entrada->comentario = $request->input('comentario');
+                $entrada->total  = $request->input('total');
+                $user           = Auth::user();
+                $entrada->user_id = $user->id;
+                $entrada->sucursal_id = $user->sucursal_id;
+                $entrada->save();
+    
+                $cantidad = $request->input('cantidad');
+                $entrada_last = Entrada::All()->last();
+    
+                if($cantidad >0){
+                    for($i=0;$i<$cantidad; $i++){
+                        $detalle_entrada = new DetalleEntrada();
+                        $detalle_entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
+                        $detalle_entrada->precio_compra = $request->input("precio_compra".$i);
+                        $detalle_entrada->precio_venta = $request->input("precio_venta".$i);
+                        $detalle_entrada->stock = $request->input("cant".$i);
+                        $detalle_entrada->cantidad = $request->input("cant".$i);
+                        $detalle_entrada->lote = $request->input("lot".$i);
+                        $detalle_entrada->producto_id = $request->input("id_producto".$i);
+                        $detalle_entrada->presentacion_id = $request->input("id_presentacion".$i);
+                        $detalle_entrada->marca_id = $request->input("id_laboratorio".$i);
+                        $detalle_entrada->entrada_id = $entrada_last->id;
+                        $detalle_entrada->save();
+                    }
                 }
-            }
-        });
+            });
+        }
+        if($tipo == 'S'){
+            $error = DB::transaction(function() use($request){
+                $salida               = new salida();
+                $salida->documento = $request->input('documento');
+                $salida->numero_documento = $request->input('numero_documento');
+                $salida->fecha = $request->input('fecha');
+                $salida->comentario = $request->input('comentario');
+                $salida->total  = $request->input('total');
+                $user           = Auth::user();
+                $salida->user_id = $user->id;
+                $salida->sucursal_id = $user->sucursal_id;
+                $salida->save();
+    
+                $cantidad = $request->input('cantidad');
+                $salida_last = Salida::All()->last();
+    
+                if($cantidad >0){
+                    for($i=0;$i<$cantidad; $i++){
+                        $detalle_salida = new DetalleSalida();
+                        $detalle_salida->fecha_caducidad = $request->input("fecha_vencim".$i);
+                        $detalle_salida->precio_compra = $request->input("precio_compra".$i);
+                        $detalle_salida->precio_venta = $request->input("precio_venta".$i);
+                        $detalle_salida->stock = $request->input("cant".$i);
+                        $detalle_salida->cantidad = $request->input("cant".$i);
+                        $detalle_salida->lote = $request->input("lot".$i);
+                        $detalle_salida->producto_id = $request->input("id_producto".$i);
+                        $detalle_salida->presentacion_id = $request->input("id_presentacion".$i);
+                        $detalle_salida->marca_id = $request->input("id_laboratorio".$i);
+                        $detalle_salida->salida_id = $salida_last->id;
+                        $detalle_salida->save();
+                    }
+                }
+            });
+        }
+        
         return is_null($error) ? "OK" : $error;
     }
 
