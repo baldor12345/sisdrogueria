@@ -47,6 +47,28 @@
 				{!! Form::close() !!}
 			</div>
 			<div id="listado{{ $entidad }}"></div>
+			<table class="table-bordered table-striped table-condensed" align="center">
+				<thead>
+					<tr>
+						<th class="text-center" colspan="2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Resumen de Caja</font></font></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Ingresos :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Egresos :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Saldo :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+				</tbody>
+			</table>
         </div>
     </div>
 </div>
