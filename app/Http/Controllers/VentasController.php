@@ -15,7 +15,10 @@ use App\Producto;
 use App\DetalleCompra;
 use App\Presentacion;
 use App\Caja;
+use App\Salida;
 use App\Detalle_venta;
+use App\DetalleEntrada;
+use App\DetalleCaja;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -216,15 +219,16 @@ class VentasController extends Controller
 
                 $detalle_caja = new DetalleCaja();
                 $detalle_caja->caja_id = $caja->id;
-                $detalle_caja->cliente_id = $id_cliente;
+                if($id_cliente != 0){
+                    $detalle_caja->cliente_id = $id_cliente;
+                }
                 $detalle_caja->comprobante_id = $venta->comprobante_id;
                 $detalle_caja->concepto_id = 3;
                 $detalle_caja->fecha = date('Y-m-d H:i:s');
                 $detalle_caja->forma_pago_id = $venta->forma_pago_id; 
                 $detalle_caja->ingreso = $venta->total;
-                $detalle_caja->numero_operacion = "0001";//se debe generar automatico
+                $detalle_caja->numero_operacion = "0004";//se debe generar automatico
                 $detalle_caja->save();
-
             }
 
         });
@@ -358,11 +362,15 @@ class VentasController extends Controller
             $producto = Producto::find($producto_id);
             $detalle_compras = DetalleCompra::where('producto_id','=',$producto_id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
-            $precio_unidad = round($detalle_compras[0]->precio_venta,2);
-            $presentacion_id = $detalle_compras[0]->presentacion_id;
+            $precio_unidad = 0;
+            $presentacion_id =0;
+            if(count($detalle_compras) > 0){
+                $precio_unidad = round($detalle_compras[0]->precio_venta,2);
+                $presentacion_id = $detalle_compras[0]->presentacion_id;
 
-            foreach ($detalle_compras as $key => $value) {
-                $stock += $value->cantidad;
+                foreach ($detalle_compras as $key => $value) {
+                    $stock += $value->cantidad;
+                }
             }
             $res = array($producto, $stock, $precio_unidad,$presentacion_id);
             return response()->json($res);

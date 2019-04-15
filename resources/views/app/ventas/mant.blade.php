@@ -1,6 +1,7 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	{!! Form::hidden('stock_temp', 0, array('id' => 'stock_temp')) !!}
 	<div class="row card-box">
 		<div class="form-group col-9 col-md-9">
 			{!! Form::label('cboCliente', 'Cliente: ', array('class' => '')) !!}
@@ -111,6 +112,7 @@ $(document).ready(function() {
                  var presentacion_id = response[3];
 				 $('#nombre_temporal').val(""+producto.descripcion);
 				 $('#precio_unidad').val(""+precio_unidad);
+				 $('#stock_temp').val(stock);
                     var msj = "<div class='alert alert-success productos'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
                     msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
 					$('#divInfoProducto').html(msj);
@@ -154,7 +156,8 @@ function agregar_producto(){
 
 	// var nombre = $('#nombre_temp').val();
 	// var nombre_presentacion = $('#nombre_presentacion_temp').val();
-	if($("#cboProducto").val() != '0' && $('#cboPresentacion').val() != '0' && $('#cantidad').val() != ""){
+	if($('#stock_temp').val() > 0 || $('#cantidad').val() < $('#stock_temp').val()){
+		if($("#cboProducto").val() != '0' && $('#cboPresentacion').val() != '0' && $('#cantidad').val() != ""){
 		var nombre_producto = $('#cboProducto option:selected').html();
 		var nombre_presentacion = $('#cboPresentacion option:selected').html();
 		var producto_id = $('#cboProducto').val();
@@ -172,10 +175,14 @@ function agregar_producto(){
 		$('#cboPresentacion').val(0);
 		$('#precio_unidad').val(0);
 		$('#cantidad').val("");
-
+		$('#stock_temp').val(0);
 	}else{
 		alert("Seleccione un producto, presentacion e ingrese su cantidad");
 	}
+	}else{
+		alert("No existe stock suficiente para el producto seleccionado");
+	}
+	
 	
 
 }
