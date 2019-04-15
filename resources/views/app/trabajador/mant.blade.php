@@ -43,7 +43,7 @@
 		{!! Form::date('fecha_ingreso', $trabajador ==null?$fecha_default:$detalle_trabajador->fecha_ingreso, array('class' => 'form-control input-xs', 'id' => 'fecha_ingreso', 'placeholder' => '')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" >
-		{!! Form::label('cboTipoPersona', 'Sucursal: ', array('class' => '')) !!}
+		{!! Form::label('cboTipoPersona', 'Tipo_Personal: ', array('class' => '')) !!}
 		{!! Form::select('cboTipoPersona', $cboTipo_personas,$trabajador != null? $trabajador->tipopersona_id: 0 , array('class' => 'form-control input-sm', 'id' => 'cboTipoPersona')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
