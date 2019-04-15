@@ -25,11 +25,11 @@ class CrearTablaDetalleCompra extends Migration
             $table->string('lote',100)->nullable();
             $table->integer('producto_id')->unsigned()->nullable();
             $table->integer('compra_id')->unsigned()->nullable();
-            $table->integer('presentacion_id')->unsigned()->nullable();
+            //$table->integer('presentacion_id')->unsigned()->nullable();
             $table->integer('marca_id')->unsigned()->nullable();
             $table->foreign('producto_id')->references('id')->on('producto')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('compra_id')->references('id')->on('compra')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
+            //$table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();

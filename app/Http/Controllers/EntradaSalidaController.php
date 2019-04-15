@@ -61,19 +61,21 @@ class EntradaSalidaController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'Compra';
-        $numero      = Libreria::getParam($request->input('numero'));
+        $numero      = Libreria::getParam($request->input('producto'));
+        $presentacion_id      = Libreria::getParam($request->input('presentacion_id'));
         $fechai      = Libreria::getParam($request->input('fechai'));
         $fechaf      = Libreria::getParam($request->input('fechaf'));
-        $resultado        = MantenimientoProducto::listar($numero, $fechai, $fechaf);
+        $resultado        = MantenimientoProducto::listar($numero,$presentacion_id, $fechai, $fechaf);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Proveedor', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nro', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Situacion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Total', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Producto', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Presentacion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'F. Caducidad', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'P. Venta', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Lote', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Cantidad', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -104,7 +106,8 @@ class EntradaSalidaController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+        $cboPresentacion     = [''=>'Todos'] + Presentacion::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.admin')->with(compact('cboPresentacion', 'entidad', 'title', 'titulo_registrar', 'ruta'));
     }
 
     /**
@@ -114,12 +117,11 @@ class EntradaSalidaController extends Controller
      */
     public function create(Request $request)
     {
-        echo "esta aqui";
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'EntradaSalida';
         $entradasalida       = null;
-        $cboDocumento       = array(1=>'Doc. Entrada', 2=>'Doc. Salida');
-        $cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
+        $cboDocumento       = array('E'=>'Doc. Entrada', 'S'=>'Doc. Salida');
+        //$cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
@@ -151,37 +153,35 @@ class EntradaSalidaController extends Controller
             return $validacion->messages()->toJson();
         }
         $error =null;
-        $tipo = $request->input('tipo');
+        $tipo = $request->input('documento');
         if($tipo == 'E'){
             $error = DB::transaction(function() use($request){
-                $entrada               = new Entrada();
-                $entrada->documento = $request->input('documento');
-                $entrada->numero_documento = $request->input('numero_documento');
-                $entrada->fecha = $request->input('fecha');
-                $entrada->comentario = $request->input('comentario');
-                $entrada->total  = $request->input('total');
-                $user           = Auth::user();
-                $entrada->user_id = $user->id;
-                $entrada->sucursal_id = $user->sucursal_id;
-                $entrada->save();
-    
                 $cantidad = $request->input('cantidad');
-                $entrada_last = Entrada::All()->last();
-    
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
-                        $detalle_entrada = new DetalleEntrada();
-                        $detalle_entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
-                        $detalle_entrada->precio_compra = $request->input("precio_compra".$i);
-                        $detalle_entrada->precio_venta = $request->input("precio_venta".$i);
-                        $detalle_entrada->stock = $request->input("cant".$i);
-                        $detalle_entrada->cantidad = $request->input("cant".$i);
-                        $detalle_entrada->lote = $request->input("lot".$i);
-                        $detalle_entrada->producto_id = $request->input("id_producto".$i);
-                        $detalle_entrada->presentacion_id = $request->input("id_presentacion".$i);
-                        $detalle_entrada->marca_id = $request->input("id_laboratorio".$i);
-                        $detalle_entrada->entrada_id = $entrada_last->id;
-                        $detalle_entrada->save();
+                        $entrada_existente = Entrada::where('lote',trim($request->input("lot".$i)))->whereDate('fecha_caducidad',$request->input("fecha_vencim".$i))->where('deleted_at',null)->get();
+                        if(count($entrada_existente) != 0){
+                            $entrada    = Entrada::find($entrada_existente[0]->id);
+                            $entrada->precio_compra = $request->input("precio_compra".$i);
+                            $entrada->precio_venta = $request->input("precio_venta".$i);
+                            $entrada->stock = intval($request->input("cant".$i))+$entrada_existente[0]->stock;
+                            $entrada->save();
+                        }
+                        if(count($entrada_existente) == 0){
+                            $entrada    = new Entrada();
+                            $entrada->fecha = $request->input('fecha');
+                            $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
+                            $entrada->precio_compra = $request->input("precio_compra".$i);
+                            $entrada->precio_venta = $request->input("precio_venta".$i);
+                            $entrada->stock = $request->input("cant".$i);
+                            $entrada->lote = $request->input("lot".$i);
+                            $entrada->producto_id = $request->input("id_producto".$i);
+                            $user           = Auth::user();
+                            $entrada->user_id = $user->id;
+                            $entrada->sucursal_id = $user->sucursal_id;
+                            $entrada->save();
+                        }
+                        
                     }
                 }
             });

@@ -13,6 +13,7 @@ use App\Presentacion;
 use App\Marca;
 use App\Proveedor;
 use App\Propiedades;
+use App\Entrada;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -182,10 +183,27 @@ class CompraController extends Controller
                     $detalle_compra->cantidad = $request->input("cant".$i);
                     $detalle_compra->lote = $request->input("lot".$i);
                     $detalle_compra->producto_id = $request->input("id_producto".$i);
-                    $detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
+                    //$detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
                     $detalle_compra->marca_id = $request->input("id_laboratorio".$i);
                     $detalle_compra->compra_id = $compra_last->id;
                     $detalle_compra->save();
+                }
+            }
+            if($cantidad >0){
+                for($i=0;$i<$cantidad; $i++){
+                    $entrada = new Entrada();
+                    $entrada->fecha = $request->input('fecha');
+                    $entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
+                    $entrada->precio_compra = $request->input("precio_compra".$i);
+                    $entrada->precio_venta = $request->input("precio_venta".$i);
+                    $entrada->stock = $request->input("cant".$i);
+                    $entrada->lote = $request->input("lot".$i);
+                    $entrada->producto_id = $request->input("id_producto".$i);
+                    //$entrada->presentacion_id = $request->input("id_presentacion".$i);
+                    $user           = Auth::user();
+                    $entrada->user_id = $user->id;
+                    $entrada->sucursal_id = $user->sucursal_id;
+                    $entrada->save();
                 }
             }
         });
@@ -356,10 +374,10 @@ class CompraController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = Producto::where("codigo",'LIKE', '%'.$term.'%')->orWhere("codigo_barra",'LIKE', '%'.$term.'%')->orWhere("descripcion",'LIKE', '%'.$term.'%')->orWhere('deleted_at',null)->limit(5)->get();
+        $tags = DB::table('producto')->join('presentacion','producto.presentacion_id','presentacion.id')->select('producto.id as id','producto.presentacion_id as presentecion_id','producto.descripcion as descripcion','presentacion.nombre as presentacion')->where("producto.codigo",'LIKE', '%'.$term.'%')->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion];
+            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

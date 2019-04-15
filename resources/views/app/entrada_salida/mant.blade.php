@@ -5,12 +5,8 @@
 		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">    	
 			<div class="form-group input-sm" style="height: 20px;" >
 				{!! Form::label('producto_id', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 20px')) !!}
-				<div class="col-sm-6 col-xs-12" style="height: 20px;">
+				<div class="col-sm-9 col-xs-12" style="height: 20px;">
 					{!! Form::select('producto_id', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'producto_id')) !!}
-				</div>
-				{!! Form::label('laboratorio_id', 'Marca/Lab.:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 20px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 20px;">
-					{!! Form::select('laboratorio_id', $cboLaboratorio, null, array('class' => 'form-control input-sm', 'id' => 'laboratorio_id')) !!}
 				</div>
 			</div>
 			<div class="form-group">
@@ -18,20 +14,15 @@
 					<tr style="height: 10px;">
 						<td>&nbsp;</td>
 						<td class=" input-sm"><b>Presentacion</b></td>
-						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: right;')) !!}</td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+						<td>{!! Form::select('id_presentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'id_presentacion','style'=>'text-align: right;')) !!}</td>
 						<td class=" input-sm"><b>P.Compra</b></td>
 						<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>P.Venta</b></td>
 						<td><input class="form-control input-sm" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Cantidad</b></td>
 						<td><input class="form-control input-sm input-number" id="cantidad" size="3" name="cantidad" type="text"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Fecha Venc.</b></td>
 						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Lote</b></td>
 						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
@@ -63,12 +54,7 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				{!! Form::label('tipo', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-sm', 'id' => 'tipo')) !!}
-				</div>
-			</div>
+			
 			<div class="form-group " >
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
@@ -81,26 +67,9 @@
 					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'numero documento')) !!}
 				</div>
 			</div>
-			<br>
-			<div class="form-group " >
-				{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-sm', 'id' => 'proveedor_id')) !!}
-				</div>
-			</div>
 			<div class="form-group" >
-				{!! Form::label('comentario', 'Comentario:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('comentario', null, array('class' => 'form-control input-xs', 'id' => 'comentario', 'placeholder' => '')) !!}
-				</div>
+					{!! Form::textarea('comentario', null, array('class' => 'form-control input-xs', 'style'=>'height: 90px;', 'id' => 'comentario', 'placeholder' => 'Ingrese comentario!..')) !!}
 			</div>
-			<div class="form-group" >
-				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
-				</div>
-			</div>
-			<br>
 			<div class="form-group">
 				<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 					{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarCompra', 'onclick' => 'guardar_compra(\''.$entidad.'\', this)')) !!}
@@ -181,20 +150,20 @@ function agregar(){
 	//datos de la presentacion
 	var presentacion_dat ="";
 	var select_p = "";
-	var select_p = document.getElementById('presentacion_id');
+	var select_p = document.getElementById('id_presentacion');
 	presentacion_dat = select_p.options[select_p.selectedIndex].innerText;
 
 
 	var preciocompra 		= $('#preciocompra').val();
-	var presentacion_id 	= $('#presentacion_id').val();
 	var laboratorio_id 		= $('#laboratorio_id').val();
 	var precioventa 		= $('#precioventa').val();
 	var cantidad 			= $('#cantidad').val();
 	var fechavencimiento 	= $('#fechavencimiento').val();
 	var lote 				= $('#lote').val();
+	console.log("id_presentacion"+id_presentacion);
 
 	if($('#producto_id').val() !='0'){
-		if(presentacion_id !=""){
+		if(id_presentacion !=""){
 			if(preciocompra !=""){
 				if(precioventa !=""){
 					if(cantidad!=""){
@@ -209,7 +178,7 @@ function agregar(){
 									t_parcial=0;
 								}
 								var total = t_parcial+subtotal;
-								var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+presentacion_id+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+								var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 									'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
 									'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 									'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -222,8 +191,7 @@ function agregar(){
 								$('#total').val(total);
 								//vaciar datos
 								$('#producto_id').val(0);
-								$('#presentacion_id').val(0);
-								$('#laboratorio_id').val(0);
+								$('#id_presentacion').val(0);
 								$('#producto_id').value="Seleccione Producto...";
 								$('#preciocompra').val("");
 								$('#precioventa').val("");

@@ -18,18 +18,13 @@
 		@foreach ($lista as $key => $value)
 		<tr>
 			<td>{{ $contador }}</td>
-			<td>{{ Date::parse( $value->compra_fecha )->format('d-m-Y') }}</td>
-			@if($value->proveedor_nombre==null)
-			<td>{{ $value->proveedor_nombre }}</td>
-			@else
-			<td>--</td>
-			@endif
-			<td>{{ $value->numero_documento }}</td>
-			<td>{{ $value->estado }}</td>
-			<td>{{ $value->total }}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle"], array($value->compra_id, 'listar'=>'SI')).'\', \''.$titulo_ver.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> Comprobante', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->compra_id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->compra_id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+			<td>{{ $value->descripcion }}</td>
+			<td>{{ $value->presentacion }}</td>
+			<td>{{ Date::parse( $value->fecha_cad )->format('d-m-Y') }}</td>
+			<td>{{ $value->precio_venta }}</td>
+			<td>{{ $value->lote }}</td>
+			<td>{{ $value->stock }}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->entrada_id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;

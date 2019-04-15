@@ -59,7 +59,7 @@ class Compra extends Model
     public static function listardetallecompra($id){
         return  DB::table('detalle_compra')
                 ->join('producto', 'detalle_compra.producto_id', '=', 'producto.id')
-                ->join('presentacion', 'detalle_compra.presentacion_id', '=', 'presentacion.id')
+                ->join('presentacion', 'producto.presentacion_id', '=', 'presentacion.id')
                 ->select(
                         'producto.descripcion as descripcion', 
                         'detalle_compra.fecha_caducidad as fecha_caducidad', 

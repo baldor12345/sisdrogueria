@@ -19,19 +19,15 @@
 						<td>&nbsp;</td>
 						<td class=" input-sm"><b>Presentacion</b></td>
 						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: right;')) !!}</td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>P.Compra</b></td>
 						<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
 						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>P.Venta</b></td>
 						<td><input class="form-control input-sm" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Cantidad</b></td>
 						<td><input class="form-control input-sm input-number" id="cantidad" size="3" name="cantidad" type="text"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Fecha Venc.</b></td>
 						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>Lote</b></td>
 						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>

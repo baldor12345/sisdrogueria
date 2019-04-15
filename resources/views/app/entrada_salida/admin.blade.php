@@ -18,8 +18,12 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						<label for="numero" class="input-sm">Nro:</label>
-						{!! Form::text('numero', '', array('class' => 'form-control input-sm', 'id' => 'numero')) !!}
+						<label for="producto" class="input-sm">Producto:</label>
+						{!! Form::text('producto', '', array('class' => 'form-control input-sm', 'id' => 'producto')) !!}
+					</div>
+					<div class="form-group">
+						<label for="descripcion" class="input-sm">Presentacion:</label>
+						{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id')) !!}
 					</div>
 					<div class="form-group">
 						<label for="fechai" class="input-sm">Desde:</label>
@@ -48,8 +52,8 @@
 		var fechaActual = new Date();
 		var day = ("0" + fechaActual.getDate()).slice(-2);
 		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-		var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
-		var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
+		var fechai= (fechaActual.getFullYear()) +"-01-01";
+		var fechaf= (fechaActual.getFullYear()+1) +"-"+month+"-"+day+"";
 		$('#fechai').val(fechai);
 		$('#fechaf').val(fechaf);
 		buscar('{{ $entidad }}');
