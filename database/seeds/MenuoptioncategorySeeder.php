@@ -40,7 +40,7 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Mantenimientos',
+					'name'     => 'Mantenimiento Almacen',
 					'order'      => 5,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -48,7 +48,7 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Personas',
+					'name'     => 'Mantenimientos',
 					'order'      => 6,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
@@ -56,8 +56,16 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Usuarios',
+					'name'     => 'Personas',
 					'order'      => 7,
+					'icon'      => 'fa fa-bank',
+					'position'      => 'V',
+					'created_at' => $now,
+					'updated_at' => $now
+				),
+				array(
+					'name'     => 'Usuarios',
+					'order'      => 8,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
 					'created_at' => $now,

@@ -51,6 +51,10 @@ class MenuoptionSeeder extends Seeder
 
 		$datos = array(
 			array(
+				'name' => 'Conceptos',
+				'link'   => 'concepto'
+			),
+			array(
 				'name' => 'Propiedades',
 				'link'   => 'propiedades'
 			),
@@ -153,14 +157,6 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Compras',
 					'link'   => 'compra'
 				),
-				array(
-					'name' => 'Lotes y Caducidad',
-					'link'   => 'lotes_caducidad'
-				),
-				array(
-					'name' => 'Stock',
-					'link'   => 'stock_producto'
-				)
 			);
 
 		for ($i=0; $i < count($datos); $i++) { 
@@ -220,6 +216,35 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Mov. Anulados',
 					'link'   => 'anulados'
+				)
+			);
+
+		for ($i=0; $i < count($datos); $i++) { 
+			DB::table('menuoption')->insert(array(
+					'name'                 => $datos[$i]['name'],
+					'link'                   => $datos[$i]['link'],
+					'order'                  => $i+1,
+					'menuoptioncategory_id' => $menuoptioncategory_id,
+					'created_at'             => $now,
+					'updated_at'             => $now
+				)
+			);
+		}
+
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Mantenimiento Almacen')->first()->id;
+
+		$datos = array(
+				array(
+					'name' => 'Entradas y Salidas',
+					'link'   => 'entradas_salidas'
+				),
+				array(
+					'name' => 'Lotes y Caducidad',
+					'link'   => 'lotes_caducidad'
+				),
+				array(
+					'name' => 'Stock',
+					'link'   => 'stock_producto'
 				)
 			);
 
