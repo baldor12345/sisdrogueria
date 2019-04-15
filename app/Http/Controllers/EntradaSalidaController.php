@@ -16,6 +16,7 @@ use App\Propiedades;
 use App\Entrada;
 use App\Salida;
 use App\DetalleEntrada;
+use App\MantenimientoProducto;
 use App\DetalleSalida;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
@@ -61,14 +62,14 @@ class EntradaSalidaController extends Controller
         $filas            = $request->input('filas');
         $entidad          = 'Compra';
         $numero      = Libreria::getParam($request->input('numero'));
-        $proveedor      = Libreria::getParam($request->input('proveedor'));
         $fechai      = Libreria::getParam($request->input('fechai'));
         $fechaf      = Libreria::getParam($request->input('fechaf'));
-        $resultado        = Compra::listarcompra($numero, $proveedor, $fechai, $fechaf);
+        $resultado        = MantenimientoProducto::listar($numero, $fechai, $fechaf);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Proveedor', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Situacion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total', 'numero' => '1');
@@ -113,6 +114,7 @@ class EntradaSalidaController extends Controller
      */
     public function create(Request $request)
     {
+        echo "esta aqui";
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'EntradaSalida';
         $entradasalida       = null;
@@ -122,7 +124,7 @@ class EntradaSalidaController extends Controller
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratorio = [''=>'Seleccione'] + Marca::pluck('name', 'id')->all();
-        $formData       = array('compra.store');
+        $formData       = array('entrada_salida.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
@@ -222,15 +224,143 @@ class EntradaSalidaController extends Controller
         return is_null($error) ? "OK" : $error;
     }
 
+    public function show($id)
+    {
+        //
+    }
+
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function edit($id, Request $request)
     {
-        //
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = Libreria::getParam($request->input('listar'), 'NO');
+        $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
+        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
+        $cboProducto       = array(0=>'Seleccione Producto...');
+        $entrada_salida       = EntradaSalida::find($id);
+        $entidad        = 'EntradaSalida';
+        $formData       = array('entrada_salida.update', $id);
+        $ruta           = $this->rutas;
+        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton          = 'Modificar';
+        return view($this->folderview.'.mant')->with(compact('ruta', 'entrada_salida', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $reglas = array(
+            'documento'       => 'required|max:50|unique:compra,documento,'.$id.',id,deleted_at,NULL',
+            'numero_documento' => 'required',
+            'serie_documento' => 'required',
+            'proveedor_id' => 'required',
+            );
+        $validacion = Validator::make($request->all(),$reglas);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        } 
+        $error = DB::transaction(function() use($request, $id){
+            $compra                 = Compra::find($id);
+            $compra->documento = $request->input('documento');
+            $compra->numero_documento = $request->input('numero_documento');
+            $compra->serie_documento = $request->input('serie_documento');
+            $compra->credito = $request->input('credito');
+            $compra->numero_dias = $request->input('numero_dias');
+            $compra->ruc = $request->input('ruc');
+            $compra->proveedor_id = $request->input('proveedor_id');
+            $compra->estado = $request->input('estado');
+            $compra->fecha = $request->input('fecha');
+            $compra->fecha_caducidad = $request->input('fecha_caducidad');
+
+            $compra->total  = $request->input('total');
+            $compra->igv = $request->input('igv');
+            $user           = Auth::user();
+            $compra->user_id = $user->id;
+            $compra->sucursal_id = $user->sucursal_id;
+            //$compra->caja_id = $user->caja_id;
+            $compra->save();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+    //para vista de ver detalle
+    public function verdetalle($id, Request $request)
+    {
+        $existe = Libreria::verificarExistencia($id, 'entrada');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = Libreria::getParam($request->input('listar'), 'NO');
+        $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
+        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
+        $entrada       = Entrada::find($id);
+        $list_detalle_c = MantenimientoProducto::listardetalleentrada($id)->get();
+        $proveedor      = ($entrada->proveedor_id != null)?Proveedor::find($entrada->proveedor_id):$proveedor="";
+        $entidad        = 'EntradaSalida';
+        $formData       = array('entrada_salida.update', $id);
+        $ruta           = $this->rutas;
+        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton          = 'Modificar';
+        return view($this->folderview.'.verdetalle')->with(compact('ruta', 'entrada', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_c','cboDocumento','cboCredito'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $error = DB::transaction(function() use($id){
+            $producto = Compra::find($id);
+            $producto->delete();
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
+    /**
+     * Función para confirmar la eliminación de un registrlo
+     * @param  integer $id          id del registro a intentar eliminar
+     * @param  string $listarLuego consultar si luego de eliminar se listará
+     * @return html              se retorna html, con la ventana de confirmar eliminar
+     */
+    public function eliminar($id, $listarLuego)
+    {
+        $existe = Libreria::verificarExistencia($id, 'compra');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = "NO";
+        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
+            $listar = $listarLuego;
+        }
+        $modelo   = Compra::find($id);
+        $entidad  = 'Compra';
+        $formData = array('route' => array('compra.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton    = 'Eliminar';
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
     }
 
 

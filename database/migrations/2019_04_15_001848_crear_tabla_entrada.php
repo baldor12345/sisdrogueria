@@ -20,12 +20,14 @@ class CrearTablaEntrada extends Migration
             $table->timestamp('fecha')->nullable();
             $table->string('numero_documento',100)->nullable();
             $table->string('comentario',400)->nullable();
-
+            $table->decimal('total',10,2)->nullable();
             $table->char('estado', 1)->nullable();//P=>Pendiente , C=>Cancelado
             $table->integer('user_id')->unsigned()->nullable();
             $table->integer('sucursal_id')->unsigned()->nullable();
+            $table->integer('proveedor_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('proveedor_id')->references('id')->on('proveedor')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -147,6 +147,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('entrada_salida', 'EntradaSalidaController', array('except' => array('show')));
     Route::get('entrada_salida/listproveedores',  'EntradaSalidaController@listproveedores')->name('entrada_salida.listproveedores');
     Route::get('entrada_salida/listproductos',  'EntradaSalidaController@listproductos')->name('entrada_salida.listproductos');
+    Route::get('entrada_salida/verdetalle/{id?}',  'EntradaSalidaController@verdetalle')->name('entrada_salida.verdetalle');
 
     //ENTRADAS Y SALIDAS
     Route::post('lotes_caducidad/buscar','lotescaducidadController@buscar')->name('lotes_caducidad.buscar');
