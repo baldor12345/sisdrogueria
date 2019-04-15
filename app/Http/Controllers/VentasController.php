@@ -215,6 +215,15 @@ class VentasController extends Controller
                 }
 
                 $detalle_caja = new DetalleCaja();
+                $detalle_caja->caja_id = $caja->id;
+                $detalle_caja->cliente_id = $id_cliente;
+                $detalle_caja->comprobante_id = $venta->comprobante_id;
+                $detalle_caja->concepto_id = 3;
+                $detalle_caja->fecha = date('Y-m-d H:i:s');
+                $detalle_caja->forma_pago_id = $venta->forma_pago_id; 
+                $detalle_caja->ingreso = $venta->total;
+                $detalle_caja->numero_operacion = "0001";//se debe generar automatico
+                $detalle_caja->save();
 
             }
 

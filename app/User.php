@@ -31,7 +31,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
+    public function sucursal(){
+        return $this->belongsTo('App\Sucursal', 'sucursal_id');
+    } 
     public function scopelistar($query, $login)
     {
         $user = Auth::user();
