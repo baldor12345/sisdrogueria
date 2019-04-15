@@ -8,9 +8,10 @@ use App\Http\Requests;
 use App\Movimiento;
 use App\Sucursal;
 use App\Persona;
-use App\Distrito;
-use App\Provincia;
-use App\Departamento;
+use App\Cliente;
+use App\Concepto;
+use App\FormaPago;
+use App\Comprobante;
 use App\Caja;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
@@ -52,19 +53,20 @@ class CajaController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'Caja';
-        $folio            = Libreria::getParam($request->input('folio'));
-        $fechainicio      = Libreria::getParam($request->input('fechainicio'));
-        $fechafin         = Libreria::getParam($request->input('fechafin'));
-        $resultado        = Movimiento::listar($fechainicio,$fechafin,$folio, $sucursal_id, $aperturaycierre, $maxapertura, $maxcierre, 1);
+        $concepto         = Libreria::getParam($request->input('concepto'));
+        $cliente         = Libreria::getParam($request->input('cliente'));
+        $fechai           = Libreria::getParam($request->input('fechai'));
+        $fechaf           = Libreria::getParam($request->input('fechaf'));
+        $resultado        = Caja::listardetallecaja($concepto, $cliente, $fechai, $fechaf);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Numero', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Concepto', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Persona', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Trabajador', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Ingresos', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Egresos', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Pago', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Cliente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Ingreso', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Egreso', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Forma Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Usuario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
@@ -102,9 +104,8 @@ class CajaController extends Controller
         $titulo_apertura  = $this->tituloApertura;
         $titulo_cierre    = $this->tituloCierre;
         $ruta             = $this->rutas;
-        //$user = Auth::user();
-        //$cboSucursal      = Sucursal::where('empresa_id', '=', $user_id)->pluck('nombre', 'id')->all();
-        return view($this->folderview.'.admin')->with(compact('entidad', 'cboSucursal' , 'title', 'titulo_registrar', 'titulo_apertura' , 'titulo_cierre' , 'ruta'));
+        $cboConcepto = [''=>'Seleccione'] + Concepto::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.admin')->with(compact('entidad', 'cboConcepto' , 'title', 'titulo_registrar', 'titulo_apertura' , 'titulo_cierre' , 'ruta'));
     }
 
     /**
