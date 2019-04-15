@@ -41,4 +41,8 @@ class CrearTablaDetalleVentas extends Migration
     {
         Schema::dropIfExists('detalle_ventas');
     }
+
+    public function listDetLotes(){
+        
+    }
 }
