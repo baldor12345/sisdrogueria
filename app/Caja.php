@@ -25,6 +25,9 @@ class Caja extends Model
     public function user(){
         return $this->belongsTo('App\User', 'user_id');
     } 
+    public function sucursal(){
+        return $this->belongsTo('App\Sucursal', 'sucursal_id');
+    } 
 
     public static function getIdUser()
     {
@@ -32,14 +35,16 @@ class Caja extends Model
         return $id;
     }
 
-    public function scopelistar($query, $titulo)
+    public function scopelistar($query)
     {
-        return $query->where(function($subquery) use($titulo)
+        $user_id = Auth::id();
+        return $query->where(function($subquery) use($user_id)
                     {
-                        if (!is_null($titulo)) {
-                            $subquery->where('titulo', 'LIKE', '%'.$titulo.'%');
-                        }
+                      
+                        $subquery->where('deleted_at', '=', null);
+                        
                     })
+                    ->where('sucursal_id','=',$user_id)
                     ->orderBy('fecha_horaapert', 'DSC');
     }
 
