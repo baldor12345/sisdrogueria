@@ -61,6 +61,18 @@
 		{!! Form::select('distrito_id', $cboDistrito, null, array('class' => 'form-control input-xs', 'id' => 'distrito_id')) !!}
 	</div>
 </div>
+<div class="form-group col-sm-12">
+	{!! Form::label('provincia_id', 'Provincia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::select('provincia_id', $cboProvincia, null, array('class' => 'form-control input-xs', 'id' => 'provincia_id')) !!}
+	</div>
+</div>
+<div class="form-group col-sm-12">
+	{!! Form::label('departamento_id', 'Departamento:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::select('departamento_id', $cboDepartamento, null, array('class' => 'form-control input-xs', 'id' => 'departamento_id')) !!}
+	</div>
+</div>
 
 
 <div class="form-group">
@@ -82,27 +94,6 @@
 				this.value = this.value.replace(/[^0-9]/g,'');
 		});
 
-		$('#distrito_id').select2({
-			dropdownParent: $("#modal"+(contadorModal-1)),
-			
-			minimumInputLenght: 2,
-			ajax: {
-				url: "{{ URL::route($ruta['listdistritos'], array()) }}",
-				dataType: 'json',
-				delay: 250,
-				data: function(params){
-					return{
-						q: $.trim(params.term)
-					};
-				},
-				processResults: function(data){
-					return{
-						results: data
-					};
-				}
-				
-			}
-		});
 	}); 
  
 </script>

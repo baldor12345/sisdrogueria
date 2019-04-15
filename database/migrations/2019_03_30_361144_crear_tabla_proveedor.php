@@ -23,7 +23,11 @@ class CrearTablaProveedor extends Migration
             $table->string('celular', 14)->nullable();
             $table->char('estado', 1)->nullable();
             $table->integer('distrito_id')->unsigned();
+            $table->integer('provincia_id')->unsigned();
+            $table->integer('departamento_id')->unsigned();
             $table->foreign('distrito_id')->references('id')->on('distrito')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('provincia_id')->references('id')->on('provincia')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('departamento_id')->references('id')->on('departamento')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

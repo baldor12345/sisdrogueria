@@ -41,6 +41,7 @@ class PresentacionController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Simbolo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -99,7 +100,7 @@ class PresentacionController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas     = array('nombre' => 'required|max:100');
+        $reglas     = array('nombre' => 'required|max:100', 'sigla' => 'required|max:100');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -108,6 +109,7 @@ class PresentacionController extends Controller
         $error = DB::transaction(function() use($request){
             $marca       = new Presentacion();
             $marca->nombre = strtoupper( $request->input('nombre') );
+            $marca->sigla = $request->input('sigla');
             $marca->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -158,7 +160,7 @@ class PresentacionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
-        $reglas     = array('nombre' => 'required|max:100');
+        $reglas     = array('nombre' => 'required|max:100', 'sigla' => 'required|max:100');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -167,6 +169,7 @@ class PresentacionController extends Controller
         $error = DB::transaction(function() use($request, $id){
             $marca       = Presentacion::find($id);
             $marca->nombre = strtoupper( $request->input('nombre') );
+            $marca->sigla = $request->input('sigla');
             $marca->save();
         });
         return is_null($error) ? "OK" : $error;

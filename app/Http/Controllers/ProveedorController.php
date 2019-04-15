@@ -109,12 +109,14 @@ class ProveedorController extends Controller
         $entidad        = 'Proveedor'; //es personamaestro
         $proveedor        = null;
         $cboEstado          = array('A'=>'Activo','I'=>'Inactivo');
-        $cboDistrito       = array(0=>'Seleccione Distrito...');
+        $cboDistrito       = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
+        $cboProvincia       = [''=>'Seleccione'] + Provincia::pluck('nombre', 'id')->all();
+        $cboDepartamento       = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         $ruta             = $this->rutas;
         $formData       = array('proveedor.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact( 'proveedor', 'cboEstado', 'ruta','formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
+        return view($this->folderview.'.mant')->with(compact('cboProvincia','cboDepartamento', 'proveedor', 'cboEstado', 'ruta','formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
     }
 
     /**
@@ -130,9 +132,12 @@ class ProveedorController extends Controller
         $reglas = array(
             'nombre'       => 'required|max:200|unique:proveedor,nombre,NULL,id,deleted_at,NULL',
             'persona_contacto'    => 'required|max:100',
+            'ruc'    => 'required|max:100',
             'telefono'    => 'required|max:100',
             'celular'    => 'required|max:15',
             'distrito_id'    => 'required',
+            'provincia_id'    => 'required',
+            'departamento_id'    => 'required',
         );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -148,6 +153,8 @@ class ProveedorController extends Controller
             $proveedor->celular     = $request->input('celular');
             $proveedor->estado       = $request->input('estado');
             $proveedor->distrito_id  = $request->input('distrito_id');
+            $proveedor->provincia_id  = $request->input('provincia_id');
+            $proveedor->departamento_id  = $request->input('departamento_id');
             $proveedor->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -177,7 +184,9 @@ class ProveedorController extends Controller
             return $existe;
         }
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
+        $cboDistrito       = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
+        $cboProvincia       = [''=>'Seleccione'] + Provincia::pluck('nombre', 'id')->all();
+        $cboDepartamento       = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         $cboEstado          = array('A'=>'Activo','I'=>'Inactivo');
         $proveedor        = Proveedor::find($id);
         $ruta             = $this->rutas;
@@ -185,7 +194,7 @@ class ProveedorController extends Controller
         $formData       = array('proveedor.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('cboEstado', 'proveedor', 'ruta', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
+        return view($this->folderview.'.mant')->with(compact('cboProvincia','cboDepartamento','cboEstado', 'proveedor', 'ruta', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito'));
     }
 
     /**
@@ -205,8 +214,11 @@ class ProveedorController extends Controller
             'nombre'       => 'required|max:200|unique:proveedor,nombre,'.$id.',id,deleted_at,NULL',
             'persona_contacto'    => 'required|max:100',
             'telefono'    => 'required|max:100',
+            'ruc'    => 'required|max:100',
             'celular'    => 'required|max:15',
             'distrito_id'    => 'required',
+            'provincia_id'    => 'required',
+            'departamento_id'    => 'required',
         );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -222,6 +234,8 @@ class ProveedorController extends Controller
             $proveedor->celular     = $request->input('celular');
             $proveedor->estado       = $request->input('estado');
             $proveedor->distrito_id  = $request->input('distrito_id');
+            $proveedor->provincia_id  = $request->input('provincia_id');
+            $proveedor->departamento_id  = $request->input('departamento_id');
             $proveedor->save();
         });
         return is_null($error) ? "OK" : $error;

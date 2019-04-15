@@ -70,7 +70,7 @@ class ProductoController extends Controller
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Precio venta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Unidad', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Presentacion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
@@ -118,7 +118,7 @@ class ProductoController extends Controller
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $cboMarca       = array(0=>'Seleccione Marca...');
         $cboCategoria   = array(0=>'Seleccione Categoria...');
-        $cboUnidad      = array(0=>'Seleccione Unidad...');
+        $cboPresentacion     = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
         $formData       = array('producto.store');
@@ -127,7 +127,7 @@ class ProductoController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
     }
 
     /**
@@ -149,7 +149,7 @@ class ProductoController extends Controller
 
             'tipo' => 'required',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
-            'unidad_id' => 'required|integer|exists:unidad,id,deleted_at,NULL',
+            'presentacion_id' => 'required|integer|exists:presentacion,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -170,7 +170,7 @@ class ProductoController extends Controller
 
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->unidad_id = $request->input('unidad_id');
+            $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
@@ -205,7 +205,7 @@ class ProductoController extends Controller
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $cboMarca = array('' => 'Seleccione') + Marca::pluck('name', 'id')->all();
         $cboCategoria = array('' => 'Seleccione') + Categoria::pluck('name', 'id')->all();
-        $cboUnidad = array('' => 'Seleccione') + Unidad::pluck('name', 'id')->all();
+        $cboPresentacion     = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $producto       = Producto::find($id);
@@ -237,7 +237,7 @@ class ProductoController extends Controller
             'ubicacion'    => 'required',
             'stock_minimo'    => 'required',
             'categoria_id' => 'required',
-            'unidad_id' => 'required',
+            'presentacion_id' => 'required',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -258,7 +258,7 @@ class ProductoController extends Controller
 
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->unidad_id = $request->input('unidad_id');
+            $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
