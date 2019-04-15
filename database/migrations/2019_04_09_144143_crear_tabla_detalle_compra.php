@@ -21,6 +21,7 @@ class CrearTablaDetalleCompra extends Migration
             $table->decimal('precio_compra',10,2)->nullable();//precio por la unidad de medida
             $table->decimal('precio_venta',10,2)->nullable();//precio al publico
             $table->integer('cantidad')->nullable();
+            $table->integer('stock')->nullable();
             $table->string('lote',100)->nullable();
             $table->integer('producto_id')->unsigned()->nullable();
             $table->integer('compra_id')->unsigned()->nullable();

@@ -16,25 +16,25 @@ class ConceptoSeeder extends Seeder
 		DB::table('concepto')->insert(array(
             array(
                 'tipo' => 'I',
-                'nombre' => 'Apertura de Caja',
+                'titulo' => 'Apertura de Caja',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
                 'tipo' => 'E',
-                'nombre' => 'Cierre de Caja',
+                'titulo' => 'Cierre de Caja',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
                 'tipo' => 'I',
-                'nombre' => 'Otros Ingresos',
+                'titulo' => 'Otros Ingresos',
                 'created_at' => $now,
                 'updated_at' => $now
             ),
             array(
                 'tipo' => 'E',
-                'nombre' => 'Otros Egresos',
+                'titulo' => 'Otros Egresos',
                 'created_at' => $now,
                 'updated_at' => $now
             ),

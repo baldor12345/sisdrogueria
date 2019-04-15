@@ -155,6 +155,15 @@ class VentasController extends Controller
             $venta->comprobante_id =  $request->input('cboComprobante');
             $venta->save();
 
+            $salida = new Salida();
+            $salida->tipo = 'V';// D=devolucion, V=Venta, T=Traslado entre sucursales
+            $salida->fecha = date('Y-m-d H:i:s');
+            $salida->sucursal_id = $user->sucursal_id;
+            $salida->numero_documento = $request->input('numero_documento');
+            $salida->user_id = $user->id;
+            $salida->save();
+
+
             $cantidad = $request->input('cantidad_registros');
 
             for($i=0;$i<$cantidad; $i++){
@@ -177,20 +186,36 @@ class VentasController extends Controller
                 $detalle_venta->sucursal_id = $user->sucursal_id;
                 $detalle_venta->save();
 
-                $detalle_compras = DetalleCompra::where('producto_id','=',$producto->id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-                foreach ($detalle_compras as $key => $value) {
+                // $detalle_salida = new DetalleSalida();
+                // $detalle_salida->fecha =  date('Y-m-d H:i:s');
+                // $detalle_salida->fecha_caducidad = 
+                // $detalle_salida->lote = 
+                // $detalle_salida->marca_id = 
+                // $detalle_salida->precio_compra = 
+                // $detalle_salida->precio_venta = 
+                // $detalle_salida->presentacion_id = 
+                // $detalle_salida->producto_id = 
+                // $detalle_salida->salida_id = 
+                // $detalle_salida->cantidad = 
+                // $detalle_salida->save();
+
+                $detalle_entradas = DetalleEntrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                foreach ($detalle_entradas as $key => $value) {
                     $cant_actual = $value->cantidad;
                     if($cant > $cant_actual){
-                        $value->cantidad = 0;
+                        $value->stock = 0;
                         $value->save();
                         $cant = $cant - $cant_actual;
                     }else{
-                        $value->cantidad = $cant_actual - $cant;;
+                        $value->stock = $cant_actual - $cant;
                         $value->save();
                         $cant = 0;
                         break;
                     }
                 }
+
+                $detalle_caja = new DetalleCaja();
+
             }
 
         });
