@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CrearTablaDetalleSalida extends Migration
+class CrearTablaDetalleEntrada extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CrearTablaDetalleSalida extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_salida', function (Blueprint $table) {
+        Schema::create('detalle_entrada', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('fecha')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();
@@ -23,11 +23,11 @@ class CrearTablaDetalleSalida extends Migration
             $table->integer('stock')->nullable();
             $table->string('lote',100)->nullable();
             $table->integer('producto_id')->unsigned()->nullable();
-            $table->integer('salida_id')->unsigned()->nullable();
             $table->integer('presentacion_id')->unsigned()->nullable();
+            $table->integer('entrada_id')->unsigned()->nullable();
             $table->integer('marca_id')->unsigned()->nullable();
             $table->foreign('producto_id')->references('id')->on('producto')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('salida_id')->references('id')->on('salida')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('entrada_id')->references('id')->on('entrada')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
@@ -42,6 +42,6 @@ class CrearTablaDetalleSalida extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle_salida');
+        Schema::dropIfExists('detalle_entrada');
     }
 }

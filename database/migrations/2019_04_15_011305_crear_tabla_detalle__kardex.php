@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CrearTablaDetalleInventario extends Migration
+class CrearTablaDetalleKardex extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CrearTablaDetalleInventario extends Migration
      */
     public function up()
     {
-        Schema::create('detalle_inventario', function (Blueprint $table) {
+        Schema::create('detalle_kardex', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('fecha')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();
@@ -23,11 +23,11 @@ class CrearTablaDetalleInventario extends Migration
             $table->integer('stock')->nullable();
             $table->string('lote',100)->nullable();
             $table->integer('producto_id')->unsigned()->nullable();
-            $table->integer('inventario_id')->unsigned()->nullable();
             $table->integer('presentacion_id')->unsigned()->nullable();
+            $table->integer('kardex_id')->unsigned()->nullable();
             $table->integer('marca_id')->unsigned()->nullable();
             $table->foreign('producto_id')->references('id')->on('producto')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('inventario_id')->references('id')->on('inventario')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('kardex_id')->references('id')->on('kardex')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
@@ -42,6 +42,6 @@ class CrearTablaDetalleInventario extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detalle_inventario');
+        Schema::dropIfExists('detalle_kardex');
     }
 }
