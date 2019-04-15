@@ -76,9 +76,9 @@
 				</div>
 			</div>
 			<div class="form-group" >
-				{!! Form::label('num_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('numero_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('num_documento', null, array('class' => 'form-control input-xs', 'id' => 'num_documento', 'placeholder' => 'numero documento')) !!}
+					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'numero documento')) !!}
 				</div>
 			</div>
 			<br>

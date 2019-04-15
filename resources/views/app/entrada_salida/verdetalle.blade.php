@@ -1,22 +1,19 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($compra, $formData) !!}	
+{!! Form::model($entrada, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="row">	
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 card-box">    	
 			<div class="form-group ">
 				{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('documento', $cboDocumento, $compra->documento, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+					{!! Form::select('documento', $cboDocumento, $entrada->documento, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
 				</div>
 			</div>
 
             <div class="form-group" >
 				{!! Form::label('numero_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie', $compra->serie_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
-				</div>
-				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie', $compra->numero_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::text('serie', $entrada->numero_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
 				</div>
                 
 			</div>
@@ -29,26 +26,22 @@
 			</div>
 		</div>		
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 card-box">    	
-			<div class="form-group">
-				{!! Form::label('credito', 'Credito:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::select('credito', $cboCredito, $compra->credito, array('class' => 'form-control input-sm', 'id' => 'credito')) !!}
-				</div>
-				{!! Form::label('numero_dias', 'Nro dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', $proveedor->numero_dias, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '','readonly')) !!}
-				</div>
-			</div>
 			<div class="form-group " >
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
 				</div>
 			</div>
+			<div class="form-group " >
+				{!! Form::label('fecha', 'Comentario:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::date('fecha', $entrada->comentario, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+				</div>
+			</div>
 			<div class="form-group" >
 				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('total', $compra->total, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+					{!! Form::text('total', $entrada->total, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
 				</div>
 			</div>
 		</div>		

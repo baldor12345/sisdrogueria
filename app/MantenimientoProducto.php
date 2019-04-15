@@ -14,6 +14,39 @@ use DateTime;
 
 class MantenimientoProducto extends Model
 {
+        public static function listar($numero, $fechai, $fechaf){
+                return  DB::table('entrada')
+                        ->leftJoin('proveedor', 'entrada.proveedor_id', '=', 'proveedor.id')
+                        ->select(
+                                'entrada.id as compra_id', 
+                                'entrada.fecha as compra_fecha', 
+                                'proveedor.nombre as proveedor_nombre',
+                                'entrada.numero_documento as numero_documento',
+                                'entrada.estado as estado',
+                                'entrada.total as total'
+                        )
+                        ->where('entrada.numero_documento', 'LIKE','%'.$numero.'%')
+                        ->where('entrada.fecha', '>=', $fechai)
+                        ->where('entrada.fecha', '<=', $fechaf)
+                        ->where('entrada.deleted_at',null)
+                        ->orderBy('entrada.fecha', 'DSC');
+        }
+
+        public static function listardetalleentrada($id){
+                return  DB::table('detalle_entrada')
+                        ->join('producto', 'detalle_entrada.producto_id', '=', 'producto.id')
+                        ->join('presentacion', 'detalle_entrada.presentacion_id', '=', 'presentacion.id')
+                        ->select(
+                                'producto.descripcion as descripcion', 
+                                'detalle_entrada.fecha_caducidad as fecha_caducidad', 
+                                'detalle_entrada.stock as cantidad', 
+                                'presentacion.nombre as presentacion_nombre', 
+                                'detalle_entrada.precio_compra as precio_compra'
+                        )
+                        ->where('detalle_entrada.entrada_id', '=', $id)
+                        ->where('detalle_entrada.deleted_at',null);
+        }
+            
     public static function listarlotescaducidad($lote, $fechai, $fechaf){
         return  DB::table('detalle_compra')
                 ->join('producto', 'detalle_compra.producto_id', '=', 'producto.id')
