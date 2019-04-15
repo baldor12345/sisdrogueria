@@ -270,11 +270,11 @@ class VentasController extends Controller
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $venta = Ventas::find($id);
+            $venta = Venta::find($id);
 
             $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->get();
-            for($i=0;$i<count($detalle_venta);$i++){
-                $detalle_venta[$i]->delete();
+            for($i=0;$i<count($detalle_ventas);$i++){
+                $detalle_ventas[$i]->delete();
             }
 
             $venta->delete();
