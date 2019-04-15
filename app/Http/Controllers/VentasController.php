@@ -147,7 +147,10 @@ class VentasController extends Controller
             $venta->user_id = $user->id;
             $venta->caja_id = $caja->id;
             $venta->sucursal_id = $user->sucursal_id;
-            $venta->cliente_id =  $request->input('cboCliente');
+            $id_cliente = $request->input('cboCliente');
+            if($id_cliente != 0){
+                $venta->cliente_id = $id_cliente ;
+            }
             $venta->forma_pago_id =  $request->input('cboForma_pago');
             $venta->comprobante_id =  $request->input('cboComprobante');
             $venta->save();
@@ -267,11 +270,11 @@ class VentasController extends Controller
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $venta = Ventas::find($id);
+            $venta = Venta::find($id);
 
             $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->get();
-            for($i=0;$i<count($detalle_venta);$i++){
-                $detalle_venta[$i]->delete();
+            for($i=0;$i<count($detalle_ventas);$i++){
+                $detalle_ventas[$i]->delete();
             }
 
             $venta->delete();
