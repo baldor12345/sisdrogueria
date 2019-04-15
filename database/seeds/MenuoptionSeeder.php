@@ -215,7 +215,7 @@ class MenuoptionSeeder extends Seeder
 				),
 				array(
 					'name' => 'Caja Diaria',
-					'link'   => 'ventas'
+					'link'   => 'caja_diaria'
 				),
 				array(
 					'name' => 'Mov. Anulados',

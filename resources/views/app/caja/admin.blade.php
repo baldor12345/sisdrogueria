@@ -23,26 +23,64 @@
 				{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 				{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 				<div class="form-group">
-					{!! Form::label('titulo', 'Titulo:', array('class' => 'input-sm')) !!}
-					{!! Form::text('titulo', '', array('class' => 'form-control input-sm', 'id' => 'titulo')) !!}
+					<label for="concepto" class="input-sm">Concepto:</label>
+					{!! Form::select('concepto', $cboConcepto, null, array('class' => 'form-control input-sm', 'id' => 'concepto')) !!}
+				</div>
+				<div class="form-group">
+					<label for="cliente" class="input-sm">Nom. Cliente:</label>
+					{!! Form::text('cliente', '', array('class' => 'form-control input-sm', 'id' => 'cliente')) !!}
+				</div>
+				<div class="form-group">
+					<label for="fechai" class="input-sm">Desde:</label>
+					{!! Form::date('fechai', '', array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
+				</div>
+				<div class="form-group">
+					<label for="fechaf" class="input-sm">Hasta:</label>
+					{!! Form::date('fechaf', '', array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
 				</div>
 				<div class="form-group">
 					{!! Form::label('filas', 'Filas a mostrar:')!!}
 					{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 				</div>
-				{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-md', 'id' => 'btnBuscar1', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
-				{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Apertura Caja', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocaja', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
+				{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar1', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
+				{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Apertura Caja', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevocaja', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
 				{!! Form::close() !!}
 			</div>
 			<div id="listado{{ $entidad }}"></div>
+			<table class="table-bordered table-striped table-condensed" align="center">
+				<thead>
+					<tr>
+						<th class="text-center" colspan="2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Resumen de Caja</font></font></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Ingresos :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Egresos :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+					<tr>
+						<th><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">Saldo :</font></font></th>
+						<th class="text-right"><font style="vertical-align: inherit;"><font style="vertical-align: inherit; font-size: 13px;">{{ 0 }}</font></font></th>
+					</tr>
+				</tbody>
+			</table>
         </div>
     </div>
 </div>
 <script>
 	$(document).ready(function () {
-		if($(".btnNuevo").attr('activo')=== 'no'){
-			$('.btnNuevo').attr("disabled", true);
-		}
+		var fechaActual = new Date();
+		var day = ("0" + fechaActual.getDate()).slice(-2);
+		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
+		var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
+		var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
+		$('#fechai').val(fechai);
+		$('#fechaf').val(fechaf);
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="name"]').keyup(function (e) {

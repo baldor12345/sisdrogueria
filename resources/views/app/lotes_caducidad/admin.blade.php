@@ -29,11 +29,11 @@
 						{!! Form::text('lote', '', array('class' => 'form-control input-sm', 'id' => 'lote')) !!}
 					</div>
 					<div class="form-group">
-						<label for="fechai" class="input-sm">Fecha V. Inicio:</label>
+						<label for="fechai" class="input-sm">Desde:</label>
 						{!! Form::date('fechai', '', array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
 					</div>
 					<div class="form-group">
-						<label for="fechaf" class="input-sm">Fecha V. Fin:</label>
+						<label for="fechaf" class="input-sm">Hasta:</label>
 						{!! Form::date('fechaf', '', array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
 					</div>
 					<div class="form-group">
