@@ -231,12 +231,12 @@ class MenuoptionSeeder extends Seeder
 			);
 		}
 
-		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Mantenimiento Almacen')->first()->id;
+		$menuoptioncategory_id = DB::table('menuoptioncategory')->where('name', '=', 'Mant. Almacen')->first()->id;
 
 		$datos = array(
 				array(
 					'name' => 'Entradas y Salidas',
-					'link'   => 'entradas_salidas'
+					'link'   => 'entrada_salida'
 				),
 				array(
 					'name' => 'Lotes y Caducidad',

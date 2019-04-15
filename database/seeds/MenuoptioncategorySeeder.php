@@ -40,7 +40,7 @@ class MenuoptioncategorySeeder extends Seeder
 					'updated_at' => $now
 				),
 				array(
-					'name'     => 'Mantenimiento Almacen',
+					'name'     => 'Mant. Almacen',
 					'order'      => 5,
 					'icon'      => 'fa fa-bank',
 					'position'      => 'V',
