@@ -140,8 +140,8 @@ class ProductoController extends Controller
     {
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'codigo' => 'required|max:30|unique:producto,codigo,NULL,id,deleted_at,NULL',
-            'descripcion' => 'required|max:400|unique:producto,descripcion,NULL,id,deleted_at,NULL',
+            'codigo' => 'required|max:100',
+            'descripcion' => 'required|max:400',
             'sustancia_activa' => 'required',
             'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
