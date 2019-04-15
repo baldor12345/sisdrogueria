@@ -9,9 +9,13 @@
 		{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
 		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
 	</div>
-	<div class="form-group col-6 col-md-6">
-		{!! Form::label('dni', 'DNI:', array('class' => ' control-label')) !!}
-			{!! Form::text('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese DNI')) !!}
+	<div class="form-group col-6 col-md-6" >
+		{!! Form::label('cboTipoDocumento', 'Tipo Documento: ', array('class' => '')) !!}
+		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento')) !!}
+	</div>
+	<div class="form-group col-6 col-md-6"  style="margin-left: 3px;">
+		{!! Form::label('doc', 'N° Documento:', array('class' => ' control-label')) !!}
+			{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
 	</div>
 
 	<div class="form-group col-6 col-md-6" >

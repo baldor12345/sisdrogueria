@@ -19,7 +19,7 @@
 		@foreach ($lista as $key => $value)
 			<tr>
 				<td>{{ $contador }}</td>
-				<td>{{ $value->dni }}</td>
+				<td>{{ $value->dni ==null?$value->ruc :$value->dni   }}</td>
 				<td>{{ $value->nombres.' '.$value->apellidos}}</td>
 				<td>{{ $value->celular}}</td>
 				<td>{{ $value->telefono}}</td>

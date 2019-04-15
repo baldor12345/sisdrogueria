@@ -55,7 +55,7 @@ class ClienteController extends Controller
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'DNI o RUC', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombres y Apellidos', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
@@ -101,15 +101,15 @@ class ClienteController extends Controller
     public function create(Request $request)
     {
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad        = 'cliente';
+        $entidad        = 'Cliente';
         $cliente        = null;
-        // $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
+        $cboTipoDocumento = array('dni' => 'DNI', 'ruc'=>'RUC');
         $formData       = array('clientes.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
         $ruta             = $this->rutas;
-        $accion = 0;
-        return view($this->folderview.'.mant')->with(compact( 'accion' , 'ruta', 'cliente', 'formData', 'entidad', 'boton', 'listar'));
+        // $accion = 0;
+        return view($this->folderview.'.mant')->with(compact( 'ruta', 'cliente', 'formData', 'entidad', 'boton', 'listar','cboTipoDocumento'));
     }
 
     /**
@@ -122,7 +122,7 @@ class ClienteController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'dni'       => 'required|max:8',
+            'doc'       => 'required|max:20',
             'nombres'    => 'required|max:100',
             'apellidos'    => 'required|max:100',
             );
@@ -133,7 +133,12 @@ class ClienteController extends Controller
         }
         $error = DB::transaction(function() use($request){
             $cliente  = new Cliente();
-            $cliente->dni        = $request->input('dni');
+            if($request->input('cboTipoDocumento') == 'dni'){
+                $cliente->dni        = $request->input('doc');
+            }else{
+                $cliente->ruc        = $request->input('doc');
+            }
+            // $cliente->dni        = $request->input('dni');
             $cliente->nombres    = strtoupper($request->input('nombres'));
             $cliente->apellidos  = strtoupper($request->input('apellidos'));
             $cliente->direccion   = strtoupper($request->input('direccion'));
@@ -175,7 +180,8 @@ class ClienteController extends Controller
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
         $accion = 1;
-        return view($this->folderview.'.mant')->with(compact( 'accion' , 'cliente', 'formData', 'entidad', 'boton', 'listar'));
+        $cboTipoDocumento = array('dni' => 'DNI', 'ruc'=>'RUC');
+        return view($this->folderview.'.mant')->with(compact( 'accion' , 'cliente', 'formData', 'entidad', 'boton', 'listar', 'cboTipoDocumento'));
     }
 
     /**
