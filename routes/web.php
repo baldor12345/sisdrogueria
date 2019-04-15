@@ -194,6 +194,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('clientes/eliminar/{id}/{listarluego}','ClienteController@eliminar')->name('clientes.eliminar');
     Route::resource('clientes', 'ClienteController', array('except' => array('show')));
 
+    /*CONCEPTO*/
+    Route::post('concepto/buscar', 'ConceptoController@buscar')->name('concepto.buscar');
+    Route::get('concepto/eliminar/{id}/{listarluego}', 'ConceptoController@eliminar')->name('concepto.eliminar');
+    Route::resource('concepto', 'ConceptoController', array('except' => array('show')));
+
 });
 Route::get('ventas/{producto_id?}','VentasController@getProducto');
 Route::get('provincias/{id}','ProvinciaController@getProvincias');
