@@ -38,7 +38,8 @@ class EntradaSalidaController extends Controller
             'index'         => 'entrada_salida.index',
             'verdetalle'         => 'entrada_salida.verdetalle',
             'listproveedores'    => 'entrada_salida.listproveedores',
-            'listproductos'    => 'entrada_salida.listproductos'
+            'listproductos'    => 'entrada_salida.listproductos',
+            'listproductosalida'    => 'entrada_salida.listproductosalida'
         );
 
     /**
@@ -120,9 +121,10 @@ class EntradaSalidaController extends Controller
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'EntradaSalida';
         $entradasalida       = null;
-        $cboDocumento       = array('E'=>'Doc. Entrada', 'S'=>'Doc. Salida');
+        $cboDocumento       = [''=>'Seleccione']+ array('E'=>'Doc. Entrada', 'S'=>'Doc. Salida');
         //$cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
         $cboProducto       = array(0=>'Seleccione Producto...');
+        $cboEntrada       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratorio = [''=>'Seleccione'] + Marca::pluck('name', 'id')->all();
@@ -132,7 +134,7 @@ class EntradaSalidaController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('entradasalida', 'cboTipo', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
+        return view($this->folderview.'.mant')->with(compact('entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
     }
 
     /**
@@ -153,7 +155,7 @@ class EntradaSalidaController extends Controller
             return $validacion->messages()->toJson();
         }
         $error =null;
-        $tipo = $request->input('documento');
+        $tipo = $request->input('doc');
         if($tipo == 'E'){
             $error = DB::transaction(function() use($request){
                 $cantidad = $request->input('cantidad');
@@ -188,34 +190,12 @@ class EntradaSalidaController extends Controller
         }
         if($tipo == 'S'){
             $error = DB::transaction(function() use($request){
-                $salida               = new salida();
-                $salida->documento = $request->input('documento');
-                $salida->numero_documento = $request->input('numero_documento');
-                $salida->fecha = $request->input('fecha');
-                $salida->comentario = $request->input('comentario');
-                $salida->total  = $request->input('total');
-                $user           = Auth::user();
-                $salida->user_id = $user->id;
-                $salida->sucursal_id = $user->sucursal_id;
-                $salida->save();
-    
                 $cantidad = $request->input('cantidad');
-                $salida_last = Salida::All()->last();
-    
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
-                        $detalle_salida = new DetalleSalida();
-                        $detalle_salida->fecha_caducidad = $request->input("fecha_vencim".$i);
-                        $detalle_salida->precio_compra = $request->input("precio_compra".$i);
-                        $detalle_salida->precio_venta = $request->input("precio_venta".$i);
-                        $detalle_salida->stock = $request->input("cant".$i);
-                        $detalle_salida->cantidad = $request->input("cant".$i);
-                        $detalle_salida->lote = $request->input("lot".$i);
-                        $detalle_salida->producto_id = $request->input("id_producto".$i);
-                        $detalle_salida->presentacion_id = $request->input("id_presentacion".$i);
-                        $detalle_salida->marca_id = $request->input("id_laboratorio".$i);
-                        $detalle_salida->salida_id = $salida_last->id;
-                        $detalle_salida->save();
+                        $entrada = Entrada::find($request->input("id_entrada".$i));
+                        $entrada->stock = $entrada->stock-intval($request->input("cantid".$i));
+                        $entrada->save();
                     }
                 }
             });
@@ -252,6 +232,26 @@ class EntradaSalidaController extends Controller
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
         return view($this->folderview.'.mant')->with(compact('ruta', 'entrada_salida', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+    }
+
+    //listar el objeto persona por dni
+    public function getEntrada(Request $request, $term){
+        if($request->ajax()){
+            $tags = DB::table('entrada')
+                    ->join('producto','entrada.producto_id','producto.id')
+                    ->join('presentacion','producto.presentacion_id','presentacion.id')
+                    ->select(
+                        'presentacion.id as presentacion_id',
+                        'presentacion.nombre as presentacion_nombre',
+                        'entrada.fecha_caducidad as fecha_caducidad',
+                        'entrada.precio_compra as precio_compra',
+                        'entrada.precio_venta as precio_venta',
+                        'entrada.stock as stock',
+                        'entrada.lote as lote'
+                        )
+                    ->where("entrada.id",'=',$term)->get();
+            return response()->json($tags);
+        }
     }
 
     /**
@@ -384,10 +384,42 @@ class EntradaSalidaController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = Producto::where("codigo",'LIKE', '%'.$term.'%')->orWhere("codigo_barra",'LIKE', '%'.$term.'%')->orWhere("descripcion",'LIKE', '%'.$term.'%')->orWhere('deleted_at',null)->limit(5)->get();
+        $tags = DB::table('producto')->join('presentacion','producto.presentacion_id','presentacion.id')->select('producto.id as id','producto.presentacion_id as presentecion_id','producto.descripcion as descripcion','presentacion.nombre as presentacion')->where("producto.codigo",'LIKE', '%'.$term.'%')->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion];
+            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+
+    public function listproductosalida(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = DB::table('entrada')
+                    ->join('producto','entrada.producto_id','producto.id')
+                    ->join('presentacion','producto.presentacion_id','presentacion.id')
+                    ->select(
+                        'producto.id as producto_id',
+                        'entrada.id as entrada_id',
+                        'producto.descripcion as descripcion',
+                        'presentacion.nombre as presentacion',
+                        'entrada.lote as lote'
+                        )
+                    ->where("producto.codigo",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')
+                    ->orWhere("entrada.lote",'LIKE', '%'.$term.'%')
+                    ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
+                    ->limit(5)->get();
+        
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

@@ -169,6 +169,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('entrada_salida', 'EntradaSalidaController', array('except' => array('show')));
     Route::get('entrada_salida/listproveedores',  'EntradaSalidaController@listproveedores')->name('entrada_salida.listproveedores');
     Route::get('entrada_salida/listproductos',  'EntradaSalidaController@listproductos')->name('entrada_salida.listproductos');
+    Route::get('entrada_salida/listproductosalida',  'EntradaSalidaController@listproductosalida')->name('entrada_salida.listproductosalida');
     Route::get('entrada_salida/verdetalle/{id?}',  'EntradaSalidaController@verdetalle')->name('entrada_salida.verdetalle');
 
     //ENTRADAS Y SALIDAS
@@ -223,6 +224,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('concepto', 'ConceptoController', array('except' => array('show')));
 
 });
+Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
 Route::get('ventas/{producto_id?}','VentasController@getProducto');
 Route::get('provincias/{id}','ProvinciaController@getProvincias');
 Route::get('distritos/{id}','DistritoController@getDistritos');

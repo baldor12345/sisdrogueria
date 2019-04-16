@@ -116,7 +116,7 @@ class CompraController extends Controller
         $entidad        = 'Compra';
         $compra       = null;
         $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
-        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
+        $cboCredito       = [''=>'Seleccione'] + array('S'=>'SI', 'N'=>'NO');
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();

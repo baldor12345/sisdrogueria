@@ -21,7 +21,6 @@
 						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: right;')) !!}</td>
 						<td class=" input-sm"><b>P.Compra</b></td>
 						<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-						<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
 						<td class=" input-sm"><b>P.Venta</b></td>
 						<td><input class="form-control input-sm" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
 						<td class=" input-sm"><b>Cantidad</b></td>
@@ -62,13 +61,13 @@
 			<div class="form-group">
 				{!! Form::label('credito', 'Credito:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('credito', $cboCredito, null, array('class' => 'form-control input-sm', 'id' => 'credito')) !!}
+					{!! Form::select('credito', $cboCredito, null, array('class' => 'form-control input-sm', 'id' => 'credito', 'onchange'=>'cambiarcredito();')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
 				{!! Form::label('numero_dias', 'Nro Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '')) !!}
+					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '','disabled')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -178,8 +177,18 @@ $(document).ready(function() {
 		}
 	});
 
-
 }); 
+
+function cambiarcredito(){
+	var doc = $('#credito').val();
+	if(doc == 'S'){
+		document.getElementById("numero_dias").disabled = false;
+	}
+	if(doc == 'N'){
+		$('#numero_dias').val("");
+		$('#numero_dias').prop("readonly", true);
+	}
+}
 
 function agregar(){
 	//datos del producto
