@@ -30,7 +30,8 @@ class ProveedorController extends Controller
             'delete' => 'proveedor.eliminar',
             'search' => 'proveedor.buscar',
             'index'  => 'proveedor.index',
-            'listdistritos' => 'proveedor.listdistritos'
+            'listdistritos' => 'proveedor.listdistritos',
+            'cargarselect' => 'proveedor.cargarselect',
         );
 
     /**
@@ -109,8 +110,8 @@ class ProveedorController extends Controller
         $entidad        = 'Proveedor'; //es personamaestro
         $proveedor        = null;
         $cboEstado          = array('A'=>'Activo','I'=>'Inactivo');
-        $cboDistrito       = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        $cboProvincia       = [''=>'Seleccione'] + Provincia::pluck('nombre', 'id')->all();
+        $cboDistrito       = [''=>'Seleccione'] ;
+        $cboProvincia       = [''=>'Seleccione'];
         $cboDepartamento       = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
         $ruta             = $this->rutas;
         $formData       = array('proveedor.store');
@@ -303,6 +304,40 @@ class ProveedorController extends Controller
         }
 
         return \Response::json($formatted_tags);
+    }
+
+
+    public function cargarselect($idselect, Request $request)
+    {
+        $entidad = $request->get('entidad');
+        $t = '';
+        $tt = '';
+
+        if($request->get('t') == ''){
+            $t = '_';
+            $tt = '2';
+        }
+
+        $retorno = '<select class="form-control input-sm" id="' . $t . $entidad . '_id" name="' . $t . $entidad . '_id"';
+        if($entidad == 'provincia'){
+            $cbo = Provincia::select('id', 'nombre')
+            ->where('departamento_id', '=', $idselect)
+            ->get();
+            $retorno .= ' onchange=\'cargarselect' . $tt . '("distrito")\'';
+        } else {
+            $cbo = Distrito::select('id', 'nombre')
+            ->where('provincia_id', '=', $idselect)
+            ->get();
+        }      
+
+        $retorno .= '><option value="" selected="selected">Seleccione</option>';
+
+        foreach ($cbo as $row) {
+            $retorno .= '<option value="' . $row['id'] .  '">' . $row['nombre'] . '</option>';
+        }
+        $retorno .= '</select></div>';
+
+        echo $retorno;
     }
 
 }

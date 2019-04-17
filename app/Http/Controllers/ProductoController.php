@@ -15,6 +15,7 @@ use App\User;
 use App\Proveedor;
 use App\Sucursal;
 use App\Propiedades;
+use App\ProductoPresentacion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -60,9 +61,10 @@ class ProductoController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'Producto';
-        $descripcion      = Libreria::getParam($request->input('name'));
+        $descripcion      = Libreria::getParam($request->input('descripcion'));
         $codigo      = Libreria::getParam($request->input('codigo'));
-        $resultado        = Producto::listar($descripcion, $codigo);
+        $presentacion_id      = Libreria::getParam($request->input('presentacion_id'));
+        $resultado        = Producto::listarproducto($descripcion, $codigo, $presentacion_id);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -102,7 +104,8 @@ class ProductoController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+        $cboPres     = [''=>'Todos'] + Presentacion::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.admin')->with(compact('cboPres', 'entidad', 'title', 'titulo_registrar', 'ruta'));
     }
 
     /**
@@ -117,8 +120,8 @@ class ProductoController extends Controller
         $producto       = null;
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $cboMarca       = array(0=>'Seleccione Marca...');
-        $cboCategoria   = array(0=>'Seleccione Categoria...');
-        $cboPresentacion     = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboCategoria   = ['0'=>'Seleccione'] + Categoria::pluck('name', 'id')->all();
+        $cboPresentacion     = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratio   = array(0=>'Seleccione Laboratorio...');
         $cboProveedor   = array(0=>'Seleccione Proveedor...');
         $formData       = array('producto.store');
@@ -149,7 +152,6 @@ class ProductoController extends Controller
 
             'tipo' => 'required',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
-            'presentacion_id' => 'required|integer|exists:presentacion,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -170,11 +172,26 @@ class ProductoController extends Controller
 
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();
+
+            $cantidad = $request->input('cantidad');
+            $producto_last = Producto::All()->last();
+
+            if($cantidad >0){
+                for($i=0;$i<$cantidad; $i++){
+                    $producto_presentacion = new ProductoPresentacion();
+                    $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                    $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                    $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                    $producto_presentacion->producto_id = $producto_last->id;
+                    $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                    $producto_presentacion->save();
+                }
+            }
+
         });
         return is_null($error) ? "OK" : $error;
     }

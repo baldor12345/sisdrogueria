@@ -18,14 +18,14 @@
 		@foreach($lista as $key => $value)
 			<tr>
 				<td>{{ $contador }}</td>
-				<td>{{ $value->codigo }} </td>
-				<td>{{ $value->descripcion }} </td>
+				<td>{{ $value->codigo_barra }} </td>
+				<td>{{ $value->producto }} </td>
 				<td>{{ $value->precio_publico }}</td>
-				<td>{{ $value->marca->name }}</td>
-				<td>{{ $value->presentacion->nombre }}</td>
-				<td>{{ $value->categoria->name }}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar',array('onclick'=>'modal(\''.URL::route($ruta["edit"],array($value->id,'listar'=>'SI')).'\',\''.$titulo_modificar.'\',this);', 'class'=>'btn btn-xs btn-warning')) !!}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick'=>'modal(\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\',\''.$titulo_eliminar.'\',this);','class'=>'btn btn-xs btn-danger')) !!}</td>
+				<td>{{ $value->laboratorio }}</td>
+				<td>{{ $value->presentacion }}</td>
+				<td>{{ $value->categoria }}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar',array('onclick'=>'modal(\''.URL::route($ruta["edit"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_modificar.'\',this);', 'class'=>'btn btn-xs btn-warning')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick'=>'modal(\''.URL::route($ruta["delete"], array($value->producto_id, 'SI')).'\',\''.$titulo_eliminar.'\',this);','class'=>'btn btn-xs btn-danger')) !!}</td>
 				<?php
 				$contador = $contador+1;
 				?>

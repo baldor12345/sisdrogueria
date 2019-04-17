@@ -82,14 +82,6 @@ class MenuoptionSeeder extends Seeder
 				'name' => 'Productos',
 				'link'   => 'producto'
 			),
-			array(
-				'name' => 'Comprobantes',
-				'link'   => 'comprobante'
-			),
-			array(
-				'name' => 'Formas de pago',
-				'link'   => 'forma_pago'
-			)
 			);
 
 		for ($i=0; $i < count($datos); $i++) { 

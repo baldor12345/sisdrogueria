@@ -16,8 +16,9 @@ class MantenimientoProducto extends Model
 {
         public static function listar($producto, $presentacion, $fechai, $fechaf){
                 return  DB::table('entrada')
-                        ->join('producto', 'entrada.producto_id', '=', 'producto.id')
-                        ->join('presentacion', 'producto.presentacion_id', '=', 'presentacion.id')
+                        ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                        ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
+                        ->join('presentacion', 'entrada.presentacion_id', '=', 'presentacion.id')
                         ->select(
                                 'entrada.id as entrada_id',
                                 'producto.descripcion as descripcion', 
@@ -28,7 +29,7 @@ class MantenimientoProducto extends Model
                                 'entrada.stock as stock'
                         )
                         ->where('producto.descripcion', 'LIKE','%'.$producto.'%')
-                        ->where('presentacion.id', 'LIKE','%'.$presentacion.'%')
+                        ->where('producto_presentacion.presentacion_id', 'LIKE','%'.$presentacion.'%')
                         ->where('entrada.fecha_caducidad', '>=', $fechai)
                         ->where('entrada.fecha_caducidad', '<=', $fechaf)
                         ->where('entrada.deleted_at',null)
@@ -37,7 +38,8 @@ class MantenimientoProducto extends Model
             
     public static function listarlotescaducidad($lote, $fechai, $fechaf){
         return  DB::table('entrada')
-                ->join('producto', 'entrada.producto_id', '=', 'producto.id')
+                ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
                 ->join('marca', 'producto.marca_id', '=', 'marca.id')
                 ->select(
                         'producto.descripcion as producto', 
@@ -55,8 +57,9 @@ class MantenimientoProducto extends Model
     
     public static function listarstock_producto($descripcion, $presentacion_id){
         return  DB::table('entrada')
-                ->join('producto', 'entrada.producto_id', '=', 'producto.id')
-                ->join('presentacion', 'producto.presentacion_id', '=', 'presentacion.id')
+                ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
+                ->join('presentacion', 'entrada.presentacion_id', '=', 'presentacion.id')
                 ->select(
                         'producto.descripcion as producto', 
                         'producto.stock_minimo as stock_minimo', 

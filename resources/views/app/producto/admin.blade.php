@@ -25,14 +25,18 @@
                     {!! Form::hidden('acion','listar', array('id'=>'accion')) !!}
 
                     <div class="form-group">
-                        {!! Form::label('name','Nombre:') !!}
-                        {!! Form::text('name','', array('class'=>'form-control input-xs','id'=>'name')) !!}
-                    </div>
-
-                    <div class="form-group">
                         {!! Form::label('codigo','Codigo:') !!}
                         {!! Form::text('codigo','', array('class'=>'form-control input-xs','id'=>'codigo')) !!}
                     </div>
+                    
+                    <div class="form-group">
+						<label for="descripcion" class="input-sm">Descripcion:</label>
+						{!! Form::text('descripcion', '', array('class' => 'form-control input-sm', 'id' => 'descripcion')) !!}
+					</div>
+					<div class="form-group">
+						<label for="descripcion" class="input-sm">Presentacion:</label>
+						{!! Form::select('presentacion_id', $cboPres, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id')) !!}
+					</div>
 
                     <div class="form-group">
                         {!! Form::label('filas', 'Filas a mostrar:')!!}

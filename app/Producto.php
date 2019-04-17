@@ -1,7 +1,6 @@
 <?php
 
 namespace App;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -9,7 +8,8 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use App\Librerias\Libreria;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
+use DateTime;
 class Producto extends Model
 {
     use SoftDeletes;
@@ -58,7 +58,28 @@ class Producto extends Model
             })
             ->orderBy('descripcion', 'ASC');
     }
-	
+    
+    public static function listarproducto($descripcion, $codigo, $presentacion){
+        return  DB::table('producto')
+                ->leftjoin('marca', 'producto.marca_id', '=', 'marca.id')
+                ->join('categoria', 'producto.categoria_id', '=', 'categoria.id')
+                ->join('producto_presentacion', 'producto_presentacion.producto_id', '=', 'producto.id')
+                ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
+                ->select(
+                        'producto.id as producto_id', 
+                        'producto.codigo_barra as codigo_barra', 
+                        'producto.descripcion as producto', 
+                        'producto.precio_publico as precio_publico', 
+                        'marca.name as laboratorio', 
+                        'presentacion.nombre as presentacion', 
+                        'categoria.name as categoria'
+                )
+                ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
+                ->where('producto.codigo_barra', 'LIKE','%'.$codigo.'%')
+                ->where('presentacion.id', 'LIKE','%'.$presentacion.'%')
+                ->where('producto.deleted_at',null);
+    }
+
 	public static function boot()
     {
         parent::boot();

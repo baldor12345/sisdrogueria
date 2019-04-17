@@ -15,21 +15,32 @@
 			</div>
 			<div class="form-group">
 				<table>
-					<tr style="height: 10px;">
+					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
-						<td class=" input-sm"><b>Presentacion</b></td>
-						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: right;')) !!}</td>
-						<td class=" input-sm"><b>P.Compra</b></td>
-						<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-						<td class=" input-sm"><b>P.Venta</b></td>
-						<td><input class="form-control input-sm" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
-						<td class=" input-sm"><b>Cantidad</b></td>
-						<td><input class="form-control input-sm input-number" id="cantidad" size="3" name="cantidad" type="text"></td>
-						<td class=" input-sm"><b>Fecha Venc.</b></td>
+						<td class=" input-sm" style="text-align:right;"><b>Categoria:</b></td>
+						<td>{!! Form::select('categoria_id', $cboCategoria, null, array('class' => 'form-control input-sm', 'id' => 'categoria_id','style'=>'text-align: left;')) !!}</td>
+						<td class=" input-sm" style="text-align:right;"><b>Unidad Compra:</b></td>
+						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
+						<td class=" input-sm" style="text-align:right;"><b>Cantidad/Presentacion:</b></td>
+						<td><input class="form-control input-sm input-number"  style="width:60px" id="cantidad" size="3" name="cantidad" type="text"></td>
+						<td class=" input-sm" style="text-align:right;"><b>Unidad/Presentacion:</b></td>
+						<td><input class="form-control input-sm input-number"  id="unidad_presentacion" size="3" name="unidad_presentacion" type="text"></td>
+						<td class=" input-sm" style="text-align:right;"><b>P.Compra:</b></td>
+						<td><input class="form-control input-sm" style="width:80px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+					</tr>
+					<tr style="height: 20px; padding-top:20px">
+						<td>&nbsp;</td>
+						<td class=" input-sm" style="text-align:right;"><b>Fecha Venc.:</b></td>
 						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td class=" input-sm"><b>Lote</b></td>
+						<td class=" input-sm" style="text-align:right;"><b>Unidad Venta:</b></td>
+						<td>{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-sm', 'id' => 'unidad_id','style'=>'text-align: left;')) !!}</td>
+						<td class=" input-sm" style="text-align:right;"><b>Factor:</b></td>
+						<td><input class="form-control input-sm" id="factor" onkeypress="return filterFloat(event,this);"  size="3" name="factor" type="text" style="text-align: right;"></td>
+						<td class=" input-sm" style="text-align:right;"><b>Precio Venta/Unidad:</b></td>
+						<td><input class="form-control input-sm" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
+						<td class=" input-sm" style="text-align:right;"><b>Lote:</b></td>
 						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
-						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
+						<td style="text-align:center;"><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i> agregar</button></td>
 					</tr>
 				</table>
 			</div>
@@ -120,7 +131,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('1300');
+	configurarAnchoModal('1500');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	var fechaActual = new Date();
@@ -154,6 +165,22 @@ $(document).ready(function() {
 		}
 	});
 
+	
+	$("input[name=cantidad]").change(function(event){
+		var cant = parseInt($('#cantidad').val());
+		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+		$('#factor').val('');
+		$('#factor').val(cant*cantidad_unidad);
+	});
+
+	$("input[name=unidad_presentacion]").change(function(event){
+		var cant = parseInt($('#cantidad').val());
+		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+		$('#factor').val('');
+		$('#factor').val(cant*cantidad_unidad);
+	});
+
+
 	$('#producto_id').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		
@@ -175,6 +202,23 @@ $(document).ready(function() {
 			}
 			
 		}
+	});
+
+	$('#producto_id').change(function(event){
+		$.get("compra/"+$(this).val()+"", function(response, productos){
+			console.log(response);
+			if(response.length !=0 ){
+				$('#laboratorio_id').val(response[0].marca_id);
+				$('#categoria_id').val(response[0].categoria_id);
+				$('#presentacion_id').val(response[0].presentacion_id);
+				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
+				$('#precio_compra').val(response[0].precio_compra);
+				$('#presentacion_id').prop("disabled", true);
+				//$('#factor').prop("readonly", true);
+			}else{
+				window.alert("Producto no esta registrado en el inventario!");
+			}
+		});
 	});
 
 }); 
@@ -210,50 +254,66 @@ function agregar(){
 	var cantidad 			= $('#cantidad').val();
 	var fechavencimiento 	= $('#fechavencimiento').val();
 	var lote 				= $('#lote').val();
+	var factor 				= $('#factor').val();
+	var unidad_id 				= $('#unidad_id').val();
 
 	if($('#producto_id').val() !='0'){
 		if(presentacion_id !=""){
 			if(preciocompra !=""){
 				if(precioventa !=""){
 					if(cantidad!=""){
-						if(fechavencimiento!=""){
-							if(lote!=""){
-								var subtotal ="";
-								subtotal = parseInt(cantidad)*parseFloat(preciocompra);
-								var t_parcial =0;
-								if($('#total').val() != ""){
-									t_parcial = parseFloat($('#total').val());
+						if(factor !=""){
+							if($('#unidad_id').val != '0'){
+								if(fechavencimiento!=""){
+									if(lote!=""){
+										var subtotal ="";
+										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
+										var t_parcial =0;
+										if($('#total').val() != ""){
+											t_parcial = parseFloat($('#total').val());
+										}else{
+											t_parcial=0;
+										}
+										var total = t_parcial+subtotal;
+										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+											'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
+											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
+											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
+											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
+											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
+											'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
+											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'</tr>';
+										$("#tabla").append(d);
+										$('#total').val(total);
+										//vaciar datos
+										$('#producto_id').val(0);
+										$('#unidad_id').val(0);
+										$('#presentacion_id').val(0);
+										$('#categoria_id').val(0);
+										$('#laboratorio_id').val(0);
+										$('#preciocompra').val("");
+										$('#unidad_presentacion').val("");
+										$('#precioventa').val("");
+										$('#cantidad').val("");
+										$('#fechavencimiento').val("");
+										$('#factor').val("");
+										$('#lote').val("");
+									}else{
+										window.alert("ingrese lote!");
+										$('#lote').focus();
+									}
 								}else{
-									t_parcial=0;
+									window.alert("seleccione fecha de vencimiento!");
+									$('#fechavencimiento').focus();
 								}
-								var total = t_parcial+subtotal;
-								var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+presentacion_id+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-									'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
-									'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
-									'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
-									'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
-									'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
-									'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
-									'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
-									'</tr>';
-								$("#tabla").append(d);
-								$('#total').val(total);
-								//vaciar datos
-								$('#producto_id').val(0);
-								$('#presentacion_id').val(0);
-								$('#laboratorio_id').val(0);
-								$('#producto_id').value="Seleccione Producto...";
-								$('#preciocompra').val("");
-								$('#precioventa').val("");
-								$('#cantidad').val("");
-								$('#fechavencimiento').val("");
-								$('#lote').val("");
 							}else{
-								window.alert("ingrese lote!");
-								$('#lote').focus();
+								window.alert("seleccione Unidad de Venta!");
+								$('#unidad_id').focus();
 							}
+
 						}else{
-							window.alert("seleccione fecha de vencimiento!");
+							window.alert("factor no debe ser vacio!");
 							$('#fechavencimiento').focus();
 						}
 					}else{
@@ -333,13 +393,14 @@ function submitForm_control(idformulario) {
 	var datos="";
 	$('.datos-producto').each(function() {
 		datos += 	"&id_producto"		+i+"="+$(this).attr("id_producto")+
-					"&id_presentacion"	+i+"="+$(this).attr("id_presentacion")+
 					"&id_laboratorio"	+i+"="+$(this).attr("id_laboratorio")+
 					"&precio_compra"	+i+"="+$(this).attr("precio_compra")+
 					"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 					"&cant"				+i+"="+$(this).attr("canti")+
-					"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
-					"&lot"			+i+"="+$(this).attr("lot");
+					"&fecha_vencim"		+i+"="+$(this).attr("fecha_venc")+
+					"&factor_"			+i+"="+$(this).attr("dat_factor")+
+					"&id_unidad"		+i+"="+$(this).attr("id_unidad")+
+					"&lot"				+i+"="+$(this).attr("lot");
 		i++;
 	});
 	datos += "&cantidad="+i;

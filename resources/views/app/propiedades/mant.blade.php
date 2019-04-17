@@ -1,12 +1,12 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($presentacion, $formData) !!}	
+{!! Form::model($propiedades, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group">
 		<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
-		{!! Form::label('nombre', 'Nombre:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+		{!! Form::label('igv', 'Igv:') !!}<div class="" style="display: inline-block;color: red;">*</div>
 		</div>
 		<div class="col-lg-8 col-md-8 col-sm-8">
-			{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
+			{!! Form::text('igv', null, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => 'Ingrese nombre')) !!}
 		</div>
 	</div>
 	<div class="form-group">

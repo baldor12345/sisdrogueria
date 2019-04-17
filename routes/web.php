@@ -89,11 +89,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('proveedor/eliminar/{id}/{listarluego}','ProveedorController@eliminar')->name('proveedor.eliminar');
     Route::resource('proveedor', 'ProveedorController', array('except' => array('show')));
     Route::get('proveedor/listdistritos',  'ProveedorController@listdistritos')->name('proveedor.listdistritos');
+    Route::get('proveedor/cargarselect/{idselect}', 'ProveedorController@cargarselect')->name('proveedor.cargarselect');
+
 
     //CATEGORIAS
     Route::post('categoria/buscar','CategoriaController@buscar')->name('categoria.buscar');
     Route::get('categoria/eliminar/{id}/{listarluego}','CategoriaController@eliminar')->name('categoria.eliminar');
     Route::resource('categoria', 'CategoriaController', array('except' => array('show')));
+    
+    //PROPIEDADES
+    Route::post('propiedades/buscar','PropiedadesController@buscar')->name('propiedades.buscar');
+    Route::get('propiedades/eliminar/{id}/{listarluego}','PropiedadesController@eliminar')->name('propiedades.eliminar');
+    Route::resource('propiedades', 'PropiedadesController', array('except' => array('show')));
 
     //UNIDADES
     Route::post('unidad/buscar','UnidadController@buscar')->name('unidad.buscar');
@@ -225,6 +232,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
+Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto');
 Route::get('provincias/{id}','ProvinciaController@getProvincias');
 Route::get('distritos/{id}','DistritoController@getDistritos');

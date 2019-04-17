@@ -1,4 +1,38 @@
+<script>
+	function cargarselect2(entidad){
+		padre = 'provincia';
+		if(entidad == 'provincia'){
+			padre = 'departamento';
+		}
 
+		var select = $('#' + padre + '_id').val();
+
+		if(select == '' && entidad == 'provincia'){
+			$('#provincia_id').html('<option value="" selected="selected">Seleccione</option>');
+			$('#distrito_id').html('<option value="" selected="selected">Seleccione</option>');
+    	}
+
+		route = 'proveedor/cargarselect/' + select + '?entidad=' + entidad + '&t=si';
+
+		$.ajax({
+			url: route,
+			headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+			type: 'GET',
+			beforeSend: function() {
+				$('#' + entidad + '_id').html('<option value="" selected="selected">Seleccione</option>');
+	        	if(padre == 'departamento'){
+					$('#distrito_id').html('<option value="" selected="selected">Seleccione</option>');
+	        	}
+			},
+	        success: function(res){
+	        	$('#' + entidad + '_id').html(res);
+	        	if(padre == 'departamento'){
+					$('#distrito_id').html('<option value="" selected="selected">Seleccione</option>');
+	        	}
+	        }
+		});
+	}
+</script>
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($proveedor, $formData) !!}
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
@@ -54,23 +88,24 @@
 	</div>
 </div>
 
+<div class="form-group col-sm-12">
+	{!! Form::label('departamento_id', 'Departamento:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::select('departamento_id', $cboDepartamento, null, array('class' => 'form-control input-xs', 'id' => 'departamento_id', 'onchange' => 'cargarselect2("provincia")')) !!}
+	</div>
+</div>
+
+<div class="form-group col-sm-12">
+	{!! Form::label('provincia_id', 'Provincia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::select('provincia_id', $cboProvincia, null, array('class' => 'form-control input-xs', 'id' => 'provincia_id', 'onchange' => 'cargarselect2("distrito")')) !!}
+	</div>
+</div>
 
 <div class="form-group col-sm-12">
 	{!! Form::label('distrito_id', 'Distrito:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
 		{!! Form::select('distrito_id', $cboDistrito, null, array('class' => 'form-control input-xs', 'id' => 'distrito_id')) !!}
-	</div>
-</div>
-<div class="form-group col-sm-12">
-	{!! Form::label('provincia_id', 'Provincia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::select('provincia_id', $cboProvincia, null, array('class' => 'form-control input-xs', 'id' => 'provincia_id')) !!}
-	</div>
-</div>
-<div class="form-group col-sm-12">
-	{!! Form::label('departamento_id', 'Departamento:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::select('departamento_id', $cboDepartamento, null, array('class' => 'form-control input-xs', 'id' => 'departamento_id')) !!}
 	</div>
 </div>
 

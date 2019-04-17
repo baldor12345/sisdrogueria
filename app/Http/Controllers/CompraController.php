@@ -10,6 +10,7 @@ use App\Compra;
 use App\DetalleCompra;
 use App\User;
 use App\Presentacion;
+use App\Categoria;
 use App\Marca;
 use App\Proveedor;
 use App\Propiedades;
@@ -119,15 +120,17 @@ class CompraController extends Controller
         $cboCredito       = [''=>'Seleccione'] + array('S'=>'SI', 'N'=>'NO');
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
-        $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
-        $cboLaboratorio = [''=>'Seleccione'] + Marca::pluck('name', 'id')->all();
+        $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
+        $cboCategoria = ['0'=>'Seleccione'] + Categoria::pluck('name', 'id')->all();
+        $cboUnidad = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -177,12 +180,12 @@ class CompraController extends Controller
                 for($i=0;$i<$cantidad; $i++){
                     $detalle_compra = new DetalleCompra();
                     $detalle_compra->fecha_caducidad = $request->input("fecha_vencim".$i);
-                    $detalle_compra->ubicacion = 'STAND0001';
+                    $detalle_compra->ubicacion = '';
                     $detalle_compra->precio_compra = $request->input("precio_compra".$i);
                     $detalle_compra->precio_venta = $request->input("precio_venta".$i);
                     $detalle_compra->cantidad = $request->input("cant".$i);
                     $detalle_compra->lote = $request->input("lot".$i);
-                    $detalle_compra->producto_id = $request->input("id_producto".$i);
+                    $detalle_compra->producto_presentacion_id = $request->input("id_producto".$i);
                     //$detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
                     $detalle_compra->marca_id = $request->input("id_laboratorio".$i);
                     $detalle_compra->compra_id = $compra_last->id;
@@ -196,10 +199,10 @@ class CompraController extends Controller
                     $entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
                     $entrada->precio_compra = $request->input("precio_compra".$i);
                     $entrada->precio_venta = $request->input("precio_venta".$i);
-                    $entrada->stock = $request->input("cant".$i);
+                    $entrada->stock = $request->input("factor_".$i);
                     $entrada->lote = $request->input("lot".$i);
-                    $entrada->producto_id = $request->input("id_producto".$i);
-                    //$entrada->presentacion_id = $request->input("id_presentacion".$i);
+                    $entrada->producto_presentacion_id = $request->input("id_producto".$i);
+                    $entrada->presentacion_id = $request->input("id_unidad".$i);
                     $user           = Auth::user();
                     $entrada->user_id = $user->id;
                     $entrada->sucursal_id = $user->sucursal_id;
@@ -313,6 +316,31 @@ class CompraController extends Controller
         return view($this->folderview.'.verdetalle')->with(compact('ruta', 'compra', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_c','cboDocumento','cboCredito'));
     }
 
+    //listar el objeto producto_presentacion por dni
+    public function getProductoPresentacion(Request $request, $term){
+        if($request->ajax()){
+            $tags = DB::table('producto_presentacion')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
+                    ->join('categoria','producto.categoria_id','categoria.id')
+                    ->join('marca','producto.marca_id','marca.id')
+                    ->select(
+                        'producto_presentacion.id as id',
+                        'producto_presentacion.presentacion_id as presentacion_id',
+                        'producto.marca_id as marca_id',
+                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion',
+                        'producto_presentacion.precio_compra as precio_compra',
+                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
+                        'producto.descripcion as descripcion',
+                        'presentacion.nombre as presentacion',
+                        'categoria.id as categoria_id'
+                    )
+                    ->where("producto_presentacion.id",'=',$term)->get();
+            return response()->json($tags);
+        }
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -374,10 +402,29 @@ class CompraController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = DB::table('producto')->join('presentacion','producto.presentacion_id','presentacion.id')->select('producto.id as id','producto.presentacion_id as presentecion_id','producto.descripcion as descripcion','presentacion.nombre as presentacion')->where("producto.codigo",'LIKE', '%'.$term.'%')->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
+        $tags = DB::table('producto_presentacion')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
+                    ->join('categoria','producto.categoria_id','categoria.id')
+                    ->join('marca','producto.marca_id','marca.id')
+                    ->select(
+                        'producto_presentacion.id as id',
+                        'producto_presentacion.presentacion_id as presentacion_id',
+                        'marca.id as marca_id',
+                        'marca.name as marca_nombre',
+                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion',
+                        'producto_presentacion.precio_compra as precio_compra',
+                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
+                        'producto.descripcion as descripcion',
+                        'presentacion.nombre as presentacion'
+                    )
+                    ->where("producto.codigo",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                    ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

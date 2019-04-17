@@ -123,11 +123,11 @@ class EntradaSalidaController extends Controller
         $entradasalida       = null;
         $cboDocumento       = [''=>'Seleccione']+ array('E'=>'Doc. Entrada', 'S'=>'Doc. Salida');
         //$cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
-        $cboProducto       = array(0=>'Seleccione Producto...');
-        $cboEntrada       = array(0=>'Seleccione Producto...');
+        $cboProducto       = array(0=>'           Seleccione Producto........................................');
+        $cboEntrada       = array(0=>'            Seleccione Producto.........................................');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
-        $cboPresentacion = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
-        $cboLaboratorio = [''=>'Seleccione'] + Marca::pluck('name', 'id')->all();
+        $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
         $formData       = array('entrada_salida.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
@@ -173,11 +173,12 @@ class EntradaSalidaController extends Controller
                             $entrada    = new Entrada();
                             $entrada->fecha = $request->input('fecha');
                             $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
+                            $entrada->presentacion_id = $request->input('id_presentacion'.$i);
                             $entrada->precio_compra = $request->input("precio_compra".$i);
                             $entrada->precio_venta = $request->input("precio_venta".$i);
                             $entrada->stock = $request->input("cant".$i);
                             $entrada->lote = $request->input("lot".$i);
-                            $entrada->producto_id = $request->input("id_producto".$i);
+                            $entrada->producto_presentacion_id = $request->input("id_producto".$i);
                             $user           = Auth::user();
                             $entrada->user_id = $user->id;
                             $entrada->sucursal_id = $user->sucursal_id;
@@ -238,8 +239,9 @@ class EntradaSalidaController extends Controller
     public function getEntrada(Request $request, $term){
         if($request->ajax()){
             $tags = DB::table('entrada')
-                    ->join('producto','entrada.producto_id','producto.id')
-                    ->join('presentacion','producto.presentacion_id','presentacion.id')
+                    ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','entrada.presentacion_id','presentacion.id')
                     ->select(
                         'presentacion.id as presentacion_id',
                         'presentacion.nombre as presentacion_nombre',
@@ -384,7 +386,18 @@ class EntradaSalidaController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        $tags = DB::table('producto')->join('presentacion','producto.presentacion_id','presentacion.id')->select('producto.id as id','producto.presentacion_id as presentecion_id','producto.descripcion as descripcion','presentacion.nombre as presentacion')->where("producto.codigo",'LIKE', '%'.$term.'%')->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
+        $tags = DB::table('producto_presentacion')
+                        ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
+                        ->join('producto','producto_presentacion.producto_id','producto.id')
+                        ->select(
+                            'producto_presentacion.id as id',
+                            'producto_presentacion.presentacion_id as presentecion_id',
+                            'producto.descripcion as descripcion',
+                            'presentacion.nombre as presentacion'
+                        )
+                        ->where("producto.codigo",'LIKE', '%'.$term.'%')
+                        ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                        ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
             $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
@@ -401,10 +414,11 @@ class EntradaSalidaController extends Controller
             return \Response::json([]);
         }
         $tags = DB::table('entrada')
-                    ->join('producto','entrada.producto_id','producto.id')
-                    ->join('presentacion','producto.presentacion_id','presentacion.id')
+                    ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','entrada.presentacion_id','presentacion.id')
                     ->select(
-                        'producto.id as producto_id',
+                        'producto_presentacion.id as producto_id',
                         'entrada.id as entrada_id',
                         'producto.descripcion as descripcion',
                         'presentacion.nombre as presentacion',

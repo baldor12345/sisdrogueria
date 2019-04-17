@@ -15,8 +15,8 @@ class CrearTablaPropiedades extends Migration
     {
         Schema::create('propiedades', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('num_decimales');
-            $table->decimal('igv',10,2);
+            $table->integer('num_decimales')->nullable();
+            $table->decimal('igv',10,2)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

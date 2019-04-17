@@ -35,17 +35,17 @@
 
 		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">    	
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='oculto1' style="display:none;">
-				<div class="form-group input-sm" style="height: 20px;" >
-					{!! Form::label('productod', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 20px')) !!}
-					<div class="col-sm-11 col-xs-12" style="height: 20px; ">
+				<div class="form-inline input-sm" style="height: 35px;" >
+					{!! Form::label('productod', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 35px')) !!}
+					<div class="col-sm-11 col-xs-12" style="height: 35px; ">
 						{!! Form::select('producto_id', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'producto_id')) !!}
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"  id='oculto2' style="display:none;">
-				<div class="form-group input-sm" style="height: 20px;">
-					{!! Form::label('entrada_id', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 20px')) !!}
-					<div class="col-sm-11 col-xs-12" style="height: 20px;">
+				<div class="form-inline input-sm" style="height: 35px;">
+					{!! Form::label('entrada_id', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 35px')) !!}
+					<div class="col-sm-11 col-xs-12" style="height: 35px;">
 						{!! Form::select('entrada_id', $cboEntrada, null, array('class' => 'form-control input-sm', 'id' => 'entrada_id')) !!}
 					</div>
 				</div>
@@ -168,8 +168,6 @@ $(document).ready(function() {
 				$('#fechavencimiento').prop("readonly", true);
 				$('#lote').prop("readonly", true);
 
-				document.getElementById("presentacion_id").innerHTML += "<option value='"+response[0].presentacion_id+"'>"+response[0].presentacion_nombre+"</option>"; 
-				
 				$('#preciocompra').val(response[0].precio_compra);
 				var fecha = response[0].fecha_caducidad.split('-');
 				var year = fecha[0];
@@ -179,7 +177,7 @@ $(document).ready(function() {
 				var day = day_p1[0];
 				var dte_format = year+"-"+month+"-"+day;
 				$('#precioventa').val(response[0].precio_venta);
-				$('#presentacion_id').val(response[0].presentacion_id);
+				$('#id_presentacion').val(response[0].presentacion_id);
 				$('#cantidad').val(response[0].stock);
 				$('#evaluar_cant').val(response[0].stock);
 				$('#fechavencimiento').val(dte_format);
@@ -283,6 +281,10 @@ function agregar(){
 	}
 	
 	if(doc_ == 'S'){
+		var entrada_dat ="";
+		var select = "";
+		var select = document.getElementById('entrada_id');
+		entrada_dat = select.options[select.selectedIndex].innerText;
 		if($('#entrada_id').val() !='0'){
 			if(id_presentacion !=""){
 				if(preciocompra !=""){
@@ -301,7 +303,7 @@ function agregar(){
 										}
 										var total = t_parcial+subtotal;
 										var d = '<tr class="datos-producto" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-											'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
+											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
 											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
@@ -314,7 +316,6 @@ function agregar(){
 										//vaciar datos
 										$('#producto_id').val(0);
 										$('#id_presentacion').val(0);
-										$('#producto_id').value="Seleccione Producto...";
 										$('#preciocompra').val("");
 										$('#precioventa').val("");
 										$('#cantidad').val("");
