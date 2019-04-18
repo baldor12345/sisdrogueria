@@ -267,7 +267,7 @@ class CajaController extends Controller
         $error = DB::transaction(function() use($request){
             $detalle_caja = new DetalleCaja();
             $detalle_caja->fecha = $request->input('fecha');
-            $detalle_caja->numero_operacion = $request->input('fecha');
+            $detalle_caja->numero_operacion = $request->input('numero_operacion');
             $detalle_caja->concepto_id = $request->input('concepto_id');
             $detalle_caja->cliente_id = $request->input('persona_id');
             if($request->input('tipo_id') == 'I'){

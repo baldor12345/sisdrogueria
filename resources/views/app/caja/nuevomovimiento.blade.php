@@ -40,10 +40,10 @@ function cargarselect2(entidad){
             </div>
             <div class="form-group">
                 <div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
-                {!! Form::label('numero_caja', 'Nro Oper.:') !!}
+                {!! Form::label('numero_operacion', 'Nro Oper.:') !!}
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
-                    {!! Form::text('numero_caja', $numero_operacion, array('class' => 'form-control input-xs', 'id' => 'numero_caja', 'placeholder' => 'Ingrese nombre', 'readonly')) !!}
+                    {!! Form::text('numero_operacion', $numero_operacion, array('class' => 'form-control input-xs', 'id' => 'numero_operacion', 'placeholder' => 'Ingrese nombre', 'readonly')) !!}
                 </div>
             </div>
             <div class="form-group">
