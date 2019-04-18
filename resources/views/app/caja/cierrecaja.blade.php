@@ -1,124 +1,182 @@
-<?php 
-use App\Persona;
-use App\Acciones;
-use App\Configuraciones;
-use Illuminate\Support\Facades\DB;
-?>
 
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($caja, $formData) !!}
+{!! Form::model($caja, $formData) !!}	
+
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+<div class="row">
+	<fieldset >    
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('numero_caja', 'Nro Caja:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::text('numero_caja', $caja_dat[0]->num_caja, array('class' => 'form-control input-xs', 'id' => 'numero_caja', 'placeholder' => 'Ingrese nombre', 'readonly')) !!}
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('fecha', 'Fecha:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha', 'placeholder' => 'Ingrese nombre')) !!}
+			</div>
+		</div>
 
-<div class="form-group">
-	{!! Form::label('titulo', 'Titulo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('titulo', $caja->titulo, array('class' => 'form-control input-xs', 'id' => 'titulo', 'placeholder' => 'Ingrese titulo','readonly')) !!}
-	</div>
-</div>
-
-<div class="form-group">
-	{!! Form::label('fecha_horaApert', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::date('fecha_horaApert', null, array('class' => 'form-control input-xs', 'id' => 'fecha_horaApert')) !!}
-	</div>
-</div>
-
-
-<div class="form-group">
-	{!! Form::label('monto_inic', 'Monto inicio(S/.):', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('monto_inic', number_format($caja->monto_iniciado,1), array('class' => 'form-control input-xs', 'id' => 'monto_inic', 'placeholder' => 'S/.','readonly')) !!}
-		{!! Form::hidden('monto_iniciado', $caja->monto_iniciado, array('id' => 'monto_iniciado')) !!}
-	</div>
-</div>
-
-<div class="form-group">
-	{!! Form::label('monto_c', 'Monto Cierre(S/.):', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('monto_c', number_format($diferencia,1), array('class' => 'form-control input-xs', 'id' => 'monto_c', 'placeholder' => 'S/.','readonly')) !!}
-		{!! Form::hidden('monto_cierre', $diferencia, array('id' => 'monto_cierre')) !!}
-	</div>
-</div>
-
-<div class="form-group">
-	{!! Form::label('diferencia_mont', 'Diferencia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('diferencia_mont', number_format($monto_cierre,1) , array('class' => 'form-control input-xs', 'id' => 'diferencia_mont', 'placeholder' => 'S/.','readonly')) !!}
-		{!! Form::hidden('diferencia_monto', $monto_cierre, array('id' => 'diferencia_monto')) !!}
-	</div>
-</div>
-
-
-<div class="form-group">
-	{!! Form::label('hora_cierre', 'Hora Cierre:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::time('hora_cierre', null, array('class' => 'form-control input-xs', 'id' => 'hora_cierre', 'placeholder' => '')) !!}
-	</div>
-</div>
-
-
-<div class="form-group">
-	{!! Form::label('descripcion', 'Descripcion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion')) !!}
-	</div>
-</div>
-
-<div class="form-group">
-	<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-	{!! Form::button('Cerrar Caja', array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarCerrar', 'onclick' => 'CerrarCaja(\''.$entidad.'\', this)')) !!}
-		&nbsp;
-		{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
-	</div>
-</div>
-{!! Form::close() !!}
-
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
-		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="usertype_id"]').focus();
-		configurarAnchoModal('400');
-
-		var fechaActual = new Date();
-		var day = ("0" + fechaActual.getDate()).slice(-2);
-		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-		var fechai = (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-		if(fechaActual.getHours()===1 || fechaActual.getHours()===2 || fechaActual.getHours()===3 ||fechaActual.getHours()===4 || fechaActual.getHours()===5 || fechaActual.getHours()===6 || fechaActual.getHours()===7 || fechaActual.getHours()===8 || fechaActual.getHours()===9){
-					var horaC ="0"+fechaActual.getHours()+":"+fechaActual.getMinutes();
-				if(fechaActual.getMinutes()===1 || fechaActual.getMinutes()===2 || fechaActual.getMinutes()===3 || fechaActual.getMinutes()===4 || fechaActual.getMinutes()===5 || fechaActual.getMinutes()===6 || fechaActual.getMinutes()===7 || fechaActual.getMinutes()===8 || fechaActual.getMinutes()===9){
-						var horaC ="0"+fechaActual.getHours()+":0"+fechaActual.getMinutes();
-				}
-		}else if(fechaActual.getMinutes()===1 || fechaActual.getMinutes()===2 || fechaActual.getMinutes()===3 || fechaActual.getMinutes()===4 || fechaActual.getMinutes()===5 || fechaActual.getMinutes()===6 || fechaActual.getMinutes()===7 || fechaActual.getMinutes()===8 || fechaActual.getMinutes()===9){
-			var horaC = fechaActual.getHours()+":0"+fechaActual.getMinutes();
-		}else{
-			var horaC =fechaActual.getHours()+":"+fechaActual.getMinutes();
-		}
-		var fecha_caja = '{{ $fecha_caja }}';
-		$('#hora_cierre').val(horaC);
-		$('#fecha_horaApert').val(fecha_caja);
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+				{!! Form::label('concepto_id', 'Concepto:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::select('concepto_id', $cboConcepto, null, array('class' => 'form-control input-xs', 'id' => 'concepto_id')) !!}
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('total', 'Total:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)' )) !!}
+			</div>
+		</div>
 		
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('cajero', 'Cajero:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::text('cajero', $cajero_dat->apellidos.' '.$cajero_dat->nombres, array('class' => 'form-control input-xs', 'id' => 'cajero', 'placeholder' => 'Ingrese nombre', 'readonly')) !!}
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('comentario', 'Comentario:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::textarea('comentario', null, array('class' => 'form-control input-xs', 'cols'=>'10', 'rows'=>'rows' ,'id' => 'comentario', 'placeholder' => 'Ingrese comentario')) !!}
+			</div>
+		</div>
+	</fieldset>	
+
+	<div class="form-group">
+		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarMovimiento', 'onclick' => 'guardar_movimiento(\''.$entidad.'\', this)')) !!}
+			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
+		</div>
+	</div>
+</div>	
+{!! Form::close() !!}
+<script type="text/javascript">
+$(document).ready(function() {
+	configurarAnchoModal('400');
+	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	$('.input-number').on('input', function () { 
+    	this.value = this.value.replace(/[^0-9]/g,'');
 	});
-	
-	function CerrarCaja(entidad){
-		var fechacierre = '{{ $fecha_caja }}';
-		var last_day = '{{$last_day}}';
 
-		var fecharecibida = $('#fecha_horaApert').val();
+    var fechaActual = new Date();
+    var day = ("0" + fechaActual.getDate()).slice(-2);
+    var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
+    var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
+    var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
+    $('#fecha').val(fechai);
 
-		if(fecharecibida >= fechacierre){
-			if(fecharecibida<=last_day){
-				guardar(entidad);
-			}else{
-				document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >La fecha cierre no puede ser mayor que la fecha "+last_day+" </span></div>";
-					$('#divMensajeError{{ $entidad }}').show();
+
+	$('#persona_id').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listpersonas'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
 			}
-		}else{
-			document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >La fecha cierre no puede ser menor que la fecha de apertura  "+fechacierre+"</span></div>";
-					$('#divMensajeError{{ $entidad }}').show();
+			
 		}
+	});
 
+
+}); 
+
+function guardar_movimiento (entidad, x) {
+    var idformulario = IDFORMMANTENIMIENTO + entidad;
+    var data         = submitForm(idformulario);
+    var respuesta    = '';
+    var listar       = 'NO';
+    if ($(idformulario + ' :input[id = "listar"]').length) {
+        var listar = $(idformulario + ' :input[id = "listar"]').val()
+    };
+    $('#btnGuardarMovimiento').button('loading');
+    data.done(function(msg) {
+        respuesta = msg;
+    }).fail(function(xhr, textStatus, errorThrown) {
+        respuesta = 'ERROR';
+        $('#btnGuardarMovimiento').removeClass('disabled');
+        $('#btnGuardarMovimiento').removeAttr('disabled');
+        $('#btnGuardarMovimiento').html('<i class="fa fa-check fa-lg"></i>Guardar');
+    }).always(function() {
+        if(respuesta === 'ERROR'){
+        }else{
+            if (respuesta === 'OK') {
+                cerrarModal();
+                if (listar === 'SI') {
+                    buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+                    
+                }        
+            } else {
+                mostrarErrores(respuesta, idformulario, entidad);
+                $('#btnGuardarMovimiento').removeClass('disabled');
+                $('#btnGuardarMovimiento').removeAttr('disabled');
+                $('#btnGuardarMovimiento').html('<i class="fa fa-check fa-lg"></i>Guardar');
+            }
+        }
+    });
+}
+
+
+function filterFloat(evt,input){
+	// Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+	var key = window.Event ? evt.which : evt.keyCode;    
+	var chark = String.fromCharCode(key);
+	var tempValue = input.value+chark;
+	if(key >= 48 && key <= 57){
+		if(filter(tempValue)=== false){
+			return false;
+		}else{       
+			return true;
+		}
+	}else{
+		if(key == 8 || key == 13 || key == 0) {     
+			return true;              
+		}else if(key == 46){
+				if(filter(tempValue)=== false){
+					return false;
+				}else{       
+					return true;
+				}
+		}else{
+			return false;
+		}
 	}
-
+}
+function filter(__val__){
+	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+	if(preg.test(__val__) === true){
+		return true;
+	}else{
+	return false;
+	}
+	
+}
 
 </script>

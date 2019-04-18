@@ -21,16 +21,13 @@ class CrearTablaDetalleCaja extends Migration
             $table->integer('cliente_id')->unsigned()->nullable();
             $table->decimal('ingreso',20, 3);
             $table->decimal('egreso',20, 3)->nullable();
-            $table->integer('forma_pago_id')->unsigned();
             $table->char('estado', 1)->nullable();// A=>abierto; C=>cerrado
+            $table->char('forma_pago', 1)->nullable();
             $table->string('comentario', 400)->nullable();
             $table->integer('caja_id')->unsigned()->nullable();
-            $table->integer('comprobante_id')->unsigned()->nullable();
             $table->foreign('cliente_id')->references('id')->on('cliente')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('caja_id')->references('id')->on('caja')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('concepto_id')->references('id')->on('concepto')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('comprobante_id')->references('id')->on('comprobante')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('forma_pago_id')->references('id')->on('forma_pago')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

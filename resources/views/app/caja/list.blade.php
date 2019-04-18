@@ -24,32 +24,22 @@ a.disabled {
 		?>
 		@foreach ($lista as $key => $value)
 		<tr>
-			<td style="font-size: 14px">{{ $contador }}</td>
-			<td style="font-size: 14px">{{  $value->num_caja   }}</td>
-			<td style="font-size: 14px">{{ $value->sucursal->nombre }}</td>	
-			<td style="font-size: 14px">{{  Date::parse( $value->fecha_horaapert )->format('d/m/Y')}}</td>	
-			<td style="font-size: 14px">{{  Date::parse( $value->fecha_horacierre )->format('d/m/Y') }}</td>
-			<td style="font-size: 14px">{{ $value->monto_iniciado }}</td>
-			<td style="font-size: 14px">{{ $value->monto_cierre }}</td>
-			<td style="font-size: 14px">{{ $value->descripcion }}</td>
-			{{-- <td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Cierre', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-secondary','disabled' )) !!}</td> --}}
-			{{-- <td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Cierre', array('onclick' => '', 'class' => 'btn btn-xs btn-secondary','disabled' )) !!}</td> --}}
-			
-			<?php if($caja_last->id == $value->id){ if($value->estado == 'C'){ ?>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-refresh"></div> Reaperturar', array('onclick' => 'modal (\''.URL::route($ruta["cargarreapertura"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_reapertura.'\', this);','class' => 'btn btn-xs btn-warning')) !!}</td>
-				
-			<?php }else if($value->estado == 'A'){ ?>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-refresh"></div> Reaperturar', array('onclick' => 'modal (\''.URL::route($ruta["cargarreapertura"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_reapertura.'\', this);','class' => 'btn btn-xs btn-warning','disabled')) !!}</td>
-			<?php } }else if($caja_last->id != $value->id){?>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-refresh"></div> Reaperturar', array('onclick' => 'modal (\''.URL::route($ruta["cargarreapertura"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_reapertura.'\', this);','class' => 'btn btn-xs btn-warning','disabled')) !!}</td>
-			<?php }?>
-
-			@if ($value->estado === 'C')
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Cierre', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-secondary','disabled' )) !!}</td>
+			<td style="font-size: 13px">{{ $contador }}</td>
+			<td style="font-size: 13px"  align="center">{{  $value->num_caja   }}</td>
+			<td style="font-size: 13px"  align="center">{{  $value->numero_operacion   }}</td>
+			<td style="font-size: 13px" >{{  $value->user_login   }}</td>
+			<td style="font-size: 13px" align="center">{{  Date::parse( $value->fecha )->format('d/m/Y')  }}</td>
+			<td style="font-size: 13px" align="center">{{  $value->concepto_nombre   }}</td>
+			<td style="font-size: 13px; color:green; font-weight: bold;" align="center">{{  number_format($value->ingreso,2) }}</td>
+			<td style="font-size: 13px" align="center">{{  number_format($value->egreso,2)   }}</td>
+			<td style="font-size: 13px" align="center">{{  $value->forma_pago   }}</td>
+			@if($value->cliente_id != '')
+			<td style="font-size: 13px">{{  $value->apellidos.'  '.$value->nombres   }}</td>
 			@else
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Cierre', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-secondary')) !!}</td>
+			<td style="font-size: 13px">--</td>	
 			@endif
-			
+			<td style="font-size: 13px">{{ $value->comentario }}</td>	
+			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;

@@ -138,28 +138,13 @@ Route::group(['middleware' => 'auth'], function () {
       /*CAJA*/
       Route::post('caja/buscar', 'CajaController@buscar')->name('caja.buscar');
       Route::resource('caja', 'CajaController', array('except' => array('show')));
-      Route::get('caja/cargarCaja/{id}', 'CajaController@cargarCaja')->name('caja.cargarCaja');
-      Route::get('/reportecajaPDF/{id}', 'CajaController@reportecajaPDF')->name('reportecajaPDF');
-      Route::get('caja/detalle/{id}', 'CajaController@detalle')->name('caja.detalle');
-  
-      Route::get('/reporteingresosPDF/{id?}', 'CajaController@reporteingresosPDF')->name('caja.reporteingresosPDF');
-      Route::get('/reporteegresosPDF/{id?}', 'CajaController@reporteegresosPDF')->name('caja.reporteegresosPDF');
-      Route::get('/reporteresumenfinancieroPDF/{id?}', 'CajaController@reporteresumenfinancieroPDF')->name('caja.reporteresumenfinancieroPDF');
-      Route::get('/reporteresumenfinancierototalPDF/{id?}', 'CajaController@reporteresumenfinancierototalPDF')->name('caja.reporteresumenfinancierototalPDF');
-      Route::get('/generarresumenPDF/{id}', 'CajaController@generarresumenPDF')->name('generarresumenPDF');
-  
-      Route::get('caja/nuevomovimiento/{id}', 'CajaController@nuevomovimiento')->name('caja.nuevomovimiento');
-      Route::post('caja/registrarmovimiento/{id}', 'CajaController@registrarmovimiento')->name('caja.registrarmovimiento');
+      Route::get('caja/nuevomovimiento', 'CajaController@nuevomovimiento')->name('caja.nuevomovimiento');
+      Route::get('caja/guardarnuevomovimiento/{id?}', 'CajaController@guardarnuevomovimiento')->name('caja.guardarnuevomovimiento');
+      Route::get('caja/cierrecaja', 'CajaController@cierrecaja')->name('caja.cierrecaja');
       Route::get('caja/cargarselect/{idselect}', 'CajaController@cargarselect')->name('caja.cargarselect');
-      Route::get('caja/cargarselecttransaccion/{idselect}', 'CajaController@cargarselecttransaccion')->name('caja.cargarselecttransaccion');
-      Route::get('caja/buscartransaccion', 'CajaController@buscartransaccion')->name('caja.buscartransaccion');
       Route::get('caja/cargarreapertura/{id}/{listarluego}', 'CajaController@cargarreapertura')->name('caja.cargarreapertura');
       Route::get('caja/guardarreapertura', 'CajaController@guardarreapertura')->name('caja.guardarreapertura');
-      Route::get('caja/cargarreporte', 'CajaController@cargarreporte')->name('caja.cargarreporte');
-      Route::get('caja/generarreportes', 'CajaController@generarreportes')->name('caja.generarreportes');
       Route::get('caja/listpersonas',  'CajaController@listpersonas')->name('caja.listpersonas');
-      Route::get('caja/guardar_distribucion_faltante',  'CajaController@guardar_distribucion_faltante')->name('caja.guardar_distribucion_faltante');
-      Route::get('caja/vistadistribuirfaltante/{distribucion_id?}',  'CajaController@vistadistribuirfaltante')->name('caja.vistadistribuirfaltante');
   
 
     //COMPRA

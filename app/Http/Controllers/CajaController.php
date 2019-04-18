@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Movimiento;
 use App\Sucursal;
+use App\Person;
 use App\Persona;
 use App\Cliente;
 use App\Concepto;
 use App\FormaPago;
-use App\Comprobante;
+use App\DetalleCaja;
 use App\Caja;
 use App\User;
 use App\Librerias\Libreria;
@@ -36,29 +37,15 @@ class CajaController extends Controller
     protected $tituloNuevaTransaccion = 'Registrar Nuevo Gasto';
     protected $tituloEliminar  = 'Eliminar persona';
     protected $rutas           = array('create' => 'caja.create', 
-            'edit'   => 'caja.edit', 
-            'delete' => 'caja.eliminar',
-            'search' => 'caja.buscar',
-            'index'  => 'caja.index',
-            'nuevatransaccion'   => 'caja.nuevatransaccion',
-            'detalle'   => 'caja.detalle',
-            'search1' => 'caja.detalle',
+            'edit'              => 'caja.edit', 
+            'delete'            => 'caja.eliminar',
+            'search'            => 'caja.buscar',
+            'index'             => 'caja.index',
             'nuevomovimiento'   => 'caja.nuevomovimiento',
-            'cargarreapertura'   => 'caja.cargarreapertura',
-            'guardarreapertura' => 'caja.guardarreapertura',
-            'cargarreporte' => 'caja.cargarreporte',
-            'generarreportes' => 'caja.generarreportes',
-            'cargarselect' => 'encuesta.cargarselect',
-            'cargarselecttransaccion' => 'caja.cargarselecttransaccion',
-            'buscartransaccion'=> 'caja.buscartransaccion',
-
-            'reporteingresosPDF' => 'caja.reporteingresosPDF',
-            'reporteegresosPDF' => 'caja.reporteegresosPDF',
-            'reporteresumenfinancieroPDF' => 'caja.reporteresumenfinancieroPDF',
-            'reporteresumenfinancierototalPDF' => 'caja.reporteresumenfinancierototalPDF',
-            'listpersonas' =>'caja.listpersonas',
-            'vistadistribuirfaltante' => 'caja.vistadistribuirfaltante',
-            'guardar_distribucion_faltante' => 'caja.guardar_distribucion_faltante'
+            'guardarnuevomovimiento'   => 'caja.guardarnuevomovimiento',
+            'cierrecaja'            => 'caja.cierrecaja',
+            'cargarselect'      => 'caja.cargarselect',
+            'listpersonas'      =>'caja.listpersonas',
         );
 
     public function __construct()
@@ -71,18 +58,24 @@ class CajaController extends Controller
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
         $entidad          = 'Caja';
-        $titulo             = Libreria::getParam($request->input('titulo'));
-        $resultado        = Caja::listar($titulo);
+        $user           = Auth::user();
+        $num_op             = Libreria::getParam($request->input('num_op'));
+        $fechaI             = Libreria::getParam($request->input('fechaI'));
+        $fechaF             = Libreria::getParam($request->input('fechaF'));
+        $resultado        = Caja::listardetallecaja($num_op, $fechaI, $fechaF, $user->sucursal_id);
         $lista            = $resultado->get();
         $cabecera         = array();
+        $cabecera[]       = array('valor' => 'Nro', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nro Caja', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nro Oper', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Usuario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Numero', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Fecha Apert.', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Fecha Cierre', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Monto Inicio', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Monto Cierre', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'descripcion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Concepto', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Ingreso', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Egreso', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Forma Pago', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Entregado a', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $caja_last = Caja::all()->last();
@@ -195,22 +188,107 @@ class CajaController extends Controller
     }
 
 
-    public function cierre(Request $request)
+    //cierre de caja
+    public function cierrecaja(Request $request)
     {
         $listar       = Libreria::getParam($request->input('listar'), 'NO');
         $entidad      = 'Caja';
-        $movimiento   = null;
+        $caja   = null;
+        $cboConcepto            =  array(2=>'Cierre de Caja');
+        $user = Auth::user();
+        $cajero_dat    = Persona::find($user->person_id);
+        $caja_dat   = Caja::where('estado', '=' , 'A')->where('deleted_at',null)->get();
+
         $formData     = array('caja.store');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-
-        $sucursal_id  = $request->input('sucursal_id');
-        $user = Auth::user();
-        $persona_id = $user->persona_id;
-        $num_caja   = Movimiento::where('sucursal_id', '=' , $sucursal_id)->max('num_caja') + 1;
-        
+        $ruta = $this->rutas;
         $boton        = 'Registrar';
-        return view($this->folderview.'.cierre')->with(compact('persona_id' , 'num_caja', 'movimiento', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.cierrecaja')->with(compact('ruta', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
     }
+
+
+
+    public function nuevomovimiento(Request $request)
+    {
+        $listar       = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad      = 'Caja';
+        $caja   = null;
+        $numero_operacion   = Libreria::codigo_operacion();
+        $cboFormaPago       = [0=>'Seleccione'] + array('C'=>'Contado', 'D'=>'Debito');
+        $cboTipo            = [0=>'Seleccione'] + array('I'=>'Ingreso', 'E'=>'Egreso');
+        $cboConcepto        = [0=>'Seleccione'];
+        $cboPersona         = [0=>'Seleccione'];
+
+        $user           = Auth::user();
+        $cajero_dat    = Persona::find($user->person_id);
+        $num_caja       = Caja::where('estado','A')->where('user_id',$user->id)->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
+
+        $formData       = array('caja.guardarnuevomovimiento','1');
+        $ruta = $this->rutas;
+        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton        = 'Registrar';
+        return view($this->folderview.'.nuevomovimiento')->with(compact('cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function guardarnuevomovimiento(Request $request, $id){
+        echo "hola";
+        $persona_id = $request->input('persona_id');
+        
+        $error = DB::transaction(function() use($request, $persona_id){
+            $persona = new Persona();
+            $persona->empresa_id = Auth::user()->empresa_id;
+            $persona->personamaestro_id = $persona_id;
+            $persona->type = $request->input('type');
+            $persona->secondtype = $request->input('secondtype');
+            $persona->save();
+        });
+        return is_null($error) ? "OK" : $error;
+
+    }
+
+    public function listpersonas(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Persona::where("nombres",'LIKE', '%'.$term.'%')->orwhere('apellidos', '%'.$term.'%')->orwhere('dni', '%'.$term.'%')->orwhere('ruc', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->apellidos.' '.$tag->nombres];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    public function cargarselect($idselect, Request $request)
+    {
+        echo $idselect;
+        $entidad = $request->get('entidad');
+        $t = '';
+        $tt = '';
+
+        if($request->get('t') == ''){
+            $t = '_';
+            $tt = '2';
+        }
+
+        $retorno = '<select class="form-control input-sm" id="' . $t . $entidad . '_id" name="';
+        $cbo = Concepto::select('id', 'titulo')
+            ->where('tipo', '=', $idselect)
+            ->get();
+        $retorno .= '><option value="" selected="selected">Seleccione</option>';
+
+        foreach ($cbo as $row) {
+            $retorno .= '<option value="' . $row['id'] .  '">' . $row['titulo'] . '</option>';
+        }
+        $retorno .= '</select></div>';
+
+        echo $retorno;
+    }
+
+
+
 
     public function persona(Request $request)
     {
