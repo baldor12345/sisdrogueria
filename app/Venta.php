@@ -19,12 +19,28 @@ class Venta extends Model
     public function sucursal(){
         return $this->belongsTo('App\Sucursal','sucursal_id');
     } 
-    public function comprobante(){
-        return $this->belongsTo('App\Comprobante','comprobante_id');
+    public function user(){
+        return $this->belongsTo('App\User','user_id');
     } 
-    public function formapago(){
-        return $this->belongsTo('App\FormaPago','forma_pago_id');
+    public function cliente(){
+        return $this->belongsTo('App\Cliente','cliente_id');
     } 
+
+    // public function scopelistardetalle($query, $venta_id){
+    //     return $query->where(function($subquery) use($fecha)
+    //     {
+    //         if (!is_null($fecha)) {
+    //             $subquery->where('fecha', '>=', $fecha);
+    //         }
+    //     })
+    //     ->orderBy('fecha', 'ASC');
+    // }
+    // public function comprobante(){
+    //     return $this->belongsTo('App\Comprobante','comprobante_id');
+    // } 
+    // public function formapago(){
+    //     return $this->belongsTo('App\FormaPago','forma_pago_id');
+    // } 
 
     /**
      * Método para listar
@@ -35,11 +51,11 @@ class Venta extends Model
     public function scopelistar($query, $fecha)
     {
         return $query->where(function($subquery) use($fecha)
-		            {
-		            	if (!is_null($fecha)) {
-		            		$subquery->where('fecha_hora', '>=', $fecha);
-		            	}
-		            })
-        			->orderBy('fecha_hora', 'ASC');
+            {
+                if (!is_null($fecha)) {
+                    $subquery->where('fecha', '>=', $fecha);
+                }
+            })
+            ->orderBy('fecha', 'ASC');
     }
 }

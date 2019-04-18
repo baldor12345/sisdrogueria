@@ -9,18 +9,17 @@ use App\Sucursal;
 use App\Distrito;
 use App\Venta;
 use App\Cliente;
-use App\Comprobante;
-use App\FormaPago;
 use App\Producto;
-use App\DetalleCompra;
 use App\Presentacion;
 use App\Caja;
-use App\Salida;
 use App\Detalle_venta;
-use App\DetalleEntrada;
+use App\Entrada;
 use App\DetalleCaja;
+use App\Propiedades;
+use App\DetalleVentaLote;
+use App\ProductoPresentacion;
 
-use App\Movimiento;
+// use App\Movimiento;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -65,12 +64,11 @@ class VentasController extends Controller
         $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
-        // $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
-        // $titulo_serie_venta = $this->tituloSerieVenta;
+   
         $ruta  = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -108,18 +106,22 @@ class VentasController extends Controller
      */
     public function create(Request $request)
     {
-        $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Ventas';
+        $listar  = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad = 'Ventas';
         $venta  = null;
-        $formData     = array('ventas.store');
-        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton        = 'Registrar'; 
+        $formData  = array('ventas.store');
+        $formData  = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton  = 'Registrar'; 
         $user = Auth::user();
-        $ruta  = $this->rutas;
-        $cboComprobante = ['0'=>'Seleccione'] + Comprobante::pluck('nombre', 'id')->all();
-        $cboFormaPago = ['0'=>'Seleccione'] + FormaPago::pluck('nombre', 'id')->all();
-        $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('venta','formData', 'entidad', 'boton', 'listar','cboComprobante','ruta','cboFormaPago','cboPresentacion'));
+        $ruta = $this->rutas;
+        $igv = Propiedades::all()->last()->igv;
+        $cboTipos = ['CO'=>'Contado','CR'=>'Crédito'];
+        $cboDocumento = ['V'=>'Voleta','F'=>'Factura'];
+        $cboFormasPago = ['T'=>'Tarjeta','E'=>'Efectivo'];
+        $cboPresentacion = ['0'=>'Seleccione'];
+        $cboCliente = ['0'=>'Seleccione'];
+        $cboProducto = ['0'=>'Seleccione'];
+        return view($this->folderview.'.mant')->with(compact('venta','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto'));
     }
 
     public function store(Request $request)
@@ -130,7 +132,7 @@ class VentasController extends Controller
             //                 'direccion' => 'required|max:100',
             //                 'telefono' => 'required|max:15'
                         );
-        $mensajes   = array();
+        $mensajes  = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
@@ -140,79 +142,68 @@ class VentasController extends Controller
             $user = Auth::user();
             $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
 
+            $numero_operacion = Libreria::numero_operacion();
             $venta = new Venta();
             $venta->total = $request->input('total');
             $venta->descuento = 0;//$request->input('descuento');
-            $venta->igv = 0.18;//IGV= de configuraciones
+            $venta->igv = $request->input('igv');//IGV= de configuraciones
             $venta->descripcion = "";//$request->input('descripcion');
-            $venta->fecha_hora = date('Y-m-d H:i:s');
-            $venta->estado = 'C';//P=Pendiente, C=cancelado
+            $venta->fecha = date('Y-m-d H:i:s');
+            $venta->estado = 'P';//P=Pendiente, C=cancelado
             $venta->user_id = $user->id;
             $venta->caja_id = $caja->id;
             $venta->sucursal_id = $user->sucursal_id;
             $id_cliente = $request->input('cboCliente');
             if($id_cliente != 0){
-                $venta->cliente_id = $id_cliente ;
+                $venta->cliente_id = $id_cliente;
             }
-            $venta->forma_pago_id =  $request->input('cboForma_pago');
-            $venta->comprobante_id =  $request->input('cboComprobante');
+            $venta->comprobante =  $request->input('cboForma_pago');
+            $venta->tipo_pago =  $request->input('cboForma_pago');
+            $venta->forma_pago =  $request->input('cboComprobante');
+            $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
+            $venta->numero_operacion = $numero_operacion;
             $venta->save();
-
-            $salida = new Salida();
-            $salida->tipo = 'V';// D=devolucion, V=Venta, T=Traslado entre sucursales
-            $salida->fecha = date('Y-m-d H:i:s');
-            $salida->sucursal_id = $user->sucursal_id;
-            $salida->numero_documento = $request->input('numero_documento');
-            $salida->user_id = $user->id;
-            $salida->save();
-
-
             $cantidad = $request->input('cantidad_registros');
 
             for($i=0;$i<$cantidad; $i++){
                 $producto = Producto::find($request->get('producto_id'.$i));
-                $detalle_venta = new Detalle_venta();
-
+               
                 $cant =$request->get('cantidad'.$i);
-                $precio_unit = $producto->precio; 
-                // $descuento = $request->get('descuento'.$i);
-                $unidad_id = $request->get('presentacion_id'.$i);
-                $subtotal = $request->get('subtotal'.$i);
-
+                $precio_unit = $producto->precio_venta; 
+                $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('presentacion'.$i))->get()[0];
+                $subtotal =  round($precio_unit *  $producto_presentacion->cant_unidad_x_presentacion, 2);
+               
+                $detalle_venta = new Detalle_venta();
                 $detalle_venta->producto_id =$producto->id; 
                 $detalle_venta->cantidad = $cant;
                 $detalle_venta->precio_unitario =$precio_unit;
-                // $detalle_venta->descuento = $descuento ; 
+               
                 $detalle_venta->total = $subtotal;
-                $detalle_venta->unidad_id = $unidad_id;
                 $detalle_venta->ventas_id = $venta->id;
                 $detalle_venta->sucursal_id = $user->sucursal_id;
+                $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
                 $detalle_venta->save();
-
-                // $detalle_salida = new DetalleSalida();
-                // $detalle_salida->fecha =  date('Y-m-d H:i:s');
-                // $detalle_salida->fecha_caducidad = 
-                // $detalle_salida->lote = 
-                // $detalle_salida->marca_id = 
-                // $detalle_salida->precio_compra = 
-                // $detalle_salida->precio_venta = 
-                // $detalle_salida->presentacion_id = 
-                // $detalle_salida->producto_id = 
-                // $detalle_salida->salida_id = 
-                // $detalle_salida->cantidad = 
-                // $detalle_salida->save();
-
-                $detalle_entradas = DetalleEntrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-                foreach ($detalle_entradas as $key => $value) {
-                    $cant_actual = $value->cantidad;
+                $entradas = Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                foreach ($entradas as $key => $value) {
+                    $cant_actual = $value->stock;
                     if($cant > $cant_actual){
                         $value->stock = 0;
                         $value->save();
                         $cant = $cant - $cant_actual;
+                        $detalleventa_lote = new DetalleVentaLote();
+                        $detalleventa_lote->cantidad = $cant;
+                        $detalleventa_lote->entrada_id =$value->id;
+                        $detalleventa_lote->detalle_venta_id =$detalle_venta->id;
+                        $detalleventa_lote->save();
                     }else{
                         $value->stock = $cant_actual - $cant;
                         $value->save();
                         $cant = 0;
+                        $detalleventa_lote = new DetalleVentaLote();
+                        $detalleventa_lote->cantidad = $cant;
+                        $detalleventa_lote->entrada_id =$value->id;
+                        $detalleventa_lote->detalle_venta_id =$detalle_venta->id;
+                        $detalleventa_lote->save();
                         break;
                     }
                 }
@@ -224,10 +215,13 @@ class VentasController extends Controller
                 }
                 $detalle_caja->comprobante_id = $venta->comprobante_id;
                 $detalle_caja->concepto_id = 3;
+                $detalle_caja->estado = '';
+                $detalle_caja->forma_pago = '';
                 $detalle_caja->fecha = date('Y-m-d H:i:s');
                 $detalle_caja->forma_pago_id = $venta->forma_pago_id; 
                 $detalle_caja->ingreso = $venta->total;
-                $detalle_caja->numero_operacion = "0004";//se debe generar automatico
+                $detalle_caja->numero_operacion = $numero_operacion;//se debe generar automatico
+                $detalle_caja->codigo_operacion =  $venta->codigo_venta;
                 $detalle_caja->save();
             }
 
@@ -360,19 +354,23 @@ class VentasController extends Controller
     public function getProducto(Request $request, $producto_id){
         if($request->ajax()){
             $producto = Producto::find($producto_id);
-            $detalle_compras = DetalleCompra::where('producto_id','=',$producto_id)->where('cantidad','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+            $entradas = Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
-            $precio_unidad = 0;
-            $presentacion_id =0;
-            if(count($detalle_compras) > 0){
-                $precio_unidad = round($detalle_compras[0]->precio_venta,2);
-                $presentacion_id = $detalle_compras[0]->presentacion_id;
-
-                foreach ($detalle_compras as $key => $value) {
+            $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad)):null;
+            $precio_unidad = $producto->precio_publico;
+            $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('deleted_at','=',null)->get();
+            
+            $cboPresentacion = '';
+            foreach ($producto_presentacion as $key => $value) {
+                $cboPresentacion =  $cboPresentacion.'<option value="'.$value->presentacion->id.'">'.$value->presentacion->nombre.'</option>';
+            }
+            if(count($entradas) > 0){
+                foreach ($entradas as $key => $value) {
                     $stock += $value->cantidad;
                 }
             }
-            $res = array($producto, $stock, $precio_unidad,$presentacion_id);
+        
+            $res = array($producto, $stock, $precio_unidad,$cboPresentacion, $fecha_venc);
             return response()->json($res);
         }
     }
