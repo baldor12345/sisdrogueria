@@ -58,4 +58,13 @@ class Venta extends Model
             })
             ->orderBy('fecha', 'ASC');
     }
+
+    public static function listarentradas( $producto_id){
+        return  DB::table('entrada')
+                ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->where('producto_presentacion.producto_id', '=',$producto_id)
+                ->where('entrada.stock', '>',0)
+                // ->groupBy('presentacion.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
+                ->orderBy('entrada.fecha_caducidad', 'ASC');
+    }
 }

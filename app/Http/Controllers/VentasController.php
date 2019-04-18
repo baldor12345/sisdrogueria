@@ -354,7 +354,7 @@ class VentasController extends Controller
     public function getProducto(Request $request, $producto_id){
         if($request->ajax()){
             $producto = Producto::find($producto_id);
-            $entradas = Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+            $entradas = Venta::listarentradas($producto_id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
             $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad)):null;
             $precio_unidad = $producto->precio_publico;
