@@ -26,6 +26,7 @@ function cargarselect2(entidad){
 {!! Form::model($caja, $formData) !!}	
 
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+{!! Form::hidden('caja_id', $num_caja[0]->id, array('id' => 'caja_id')) !!}
 <div class="row">
 	<div class="col-md-6">
 		<fieldset >    

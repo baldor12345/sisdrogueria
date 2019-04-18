@@ -12,7 +12,7 @@
     <div class="col-sm-12">
         <div class="card-box table-responsive">
 			
-            <div class="row m-b-5">
+            <div class="row">
                 <div class="col-sm-12">
 					{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
@@ -45,28 +45,6 @@
             </div>
 
 			<div id="listado{{ $entidad }}"></div>
-
-			<table class="table-bordered table-striped table-condensed" align="center">
-				<thead>
-					<tr>
-						<th class="text-center" colspan="2">Resumen de Caja</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>Ingresos :</th>
-						<th class="text-right">0.00</th>
-					</tr>
-					<tr>
-						<th>Egresos :</th>
-						<th class="text-right">0.00</th>
-					</tr>
-					<tr>
-						<th>Saldo :</th>
-						<th class="text-right">0.00</th>
-					</tr>
-				</tbody>
-			</table>
 
         </div>
     </div>

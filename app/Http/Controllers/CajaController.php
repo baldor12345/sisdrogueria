@@ -76,9 +76,14 @@ class CajaController extends Controller
         $cabecera[]       = array('valor' => 'Forma Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Entregado a', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $caja_last = Caja::all()->last();
+
+        $ingresos =0;
+        $egresos =0;
+
+
 
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -170,278 +175,6 @@ class CajaController extends Controller
         return view($this->folderview.'.mant')->with(compact('caja', 'formData', 'entidad', 'boton', 'listar','ingresos','titulo','caja_abierta','first_day','last_day','caja_last'));
     }
 
-    public function apertura(Request $request)
-    {
-        $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Caja';
-        $movimiento   = null;
-        $formData     = array('caja.store');
-        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        
-        $sucursal_id  = $request->input('sucursal_id');
-        $user = Auth::user();
-        $persona_id = $user->persona_id;
-        $num_caja   = Movimiento::where('sucursal_id', '=' , $sucursal_id)->max('num_caja') + 1;
-        
-        $boton        = 'Registrar'; 
-        return view($this->folderview.'.apertura')->with(compact('persona_id' , 'num_caja', 'movimiento', 'formData', 'entidad', 'boton', 'listar'));
-    }
-
-
-    //cierre de caja
-    public function cierrecaja(Request $request)
-    {
-        $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Caja';
-        $caja   = null;
-        $cboConcepto            =  array(2=>'Cierre de Caja');
-        $user = Auth::user();
-        $cajero_dat    = Persona::find($user->person_id);
-        $caja_dat   = Caja::where('estado', '=' , 'A')->where('deleted_at',null)->get();
-
-        $formData     = array('caja.store');
-        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $ruta = $this->rutas;
-        $boton        = 'Registrar';
-        return view($this->folderview.'.cierrecaja')->with(compact('ruta', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
-    }
-
-
-
-    public function nuevomovimiento(Request $request)
-    {
-        $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Caja';
-        $caja   = null;
-        $numero_operacion   = Libreria::codigo_operacion();
-        $cboFormaPago       = [0=>'Seleccione'] + array('C'=>'Contado', 'D'=>'Debito');
-        $cboTipo            = [0=>'Seleccione'] + array('I'=>'Ingreso', 'E'=>'Egreso');
-        $cboConcepto        = [0=>'Seleccione'];
-        $cboPersona         = [0=>'Seleccione'];
-
-        $user           = Auth::user();
-        $cajero_dat    = Persona::find($user->person_id);
-        $num_caja       = Caja::where('estado','A')->where('user_id',$user->id)->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
-
-        $formData       = array('caja.guardarnuevomovimiento','1');
-        $ruta = $this->rutas;
-        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton        = 'Registrar';
-        return view($this->folderview.'.nuevomovimiento')->with(compact('cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
-    }
-
-    public function guardarnuevomovimiento(Request $request, $id){
-        echo "hola";
-        $persona_id = $request->input('persona_id');
-        
-        $error = DB::transaction(function() use($request, $persona_id){
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $persona_id;
-            $persona->type = $request->input('type');
-            $persona->secondtype = $request->input('secondtype');
-            $persona->save();
-        });
-        return is_null($error) ? "OK" : $error;
-
-    }
-
-    public function listpersonas(Request $request){
-        $term = trim($request->q);
-        if (empty($term)) {
-            return \Response::json([]);
-        }
-        $tags = Persona::where("nombres",'LIKE', '%'.$term.'%')->orwhere('apellidos', '%'.$term.'%')->orwhere('dni', '%'.$term.'%')->orwhere('ruc', '%'.$term.'%')->limit(5)->get();
-        $formatted_tags = [];
-        foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->apellidos.' '.$tag->nombres];
-            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
-        }
-
-        return \Response::json($formatted_tags);
-    }
-
-    public function cargarselect($idselect, Request $request)
-    {
-        echo $idselect;
-        $entidad = $request->get('entidad');
-        $t = '';
-        $tt = '';
-
-        if($request->get('t') == ''){
-            $t = '_';
-            $tt = '2';
-        }
-
-        $retorno = '<select class="form-control input-sm" id="' . $t . $entidad . '_id" name="';
-        $cbo = Concepto::select('id', 'titulo')
-            ->where('tipo', '=', $idselect)
-            ->get();
-        $retorno .= '><option value="" selected="selected">Seleccione</option>';
-
-        foreach ($cbo as $row) {
-            $retorno .= '<option value="' . $row['id'] .  '">' . $row['titulo'] . '</option>';
-        }
-        $retorno .= '</select></div>';
-
-        echo $retorno;
-    }
-
-
-
-
-    public function persona(Request $request)
-    {
-        $listar         = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad        = 'Persona'; //es personamaestro
-        $persona        = null;
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
-        $formData       = array('caja.guardarpersona');
-        $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton          = 'Registrar'; 
-        $ruta             = $this->rutas;
-        $accion = 0;
-        return view($this->folderview.'.persona')->with(compact( 'accion' , 'ruta', 'persona', 'formData', 'entidad', 'boton', 'cboDistrito', 'listar'));
-    }
-
-    public function guardarpersona(Request $request)
-    {
-        $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $documento = $request->input('documento');
-        $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,NULL,id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,NULL,id,deleted_at,NULL',
-            'razonsocial'    => 'required|max:100',
-            );
-        }
-        $validacion = Validator::make($request->all(),$reglas);
-        if ($validacion->fails()) {
-            return $validacion->messages()->toJson();
-        }
-        $error = DB::transaction(function() use($request,$tamCadena){
-            $cliente               = new Personamaestro();
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
-            $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->telefono    = $request->input('telefono');
-            $cliente->celular     = $request->input('celular');
-            $cliente->email       = $request->input('email');
-            $value =Libreria::getParam($request->input('fechanacimiento'));
-            $cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
-            $cliente->save();
-
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $cliente->id;
-
-            $tipocliente = $request->input('cliente');
-            $tipoproveedor = $request->input('proveedor');
-            $tipotrabajador = $request->input('trabajador');
-
-
-            if( $tipocliente !==null && $tipoproveedor == null && $tipotrabajador == null ){
-                //CLIENTE
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //PROVEEDOR
-                $persona->type  = $tipoproveedor;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor == null && $tipotrabajador !== null ){
-                //TRABAJADOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor == null && $tipotrabajador !== null ){
-                // CLIENTE Y TRABAJADOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //CLIENTE Y PROVEEDOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TRABAJADOR Y PROVEEDOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TODOS
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-
-            $persona->save();
-
-        });
-        return is_null($error) ? "OK" : $error;
-    }
-
-    public function repetido($id, $listarLuego){
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $listar = "NO";
-        if (!is_null(Libreria::obtenerParametro($listarLuego))) {
-            $listar = $listarLuego;
-        }
-
-        $modelo   = Personamaestro::find($id);
-
-        if($modelo->distrito_id != null){
-            $distrito = Distrito::find($modelo->distrito_id);
-            $provincia = Provincia::find($distrito->provincia_id);
-            $departamento = Departamento::find($provincia->departamento_id);
-        }
-
-
-        $entidad  = 'Persona';
-        $formData = array('route' => array('caja.guardarrepetido', $id), 'method' => 'POST', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        return view('app.personarepetida')->with(compact('modelo', 'distrito', 'provincia', 'departamento' , 'formData', 'entidad', 'listar'));
-    }
-
-    public function guardarrepetido(Request $request){
-
-        $persona_id = $request->input('persona_id');
-        
-        $error = DB::transaction(function() use($request, $persona_id){
-            $persona = new Persona();
-            $persona->empresa_id = Auth::user()->empresa_id;
-            $persona->personamaestro_id = $persona_id;
-            $persona->type = $request->input('type');
-            $persona->secondtype = $request->input('secondtype');
-            $persona->save();
-        });
-        return is_null($error) ? "OK" : $error;
-
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -494,6 +227,142 @@ class CajaController extends Controller
         return is_null($error) ? "OK" : $error;
     }
 
+
+    public function nuevomovimiento(Request $request)
+    {
+        $listar       = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad      = 'Caja';
+        $caja   = null;
+        $numero_operacion   = Libreria::codigo_operacion();
+        $cboFormaPago       = [''=>'Seleccione'] + array('C'=>'Contado', 'D'=>'Debito');
+        $cboTipo            = [''=>'Seleccione'] + array('I'=>'Ingreso', 'E'=>'Egreso');
+        $cboConcepto        = [''=>'Seleccione'];
+        $cboPersona         = [''=>'Seleccione'];
+
+        $user           = Auth::user();
+        $cajero_dat    = Persona::find($user->person_id);
+        $num_caja       = Caja::where('estado','A')->where('user_id',$user->id)->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
+
+        $formData       = array('caja.guardarnuevomovimiento');
+        $ruta = $this->rutas;
+        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton        = 'Registrar';
+        return view($this->folderview.'.nuevomovimiento')->with(compact('cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function guardarnuevomovimiento(Request $request)
+    {
+        $listar     = Libreria::getParam($request->input('listar'), 'NO');
+        $reglas = array(
+            'tipo_id'        => 'required|max:100',
+            'concepto_id'      => 'required|max:100',
+            'total'    => 'required|max:100',
+            'forma_pago'    => 'required|max:200'
+            );
+        $validacion = Validator::make($request->all(),$reglas);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
+
+        $error = DB::transaction(function() use($request){
+            $detalle_caja = new DetalleCaja();
+            $detalle_caja->fecha = $request->input('fecha');
+            $detalle_caja->numero_operacion = $request->input('fecha');
+            $detalle_caja->concepto_id = $request->input('concepto_id');
+            $detalle_caja->cliente_id = $request->input('persona_id');
+            if($request->input('tipo_id') == 'I'){
+                $detalle_caja->ingreso = $request->input('total');
+                $detalle_caja->egreso = 0;
+            }
+            if($request->input('tipo_id') == 'E'){
+                $detalle_caja->egreso = $request->input('total');
+                $detalle_caja->ingreso = 0;
+            }
+            $detalle_caja->estado = $request->input('C');
+            $detalle_caja->forma_pago = $request->input('forma_pago');
+            $detalle_caja->comentario = $request->input('comentario');
+            $detalle_caja->caja_id = $request->input('caja_id');
+            $detalle_caja->save();
+        });
+        return is_null($error) ? "OK" : $error;
+
+    }
+
+    public function apertura(Request $request)
+    {
+        $listar       = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad      = 'Caja';
+        $movimiento   = null;
+        $formData     = array('caja.store');
+        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        
+        $sucursal_id  = $request->input('sucursal_id');
+        $user = Auth::user();
+        $persona_id = $user->persona_id;
+        $num_caja   = Movimiento::where('sucursal_id', '=' , $sucursal_id)->max('num_caja') + 1;
+        
+        $boton        = 'Registrar'; 
+        return view($this->folderview.'.apertura')->with(compact('persona_id' , 'num_caja', 'movimiento', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    //cierre de caja
+    public function cierrecaja(Request $request)
+    {
+        $listar       = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad      = 'Caja';
+        $caja   = null;
+        $cboConcepto            =  array(2=>'Cierre de Caja');
+        $user = Auth::user();
+        $cajero_dat    = Persona::find($user->person_id);
+        $caja_dat   = Caja::where('estado', '=' , 'A')->where('deleted_at',null)->get();
+
+        $formData     = array('caja.store');
+        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $ruta = $this->rutas;
+        $boton        = 'Registrar';
+        return view($this->folderview.'.cierrecaja')->with(compact('ruta', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
+    }
+
+    public function listpersonas(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Persona::where("nombres",'LIKE', '%'.$term.'%')->orwhere('apellidos', '%'.$term.'%')->orwhere('dni', '%'.$term.'%')->orwhere('ruc', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->apellidos.' '.$tag->nombres];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    public function cargarselect($idselect, Request $request)
+    {
+        echo $idselect;
+        $entidad = $request->get('entidad');
+        $t = '';
+        $tt = '';
+
+        if($request->get('t') == ''){
+            $t = '_';
+            $tt = '2';
+        }
+
+        $retorno = '<select class="form-control input-sm" id="' . $t . $entidad . '_id" name="';
+        $cbo = Concepto::select('id', 'titulo')
+            ->where('tipo', '=', $idselect)
+            ->get();
+        $retorno .= '><option value="" selected="selected">Seleccione</option>';
+
+        foreach ($cbo as $row) {
+            $retorno .= '<option value="' . $row['id'] .  '">' . $row['titulo'] . '</option>';
+        }
+        $retorno .= '</select></div>';
+
+        echo $retorno;
+    }
 
     /**
      * Display the specified resource.

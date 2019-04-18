@@ -135,16 +135,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('forma_pago/buscar','FormaPagoController@buscar')->name('forma_pago.buscar');
     Route::get('forma_pago/eliminar/{id}/{listarluego}','FormaPagoController@eliminar')->name('forma_pago.eliminar');
     Route::resource('forma_pago', 'FormaPagoController', array('except' => array('show')));
-      /*CAJA*/
-      Route::post('caja/buscar', 'CajaController@buscar')->name('caja.buscar');
-      Route::resource('caja', 'CajaController', array('except' => array('show')));
-      Route::get('caja/nuevomovimiento', 'CajaController@nuevomovimiento')->name('caja.nuevomovimiento');
-      Route::get('caja/guardarnuevomovimiento/{id?}', 'CajaController@guardarnuevomovimiento')->name('caja.guardarnuevomovimiento');
-      Route::get('caja/cierrecaja', 'CajaController@cierrecaja')->name('caja.cierrecaja');
-      Route::get('caja/cargarselect/{idselect}', 'CajaController@cargarselect')->name('caja.cargarselect');
-      Route::get('caja/cargarreapertura/{id}/{listarluego}', 'CajaController@cargarreapertura')->name('caja.cargarreapertura');
-      Route::get('caja/guardarreapertura', 'CajaController@guardarreapertura')->name('caja.guardarreapertura');
-      Route::get('caja/listpersonas',  'CajaController@listpersonas')->name('caja.listpersonas');
+    
+    /*CAJA*/
+    Route::post('caja/buscar', 'CajaController@buscar')->name('caja.buscar');
+    Route::resource('caja', 'CajaController', array('except' => array('show')));
+    Route::get('caja/nuevomovimiento', 'CajaController@nuevomovimiento')->name('caja.nuevomovimiento');
+    Route::post('caja/guardarnuevomovimiento', 'CajaController@guardarnuevomovimiento')->name('caja.guardarnuevomovimiento');
+    Route::get('caja/cierrecaja', 'CajaController@cierrecaja')->name('caja.cierrecaja');
+    Route::get('caja/cargarselect/{idselect}', 'CajaController@cargarselect')->name('caja.cargarselect');
+    Route::get('caja/cargarreapertura/{id}/{listarluego}', 'CajaController@cargarreapertura')->name('caja.cargarreapertura');
+    Route::get('caja/guardarreapertura', 'CajaController@guardarreapertura')->name('caja.guardarreapertura');
+    Route::get('caja/listpersonas',  'CajaController@listpersonas')->name('caja.listpersonas');
   
 
     //COMPRA

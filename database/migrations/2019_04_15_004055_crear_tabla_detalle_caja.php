@@ -16,12 +16,13 @@ class CrearTablaDetalleCaja extends Migration
         Schema::create('detalle_caja', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('fecha')->nullable();
+            $table->string('codigo_operacion', 400)->nullable();
             $table->string('numero_operacion', 400)->nullable();
             $table->integer('concepto_id')->unsigned()->nullable();
             $table->integer('cliente_id')->unsigned()->nullable();
             $table->decimal('ingreso',20, 3);
             $table->decimal('egreso',20, 3)->nullable();
-            $table->char('estado', 1)->nullable();// A=>abierto; C=>cerrado
+            $table->char('estado', 1)->nullable();//C=>Cancelado, P=>Pendiente
             $table->char('forma_pago', 1)->nullable();
             $table->string('comentario', 400)->nullable();
             $table->integer('caja_id')->unsigned()->nullable();

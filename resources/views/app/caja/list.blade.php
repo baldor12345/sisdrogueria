@@ -31,20 +31,48 @@ a.disabled {
 			<td style="font-size: 13px" align="center">{{  Date::parse( $value->fecha )->format('d/m/Y')  }}</td>
 			<td style="font-size: 13px" align="center">{{  $value->concepto_nombre   }}</td>
 			<td style="font-size: 13px; color:green; font-weight: bold;" align="center">{{  number_format($value->ingreso,2) }}</td>
-			<td style="font-size: 13px" align="center">{{  number_format($value->egreso,2)   }}</td>
-			<td style="font-size: 13px" align="center">{{  $value->forma_pago   }}</td>
+			<td style="font-size: 13px; color:red; font-weight: bold;" align="center">{{  number_format($value->egreso,2)   }}</td>
+			@if($value->forma_pago != 'C')
+			<td style="font-size: 13px">Contado</td>
+			@else
+			<td style="font-size: 13px">Debito</td>	
+			@endif
 			@if($value->cliente_id != '')
 			<td style="font-size: 13px">{{  $value->apellidos.'  '.$value->nombres   }}</td>
 			@else
 			<td style="font-size: 13px">--</td>	
 			@endif
 			<td style="font-size: 13px">{{ $value->comentario }}</td>	
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-usd"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-success')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;
 		?>
 		@endforeach
+	</tbody>
+</table>
+
+<table class="table-bordered table-striped table-condensed" align="center">
+	<thead>
+		<tr>
+			<th class="text-center" style="font-size: 13px" colspan="2">Resumen de Caja</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th style="font-size: 13px">Ingresos :</th>
+			<th class="text-right" style="font-size: 13px">0.00</th>
+		</tr>
+		<tr>
+			<th style="font-size: 13px">Egresos :</th>
+			<th class="text-right" style="font-size: 13px">0.00</th>
+		</tr>
+		<tr>
+			<th style="font-size: 13px">Saldo :</th>
+			<th class="text-right" style="font-size: 13px">0.00</th>
+		</tr>
 	</tbody>
 </table>
 @endif
