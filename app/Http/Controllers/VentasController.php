@@ -206,8 +206,8 @@ class VentasController extends Controller
                 
                 for ($i=0; $i<count($entradas) ; $i++) {
                     $cant_actual = $entradas[$i]->stock;
-                    $id_entrada = $entradas[$i]->id;
-                    $entrada1 = Entrada::find($id_entrada);
+                    
+                    $entrada1 = Entrada::find($entradas[$i]->id);
                     
                     if($cant > $cant_actual){
                         $entrada1->stock = 0;
@@ -219,7 +219,7 @@ class VentasController extends Controller
                         $detalleventa_lote->detalle_venta_id =$detalle_venta->id;
                         $detalleventa_lote->save();
                     }else{
-                        $entrada1->stock = $cant_actual - $cant;
+                        $entrada1->stock -= $cant;
                         $entrada1->save();
                        
                         $detalleventa_lote = new DetalleVentaLote();

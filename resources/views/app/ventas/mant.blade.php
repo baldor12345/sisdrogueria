@@ -143,23 +143,7 @@ $(document).ready(function() {
 			
 		}
 	});
-	// $('#cboProducto').change(function(){
-	// 	// $('#selectaval').select2("val", "0");
-	// 	$.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
-	// 		// console.log("Respuesta persona: "+response[3]);
-	// 		var producto = response[0];
-	// 		var stock = response[1];
-	// 		var precio_unidad = response[2];
-	// 			var presentacion_id = response[3];
-	// 			$('#nombre_temporal').val(""+producto.descripcion);
-	// 			$('#precio_unidad').val(""+precio_unidad);
-	// 			$('#stock_temp').val(stock);
-	// 			var msj = "<div class='alert alert-success productos'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
-	// 			msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
-	// 			$('#divInfoProducto').html(msj);
-	// 			$('#divInfoProducto').show();
-	// 	});
-	// });
+	
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		minimumInputLenght: 2,
@@ -231,12 +215,12 @@ $(document).ready(function() {
 	});
 
 	
-	$("input[name=cantidad]").change(function(event){
-		// var cant = parseInt($('#cantidad').val());
-		// var cantidad_unidad = parseInt($('#unidad_presentacion').val());
-		// $('#factor').val('');
-		// $('#factor').val(cant*cantidad_unidad);
-	});
+	// $("input[name=cantidad]").change(function(event){
+	// 	// var cant = parseInt($('#cantidad').val());
+	// 	// var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+	// 	// $('#factor').val('');
+	// 	// $('#factor').val(cant*cantidad_unidad);
+	// });
 
 
 }); 
@@ -372,7 +356,7 @@ function submitForm_venta(idformulario) {
 	$('.datos-producto').each(function() {
 		datos += 	"&producto_id"		+i+"="+$(this).attr("producto_id")+
 					"&presentacion_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&cantidad"		+i+"="+$(this).attr("cantidad")+
+					"&cantidad"		+i+"="+$(this).attr("cantidad");
 		i++;
 	});
 	datos += "&cantidad_registros="+i;
