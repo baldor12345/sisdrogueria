@@ -66,6 +66,7 @@ class VentasController extends Controller
         $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -258,19 +259,28 @@ class VentasController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'ventas');
+
+        $existe = Libreria::verificarExistencia($id, 'unidad');
         if ($existe !== true) {
             return $existe;
         }
-        // $listar   = Libreria::getParam($request->input('listar'), 'NO');
-        // $ventas = Sucursal::find($id);
-        // $cboDistritos = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        // $entidad  = 'Sucursal';
-        // $formData = array('sucursal.update', $id);
-        // $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        // $boton    = 'Modificar';
-       
-        return view($this->folderview.'.mant')->with(compact('ventas', 'formData', 'entidad', 'boton', 'listar','cboDistritos'));
+        $listar  = Libreria::getParam($request->input('listar'), 'NO');
+        $entidad = 'Ventas';
+        $venta  = Venta::find($id);
+        $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->where('deleted_at','=',null)->get();
+        $formData  = array('ventas.update');
+        $formData  = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton  = 'Modificar'; 
+        $user = Auth::user();
+        $ruta = $this->rutas;
+        $igv = Propiedades::all()->last()->igv;
+        $cboTipos = ['CO'=>'Contado','CR'=>'Crédito'];
+        $cboDocumento = ['V'=>'Voleta','F'=>'Factura'];
+        $cboFormasPago = ['T'=>'Tarjeta','E'=>'Efectivo'];
+        $cboPresentacion = ['0'=>'Seleccione'];
+        $cboCliente = ['0'=>'Seleccione'];
+        $cboProducto = ['0'=>'Seleccione'];
+        return view($this->folderview.'.mant')->with(compact('venta','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','detalle_ventas'));
     }
 
     /**
@@ -313,13 +323,13 @@ class VentasController extends Controller
         }
         $error = DB::transaction(function() use($id){
             $venta = Venta::find($id);
+            $venta->estado = 'A';//A= Anulado
+            // $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->get();
+            // for($i=0;$i<count($detalle_ventas);$i++){
+            //     $detalle_ventas[$i]->delete();
+            // }
 
-            $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->get();
-            for($i=0;$i<count($detalle_ventas);$i++){
-                $detalle_ventas[$i]->delete();
-            }
-
-            $venta->delete();
+            $venta->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -344,7 +354,7 @@ class VentasController extends Controller
         $modelo   = Venta::find($id);
         $entidad  = 'Ventas';
         $formData = array('route' => array('ventas.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton    = 'Eliminar';
+        $boton    = 'Anular';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
 
@@ -401,5 +411,9 @@ class VentasController extends Controller
     public function getProductoPresentacion(Request $request, $producto_id, $presentacion_id){
         $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('presentacion_id','=',$presentacion_id)->get()[0];
         return response()->json($producto_presentacion);
+    }
+
+    public function verdetalle($venta_id){
+
     }
 }
