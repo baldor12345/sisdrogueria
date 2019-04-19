@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-class CajaSeeder extends Seeder
+class DetalleCajaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,14 +13,16 @@ class CajaSeeder extends Seeder
     {
         $now = new DateTime;
         $user           = DB::table('user')->where('login','admin')->get();
-		DB::table('caja')->insert(array(
+		DB::table('detalle_caja')->insert(array(
             array(
-                'num_caja' => 'CAJA00001',
-                'fecha_horaapert' => $now,
-                'monto_iniciado' => 0.0,
-                'estado' => 'A',
-                'user_id' => $user[0]->id,
-                'sucursal_id' => $user[0]->sucursal_id,
+                'fecha' => $now,
+                'numero_operacion' => '00000001',
+                'concepto_id' => 1,
+                'ingreso' => 0,
+                'egreso' => 0,
+                'estado' => 'C',
+                'forma_pago' => 'C',
+                'caja_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now,
                 'updated_at' => $now

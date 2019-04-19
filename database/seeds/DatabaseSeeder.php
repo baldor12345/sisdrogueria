@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PropiedadesSeeder::class);
         $this->call(ConceptoSeeder::class);
         $this->call(CajaSeeder::class);
+        $this->call(DetalleCajaSeeder::class);
         $this->call(PresentacionSeeder::class);
 
         $this->call(ComprobanteSeeder::class);

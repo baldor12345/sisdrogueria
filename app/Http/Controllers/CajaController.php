@@ -31,19 +31,19 @@ class CajaController extends Controller
     protected $tituloModificar = 'Modificar Caja';
     protected $titulo_nuevomovimiento = 'Registrar Nuevo Movimiento';
     protected $tituloCerrarCaja = 'Cerrar Caja';
-    protected $titulo_reaperturar = 'Reaperturar Caja';
-    protected $titulo_reporte = 'Reportes';
-    protected $titulo_transaccion = 'Transacciones Realizadas';
-    protected $tituloNuevaTransaccion = 'Registrar Nuevo Gasto';
     protected $tituloEliminar  = 'Eliminar persona';
     protected $rutas           = array('create' => 'caja.create', 
             'edit'              => 'caja.edit', 
             'delete'            => 'caja.eliminar',
             'search'            => 'caja.buscar',
             'index'             => 'caja.index',
+
             'nuevomovimiento'   => 'caja.nuevomovimiento',
             'guardarnuevomovimiento'   => 'caja.guardarnuevomovimiento',
+
             'cierrecaja'            => 'caja.cierrecaja',
+            'guardarcierrecaja'            => 'caja.guardarcierrecaja',
+
             'cargarselect'      => 'caja.cargarselect',
             'listpersonas'      =>'caja.listpersonas',
         );
@@ -87,11 +87,7 @@ class CajaController extends Controller
 
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
-        $titulo_cerrarCaja = $this->tituloCerrarCaja;
-        $titulo_transaccion = $this->titulo_transaccion;
-        $titulo_nuevomovimiento = $this->titulo_nuevomovimiento;
-        $titulo_reapertura = $this->titulo_reaperturar;
-        $titulo_reporte = $this->titulo_reporte;
+        $titulo_cerrarCaja = "cerrar caja";
         $ruta = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -102,7 +98,7 @@ class CajaController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar','titulo_cerrarCaja','titulo_nuevomovimiento','titulo_transaccion' ,'ruta','titulo_reapertura','titulo_reporte','caja_last'));
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar','titulo_cerrarCaja' ,'ruta','caja_last'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -121,13 +117,12 @@ class CajaController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $titulo_nuevomovimiento = $this->titulo_nuevomovimiento;
-        $titulo_reapertura = $this->titulo_reaperturar;
-        $titulo_reporte = $this->titulo_reporte;
+        $titulo_cierrecaja = $this->tituloCerrarCaja;
         $ruta             = $this->rutas;
         $listCaja = Caja::listar();
 
        
-        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar','titulo_nuevomovimiento', 'ruta','listCaja','titulo_reapertura','titulo_reporte'));
+        return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar','titulo_nuevomovimiento', 'ruta','titulo_cierrecaja'));
     
     }
     /**
@@ -137,42 +132,27 @@ class CajaController extends Controller
      */
     public function create(Request $request)
     {
-        $caja_last = Caja::All()->last();
-        $ingresos = (count($caja_last) != 0)?$caja_last->monto_cierre:0;
+        //$articles->where('category_id','=',$categorie->id)->orderby('created_at','DESC')->take(1)->get();
+
+        $user = Auth::user();
+        $caja_last = Caja::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
+        $ingresos = (count($caja_last) != 0)?$caja_last[0]->monto_cierre:0;
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Caja';
-        $count_caja = Caja::where('estado','C')->count();
-        if(strlen($count_caja) == 1){
-            $titulo = "Caja 000".($count_caja+1);
-        }
-        if(strlen($count_caja) == 2){
-            $titulo = "Caja 00".($count_caja+1);
-        }
-        if(strlen($count_caja) == 3){
-            $titulo = "Caja 0".($count_caja+1);
-        }
-        if(strlen($count_caja) == 4){
-            $titulo = "Caja ".($count_caja+1);
-        }
-        $caja_last = Caja::All()->last();
-        $date_caja = Date::parse($caja_last->fecha_horacierre)->format('Y-m-01');
+        $num_caja       = Libreria::codigo_operacioncaja();
+        $cboConcepto            =  array(1=>'Apertura de Caja');
 
-        $fecha_format = date($date_caja);
-
-        $sum_month = date("d-m-Y",strtotime($fecha_format."+ 1 month"));
-        //primer dia del mes
-        $first_day = Date::parse($sum_month)->format('Y-m-d');
-        //ultimo dia del mes 
-        $fecha_p = new DateTime($sum_month);
-        $fecha_p->modify('last day of this month');
-        $last_day = $fecha_p->format('Y-m-d');
+        $fecha_apertura = date('Y-m-d');
+        $hora_apertura = date('H:i');
+        $cajero_dat    = Persona::find($user->person_id);
+        $limit_day = Date::parse($caja_last[0]->fecha_horaapert)->format('Y-m-d');
         
-        $caja_abierta = Caja::where('estado','A')->count();
+        $caja_abierta = Caja::where('estado','A')->where('sucursal_id',$user->sucursal_id)->count();
         $caja        = null;
         $formData       = array('caja.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('caja', 'formData', 'entidad', 'boton', 'listar','ingresos','titulo','caja_abierta','first_day','last_day','caja_last'));
+        return view($this->folderview.'.mant')->with(compact('limit_day', 'cajero_dat', 'fecha_apertura', 'hora_apertura', 'cboConcepto', 'num_caja', 'caja', 'formData', 'entidad', 'boton', 'listar','ingresos','titulo','caja_abierta','first_day','last_day','caja_last'));
     }
 
     /**
@@ -191,31 +171,45 @@ class CajaController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'fecha_horaApert'        => 'required|max:100',
-            'hora_apertura'      => 'required|max:100',
-            'monto_iniciado'    => 'required|max:100',
-            'titulo'    => 'required|max:200'
+            'monto_ini'    => 'required|max:100',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $evaluar_caja = Caja::where('estado','A')->count();
+        $user           = Auth::user();
+        $evaluar_caja = Caja::where('estado','A')->where('sucursal_id',$user->sucursal_id)->count();
         if($evaluar_caja == 0){
             $error = DB::transaction(function() use($request){
                 //apertura una nueva caja
+                $fecha_         = $request->input('fecha_horaApert');
+                $hora_          = $request->input('hora_apertura');
+                $date_apert     = date('Y-m-d H:i:s', strtotime($fecha_." ".$hora_.":00"));
                 
                 $caja               = new Caja();
-                $caja->descripcion        = $request->input('titulo');
-                // $caja->descripcion        = $request->input('descripcion');
-                $caja->fecha_horaapert        = $request->input('fecha_horaApert').date(" H:i:s");
-                $caja->monto_iniciado        = $request->input('monto_iniciado');
-                $caja->estado        = 'A';//abierto
-                $caja->user_id        = Caja::getIdUser();
-                $caja->num_caja        = "0002";
-                $user_logueado = User::find($caja->user_id);
-                $caja->sucursal_id        = $user_logueado->id;
+                $caja->num_caja        = $request->input('num_caja');
+                $caja->fecha_horaapert        = $date_apert;
+                $caja->monto_iniciado        = $request->input('monto_ini');
+                $caja->descripcion        = $request->input('descripcion');
+                $caja->estado        = 'A';
+                $user           = Auth::user();
+                $caja->user_id = $user->id;
+                $caja->sucursal_id = $user->sucursal_id;
                 $caja->save();
+
+                $caja_last   =   Caja::where('estado','A')->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
+                $numero_operacion   = Libreria::codigo_operacion();
+
+                $detalle_caja = new DetalleCaja();
+                $detalle_caja->fecha = $request->input('fecha_horaApert').date(" H:i:s");
+                $detalle_caja->numero_operacion = $numero_operacion;
+                $detalle_caja->concepto_id = $request->input('concepto_id');
+                $detalle_caja->ingreso = $request->input('monto_ini');
+                $detalle_caja->estado = $request->input('C');
+                $detalle_caja->forma_pago = 'C';
+                $detalle_caja->comentario = $request->input('descripcion');
+                $detalle_caja->caja_id = $caja_last[0]->id;
+                $detalle_caja->save();
             });
         }else{
             $error = "ERROR";
@@ -242,12 +236,15 @@ class CajaController extends Controller
         $user           = Auth::user();
         $cajero_dat    = Persona::find($user->person_id);
         $num_caja       = Caja::where('estado','A')->where('user_id',$user->id)->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
+        $count_caja      = (count($num_caja) !=0)?count($num_caja):0;
+
+        $fecha = Date::parse($num_caja[0]->fecha_horaapert)->format('Y-m-d');
 
         $formData       = array('caja.guardarnuevomovimiento');
         $ruta = $this->rutas;
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar';
-        return view($this->folderview.'.nuevomovimiento')->with(compact('cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.nuevomovimiento')->with(compact('fecha', 'count_caja', 'cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     public function guardarnuevomovimiento(Request $request)
@@ -265,9 +262,10 @@ class CajaController extends Controller
         }
 
         $error = DB::transaction(function() use($request){
+            $numero_operacion   = Libreria::codigo_operacion();
             $detalle_caja = new DetalleCaja();
             $detalle_caja->fecha = $request->input('fecha');
-            $detalle_caja->numero_operacion = $request->input('numero_operacion');
+            $detalle_caja->numero_operacion = $numero_operacion;
             $detalle_caja->concepto_id = $request->input('concepto_id');
             $detalle_caja->cliente_id = $request->input('persona_id');
             if($request->input('tipo_id') == 'I'){
@@ -288,23 +286,6 @@ class CajaController extends Controller
 
     }
 
-    public function apertura(Request $request)
-    {
-        $listar       = Libreria::getParam($request->input('listar'), 'NO');
-        $entidad      = 'Caja';
-        $movimiento   = null;
-        $formData     = array('caja.store');
-        $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        
-        $sucursal_id  = $request->input('sucursal_id');
-        $user = Auth::user();
-        $persona_id = $user->persona_id;
-        $num_caja   = Movimiento::where('sucursal_id', '=' , $sucursal_id)->max('num_caja') + 1;
-        
-        $boton        = 'Registrar'; 
-        return view($this->folderview.'.apertura')->with(compact('persona_id' , 'num_caja', 'movimiento', 'formData', 'entidad', 'boton', 'listar'));
-    }
-
     //cierre de caja
     public function cierrecaja(Request $request)
     {
@@ -312,16 +293,65 @@ class CajaController extends Controller
         $entidad      = 'Caja';
         $caja   = null;
         $cboConcepto            =  array(2=>'Cierre de Caja');
+
+        $fecha_cierre = date('Y-m-d');
+        $hora_cierre = date('H:i');
+
         $user = Auth::user();
         $cajero_dat    = Persona::find($user->person_id);
-        $caja_dat   = Caja::where('estado', '=' , 'A')->where('deleted_at',null)->get();
+        $caja_dat   = Caja::where('estado', '=' , 'A')->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
+        $count_caja      = (count($caja_dat) !=0)?count($caja_dat):0;
 
-        $formData     = array('caja.store');
+        $limit_day = Date::parse($caja_dat[0]->fecha_horaapert)->format('Y-m-d');
+
+        $formData     = array('caja.guardarcierrecaja');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $ruta = $this->rutas;
-        $boton        = 'Registrar';
-        return view($this->folderview.'.cierrecaja')->with(compact('ruta', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
+        $boton        = 'Registrar Cierre';
+        return view($this->folderview.'.cierrecaja')->with(compact('limit_day', 'fecha_cierre', 'hora_cierre', 'ruta', 'count_caja', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
     }
+
+    public function guardarcierrecaja(Request $request)
+    {
+        $listar     = Libreria::getParam($request->input('listar'), 'NO');
+        $reglas = array(
+            );
+        $validacion = Validator::make($request->all(),$reglas);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        }
+
+        $error = DB::transaction(function() use($request){
+
+            $fecha_         = $request->input('fecha');
+            $hora_          = $request->input('hora_cierre');
+            $date_cierre     = date('Y-m-d H:i:s', strtotime($fecha_." ".$hora_.":00"));
+
+            $caja                   = Caja::find($request->input('caja_id'));
+            $caja->fecha_horacierre = $date_cierre;
+            $caja->monto_cierre = $request->input('monto_cierre');
+            $caja->estado = 'C';
+            $caja->descripcion = $request->input('comentario');
+            $caja->save();
+
+            $numero_operacion   = Libreria::codigo_operacion();
+
+            $detalle_caja = new DetalleCaja();
+            $detalle_caja->fecha = $request->input('fecha').date(" H:i:s");
+            $detalle_caja->numero_operacion = $numero_operacion;
+            $detalle_caja->concepto_id = $request->input('concepto_id');
+            $detalle_caja->ingreso = 0.00;
+            $detalle_caja->egreso = $request->input('monto_cierre');
+            $detalle_caja->estado = 'C';
+            $detalle_caja->forma_pago = 'C';
+            $detalle_caja->comentario = $request->input('comentario');
+            $detalle_caja->caja_id = $request->input('caja_id');
+            $detalle_caja->save();
+        });
+        return is_null($error) ? "OK" : $error;
+
+    }
+
 
     public function listpersonas(Request $request){
         $term = trim($request->q);
@@ -353,6 +383,8 @@ class CajaController extends Controller
         $retorno = '<select class="form-control input-sm" id="' . $t . $entidad . '_id" name="';
         $cbo = Concepto::select('id', 'titulo')
             ->where('tipo', '=', $idselect)
+            ->where('id', '!=', 1)
+            ->where('id', '!=', 2)
             ->get();
         $retorno .= '><option value="" selected="selected">Seleccione</option>';
 

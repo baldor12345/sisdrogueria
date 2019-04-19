@@ -4,47 +4,50 @@
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 
 <div class="form-group">
-	{!! Form::label('titulo', 'Titulo:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	{!! Form::label('num_caja', 'Nro Caja:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('titulo', $titulo, array('class' => 'form-control input-xs', 'id' => 'titulo', 'placeholder' => 'Ingrese titulo')) !!}
+		{!! Form::text('num_caja', $num_caja, array('class' => 'form-control input-xs', 'id' => 'num_caja', 'placeholder' => 'Ingrese titulo', 'readonly')) !!}
+	</div>
+</div>
+<div class="form-group">
+	{!! Form::label('concepto_id', 'Concepto:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::select('concepto_id', $cboConcepto, null, array('class' => 'form-control input-xs', 'id' => 'concepto_id')) !!}
 	</div>
 </div>
 
 <div class="form-group">
-	{!! Form::label('fecha_horaApert', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	{!! Form::label('fecha_horaApert', 'F. Apertura:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
 		{!! Form::date('fecha_horaApert', null, array('class' => 'form-control input-xs', 'id' => 'fecha_horaApert', 'placeholder' => '')) !!}
 	</div>
 </div>
-<?php
-	if($caja != null){
-		echo "<input type='hidden' id='fechaTemp' value='".Date::parse($caja->fecha_horaapert )->format('d/m/Y')."'>";
-		echo "<input type='hidden' id='horaAp' value='".Date::parse($caja->fecha_horaapert )->format('H:m')."'>";
-	}else{
-		echo "<input type='hidden' id='fechaTemp' value=''>";
-		echo "<input type='hidden' id='horaAp' value=''>";
-	}
-?>
 
 <div class="form-group">
-	{!! Form::label('hora_apertura', 'Hora Apertura:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	{!! Form::label('hora_apertura', 'H. Apertura:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
 		{!! Form::time('hora_apertura', null, array('class' => 'form-control input-xs', 'id' => 'hora_apertura', 'placeholder' => '')) !!}
 	</div>
 </div>
 
 <div class="form-group">
-	{!! Form::label('monto_ini', 'Monto Inicio(S/.):', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	{!! Form::label('monto_ini', 'Monto In.:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('monto_ini', number_format($ingresos,1), array('class' => 'form-control input-xs', 'id' => 'monto_ini', 'placeholder' => 'S/.','readonly')) !!}
-		{!! Form::hidden('monto_iniciado', $ingresos, array('id' => 'monto_iniciado')) !!}
+		{!! Form::text('monto_ini', number_format($ingresos,2), array('class' => 'form-control input-xs', 'id' => 'monto_ini', 'placeholder' => 'S/.','readonly')) !!}
+	</div>
+</div>
+
+<div class="form-group">
+	{!! Form::label('cajero', 'Cajero:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+	<div class="col-sm-9 col-xs-12">
+		{!! Form::text('cajero', $cajero_dat->apellidos.' '.$cajero_dat->nombres, array('class' => 'form-control input-xs', 'id' => 'cajero', 'placeholder' => 'Ingrese titulo', 'readonly')) !!}
 	</div>
 </div>
 
 <div class="form-group">
 	{!! Form::label('descripcion', 'Descripcion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion')) !!}
+		{!! Form::textarea('descripcion', null, array('class' => 'form-control input-xs', 'cols'=>'10', 'rows'=>'rows', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion')) !!}
 	</div>
 </div>
 
@@ -61,53 +64,21 @@
 	$(document).ready(function() {
 		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 		$(IDFORMMANTENIMIENTO + '{!! $entidad !!} :input[id="usertype_id"]').focus();
-		configurarAnchoModal('400');
-
-		var fechaActual = new Date();
-		var day = ("0" + fechaActual.getDate()).slice(-2);
-		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-		var fecha_horaApert = (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-		if(fechaActual.getHours()===1 || fechaActual.getHours()===2 || fechaActual.getHours()===3 ||fechaActual.getHours()===4 || fechaActual.getHours()===5 || fechaActual.getHours()===6 || fechaActual.getHours()===7 || fechaActual.getHours()===8 || fechaActual.getHours()===9){
-					var horaAp ="0"+fechaActual.getHours()+":"+fechaActual.getMinutes();
-				if(fechaActual.getMinutes()===1 || fechaActual.getMinutes()===2 || fechaActual.getMinutes()===3 || fechaActual.getMinutes()===4 || fechaActual.getMinutes()===5 || fechaActual.getMinutes()===6 || fechaActual.getMinutes()===7 || fechaActual.getMinutes()===8 || fechaActual.getMinutes()===9){
-						var horaAp ="0"+fechaActual.getHours()+":0"+fechaActual.getMinutes();
-				}
-		}else if(fechaActual.getMinutes()===1 || fechaActual.getMinutes()===2 || fechaActual.getMinutes()===3 || fechaActual.getMinutes()===4 || fechaActual.getMinutes()===5 || fechaActual.getMinutes()===6 || fechaActual.getMinutes()===7 || fechaActual.getMinutes()===8 || fechaActual.getMinutes()===9){
-			var horaAp = fechaActual.getHours()+":0"+fechaActual.getMinutes();
-		}else{
-			var horaAp =fechaActual.getHours()+":"+fechaActual.getMinutes();
-		}
-
-		if($('#fechaTemp').val() !== ""){
-			// DD/MM/YYYY
-			var valoresFecha = $('#fechaTemp').val().split('/');
-			//yyy/MM/DD
-			var fecha = valoresFecha[2] + "-" + valoresFecha[1] + "-" + valoresFecha[0];
-			console.log("fecha recibida: "+fecha);
-			$('#fecha_horaApert').val(fecha);
-			$('#hora_apertura').val($('#horaAp').val());
-			console.log("hora apertura: "+$('#horaAp').val() );
-		}else{
-			$('#fecha_horaApert').val(fecha_horaApert);
-			$('#hora_apertura').val(horaAp);
-		}
+		configurarAnchoModal('450');
+		$('#fecha_horaApert').val('{{ $fecha_apertura }}');
+		$('#hora_apertura').val('{{ $hora_apertura }}');
 		
 		
 	}); 
-	function aperturarcaja(entidad){
-		var first_day = '{{$first_day}}';
-		var last_day = '{{$last_day}}';
+	function aperturarcaja(entidad, idboton){
+		var last_day = '{{$limit_day}}';
 		var fecha_select = $('#fecha_horaApert').val();
-		if(fecha_select > first_day){
-			if(fecha_select <= last_day){
-				guardar(entidad);
-			}else{
-				document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >la fecha de apertura debe ser menor que "+last_day+"</span></div>";
-					$('#divMensajeError{{ $entidad }}').show();
-			}
+		console.log(last_day+" "+fecha_select);
+		if(fecha_select > last_day){
+			guardar(entidad, idboton);
 		}else{
-			document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >la fecha de apertura debe ser mayor que "+first_day+"</span></div>";
-					$('#divMensajeError{{ $entidad }}').show();
+			document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >la fecha de apertura debe ser mayor que "+last_day+"</span></div>";
+				$('#divMensajeError{{ $entidad }}').show();
 		}
 
 		

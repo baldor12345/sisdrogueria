@@ -15,12 +15,12 @@ class CrearTablaCaja extends Migration
     {
         Schema::create('caja', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('num_caja')->nullable();
+            $table->string('num_caja',100)->nullable();
             $table->string('descripcion', 400)->nullable();
             $table->timestamp('fecha_horaapert')->nullable();
             $table->timestamp('fecha_horacierre')->nullable();
-            $table->decimal('monto_iniciado',20, 7);
-            $table->decimal('monto_cierre',20, 7)->nullable();
+            $table->decimal('monto_iniciado',20, 3);
+            $table->decimal('monto_cierre',20, 3)->nullable();
             $table->char('estado', 1)->nullable();// A=>abierto; C=>cerrado
             $table->integer('user_id')->unsigned();
             $table->integer('sucursal_id')->unsigned();

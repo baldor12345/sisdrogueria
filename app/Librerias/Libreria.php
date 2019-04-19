@@ -4,6 +4,7 @@ namespace App\Librerias;
 use Validator;
 use App\Menuoption;
 use App\DetalleCaja;
+use App\Caja;
 
 /**
 * Libreria de clases
@@ -471,6 +472,22 @@ class Libreria
 			$codigo_generado = $ceros.$numero_transacciones;
 		}else {
 			$codigo_generado = "00000001";
+		}
+		return $codigo_generado;
+	}
+
+	public static function codigo_operacioncaja(){
+		$numero_transacciones = count(Caja::where('deleted_at','=',null)->get()) + 1;
+		$codigo_generado ="";
+		if($numero_transacciones > 0){
+			$digitos = strlen($numero_transacciones);
+			$ceros =  "CAJA";
+			for($i=0; $i< (5 - $digitos) ; $i ++){
+				$ceros = $ceros."0";
+			}
+			$codigo_generado = $ceros.$numero_transacciones;
+		}else {
+			$codigo_generado = "CAJA00001";
 		}
 		return $codigo_generado;
 	}

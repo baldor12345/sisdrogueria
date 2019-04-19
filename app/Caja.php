@@ -70,8 +70,8 @@ class Caja extends Model
                         'detalle_caja.comentario as comentario' 
                 )
                 ->where('detalle_caja.numero_operacion', 'LIKE','%'.$num_op.'%')
-                ->where('detalle_caja.fecha', '>=', $fechai)
-                ->where('detalle_caja.fecha', '<=', $fechaf)
+                ->whereDate('detalle_caja.fecha', '>=', $fechai)
+                ->whereDate('detalle_caja.fecha', '<=', $fechaf)
                 ->where('caja.sucursal_id', $sucursal_id)
                 ->where('detalle_caja.deleted_at',null)
                 ->orderBy('detalle_caja.fecha', 'DSC');

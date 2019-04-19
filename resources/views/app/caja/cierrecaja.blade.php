@@ -1,8 +1,9 @@
-
+@if($count_caja != 0)
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($caja, $formData) !!}	
 
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+{!! Form::hidden('caja_id', $caja_dat[0]->id, array('id' => 'caja_id')) !!}
 <div class="row">
 	<fieldset >    
 		<div class="form-group">
@@ -15,10 +16,18 @@
 		</div>
 		<div class="form-group">
 			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
-			{!! Form::label('fecha', 'Fecha:') !!}
+			{!! Form::label('fecha', 'F. Cierre:') !!}
 			</div>
 			<div class="col-lg-8 col-md-8 col-sm-8">
 				{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha', 'placeholder' => 'Ingrese nombre')) !!}
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
+			{!! Form::label('hora_cierre', 'H. Cierre:') !!}
+			</div>
+			<div class="col-lg-8 col-md-8 col-sm-8">
+				{!! Form::time('hora_cierre', null, array('class' => 'form-control input-xs', 'id' => 'hora_cierre', 'placeholder' => '')) !!}
 			</div>
 		</div>
 
@@ -32,10 +41,10 @@
 		</div>
 		<div class="form-group">
 			<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
-			{!! Form::label('total', 'Total:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+			{!! Form::label('monto_cierre', 'Monto Cie.:') !!}<div class="" style="display: inline-block;color: red;">*</div>
 			</div>
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)' )) !!}
+				{!! Form::text('monto_cierre', null, array('class' => 'form-control input-xs', 'id' => 'monto_cierre', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 			</div>
 		</div>
 		
@@ -60,7 +69,7 @@
 
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarMovimiento', 'onclick' => 'guardar_movimiento(\''.$entidad.'\', this)')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarMovimiento', 'onclick' => 'cerrarcaja(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
 	</div>
@@ -74,12 +83,8 @@ $(document).ready(function() {
     	this.value = this.value.replace(/[^0-9]/g,'');
 	});
 
-    var fechaActual = new Date();
-    var day = ("0" + fechaActual.getDate()).slice(-2);
-    var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-    var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
-    var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-    $('#fecha').val(fechai);
+    $('#fecha').val('{{ $fecha_cierre }}');
+	$('#hora_cierre').val('{{ $hora_cierre }}');
 
 
 	$('#persona_id').select2({
@@ -108,7 +113,22 @@ $(document).ready(function() {
 
 }); 
 
-function guardar_movimiento (entidad, x) {
+function cerrarcaja(entidad, idboton){
+	var last_day = '{{$limit_day}}';
+	var fecha_select = $('#fecha').val();
+	console.log(last_day+" "+fecha_select);
+	if(fecha_select >= last_day){
+		guardar_cerrar_caja(entidad, idboton);
+	}else{
+		document.getElementById("divMensajeError{{ $entidad }}").innerHTML = "<div class='alert alert-danger' role='alert'><span >la fecha de apertura debe ser mayor que "+last_day+"</span></div>";
+			$('#divMensajeError{{ $entidad }}').show();
+	}
+
+	
+}
+
+
+function guardar_cerrar_caja (entidad, x) {
     var idformulario = IDFORMMANTENIMIENTO + entidad;
     var data         = submitForm(idformulario);
     var respuesta    = '';
@@ -180,3 +200,7 @@ function filter(__val__){
 }
 
 </script>
+
+@else
+<h3 class="text-warning">No hay caja aperturada actualmente!.</h3>
+@endif

@@ -1,3 +1,4 @@
+@if($count_caja != 0)
 <script>
 function cargarselect2(entidad){
 	var select = $('#tipo_id').val();
@@ -51,7 +52,7 @@ function cargarselect2(entidad){
                 {!! Form::label('fecha', 'Fecha:') !!}<div class="" style="display: inline-block;color: red;">*</div>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
-                    {!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha', 'placeholder' => 'Ingrese nombre')) !!}
+                    {!! Form::date('fecha', $fecha, array('class' => 'form-control input-xs', 'id' => 'fecha', 'placeholder' => 'Ingrese nombre')) !!}
                 </div>
             </div>
             <div class="form-group">
@@ -133,13 +134,6 @@ $(document).ready(function() {
 	$('.input-number').on('input', function () { 
     	this.value = this.value.replace(/[^0-9]/g,'');
 	});
-
-    var fechaActual = new Date();
-    var day = ("0" + fechaActual.getDate()).slice(-2);
-    var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-    var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
-    var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-    $('#fecha').val(fechai);
 
 
 	$('#persona_id').select2({
@@ -240,3 +234,6 @@ function filter(__val__){
 }
 
 </script>
+@else
+<h3 class="text-warning">Aperture caja para poder registrar movimientos nuevos!.</h3>
+@endif
