@@ -220,6 +220,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 });
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
+Route::get('entrada/{id?}/{dni?}','EntradaSalidaController@getDetalleREntrada');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto');
 Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion');

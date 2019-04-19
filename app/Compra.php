@@ -47,6 +47,7 @@ class Compra extends Model
                         'compra.serie_documento as serie_documento',
                         'compra.numero_documento as numero_documento',
                         'compra.estado as estado',
+                        'compra.tipo_pago as tipo_pago',
                         'compra.total as total'
                 )
                 ->where('compra.numero_documento', 'LIKE','%'.$numero.'%')

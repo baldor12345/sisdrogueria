@@ -128,13 +128,14 @@ class EntradaSalidaController extends Controller
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
+        $numero_operacion   = Libreria::codigo_operacion();
         $formData       = array('entrada_salida.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
+        return view($this->folderview.'.mant')->with(compact('numero_operacion', 'entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
     }
 
     /**
@@ -252,6 +253,22 @@ class EntradaSalidaController extends Controller
                         'entrada.lote as lote'
                         )
                     ->where("entrada.id",'=',$term)->get();
+            return response()->json($tags);
+        }
+    }
+
+    public function getDetalleREntrada(Request $request, $term, $dni){
+        if($request->ajax()){
+            $tags = DB::table('producto_presentacion')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
+                    ->select(
+                        'producto_presentacion.presentacion_id as presentacion_id',
+                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion',
+                        'producto_presentacion.precio_compra as precio_compra',
+                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
+                        )
+                    ->where("producto_presentacion.id",'=',$term)->get();
             return response()->json($tags);
         }
     }
@@ -397,7 +414,7 @@ class EntradaSalidaController extends Controller
                         )
                         ->where("producto.codigo",'LIKE', '%'.$term.'%')
                         ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
-                        ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
+                        ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
             $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
@@ -429,7 +446,7 @@ class EntradaSalidaController extends Controller
                     ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')
                     ->orWhere("entrada.lote",'LIKE', '%'.$term.'%')
                     ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
-                    ->limit(5)->get();
+                    ->limit(8)->get();
         
         $formatted_tags = [];
         foreach ($tags as $tag) {
