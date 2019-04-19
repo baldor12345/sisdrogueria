@@ -254,7 +254,7 @@ class ProductoController extends Controller
             'ubicacion'    => 'required',
             'stock_minimo'    => 'required',
             'categoria_id' => 'required',
-            'presentacion_id' => 'required',
+            
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -275,9 +275,9 @@ class ProductoController extends Controller
 
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->presentacion_id = $request->input('presentacion_id');
+            // $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
-            $user           = Auth::user();
+            $user = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();
         });

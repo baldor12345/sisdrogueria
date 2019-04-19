@@ -17,6 +17,9 @@ class ProductoPresentacion extends Model
 
     protected $primaryKey='id';
 
+    public function presentacion(){
+        return $this->belongsTo('App\Presentacion','presentacion_id');
+    } 
     /**
      * Método para listar
      * @param  model $query modelo

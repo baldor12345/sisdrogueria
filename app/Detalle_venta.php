@@ -18,9 +18,9 @@ class Detalle_venta extends Model
         return $this->belongsTo('App\Producto','producto_id');
     } 
     
-    public function scopelistar($query,$id_venta)
+    public function scopelistardetalle($query,$id_venta)
     {
-        return $query->where(function($subquery) use($nombre)
+        return $query->where(function($subquery) use($id_venta)
 		            {
                         
                         if (!is_null($id_venta)) {
@@ -29,7 +29,21 @@ class Detalle_venta extends Model
                         
                     })
                     ->where('deleted_at','=',null)
-        			->orderBy('nombres', 'ASC');
+        			->orderBy('nombre', 'ASC');
+        			
+    }
+    public function scopelistar($query)
+    {
+        return $query->where(function($subquery)
+		            {
+                        
+                        // if (!is_null($id_venta)) {
+                        //     $subquery->where('ventas_id', '=', $id_venta)->where('deleted_at','=',null);
+                        // }
+                        
+                    })
+                    ->where('deleted_at','=',null)
+        			->orderBy('id', 'ASC');
         			
     }
 

@@ -1,85 +1,149 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-	{!! Form::hidden('stock_temp', 0, array('id' => 'stock_temp')) !!}
-	<div class="row card-box">
-		<div class="form-group col-9 col-md-9">
-			{!! Form::label('cboCliente', 'Cliente: ', array('class' => '')) !!}
-			{!! Form::select('cboCliente', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboCliente')) !!}
-		</div>
-		<div class="form-group col-2 col-md-2" style="margin-left: 3px">
-			{!! Form::label('btnadd', 'Nuevo: ', array('class' => 'control-label col-12 col-md-12')) !!}
-			{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> Registrar Nuevo', array('class' => 'btn btn-success btn-sm', 'id' => 'btnadd', 'onclick' => '')) !!} --}}
-			{!! Form::button('<i class="glyphicon glyphicon-plus"></i> ', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-md', 'id' => 'btnNuevocli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
-		</div>
-		<div class="form-group col-6 col-md-6">
-			{!! Form::label('cboForma_pago', 'Forma de pago: ', array('class' => '')) !!}
-			{!! Form::select('cboForma_pago', $cboFormaPago, '0' , array('class' => 'form-control input-sm', 'id' => 'cboForma_pago')) !!}
-		</div>
-		<div class="form-group col-6 col-md-6"  style="margin-left: 3px">
-			{!! Form::label('cboComprobante', 'Comprobante Pago: ', array('class' => '')) !!}
-			{!! Form::select('cboComprobante', $cboComprobante, '0' , array('class' => 'form-control input-sm', 'id' => 'cboComprobante')) !!}
-		</div>
-	</div>
+
 	<div class="row">
-		<div id="divInfoProducto" class="col-12 col-md-12" ></div>
-	</div>
+		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
+			<table id="tabla_temp">
+				<tr><td>Producto:</td><td><label id="producto_inf"></label></td><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+				<tr><td>Precio s/.:</td><td><label id="precio_inf" precio='0'></label></td><td>Stock (Unidades):</td><td><label id="stock_inf" stock='0'></label></td></tr>
+				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td>Cantidad Unidades:</td><td><label id="cant_unidades_inf"></label></td></tr>
+			</table>
+		</div>
+		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">   
 
-	<div class="row card-box">
-		<div class="form-group col-6 col-md-6">
-			{!! Form::label('cboProducto', 'Producto: ', array('class' => '')) !!}
-			{!! Form::select('cboProducto', array('0'=>'Seleccione'), '0' , array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
-		</div>
-		{!! Form::hidden('precio_unidad', 0.0, array('id' => 'precio_unidad')) !!}
-		{{-- {!!Form::hidden('nombre_temporal',"",array('id'=>'nombre_temporal'))!!}
-		{!! Form::hidden('nombre_presentacion_temp', "", array('id' => 'nombre_presentacion_temp')) !!}  --}}
-		<div class="form-group col-3 col-md-3" style="margin-left: 3px">
-			{!! Form::label('cboPresentacion', 'Presentacion: ', array('class' => '')) !!}
-			{!! Form::select('cboPresentacion', $cboPresentacion, '0' , array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
-		</div>
-		<div class="form-group col-2 col-md-2" style="margin-left: 3px">
-			{!! Form::label('cantidad', 'Cantidad:', array('class' => 'control-label')) !!}
-			{!! Form::text('cantidad', null, array('class' => 'form-control input-xs', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
-		</div>
-		<div class="form-group col-1 col-md-1" style="margin-left: 3px">
-				{!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar_producto()')) !!}
-		</div>
-		<div class="form-group col-12 col-md-12">
-			<div class="table-responsive">
-				<table class="table table-bordered table-striped table-condensed table-hover">
-					<thead>
-						<tr>
-							<th>Nombre</th>
-							<th>Cantidad</th>
-							<th>Unidad/Medida</th>
-							<th>Precio Unitario</th>
-							<th>Sub Total S/.</th>
-							<th>Eliminar</th>
-						</tr>
-					</thead>
-					<tbody id="tabla_productos">
-
-					</tbody>
-				</table>
+			<div class="form-group col-6 col-md-6 text-left">
+				{!! Form::label('cboProducto', 'Producto:', array('class' => ' col-md-12 text-left')) !!}
+				{!! Form::select('cboProducto', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
+			</div>
+			<div class="form-group col-4 col-md-4 text-left" style="margin-left: 3px">
+				{!! Form::label('cboPresentacion', 'Unidad:', array('class' => ' col-md-12 text-left')) !!}
+				{!! Form::select('cboPresentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
+			</div>
+			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+					{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
+					{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
+				</div>
+			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
+				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
+			</div>
+			
+			<div class="form-group" >
+				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
+		            <thead>
+		                <tr>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="35%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Lote</th>
+							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
+							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
+		                </tr>
+		            </thead>
+		        </table>
 			</div>
 		</div>
-		<div class="form-group col-12 col-md-12" >
-			{!! Form::label('total_p', 'Total: ', array('class' => '', 'id'=>'total_p')) !!}
-			{!!Form::hidden('total',0,array('id'=>'total'))!!}
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar_venta(\''.$entidad.'\', this)')) !!}
-			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
-		</div>
+
+		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 card-box">
+			<div class="form-group ">
+				{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::select('documento', $cboDocumento, null, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+				</div>
+			</div>
+			<div class="form-group">
+				{!! Form::label('cboCliente', 'Cliente:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
+				<div class="input-group" style="">
+					{!! Form::select('cboCliente', $cboCliente, null, array('class' => 'form-control input-md', 'id' => 'cboCliente')) !!}
+					<span class="input-group-btn">
+						{!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!}
+					</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('tipo_venta', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
+				</div>
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
+				</div>
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+					{!! Form::text('serie_documento', null, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
+				</div>
+				<div class="col-sm-6 col-xs-12" style="height: 25px;">
+					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
+				</div>
+			</div>
+
+			<div class="form-group">
+				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+				</div>
+			</div>
+			<br>
+			
+			<div class="form-group" >
+				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+					{!! Form::text('igv', $igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
+				</div>
+			</div>
+			<br>
+			<div class="form-group">
+				<div class="col-lg-12 col-md-12 col-sm-12 text-right">
+					{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarVenta', 'onclick' => 'guardar_venta(\''.$entidad.'\', this)')) !!}
+					{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
+				</div>
+			</div>
+		</div>		
 	</div>
 {!! Form::close() !!}
+
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('850');
+	configurarAnchoModal('1500');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	$('#detalle_prod').hide();
+	$('#cboCliente').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listclientes'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+	
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		minimumInputLenght: 2,
@@ -101,90 +165,140 @@ $(document).ready(function() {
 			
 		}
 	});
-
 	$('#cboProducto').change(function(){
-            // $('#selectaval').select2("val", "0");
-            $.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
-                // console.log("Respuesta persona: "+response[3]);
-                var producto = response[0];
-                var stock = response[1];
-                var precio_unidad = response[2];
-                 var presentacion_id = response[3];
-				 $('#nombre_temporal').val(""+producto.descripcion);
-				 $('#precio_unidad').val(""+precio_unidad);
-				 $('#stock_temp').val(stock);
-                    var msj = "<div class='alert alert-success productos'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
-                    msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
-					$('#divInfoProducto').html(msj);
-					$('#divInfoProducto').show();
-            });
-        });
-	$('#cboPresentacion').change(function(){
-                
-				// //  $('#nombre_temporal').val(""+producto.descripcion);
-                //     var msj = "<div class='alert alert-success'><strong>¡Detalles de producto: !</strong><ul><li>Producto: "+producto.descripcion+"</li>";
-                //     msj += "<li>Stock: "+stock+"</li><li>Precio/Unidad: "+precio_unidad+"</li></ul>";
-				// 	$('#divInfoProducto').html(msj);
-				// 	$('#divInfoProducto').show();
-        });
-
-	$('#cboCliente').select2({
-		dropdownParent: $("#modal"+(contadorModal-1)),
-		
-		minimumInputLenght: 2,
-		ajax: {
+		// $('#selectaval').select2("val", "0");
+		$.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
+			// console.log("Respuesta persona: "+response[3]);
+			var producto = response[0];
+			var stock = response[1];
+			var precio_unidad = response[2];
+			var cboPresentacion = response[3];
+			var fecha_venc = response[4];
+			var lote = response[5];
+				$('#producto_inf').text(producto.descripcion);
+				$('#stock_inf').text(""+stock);
+				$('#stock_inf').attr('stock',stock);
+				$('#precio_inf').text(precio_unidad);
+				$('#precio_inf').attr('precio',precio_unidad);
+				$('#unidad_inf').text("");
+				$('#unidad_inf').attr('lote',lote);
 			
-			url: "{{ URL::route($ruta['listclientes'], array()) }}",
-			dataType: 'json',
-			delay: 250,
-			data: function(params){
-				return{
-					q: $.trim(params.term)
-				};
-			},
-			processResults: function(data){
-				return{
-					results: data
-				};
-			}
-			
-		}
+				$('#fecha_v_inf').text(fecha_venc!=null?""+fecha_venc:"");
+				$('#fecha_v_inf').attr('fecha_v',""+fecha_venc);
+				$('#cboPresentacion').empty();
+				$('#cboPresentacion').append('<option value="0">Seleccione.</option>');
+				$('#cboPresentacion').append(cboPresentacion);
+				
+				$('#detalle_prod').show();
+		});
 	});
+
+	$('#cboCliente').change(function(){
+                
+			
+	});
+
+	$('#cboPresentacion').change(function(){
+		var producto_id = $('#cboProducto').val();
+		$.get("ventas/"+producto_id+"/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
+			// console.log("Respuesta persona: "+response[3]);
+			var productoPresentacion = response;
+			var precio_unidad = productoPresentacion.precio_venta;
+			var cantidad_unidades_presentacion = productoPresentacion.cant_unidad_x_presentacion;
+			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
+			var total_unidades = cantidad_unidades_presentacion * cantidad;
+				$('#unidad_inf').text( $('#cboPresentacion option:selected').html());
+				$('#cant_unidades_inf').text(total_unidades);
+				$('#precio_inf').text(precio_unidad);
+		});      
+			
+	});
+
+	
+	// $("input[name=cantidad]").change(function(event){
+	// 	// var cant = parseInt($('#cantidad').val());
+	// 	// var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+	// 	// $('#factor').val('');
+	// 	// $('#factor').val(cant*cantidad_unidad);
+	// });
+
+
 }); 
 
-function agregar_producto(){
+function selectTipo(combo){//tipo a Credito o a Contado
+	$(combo).val();
+	if($(combo).val() == 'CR'){//Credito
 
-	// var nombre = $('#nombre_temp').val();
-	// var nombre_presentacion = $('#nombre_presentacion_temp').val();
-	if($('#stock_temp').val() > 0 || $('#cantidad').val() < $('#stock_temp').val()){
-		if($("#cboProducto").val() != '0' && $('#cboPresentacion').val() != '0' && $('#cantidad').val() != ""){
-		var nombre_producto = $('#cboProducto option:selected').html();
-		var nombre_presentacion = $('#cboPresentacion option:selected').html();
-		var producto_id = $('#cboProducto').val();
-		var presentacion_id = $('#cboPresentacion').val();
-		var precio_unidad = parseFloat($('#precio_unidad').val());
-		var cantidad = parseFloat($('#cantidad').val());
-		var subtotal = cantidad * precio_unidad;
-		var total = parseFloat($('#total').val()) + subtotal;
-		$('#total_p').text('Total: '+total);
-		$('#total').val(total);
-		var fila = '<tr class="producto_venta" producto_id='+producto_id+' presentacion_id='+presentacion_id+' cantidad='+cantidad+'  subtotal='+subtotal+'><td>'+nombre_producto+"</td><td>"+cantidad+"</td><td>"+nombre_presentacion+"</td><td>"+precio_unidad+"</td><td>"+subtotal+"</td>";
-		fila += '<td width="5%" align="center"><button id="btnQuitarProd" name="btnQuitarprod"  class="btn btn-danger btn-sm" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td></tr>';
-		$("#tabla_productos").append(fila);
-		$('#cboProducto').val(null);
-		$('#cboPresentacion').val(0);
-		$('#precio_unidad').val(0);
-		$('#cantidad').val("");
-		$('#stock_temp').val(0);
+	}else{//Contado
+
+	}
+}
+
+function agregar(){
+
+	var nombre_producto = $('#cboProducto option:selected').html();
+	var nombre_presentacion = $('#cboPresentacion option:selected').html();
+
+	var presentacion_id = parseInt($('#cboPresentacion').val());
+	var producto_id = parseInt($('#cboProducto').val());
+
+	var precioventa = parseFloat($('#precio_inf').attr('precio'));
+	var cantidad = parseInt($('#cantidad').val());
+	var fechavencimiento = $('#fecha_v_inf').attr('fecha_v');
+	var igv = parseFloat($('#igv').val());
+	var total = parseFloat($('#total').val()!=""?$('#total').val():0);
+	var lote = $('#unidad_inf').attr('lote');
+	var stock = $('#stock_inf').attr('stock');
+	if(stock > cantidad){
+	if(producto_id!= '0'){
+		if(presentacion_id !='0'){
+			if(cantidad!=""){
+				var subtotal = cantidad * precioventa;
+				total += subtotal;
+				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
+			
+				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" >'+
+					'<td class="input-sm" width="35%">'+nombre_producto+'</td>'+
+					'<td class="input-sm" width="15%" align="center">'+nombre_presentacion+'</td>'+
+					'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
+					'<td class="input-sm" width="5%" align="center">'+lote+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+precioventa+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+cantidad+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
+					'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+					'</tr>';
+				$("#tabla").append(d);
+				$('#total').val(total);
+				//vaciar datos
+				$('#cboProducto').val(0);
+				$('#cboPresentacion').empty();
+				$('#cboPresentacion').append('<option value="0">Seleccione</option>');
+
+				$('#producto_inf').val("");
+				$('#precio_inf').val("");
+				$('#stock_inf').val("");
+				$('#cant_unidades_inf').val("");
+				$('#unidad_inf').val("");
+				$('#fecha_v_inf').val("");
+				// $('#lote').val("");
+			}else{
+				alert("ingrese cantidad!");
+				$('#cantidad').focus();
+			}
+		}else{
+			alert("seleccione Unidad!");
+			$('#cboPresentacion').focus();
+		}
 	}else{
-		alert("Seleccione un producto, presentacion e ingrese su cantidad");
+		alert("seleccione Un Producto!");
+		$('#cboProducto').focus();
 	}
 	}else{
-		alert("No existe stock suficiente para el producto seleccionado");
+		alert("No hay stock suficiente para la cantidad solicitada!");
+		$('#cantidad').focus();
 	}
-	
-	
 
+	
 }
 
 function quitar(t, subtotal){
@@ -195,12 +309,11 @@ function quitar(t, subtotal){
 		var tr = td.parentNode;
 		var table = tr.parentNode;
 		table.removeChild(tr);
-		 var total_parcial = parseFloat($('#total').val())-subtotal;
-		 $('#total').val(total_parcial);
-		 $('#total_p').text('Total: '+total_parcial);
+		var total_parcial = parseFloat($('#total').val());
+		$('#total').val(parseFloat(total_parcial)-subtotal);
 	}
-}
 
+}
 
 function guardar_venta(entidad, idboton) {
 	var idformulario = IDFORMMANTENIMIENTO + entidad;
@@ -240,11 +353,10 @@ function guardar_venta(entidad, idboton) {
 function submitForm_venta(idformulario) {
 	var i=0;
 	var datos="";
-	$('.producto_venta').each(function() {
+	$('.datos-producto').each(function() {
 		datos += 	"&producto_id"		+i+"="+$(this).attr("producto_id")+
 					"&presentacion_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&subtotal"	+i+"="+$(this).attr("subtotal")+
-					"&cantidad"	+i+"="+$(this).attr("cantidad");
+					"&cantidad"		+i+"="+$(this).attr("cantidad");
 		i++;
 	});
 	datos += "&cantidad_registros="+i;
@@ -262,6 +374,11 @@ function submitForm_venta(idformulario) {
 	console.log('Respuesta: '+respuesta);
 	return respuesta;
 }
+
+
+$('.input-number').on('input', function () { 
+	this.value = this.value.replace(/[^0-9]/g,'');
+});
 
 function filterFloat(evt,input){
 	// Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
@@ -297,6 +414,5 @@ function filter(__val__){
 	}
 	
 }
-
 
 </script>

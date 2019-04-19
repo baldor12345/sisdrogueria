@@ -3,6 +3,7 @@
 namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Venta extends Model
 {
@@ -19,12 +20,28 @@ class Venta extends Model
     public function sucursal(){
         return $this->belongsTo('App\Sucursal','sucursal_id');
     } 
-    public function comprobante(){
-        return $this->belongsTo('App\Comprobante','comprobante_id');
+    public function user(){
+        return $this->belongsTo('App\User','user_id');
     } 
-    public function formapago(){
-        return $this->belongsTo('App\FormaPago','forma_pago_id');
+    public function cliente(){
+        return $this->belongsTo('App\Cliente','cliente_id');
     } 
+
+    // public function scopelistardetalle($query, $venta_id){
+    //     return $query->where(function($subquery) use($fecha)
+    //     {
+    //         if (!is_null($fecha)) {
+    //             $subquery->where('fecha', '>=', $fecha);
+    //         }
+    //     })
+    //     ->orderBy('fecha', 'ASC');
+    // }
+    // public function comprobante(){
+    //     return $this->belongsTo('App\Comprobante','comprobante_id');
+    // } 
+    // public function formapago(){
+    //     return $this->belongsTo('App\FormaPago','forma_pago_id');
+    // } 
 
     /**
      * Método para listar
@@ -35,11 +52,31 @@ class Venta extends Model
     public function scopelistar($query, $fecha)
     {
         return $query->where(function($subquery) use($fecha)
-		            {
-		            	if (!is_null($fecha)) {
-		            		$subquery->where('fecha_hora', '>=', $fecha);
-		            	}
-		            })
-        			->orderBy('fecha_hora', 'ASC');
+            {
+                if (!is_null($fecha)) {
+                    $subquery->where('fecha', '>=', $fecha);
+                }
+            })
+            ->orderBy('fecha', 'ASC');
     }
+
+    public static function listarentradas( $producto_id){
+        return  DB::table('entrada')
+                ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->select(
+                    'entrada.id as id', 
+                    'entrada.lote as lote', 
+                    'entrada.precio_venta as precio_venta', 
+                    'entrada.fecha_caducidad as fecha_caducidad', 
+                    'entrada.estado as estado', 
+                    'entrada.presentacion_id as presentacion_id', 
+                    'entrada.producto_presentacion_id as producto_presentacion_id', 
+                    'entrada.stock as stock',
+                    'entrada.sucursal_id as sucursal_id'
+            )
+                ->where('producto_presentacion.producto_id', '=',$producto_id)
+                ->where('entrada.stock', '>',0)
+                ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
+    }
+
 }
