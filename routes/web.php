@@ -181,6 +181,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ventas/eliminar/{id}/{listarluego}','VentasController@eliminar')->name('ventas.eliminar');
     Route::resource('ventas', 'VentasController', array('except' => array('show')));
     Route::get('ventas/listclientes',  'VentasController@listclientes')->name('ventas.listclientes');
+    Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
 
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
@@ -220,5 +221,6 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto');
+Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion');
 Route::get('provincias/{id}','ProvinciaController@getProvincias');
 Route::get('distritos/{id}','DistritoController@getDistritos');

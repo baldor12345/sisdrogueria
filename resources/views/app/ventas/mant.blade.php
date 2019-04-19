@@ -5,9 +5,9 @@
 	<div class="row">
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
 			<table id="tabla_temp">
-				<tr><td>Producto:</td><td><label id="producto_inf"></label></td><td>Fecha Venc.:</td><td><label id="fecha_v_inf"></label></td></tr>
-				<tr><td>Precio s/.:</td><td><label id="precio_inf"></label></td><td>Stock:</td><td><label id="stock_inf"></label></td></tr>
-				<tr><td>Unidad:</td><td><label id="unidad_inf"></label></td><td>Cantidad Unidades:</td><td><label id="cant_unidades_inf"></label></td></tr>
+				<tr><td>Producto:</td><td><label id="producto_inf"></label></td><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+				<tr><td>Precio s/.:</td><td><label id="precio_inf" precio='0'></label></td><td>Stock (Unidades):</td><td><label id="stock_inf" stock='0'></label></td></tr>
+				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td>Cantidad Unidades:</td><td><label id="cant_unidades_inf"></label></td></tr>
 			</table>
 		</div>
 		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">   
@@ -26,25 +26,26 @@
 				</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
 				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
-				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar_producto()')) !!}
+				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
 			</div>
 			
 			<div class="form-group" >
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="45%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="35%">Producto</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Lote</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
+							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
+							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 		                </tr>
 		            </thead>
 		        </table>
 			</div>
-		</div>	
+		</div>
 
 		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 card-box">
 			<div class="form-group ">
@@ -189,11 +190,17 @@ $(document).ready(function() {
 			var precio_unidad = response[2];
 			var cboPresentacion = response[3];
 			var fecha_venc = response[4];
+			var lote = response[5];
 				$('#producto_inf').text(producto.descripcion);
 				$('#stock_inf').text(""+stock);
+				$('#stock_inf').attr('stock',stock);
 				$('#precio_inf').text(precio_unidad);
+				$('#precio_inf').attr('precio',precio_unidad);
 				$('#unidad_inf').text("");
+				$('#unidad_inf').attr('lote',lote);
+			
 				$('#fecha_v_inf').text(fecha_venc!=null?""+fecha_venc:"");
+				$('#fecha_v_inf').attr('fecha_v',""+fecha_venc);
 				$('#cboPresentacion').empty();
 				$('#cboPresentacion').append('<option value="0">Seleccione.</option>');
 				$('#cboPresentacion').append(cboPresentacion);
@@ -208,24 +215,29 @@ $(document).ready(function() {
 	});
 
 	$('#cboPresentacion').change(function(){
-                
+		var producto_id = $('#cboProducto').val();
+		$.get("ventas/"+producto_id+"/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
+			// console.log("Respuesta persona: "+response[3]);
+			var productoPresentacion = response;
+			var precio_unidad = productoPresentacion.precio_venta;
+			var cantidad_unidades_presentacion = productoPresentacion.cant_unidad_x_presentacion;
+			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
+			var total_unidades = cantidad_unidades_presentacion * cantidad;
+				$('#unidad_inf').text( $('#cboPresentacion option:selected').html());
+				$('#cant_unidades_inf').text(total_unidades);
+				$('#precio_inf').text(precio_unidad);
+		});      
 			
 	});
 
 	
 	$("input[name=cantidad]").change(function(event){
-		var cant = parseInt($('#cantidad').val());
-		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
-		$('#factor').val('');
-		$('#factor').val(cant*cantidad_unidad);
+		// var cant = parseInt($('#cantidad').val());
+		// var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+		// $('#factor').val('');
+		// $('#factor').val(cant*cantidad_unidad);
 	});
 
-	$("input[name=unidad_presentacion]").change(function(event){
-		var cant = parseInt($('#cantidad').val());
-		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
-		$('#factor').val('');
-		$('#factor').val(cant*cantidad_unidad);
-	});
 
 }); 
 
@@ -239,99 +251,69 @@ function selectTipo(combo){//tipo a Credito o a Contado
 }
 
 function agregar(){
-	//datos del producto
-	var producto_dat ="";
-	var select = "";
-	var select = document.getElementById('producto_id');
-	producto_dat = $('#cboProducto option:selected').html();
 
-	//datos de la presentacion
-	var presentacion_dat = $('#cboPresentacion option:selected').html();
-	var presentacion_id = $('#cboPresentacion').val();
-	var precioventa 		= $('#precioventa').val();
-	var cantidad 			= $('#cantidad').val();
-	var fechavencimiento 	= $('#fechavencimiento').val();
-	
+	var nombre_producto = $('#cboProducto option:selected').html();
+	var nombre_presentacion = $('#cboPresentacion option:selected').html();
 
-	if($('#producto_id').val() !='0'){
-		if(presentacion_id !=""){
-			if(preciocompra !=""){
-				if(precioventa !=""){
-					if(cantidad!=""){
-						if(factor !=""){
-							if($('#unidad_id').val != '0'){
-								if(fechavencimiento!=""){
-									if(lote!=""){
-										var subtotal ="";
-										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
-										var t_parcial =0;
-										if($('#total').val() != ""){
-											t_parcial = parseFloat($('#total').val());
-										}else{
-											t_parcial=0;
-										}
-										var total = t_parcial+subtotal;
-										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-											'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
-											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
-											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
-											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
-											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
-											'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
-											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
-											'</tr>';
-										$("#tabla").append(d);
-										$('#total').val(total);
-										//vaciar datos
-										$('#producto_id').val(0);
-										$('#unidad_id').val(0);
-										$('#presentacion_id').val(0);
-										$('#categoria_id').val(0);
-										$('#laboratorio_id').val(0);
-										$('#preciocompra').val("");
-										$('#unidad_presentacion').val("");
-										$('#precioventa').val("");
-										$('#cantidad').val("");
-										$('#fechavencimiento').val("");
-										$('#factor').val("");
-										$('#lote').val("");
-									}else{
-										window.alert("ingrese lote!");
-										$('#lote').focus();
-									}
-								}else{
-									window.alert("seleccione fecha de vencimiento!");
-									$('#fechavencimiento').focus();
-								}
-							}else{
-								window.alert("seleccione Unidad de Venta!");
-								$('#unidad_id').focus();
-							}
+	var presentacion_id = parseInt($('#cboPresentacion').val());
+	var producto_id = parseInt($('#cboProducto').val());
 
-						}else{
-							window.alert("factor no debe ser vacio!");
-							$('#fechavencimiento').focus();
-						}
-					}else{
-						window.alert("ingrese cantidad a comprar!");
-						$('#cantidad').focus();
-					}	
-				}else{
-					window.alert("ingrese precio de venta!");	
-					$('#precioventa').focus();
-				}
+	var precioventa = parseFloat($('#precio_inf').attr('precio'));
+	var cantidad = parseInt($('#cantidad').val());
+	var fechavencimiento = $('#fecha_v_inf').attr('fecha_v');
+	var igv = parseFloat($('#igv').val());
+	var total = parseFloat($('#total').val()!=""?$('#total').val():0);
+	var lote = $('#unidad_inf').attr('lote');
+	var stock = $('#stock_inf').attr('stock');
+	if(stock > cantidad){
+	if(producto_id!= '0'){
+		if(presentacion_id !='0'){
+			if(cantidad!=""){
+				var subtotal = cantidad * precioventa;
+				total += subtotal;
+				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
+			
+				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" >'+
+					'<td class="input-sm" width="35%">'+nombre_producto+'</td>'+
+					'<td class="input-sm" width="15%" align="center">'+nombre_presentacion+'</td>'+
+					'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
+					'<td class="input-sm" width="5%" align="center">'+lote+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+precioventa+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+cantidad+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
+					'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+					'</tr>';
+				$("#tabla").append(d);
+				$('#total').val(total);
+				//vaciar datos
+				$('#cboProducto').val(0);
+				$('#cboPresentacion').empty();
+				$('#cboPresentacion').append('<option value="0">Seleccione</option>');
+
+				$('#producto_inf').val("");
+				$('#precio_inf').val("");
+				$('#stock_inf').val("");
+				$('#cant_unidades_inf').val("");
+				$('#unidad_inf').val("");
+				$('#fecha_v_inf').val("");
+				// $('#lote').val("");
 			}else{
-				window.alert("ingrese precio de compra!");
-				$('#preciocompra').focus();
+				alert("ingrese cantidad!");
+				$('#cantidad').focus();
 			}
 		}else{
-			window.alert("Seleccione presentacion!");
-			$('#presentacion_id').focus();
+			alert("seleccione Unidad!");
+			$('#cboPresentacion').focus();
 		}
 	}else{
-		window.alert("seleccione un producto!");
-		$('#producto_id').focus();
+		alert("seleccione Un Producto!");
+		$('#cboProducto').focus();
 	}
+	}else{
+		alert("No hay stock suficiente para la cantidad solicitada!");
+		$('#cantidad').focus();
+	}
+
 	
 }
 
@@ -388,18 +370,12 @@ function submitForm_venta(idformulario) {
 	var i=0;
 	var datos="";
 	$('.datos-producto').each(function() {
-		datos += 	"&id_producto"		+i+"="+$(this).attr("id_producto")+
-					"&id_laboratorio"	+i+"="+$(this).attr("id_laboratorio")+
-					"&precio_compra"	+i+"="+$(this).attr("precio_compra")+
-					"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
-					"&cant"				+i+"="+$(this).attr("canti")+
-					"&fecha_vencim"		+i+"="+$(this).attr("fecha_venc")+
-					"&factor_"			+i+"="+$(this).attr("dat_factor")+
-					"&id_unidad"		+i+"="+$(this).attr("id_unidad")+
-					"&lot"				+i+"="+$(this).attr("lot");
+		datos += 	"&producto_id"		+i+"="+$(this).attr("producto_id")+
+					"&presentacion_id"	+i+"="+$(this).attr("presentacion_id")+
+					"&cantidad"		+i+"="+$(this).attr("cantidad")+
 		i++;
 	});
-	datos += "&cantidad="+i;
+	datos += "&cantidad_registros="+i;
 	var parametros = $(idformulario).serialize();
 	parametros += datos;
 	var accion     = $(idformulario).attr('action').toLowerCase();

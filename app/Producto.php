@@ -80,6 +80,18 @@ class Producto extends Model
                 ->where('producto.deleted_at',null);
     }
 
+    public function scopelistarproductosventa($query,$nombre){
+        return $query->where(function($subquery) use($nombre)
+        {
+            if (!is_null($nombre)) {
+                $subquery->where("descripcion",'LIKE', '%'.$nombre.'%');
+            }
+        })
+        ->where('deleted_at','=',null)
+        // ->limit(5)
+        ->orderBy('descripcion', 'ASC')->get();
+    }
+
 	public static function boot()
     {
         parent::boot();

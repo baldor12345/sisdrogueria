@@ -3,6 +3,7 @@
 namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Venta extends Model
 {
@@ -64,7 +65,7 @@ class Venta extends Model
                 ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->where('producto_presentacion.producto_id', '=',$producto_id)
                 ->where('entrada.stock', '>',0)
-                // ->groupBy('presentacion.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
-                ->orderBy('entrada.fecha_caducidad', 'ASC');
+                ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
     }
+
 }
