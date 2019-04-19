@@ -19,7 +19,7 @@
 			<div class="form-group" >
 				{!! Form::label('numero_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'numero documento')) !!}
+					{!! Form::text('numero_documento', $numero_operacion, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'numero documento')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -135,6 +135,27 @@ $(document).ready(function() {
 			
 		}
 	});
+
+	$('#producto_id').change(function(event){
+		$.get("entrada/"+$(this).val()+"/0219312", function(response, productos){
+			console.log(response);
+			if(response.length !=0 ){
+				$('#id_presentacion').prop("readonly", true);
+				//$('#precioventa').prop("readonly", true);
+				//$('#fechavencimiento').prop("readonly", true);
+				//$('#lote').prop("readonly", true);
+
+				$('#preciocompra').val(response[0].precio_compra);
+				$('#precioventa').val(response[0].precio_venta_unitario);
+				$('#id_presentacion').val(response[0].presentacion_id);
+				$('#cantidad').val(response[0].cant_unidad_x_presentacion);
+
+			}else{
+				window.alert("Producto no esta registrado en el inventario!");
+			}
+		});
+	});
+
 
 	$('#entrada_id').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),

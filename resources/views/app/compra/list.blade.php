@@ -20,8 +20,12 @@
 			<td>{{ $contador }}</td>
 			<td>{{ Date::parse( $value->compra_fecha )->format('d-m-Y') }}</td>
 			<td>{{ $value->proveedor_nombre }}</td>
-			<td>{{ $value->numero_documento.'-'.$value->serie_documento }}</td>
-			<td>{{ $value->estado }}</td>
+			<td>{{ $value->serie_documento.'-'.$value->numero_documento }}</td>
+			@if($value->tipo_pago == 'CO')
+			<td>Contado</td>
+			@else
+			<td>Credito</td>
+			@endif
 			<td>{{ $value->total }}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle"], array($value->compra_id, 'listar'=>'SI')).'\', \''.$titulo_ver.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> Comprobante', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->compra_id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>

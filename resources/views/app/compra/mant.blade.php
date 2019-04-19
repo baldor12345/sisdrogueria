@@ -70,15 +70,15 @@
 			</div>
 
 			<div class="form-group">
-				{!! Form::label('credito', 'Credito:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('credito', 'T. pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::select('credito', $cboCredito, null, array('class' => 'form-control input-sm', 'id' => 'credito', 'onchange'=>'cambiarcredito();')) !!}
 				</div>
 			</div>
-			<div class="form-group" >
+			<div class="form-group" id="num_days" style="display:none;">
 				{!! Form::label('numero_dias', 'Nro Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '','disabled')) !!}
+					{!! Form::text('numero_dias', null, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -87,7 +87,7 @@
 					{!! Form::text('serie_documento', null, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
 				</div>
 				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
+					{!! Form::text('numero_documento', $numero_operacion, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
 				</div>
 			</div>
 			<div class="form-group " >
@@ -122,7 +122,7 @@
 			<br>
 			<div class="form-group">
 				<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-					{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarCompra', 'onclick' => 'guardar_compra(\''.$entidad.'\', this)')) !!}
+					{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarCompraP', 'onclick' => 'guardar_compra(\''.$entidad.'\', this)')) !!}
 					{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 				</div>
 			</div>
@@ -212,7 +212,8 @@ $(document).ready(function() {
 				$('#categoria_id').val(response[0].categoria_id);
 				$('#presentacion_id').val(response[0].presentacion_id);
 				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
-				$('#precio_compra').val(response[0].precio_compra);
+				$('#preciocompra').val(response[0].precio_compra);
+				$('#precioventa').val(response[0].precio_venta_unitario);
 				$('#presentacion_id').prop("disabled", true);
 				//$('#factor').prop("readonly", true);
 			}else{
@@ -225,12 +226,14 @@ $(document).ready(function() {
 
 function cambiarcredito(){
 	var doc = $('#credito').val();
-	if(doc == 'S'){
-		document.getElementById("numero_dias").disabled = false;
+	if(doc == 'CO'){
+		$('#num_days').css('display','none');
+		//document.getElementById("numero_dias").disabled = false;
 	}
-	if(doc == 'N'){
+	if(doc == 'CR'){
+		$('#num_days').css('display','block');
 		$('#numero_dias').val("");
-		$('#numero_dias').prop("readonly", true);
+		//$('#numero_dias').prop("readonly", true);
 	}
 }
 
@@ -263,7 +266,7 @@ function agregar(){
 				if(precioventa !=""){
 					if(cantidad!=""){
 						if(factor !=""){
-							if($('#unidad_id').val != '0'){
+							if($('#unidad_id').val() != '0'){
 								if(fechavencimiento!=""){
 									if(lote!=""){
 										var subtotal ="";
@@ -300,11 +303,11 @@ function agregar(){
 										$('#factor').val("");
 										$('#lote').val("");
 									}else{
-										window.alert("ingrese lote!");
+										window.alert("ingrese lote, debe ser obligatorio!");
 										$('#lote').focus();
 									}
 								}else{
-									window.alert("seleccione fecha de vencimiento!");
+									window.alert("seleccione fecha de vencimiento del producto seleccionado!");
 									$('#fechavencimiento').focus();
 								}
 							}else{
@@ -363,12 +366,12 @@ function guardar_compra(entidad, idboton) {
 	};
 	data.done(function(msg) {
 		respuesta = msg;
-		$('#btnGuardarCompra').button('loading');
+		$(idboton).button('loading');
 	}).fail(function(xhr, textStatus, errorThrown) {
 		respuesta = 'ERROR';
-		$('#btnGuardarCompra').removeClass('disabled');
-		$('#btnGuardarCompra').removeAttr('disabled');
-		$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
+		$(idboton).removeClass('disabled');
+		$(idboton).removeAttr('disabled');
+		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
@@ -381,9 +384,9 @@ function guardar_compra(entidad, idboton) {
 				}        
 			} else {
 				mostrarErrores(respuesta, idformulario, entidad);
-				$('#btnGuardarCompra').removeClass('disabled');
-				$('#btnGuardarCompra').removeAttr('disabled');
-				$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
+				$(idboton).removeClass('disabled');
+				$(idboton).removeAttr('disabled');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 			}
 		}
 	});

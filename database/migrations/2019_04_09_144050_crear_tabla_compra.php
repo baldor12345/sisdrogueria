@@ -18,7 +18,7 @@ class CrearTablaCompra extends Migration
             $table->char('documento', 1)->nullable();//0=>FACTURA DE COMPRA, 1=>BOLETA DE COMPRA, 2=>GUIA INTERNA   , 3=>NOTA DE CREDITO, 4=>TICKET
             $table->string('numero_documento',100)->nullable();
             $table->string('serie_documento',100)->nullable();
-            $table->char('credito', 1)->nullable();//S=>SI DE COMPRA, N=>NO
+            $table->char('tipo_pago', 2)->nullable();//CO=>CONTADO , CR=>CREDITO
             $table->integer('numero_dias')->nullable();
             $table->string('ruc',100)->nullable();
             $table->integer('proveedor_id')->unsigned()->nullable();

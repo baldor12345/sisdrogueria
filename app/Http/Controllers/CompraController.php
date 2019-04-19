@@ -70,7 +70,7 @@ class CompraController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Proveedor', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Situacion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Tipo Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
@@ -117,7 +117,7 @@ class CompraController extends Controller
         $entidad        = 'Compra';
         $compra       = null;
         $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
-        $cboCredito       = [''=>'Seleccione'] + array('S'=>'SI', 'N'=>'NO');
+        $cboCredito       = ['CO'=>'Contado','CR'=>'Crédito'];
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
@@ -126,11 +126,12 @@ class CompraController extends Controller
         $cboUnidad = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
+        $numero_operacion   = Libreria::codigo_operacion();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -144,9 +145,7 @@ class CompraController extends Controller
     {
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'documento' => 'required|max:60',
             'numero_documento' => 'required',
-            'serie_documento' => 'required',
             'proveedor_id' => 'required|integer|exists:proveedor,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
@@ -158,7 +157,7 @@ class CompraController extends Controller
             $compra->documento = $request->input('documento');
             $compra->numero_documento = $request->input('numero_documento');
             $compra->serie_documento = $request->input('serie_documento');
-            $compra->credito = $request->input('credito');
+            $compra->tipo_pago = $request->input('credito');
             $compra->numero_dias = $request->input('numero_dias');
             $compra->ruc = $request->input('ruc');
             $compra->proveedor_id = $request->input('proveedor_id');
@@ -304,7 +303,7 @@ class CompraController extends Controller
         }
         $listar = Libreria::getParam($request->input('listar'), 'NO');
         $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
-        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
+        $cboCredito       = ['CO'=>'Contado','CR'=>'Crédito'];
         $compra       = Compra::find($id);
         $list_detalle_c = Compra::listardetallecompra($id)->get();
         $proveedor      = Proveedor::find($compra->proveedor_id);
@@ -421,7 +420,7 @@ class CompraController extends Controller
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
                     ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
                     ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
-                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(5)->get();
+                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
             $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
