@@ -93,7 +93,7 @@
 			<div class="form-group">
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+					{!! Form::date('fecha', $fecha_defecto, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
 				</div>
 			</div>
 			<br>
