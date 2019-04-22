@@ -138,18 +138,12 @@ $(document).ready(function() {
 
 	$('#producto_id').change(function(event){
 		$.get("entrada/"+$(this).val()+"/0219312", function(response, productos){
-			console.log(response);
 			if(response.length !=0 ){
-				$('#id_presentacion').prop("readonly", true);
-				//$('#precioventa').prop("readonly", true);
-				//$('#fechavencimiento').prop("readonly", true);
-				//$('#lote').prop("readonly", true);
-
 				$('#preciocompra').val(response[0].precio_compra);
 				$('#precioventa').val(response[0].precio_venta_unitario);
 				$('#id_presentacion').val(response[0].presentacion_id);
 				$('#cantidad').val(response[0].cant_unidad_x_presentacion);
-
+				$('#id_presentacion').prop("disabled", true);
 			}else{
 				window.alert("Producto no esta registrado en el inventario!");
 			}
@@ -188,7 +182,7 @@ $(document).ready(function() {
 				$('#precioventa').prop("readonly", true);
 				$('#fechavencimiento').prop("readonly", true);
 				$('#lote').prop("readonly", true);
-
+				$('#id_presentacion').prop("disabled", true);
 				$('#preciocompra').val(response[0].precio_compra);
 				var fecha = response[0].fecha_caducidad.split('-');
 				var year = fecha[0];

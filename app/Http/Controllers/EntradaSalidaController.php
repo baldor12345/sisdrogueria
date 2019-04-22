@@ -14,14 +14,15 @@ use App\Marca;
 use App\Proveedor;
 use App\Propiedades;
 use App\Entrada;
-use App\Salida;
+use App\EntradaSalida;
 use App\DetalleEntrada;
 use App\MantenimientoProducto;
-use App\DetalleSalida;
+use App\EntradaSalidaDetalle;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Date\Date;
 
 class EntradaSalidaController extends Controller
 {
@@ -30,7 +31,7 @@ class EntradaSalidaController extends Controller
     protected $tituloRegistrar = 'Registrar Entrada o Salida';
     protected $tituloModificar = 'Modificar Entrada o Salida';
     protected $tituloEliminar  = 'Eliminar Entrada o Salida';
-    protected $titulo_ver  = 'Detalle de Entrada o Salida';
+    protected $titulo_ver  = 'Detalle';
     protected $rutas           = array('create' => 'entrada_salida.create', 
             'edit'          => 'entrada_salida.edit', 
             'delete'        => 'entrada_salida.eliminar',
@@ -61,21 +62,18 @@ class EntradaSalidaController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'Compra';
-        $numero      = Libreria::getParam($request->input('producto'));
-        $presentacion_id      = Libreria::getParam($request->input('presentacion_id'));
+        $entidad          = 'EntradaSalida';
+        $numero      = Libreria::getParam($request->input('numero_doc'));
+        $presentacion_id      = Libreria::getParam($request->input('tipo'));
         $fechai      = Libreria::getParam($request->input('fechai'));
         $fechaf      = Libreria::getParam($request->input('fechaf'));
-        $resultado        = MantenimientoProducto::listar($numero,$presentacion_id, $fechai, $fechaf);
+        $resultado        = EntradaSalida::listar($numero,$presentacion_id, $fechai, $fechaf);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Producto', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Presentacion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'F. Caducidad', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'P. Venta', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Lote', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Cantidad', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nro Documento', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -107,7 +105,7 @@ class EntradaSalidaController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
-        $cboPresentacion     = [''=>'Todos'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboPresentacion     = [''=>'Seleccione','E'=>'Entrada','S'=>'Salida'];
         return view($this->folderview.'.admin')->with(compact('cboPresentacion', 'entidad', 'title', 'titulo_registrar', 'ruta'));
     }
 
@@ -159,9 +157,31 @@ class EntradaSalidaController extends Controller
         $tipo = $request->input('doc');
         if($tipo == 'E'){
             $error = DB::transaction(function() use($request){
+
+                $EntradaSalida    = new EntradaSalida();
+                $EntradaSalida->fecha = $request->input('fecha');
+                $EntradaSalida->tipo = 'E';
+                $EntradaSalida->num_documento = $request->input('numero_documento');
+                $EntradaSalida->descripcion = $request->input('comentario');
+                $user           = Auth::user();
+                $EntradaSalida->user_id = $user->id;
+                $EntradaSalida->sucursal_id = $user->sucursal_id;
+                $EntradaSalida->save();
+                $entrada_salida_last    = EntradaSalida::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
+
                 $cantidad = $request->input('cantidad');
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
+                        $entrada_salida_detalle    = new EntradaSalidaDetalle();
+                        $entrada_salida_detalle->fecha_caducidad = $request->input("fecha_vencim".$i);
+                        $entrada_salida_detalle->precio_compra = $request->input("precio_compra".$i);
+                        $entrada_salida_detalle->precio_venta = $request->input("precio_venta".$i);
+                        $entrada_salida_detalle->cantidad = $request->input("cant".$i);
+                        $entrada_salida_detalle->lote = $request->input("lot".$i);
+                        $entrada_salida_detalle->entrada_salida_id = $entrada_salida_last[0]->id;
+                        $entrada_salida_detalle->producto_presentacion_id = $request->input("id_producto".$i);
+                        $entrada_salida_detalle->save();
+
                         $entrada_existente = Entrada::where('lote',trim($request->input("lot".$i)))->whereDate('fecha_caducidad',$request->input("fecha_vencim".$i))->where('deleted_at',null)->get();
                         if(count($entrada_existente) != 0){
                             $entrada    = Entrada::find($entrada_existente[0]->id);
@@ -192,9 +212,33 @@ class EntradaSalidaController extends Controller
         }
         if($tipo == 'S'){
             $error = DB::transaction(function() use($request){
+
+                $EntradaSalida    = new EntradaSalida();
+                $EntradaSalida->fecha = $request->input('fecha');
+                $EntradaSalida->tipo = 'S';
+                $EntradaSalida->num_documento = $request->input('numero_documento');
+                $EntradaSalida->descripcion = $request->input('comentario');
+                $user           = Auth::user();
+                $EntradaSalida->user_id = $user->id;
+                $EntradaSalida->sucursal_id = $user->sucursal_id;
+                $EntradaSalida->save();
+                $entrada_salida_last    = EntradaSalida::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
+
+
                 $cantidad = $request->input('cantidad');
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
+
+                        $entrada_salida_detalle    = new EntradaSalidaDetalle();
+                        $entrada_salida_detalle->fecha_caducidad = $request->input("fecha_vencim".$i);
+                        $entrada_salida_detalle->precio_compra = $request->input("precio_compra".$i);
+                        $entrada_salida_detalle->precio_venta = $request->input("precio_venta".$i);
+                        $entrada_salida_detalle->cantidad = $request->input("cant".$i);
+                        $entrada_salida_detalle->lote = $request->input("lot".$i);
+                        $entrada_salida_detalle->entrada_salida_id = $entrada_salida_last[0]->id;
+                        $entrada_salida_detalle->producto_presentacion_id = $request->input("id_producto".$i);
+                        $entrada_salida_detalle->save();
+
                         $entrada = Entrada::find($request->input("id_entrada".$i));
                         $entrada->stock = $entrada->stock-intval($request->input("cantid".$i));
                         $entrada->save();
@@ -322,22 +366,22 @@ class EntradaSalidaController extends Controller
     //para vista de ver detalle
     public function verdetalle($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'entrada');
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
         if ($existe !== true) {
             return $existe;
         }
         $listar = Libreria::getParam($request->input('listar'), 'NO');
-        $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
-        $cboCredito       = array('S'=>'SI', 'N'=>'NO');
-        $entrada       = Entrada::find($id);
-        $list_detalle_c = MantenimientoProducto::listardetalleentrada($id)->get();
-        $proveedor      = ($entrada->proveedor_id != null)?Proveedor::find($entrada->proveedor_id):$proveedor="";
+        $cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
+        $entrada_salida       = EntradaSalida::find($id);
+        $fecha = Date::parse($entrada_salida->fecha)->format('Y-m-d');
+
+        $list_detalle_es = EntradaSalida::listdetalleES($id)->get();
         $entidad        = 'EntradaSalida';
         $formData       = array('entrada_salida.update', $id);
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.verdetalle')->with(compact('ruta', 'entrada', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_c','cboDocumento','cboCredito'));
+        return view($this->folderview.'.verdetalle')->with(compact('fecha', 'ruta', 'entrada_salida', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_es','cboTipo'));
     }
 
     /**

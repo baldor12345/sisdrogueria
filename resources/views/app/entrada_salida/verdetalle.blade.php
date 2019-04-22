@@ -1,27 +1,19 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($entrada, $formData) !!}	
+{!! Form::model($entrada_salida, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="row">	
 		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 card-box">    	
 			<div class="form-group ">
-				{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('tipo', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('documento', $cboDocumento, $entrada->documento, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+					{!! Form::select('tipo', $cboTipo, $entrada_salida->tipo, array('class' => 'form-control input-sm', 'id' => 'tipo', 'disabled')) !!}
 				</div>
 			</div>
 
             <div class="form-group" >
 				{!! Form::label('numero_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie', $entrada->numero_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
-				</div>
-                
-			</div>
-
-            <div class="form-group" >
-				{!! Form::label('numero_dias', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', $proveedor->nombre, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '')) !!}
+					{!! Form::text('serie', $entrada_salida->num_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento','readonly')) !!}
 				</div>
 			</div>
 		</div>		
@@ -29,19 +21,13 @@
 			<div class="form-group " >
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::date('fecha', null, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+					{!! Form::date('fecha', $fecha, array('class' => 'form-control input-xs', 'id' => 'fecha', 'readonly')) !!}
 				</div>
 			</div>
 			<div class="form-group " >
-				{!! Form::label('fecha', 'Comentario:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('comentario', 'Comentario:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::date('fecha', $entrada->comentario, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
-				</div>
-			</div>
-			<div class="form-group" >
-				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('total', $entrada->total, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+					{!! Form::textarea('comentario', $entrada_salida->comentario, array('class' => 'form-control input-xs' , 'cols'=>'10', 'rows'=>'rows', 'id' => 'comentario', 'readonly')) !!}
 				</div>
 			</div>
 		</div>		
@@ -56,19 +42,21 @@
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">Presentacion</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">F. Venc.</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">P. Compra</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">P. Venta</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Lote</th>
 		                </tr>
 		            </thead>
                     <tbody>
-                        @foreach ($list_detalle_c as $key => $value)
+                        @foreach ($list_detalle_es as $key => $value)
                             <tr>
-                                <td class="text-center input-sm">{{ $value->descripcion }}</td>
-                                <td class="text-center input-sm">{{ $value->presentacion_nombre }}</td>
+                                <td class="text-center input-sm">{{ $value->producto }}</td>
+                                <td class="text-center input-sm">{{ $value->presentacion }}</td>
                                 <td class="text-center input-sm">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
+								<td class="text-center input-sm">{{ $value->precio_compra }}</td>
+								<td class="text-center input-sm">{{ $value->precio_venta }}</td>
                                 <td class="text-center input-sm">{{ $value->cantidad }}</td>
-                                <td class="text-center input-sm">{{ $value->precio_compra }}</td>
-                                <td class="text-center input-sm">{{ number_format($value->precio_compra*$value->cantidad,2) }}</td>
+                                <td class="text-center input-sm">{{ $value->lote }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -84,7 +72,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('900');
+	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	var fechaActual = new Date();

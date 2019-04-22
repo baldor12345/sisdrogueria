@@ -18,12 +18,12 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						<label for="producto" class="input-sm">Producto:</label>
-						{!! Form::text('producto', '', array('class' => 'form-control input-sm', 'id' => 'producto')) !!}
+						<label for="numero_doc" class="input-sm">Nro Documento:</label>
+						{!! Form::text('numero_doc', '', array('class' => 'form-control input-sm', 'id' => 'numero_doc')) !!}
 					</div>
 					<div class="form-group">
-						<label for="descripcion" class="input-sm">Presentacion:</label>
-						{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id')) !!}
+						<label for="tipo" class="input-sm">Tipo:</label>
+						{!! Form::select('tipo', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'tipo')) !!}
 					</div>
 					<div class="form-group">
 						<label for="fechai" class="input-sm">Desde:</label>

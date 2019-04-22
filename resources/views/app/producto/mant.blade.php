@@ -110,6 +110,17 @@
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
+						<tbody>
+							@foreach($listdet_ as $key => $value)
+								<tr class='datos-presentacion' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
+									<td>{{ $value->presentacion_nombre }} </td>
+									<td>{{ $value->precio_compra }} </td>
+									<td>{{ $value->cant_unidad_x_presentacion }} </td>
+									<td>{{ $value->precio_venta_unitario }}</td>
+									<td><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>
+								</tr>
+							@endforeach
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -301,6 +312,7 @@ function submitForm_control(idformulario) {
 	var datos="";
 	$('.datos-presentacion').each(function() {
 		datos += 	"&id_present"		+i+"="+$(this).attr("id_present")+
+					"&propresent_id"	+i+"="+$(this).attr("id_producto_presentacion")+
 					"&preciocomp"	+i+"="+$(this).attr("preciocomp")+
 					"&unidad_x_present"	+i+"="+$(this).attr("unidad_x_present")+
 					"&precioventaunit"	+i+"="+$(this).attr("precioventaunit");

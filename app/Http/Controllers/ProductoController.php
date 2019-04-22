@@ -63,8 +63,7 @@ class ProductoController extends Controller
         $entidad          = 'Producto';
         $descripcion      = Libreria::getParam($request->input('descripcion'));
         $codigo      = Libreria::getParam($request->input('codigo'));
-        $presentacion_id      = Libreria::getParam($request->input('presentacion_id'));
-        $resultado        = Producto::listarproducto($descripcion, $codigo, $presentacion_id);
+        $resultado        = Producto::listarproducto($descripcion, $codigo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -72,7 +71,6 @@ class ProductoController extends Controller
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Precio venta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Presentacion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
@@ -227,11 +225,24 @@ class ProductoController extends Controller
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
+        $listdet_       = DB::table('producto_presentacion')
+                                ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
+                                ->select(
+                                        'producto_presentacion.id as propresent_id', 
+                                        'producto_presentacion.presentacion_id as presentacion_id', 
+                                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion', 
+                                        'producto_presentacion.precio_compra as precio_compra', 
+                                        'presentacion.nombre as presentacion_nombre', 
+                                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
+                                )
+                                ->where('producto_presentacion.producto_id', $id)
+                                ->where('producto_presentacion.deleted_at',null)->get();
+        
         $formData       = array('producto.update', $id);
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -270,16 +281,49 @@ class ProductoController extends Controller
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->costo = $request->input('costo');
-            $producto->precio_publico = $request->input('precio_publico');
 
             $producto->marca_id  = $request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            // $producto->presentacion_id = $request->input('presentacion_id');
             $producto->proveedor_id = $request->input('proveedor_id');
             $user = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();
+
+            $cantidad = $request->input('cantidad');
+            $detalle_present_ = ProductoPresentacion::where('producto_id',$id)->where('deleted_at',null)->get();
+            if($cantidad >0){
+                for($i=0;$i<$cantidad; $i++){
+                    if(intval($request->input("propresent_id".$i)) == 0){
+                        $producto_presentacion = new ProductoPresentacion();
+                        $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                        $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                        $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                        $producto_presentacion->producto_id = $id;
+                        $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                        $producto_presentacion->save();
+                    }
+                    if(intval($request->input("propresent_id".$i)) != 0){
+                        foreach ($detalle_present_ as $key => $value) {
+                            echo "ids que pasan ".intval($request->input("propresent_id".$i))."  ".$value->id;
+                            if($value->id == intval($request->input("propresent_id".$i))){
+                                $producto_presentacion = ProductoPresentacion::find($value->id);
+                                $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                                $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                                $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                                $producto_presentacion->producto_id = $id;
+                                $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                                $producto_presentacion->save();
+                            }else{
+                                $producto_presentacion = ProductoPresentacion::find($value->id);
+                                $producto_presentacion->delete();
+                            }
+                        }
+                    }
+                    
+                    
+                }
+            }
+
         });
         return is_null($error) ? "OK" : $error;
     }

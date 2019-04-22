@@ -12,11 +12,8 @@
 
             <div class="form-group" >
 				{!! Form::label('numero_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie', $compra->serie_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
-				</div>
-				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie', $compra->numero_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::text('serie', $compra->numero_documento, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'num documento', 'readonly')) !!}
 				</div>
                 
 			</div>
@@ -24,7 +21,7 @@
             <div class="form-group" >
 				{!! Form::label('numero_dias', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_dias', $proveedor->nombre, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '')) !!}
+					{!! Form::text('numero_dias', $proveedor->nombre, array('class' => 'form-control input-xs input-number', 'id' => 'numero_dias', 'placeholder' => '', 'readonly')) !!}
 				</div>
 			</div>
 		</div>		

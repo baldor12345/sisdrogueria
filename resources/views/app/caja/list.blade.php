@@ -38,7 +38,7 @@ a.disabled {
 			<td style="font-size: 13px">Debito</td>	
 			@endif
 			@if($value->cliente_id != '')
-			<td style="font-size: 13px">{{  $value->apellidos.'  '.$value->nombres   }}</td>
+			<td style="font-size: 13px">{{  $value->cliente_apellidos.'  '.$value->cliente_nombres   }}</td>
 			@else
 			<td style="font-size: 13px">--</td>	
 			@endif
