@@ -117,6 +117,7 @@ class VentasController extends Controller
         $boton  = 'Registrar'; 
         $user = Auth::user();
         $ruta = $this->rutas;
+        $fecha_defecto = date('Y-m-d');
         $igv = Propiedades::all()->last()->igv;
         $cboTipos = ['CO'=>'Contado','CR'=>'Crédito'];
         $cboDocumento = ['V'=>'Voleta','F'=>'Factura'];
@@ -124,7 +125,7 @@ class VentasController extends Controller
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('venta','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto'));
+        return view($this->folderview.'.mant')->with(compact('venta','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto'));
     }
 
     public function store(Request $request)

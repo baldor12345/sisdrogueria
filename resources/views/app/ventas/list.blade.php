@@ -17,7 +17,7 @@
 		@foreach ($lista as $key => $value)
 		<tr>
 			<td>{{ $contador }}</td>
-			<td>{{ Date::parse( $value->fecha )->format('d/m/Y') }}</td>
+			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
 			<td>{{ $value->total }}</td>
 			<td>{{ $value->sucursal->nombre }}</td>
 			<td>{{ $value->comprobante == 'V'?'Voleta':'Factura' }}</td>
