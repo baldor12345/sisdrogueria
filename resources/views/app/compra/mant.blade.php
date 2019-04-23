@@ -8,23 +8,17 @@
 				<div class="col-sm-6 col-xs-12" style="height: 20px;">
 					{!! Form::select('producto_id', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'producto_id')) !!}
 				</div>
-				{!! Form::label('laboratorio_id', 'Marca/Lab.:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 20px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 20px;">
-					{!! Form::select('laboratorio_id', $cboLaboratorio, null, array('class' => 'form-control input-sm', 'id' => 'laboratorio_id')) !!}
-				</div>
 			</div>
 			<div class="form-group">
 				<table>
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
-						<td class=" input-sm" style="text-align:right;"><b>Categoria:</b></td>
-						<td>{!! Form::select('categoria_id', $cboCategoria, null, array('class' => 'form-control input-sm', 'id' => 'categoria_id','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Unidad Compra:</b></td>
 						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Cantidad/Presentacion:</b></td>
-						<td><input class="form-control input-sm input-number"  style="width:60px" id="cantidad" size="3" name="cantidad" type="text"></td>
+						<td><input class="form-control input-sm input-number"   id="cantidad" size="3" name="cantidad" type="text"></td>
 						<td class=" input-sm" style="text-align:right;"><b>Unidad/Presentacion:</b></td>
-						<td><input class="form-control input-sm input-number"  id="unidad_presentacion" size="3" name="unidad_presentacion" type="text"></td>
+						<td><input class="form-control input-sm input-number"  id="unidad_presentacion" size="7" name="unidad_presentacion" type="text"></td>
 						<td class=" input-sm" style="text-align:right;"><b>P.Compra:</b></td>
 						<td><input class="form-control input-sm" style="width:80px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
 					</tr>
@@ -82,11 +76,8 @@
 				</div>
 			</div>
 			<div class="form-group" >
-				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie_documento', null, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
-				</div>
-				<div class="col-sm-6 col-xs-12" style="height: 25px;">
+				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}	
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::text('numero_documento', $numero_operacion, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
 				</div>
 			</div>
@@ -208,8 +199,6 @@ $(document).ready(function() {
 		$.get("compra/"+$(this).val()+"", function(response, productos){
 			console.log(response);
 			if(response.length !=0 ){
-				$('#laboratorio_id').val(response[0].marca_id);
-				$('#categoria_id').val(response[0].categoria_id);
 				$('#presentacion_id').val(response[0].presentacion_id);
 				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
 				$('#preciocompra').val(response[0].precio_compra);
