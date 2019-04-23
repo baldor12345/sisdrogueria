@@ -25,25 +25,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
-class VentasController extends Controller
+class ProductoVendidoController extends Controller
 {
 
-    protected $folderview      = 'app.ventas';
-    protected $tituloAdmin     = 'Ventas';
-    protected $tituloRegistrar = 'Registrar Venta';
-    protected $tituloModificar = 'Modificar Vneta';
-    protected $tituloEliminar  = 'Eliminar venta';
+    protected $folderview      = 'app.prodmasvendidos';
+    protected $tituloAdmin     = 'Productos mas vendidos';
+  
     // protected $tituloSerieVenta  = 'Serie venta';
-    protected $rutas           = array('create' => 'ventas.create', 
-            'edit'     => 'ventas.edit', 
-            'delete'   => 'ventas.eliminar',
+    protected $rutas           = array(
             'search'   => 'ventas.buscar',
             'index'    => 'ventas.index',
-            'listclientes'    => 'ventas.listclientes',
-            'listproductos'    => 'ventas.listproductos',
-            'getProducto'    => 'ventas.getProducto',
-            'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
-            'create_new' => 'clientes.create',
+            // 'listclientes'    => 'ventas.listclientes',
+            // 'listproductos'    => 'ventas.listproductos',
+            // 'getProducto'    => 'ventas.getProducto',
+            // 'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
+            // 'create_new' => 'clientes.create',
         );
 
     public function __construct()
@@ -55,16 +51,18 @@ class VentasController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'Ventas';
+        $entidad          = 'ProdVendido';
         $fecha           = Libreria::getParam($request->input('fecha_inicio'));
+        $nombre           = Libreria::getParam($request->input('nombre'));
+        $categoria           = Libreria::getParam($request->input('categoria'));
         $resultado        = Venta::listar($fecha);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Cliente', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total S/.', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Cantidad', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
