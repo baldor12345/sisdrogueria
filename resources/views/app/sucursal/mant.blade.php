@@ -1,31 +1,30 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($sucursal, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-	<div class="form-group">
-		{!! Form::label('nombre', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('nombre', 'Nombre:', array('class' => '')) !!}
 			{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
-		</div>
 	</div>
-	<div class="form-group">
-		{!! Form::label('telefono', 'Teléfono:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('telefono', 'Teléfono:', array('class' => '')) !!}
 			{!! Form::text('telefono', null, array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese telefono')) !!}
-		</div>
 	</div>
-	<div class="form-group">
-		{!! Form::label('direccion', 'Dirección:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('direccion', 'Dirección:', array('class' => '')) !!}
 			{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese dirección')) !!}
-		</div>
 	</div>
-	
-		<div class="form-group col-12 col-md-12">
-				{!! Form::label('distrito_id', 'Distrito: ', array('class' => 'aval')) !!}
-				{!! Form::select('distrito_id', $cboDistritos, $sucursal !=null? $sucursal->distrito_id: 0 , array('class' => 'form-control input-sm', 'id' => 'distrito_id')) !!}
-		</div>
-
-
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('departamento', 'Departamento: ', array('class' => '')) !!}
+		{!! Form::select('departamento', $cboDepartamentos, $sucursal !=null? $sucursal->departamento->nombre: 0 , array('class' => 'form-control input-sm', 'id' => 'departamento')) !!}
+	</div>
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('provincia', 'Provincia: ', array('class' => '')) !!}
+		{!! Form::select('provincia', $cboProvincias, $sucursal !=null? $sucursal->provincia->nombre: 0 , array('class' => 'form-control input-sm', 'id' => 'provincia')) !!}
+	</div>
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('distrito', 'Distrito: ', array('class' => '')) !!}
+		{!! Form::select('distrito', $cboDistritos, $sucursal !=null? $sucursal->distrito_id: 0 , array('class' => 'form-control input-sm', 'id' => 'distrito')) !!}
+	</div>
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
@@ -37,5 +36,33 @@
 $(document).ready(function() {
 	configurarAnchoModal('450');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+
+	$('#departamento').change(function(){
+		$.get("provincia/"+$(this).val()+"",function(response, facultad){//
+			$('#provincia').empty();
+			var cantidad = response[0];
+			var listProvincias = response[1];
+			var cboProvincias = '<option value="0">Seleccione</option>';
+			for(var i=0; i<cantidad; i++){
+				cboProvincias +='<option value="'+listProvincias[i].id+'">'+listProvincias[i].nombre+'</option>'
+			}
+			$('#provincia').append(cboProvincias);
+		});
+	});
+
+	$('#provincia').change(function(){
+		$.get("distrito/"+$(this).val()+"",function(response, facultad){//
+			$('#distrito').empty();
+			var cantidad = response[0];
+			var listDistritos = response[1];
+			var cboDistritos = '<option value="0">Seleccione</option>';
+			for(var i=0; i<cantidad; i++){
+				cboDistritos +='<option value="'+listDistritos[i].id+'">'+listDistritos[i].nombre+'</option>'
+			}
+			$('#distrito').append(cboDistritos);
+		});
+	});
+
+
 }); 
 </script>

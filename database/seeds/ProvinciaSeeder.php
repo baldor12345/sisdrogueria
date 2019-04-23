@@ -14,7 +14,7 @@ class ProvinciaSeeder extends Seeder
         $now = new DateTime;
         DB::table('provincia')->insert(array(
             'id'=> 1,
-            'nombre' =>'Lambayeque',
+            'nombre' =>'LAMBAYEQUE',
             'departamento_id' => 1,
             'created_at'     => $now,
             'updated_at'     => $now

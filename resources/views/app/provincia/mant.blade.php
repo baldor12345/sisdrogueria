@@ -3,15 +3,13 @@
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 
 	<div class="form-group col-12 col-md-12">
-			{!! Form::label('departamento_id', 'Deaprtamento: ', array('class' => 'aval')) !!}
+			{!! Form::label('departamento_id', 'Departamento: ', array('class' => 'aval')) !!}
 			{!! Form::select('departamento_id', $cboDepartamentos, $provincia != null?$provincia->departamento_id: 0, array('class' => 'form-control input-sm', 'id' => 'departamento_id')) !!}
 	</div>
 
 	<div class="form-group">
 		{!! Form::label('nombre', 'Nombre:', array('class' => 'col-lg-3 col-md-3 col-sm-3 control-label')) !!}
-		<div class="col-lg-9 col-md-9 col-sm-9">
-			{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
-		</div>
+		{!! Form::text('nombre', null, array('class' => 'form-control input-xs', 'id' => 'nombre', 'placeholder' => 'Ingrese nombre')) !!}
 	</div>
 	<div class="form-group">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">

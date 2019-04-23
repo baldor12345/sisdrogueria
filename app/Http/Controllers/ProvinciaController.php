@@ -24,6 +24,7 @@ class ProvinciaController extends Controller
             'delete'   => 'provincia.eliminar',
             'search'   => 'provincia.buscar',
             'index'    => 'provincia.index',
+            'getProvinciasDep'    => 'provincia.getProvinciasDep',
         );
 
     public function __construct()
@@ -249,10 +250,19 @@ class ProvinciaController extends Controller
         }
     }
 
-    public function getProvincias(Request $request, $id){
+    // public function getProvincias(Request $request, $id){
+    //     if($request->ajax()){
+    //         $provincias = Provincia::provincias($id);
+    //         return response()->json($provincias);
+    //     }
+    // }
+    public function getProvinciasDep(Request $request, $departamento_id){
         if($request->ajax()){
-            $provincias = Provincia::provincias($id);
-            return response()->json($provincias);
+            
+            $provincias = Provincia::where('departamento_id','=',$departamento_id)->get();
+            $cantidad = count($provincias);
+            $res = array($cantidad, $provincias);
+            return response()->json($res);
         }
     }
 

@@ -40,13 +40,13 @@ class Provincia extends Model
             ->orderBy('nombre', 'ASC');
     }
 
-    public function listarDistritosProvincia($departamento_id){
-        return $query->where(function($subquery) use($departamento_id)
-        {
-            if (!is_null($provincia_id)) {
-                $subquery->where('departamento_id', '=', $departamento_id)->where('deleted_at','=',null);
-            }
-        })
-        ->orderBy('nombre', 'ASC');
-    }
+    // public static function listarProvincia($departamento_id){
+    //     return $query->where(function($subquery) use($departamento_id)
+    //     {
+    //         if (!is_null($departamento_id)) {
+    //             $subquery->where('departamento_id', '=', $departamento_id)->where('deleted_at','=',null);
+    //         }
+    //     })
+    //     ->orderBy('nombre', 'ASC')->get();
+    // }
 }

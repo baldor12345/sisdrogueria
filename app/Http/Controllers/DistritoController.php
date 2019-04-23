@@ -27,6 +27,7 @@ class DistritoController extends Controller
             'delete'   => 'distrito.eliminar',
             'search'   => 'distrito.buscar',
             'index'    => 'distrito.index',
+            'getDistritosProvincia'    => 'distrito.getDistritosProvincia',
         );
 
     public function __construct()
@@ -226,5 +227,14 @@ class DistritoController extends Controller
         $formData = array('route' => array('distrito.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
+    }
+
+    public function getDistritosProvincia(Request $request, $provincia_id){
+        if($request->ajax()){
+            $distritos = Distrito::where('provincia_id','=',$provincia_id)->get();
+            $cantidad = count($distritos);
+            $res = array($cantidad, $distritos);
+            return response()->json($res);
+        }
     }
 }

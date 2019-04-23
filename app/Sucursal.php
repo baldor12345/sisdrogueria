@@ -22,6 +22,12 @@ class Sucursal extends Model
     public function distrito(){
         return $this->belongsTo('App\Distrito','distrito_id');
     } 
+    public function provincia(){
+        return $this->belongsTo('App\Provincia','provincia_id');
+    } 
+    public function departamento(){
+        return $this->belongsTo('App\Departamento','departamento_id');
+    } 
 
     /**
      * Método para listar

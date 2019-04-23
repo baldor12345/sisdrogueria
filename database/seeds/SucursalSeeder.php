@@ -20,6 +20,8 @@ class SucursalSeeder extends Seeder
                 'telefono' =>'930532414',
                 'direccion' =>'rivadeneyra',
                 'distrito_id' =>1,
+                'provincia_id' =>1,
+                'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now
             ],
@@ -29,6 +31,8 @@ class SucursalSeeder extends Seeder
                 'telefono' =>'930531212',
                 'direccion' =>'juan fanning',
                 'distrito_id' =>1,
+                'provincia_id' =>1,
+                'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now
             ]

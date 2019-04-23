@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Sucursal;
 use App\Distrito;
+use App\Departamento;
+use App\Provincia;
 
 use App\Movimiento;
 use App\Librerias\Libreria;
@@ -48,6 +50,8 @@ class SucursalController extends Controller
         $cabecera[]       = array('valor' => 'Nombre', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Distrito', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Provincia', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Departamento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
@@ -97,8 +101,10 @@ class SucursalController extends Controller
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar'; 
         $user = Auth::user();
-        $cboDistritos = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
-        return view($this->folderview.'.mant')->with(compact('sucursal','formData', 'entidad', 'boton', 'listar','cboDistritos'));
+        $cboDepartamentos = [''=>'Seleccione'] + Departamento::pluck('nombre', 'id')->all();
+        $cboProvincias = [''=>'Seleccione'];
+        $cboDistritos = [''=>'Seleccione'];//+ Distrito::pluck('nombre', 'id')->all();
+        return view($this->folderview.'.mant')->with(compact('sucursal','formData', 'entidad', 'boton', 'listar','cboDistritos','cboDepartamentos','cboProvincias'));
     }
 
     public function store(Request $request)
@@ -106,7 +112,10 @@ class SucursalController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array('nombre' => 'required|max:50',
                             'direccion' => 'required|max:100',
-                            'telefono' => 'required|max:15');
+                            'telefono' => 'required|max:15',
+                            'departamento' => 'required',
+                            'distrito' => 'required',
+                            'provincia' => 'required|max:15');
         $mensajes   = array();
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -118,8 +127,9 @@ class SucursalController extends Controller
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
             $sucursal->telefono = $request->input('telefono');
-            $sucursal->distrito_id = $request->input('distrito_id');
-           
+            $sucursal->distrito_id = $request->input('distrito');
+            $sucursal->provincia_id = $request->input('provincia');
+            $sucursal->departamento_id = $request->input('departamento');
             $sucursal->save();
 
            

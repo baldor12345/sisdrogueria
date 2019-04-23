@@ -14,7 +14,7 @@ class DepartamentoSeeder extends Seeder
         $now = new DateTime;
         DB::table('departamento')->insert(array(
             'id'=> 1,
-            'nombre' =>'Lambayeque',
+            'nombre' =>'LAMBAYEQUE',
             'created_at'     => $now,
             'updated_at'     => $now
         ));

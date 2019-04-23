@@ -40,14 +40,14 @@ class Distrito extends Model
             ->orderBy('nombre', 'ASC');
     }
 
-    public function listarDistritosProvincia($departamento_id){
-        return $query->where(function($subquery) use($provincia_id)
-        {
-            if (!is_null($provincia_id)) {
-                $subquery->where('provincia_id', '=', $provincia_id)->where('deleted_at','=',null);
-            }
-        })->orderBy('nombre', 'ASC');
-    }
+    // public static function listarDistritos($provincia_id){
+    //     return $query->where(function($subquery) use($provincia_id)
+    //     {
+    //         if (!is_null($provincia_id)) {
+    //             $subquery->where('provincia_id', '=', $provincia_id)->where('deleted_at','=',null);
+    //         }
+    //     })->orderBy('nombre', 'ASC');
+    // }
 
    
 

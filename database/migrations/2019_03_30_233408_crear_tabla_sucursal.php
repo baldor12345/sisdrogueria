@@ -19,7 +19,11 @@ class CrearTablaSucursal extends Migration
             $table->string('telefono',15);
             $table->string('direccion',100);
             $table->integer('distrito_id')->unsigned();
+            $table->integer('provincia_id')->unsigned();
+            $table->integer('departamento_id')->unsigned();
             $table->foreign('distrito_id')->references('id')->on('distrito')->onUpdate('restrict')->onDelete('restrict');
+            $table->foreign('provincia_id')->references('id')->on('provincia')->onUpdate('restrict')->onDelete('restrict');
+            $table->foreign('departamento_id')->references('id')->on('departamento')->onUpdate('restrict')->onDelete('restrict');
             $table->timestamps();
             $table->softDeletes();
         });
