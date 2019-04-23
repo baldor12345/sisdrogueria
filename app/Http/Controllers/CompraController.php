@@ -121,8 +121,6 @@ class CompraController extends Controller
         $cboProducto       = array(0=>'Seleccione Producto...');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
-        $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
-        $cboCategoria = ['0'=>'Seleccione'] + Categoria::pluck('name', 'id')->all();
         $cboUnidad = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
@@ -159,7 +157,6 @@ class CompraController extends Controller
             $compra->serie_documento = $request->input('serie_documento');
             $compra->tipo_pago = $request->input('credito');
             $compra->numero_dias = $request->input('numero_dias');
-            $compra->ruc = $request->input('ruc');
             $compra->proveedor_id = $request->input('proveedor_id');
             $compra->estado = $request->input('estado');
             $compra->fecha = $request->input('fecha');
@@ -169,7 +166,6 @@ class CompraController extends Controller
             $user           = Auth::user();
             $compra->user_id = $user->id;
             $compra->sucursal_id = $user->sucursal_id;
-            //$compra->caja_id = $user->caja_id;
             $compra->save();
 
             $cantidad = $request->input('cantidad');
@@ -185,8 +181,6 @@ class CompraController extends Controller
                     $detalle_compra->cantidad = $request->input("cant".$i);
                     $detalle_compra->lote = $request->input("lot".$i);
                     $detalle_compra->producto_presentacion_id = $request->input("id_producto".$i);
-                    //$detalle_compra->presentacion_id = $request->input("id_presentacion".$i);
-                    $detalle_compra->marca_id = $request->input("id_laboratorio".$i);
                     $detalle_compra->compra_id = $compra_last->id;
                     $detalle_compra->save();
                 }

@@ -20,7 +20,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ Date::parse( $value->compra_fecha )->format('d-m-Y') }}</td>
 			<td>{{ $value->proveedor_nombre }}</td>
-			<td>{{ $value->serie_documento.'-'.$value->numero_documento }}</td>
+			<td>{{ $value->numero_documento }}</td>
 			@if($value->tipo_pago == 'CO')
 			<td>Contado</td>
 			@else

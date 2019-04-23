@@ -15,7 +15,6 @@ class CrearTablaDetalleCompra extends Migration
     {
         Schema::create('detalle_compra', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('fecha')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();
             $table->string('ubicacion',100)->nullable();
             $table->decimal('precio_compra',10,2)->nullable();//precio por la unidad de medida
@@ -25,11 +24,9 @@ class CrearTablaDetalleCompra extends Migration
             $table->string('lote',100)->nullable();
             $table->integer('producto_presentacion_id')->unsigned()->nullable();
             $table->integer('compra_id')->unsigned()->nullable();
-            //$table->integer('presentacion_id')->unsigned()->nullable();
             $table->integer('marca_id')->unsigned()->nullable();
             $table->foreign('producto_presentacion_id')->references('id')->on('producto_presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('compra_id')->references('id')->on('compra')->onDelete('restrict')->onUpdate('restrict');
-            //$table->foreign('presentacion_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();

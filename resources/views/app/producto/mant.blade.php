@@ -110,6 +110,8 @@
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
+						@if($listdet_=='')
+						@else
 						<tbody>
 							@foreach($listdet_ as $key => $value)
 								<tr class='datos-presentacion' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
@@ -121,6 +123,7 @@
 								</tr>
 							@endforeach
 						</tbody>
+						@endif
 					</table>
 				</div>
 			</div>
