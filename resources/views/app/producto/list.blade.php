@@ -20,7 +20,6 @@
 				<td>{{ $contador }}</td>
 				<td>{{ $value->codigo_barra }} </td>
 				<td>{{ $value->producto }} </td>
-				<td>{{ $value->precio_publico }}</td>
 				<td>{{ $value->laboratorio }}</td>
 				<td>{{ $value->categoria }}</td>
 				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar',array('onclick'=>'modal(\''.URL::route($ruta["edit"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_modificar.'\',this);', 'class'=>'btn btn-xs btn-warning')) !!}</td>

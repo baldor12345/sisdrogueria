@@ -78,12 +78,18 @@ class CajaController extends Controller
         $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
-        $caja_last = Caja::all()->last();
-
+        $user           = Auth::user();
+        $caja_last      = Caja::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
+        $caja_det_      = DetalleCaja::where('caja_id',$caja_last[0]->id)->where('deleted_at',null)->get();
+        
         $ingresos =0;
         $egresos =0;
-
-
+        foreach ($caja_det_ as $key => $value) {
+            if($value->concepto_id != 2){
+                $ingresos +=    $value->ingreso;
+                $egresos  +=    $value->egreso;
+            } 
+        }
 
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -98,7 +104,7 @@ class CajaController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar','titulo_cerrarCaja' ,'ruta','caja_last'));
+            return view($this->folderview.'.list')->with(compact('ingresos','egresos','lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar','titulo_cerrarCaja' ,'ruta','caja_last'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -119,7 +125,6 @@ class CajaController extends Controller
         $titulo_nuevomovimiento = $this->titulo_nuevomovimiento;
         $titulo_cierrecaja = $this->tituloCerrarCaja;
         $ruta             = $this->rutas;
-        $listCaja = Caja::listar();
 
        
         return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar','titulo_nuevomovimiento', 'ruta','titulo_cierrecaja'));
@@ -238,7 +243,7 @@ class CajaController extends Controller
         $num_caja       = Caja::where('estado','A')->where('user_id',$user->id)->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
         $count_caja      = (count($num_caja) !=0)?count($num_caja):0;
 
-        $fecha = Date::parse($num_caja[0]->fecha_horaapert)->format('Y-m-d');
+        $fecha = (count($num_caja) !=0)?Date::parse($num_caja[0]->fecha_horaapert)->format('Y-m-d'):date('Y-m-d');
 
         $formData       = array('caja.guardarnuevomovimiento');
         $ruta = $this->rutas;
@@ -264,7 +269,7 @@ class CajaController extends Controller
         $error = DB::transaction(function() use($request){
             $numero_operacion   = Libreria::codigo_operacion();
             $detalle_caja = new DetalleCaja();
-            $detalle_caja->fecha = $request->input('fecha');
+            $detalle_caja->fecha = $request->input('fecha').date(" H:i:s");
             $detalle_caja->numero_operacion = $numero_operacion;
             $detalle_caja->concepto_id = $request->input('concepto_id');
             $detalle_caja->cliente_id = $request->input('persona_id');
@@ -302,13 +307,27 @@ class CajaController extends Controller
         $caja_dat   = Caja::where('estado', '=' , 'A')->where('sucursal_id',$user->sucursal_id)->where('deleted_at',null)->get();
         $count_caja      = (count($caja_dat) !=0)?count($caja_dat):0;
 
-        $limit_day = Date::parse($caja_dat[0]->fecha_horaapert)->format('Y-m-d');
+        $caja_last      = Caja::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
+        $caja_det_      = DetalleCaja::where('caja_id',$caja_last[0]->id)->where('deleted_at',null)->get();
+        
+        $ingresos =0;
+        $egresos =0;
+        foreach ($caja_det_ as $key => $value) {
+            if($value->concepto_id != 2){
+                $ingresos +=    $value->ingreso;
+                $egresos  +=    $value->egreso;
+            } 
+        }
+
+        $saldo = $ingresos-$egresos;
+
+        $limit_day = (count($caja_dat)!=0)?Date::parse($caja_dat[0]->fecha_horaapert)->format('Y-m-d'):date('Y-m-d');
 
         $formData     = array('caja.guardarcierrecaja');
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $ruta = $this->rutas;
         $boton        = 'Registrar Cierre';
-        return view($this->folderview.'.cierrecaja')->with(compact('limit_day', 'fecha_cierre', 'hora_cierre', 'ruta', 'count_caja', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.cierrecaja')->with(compact('saldo', 'limit_day', 'fecha_cierre', 'hora_cierre', 'ruta', 'count_caja', 'cajero_dat', 'user', 'cboConcepto', 'persona_id' , 'caja_dat', 'caja', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     public function guardarcierrecaja(Request $request)

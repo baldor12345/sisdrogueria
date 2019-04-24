@@ -482,12 +482,12 @@ class Libreria
 		if($numero_transacciones > 0){
 			$digitos = strlen($numero_transacciones);
 			$ceros =  "CAJA";
-			for($i=0; $i< (5 - $digitos) ; $i ++){
+			for($i=0; $i< (4 - $digitos) ; $i ++){
 				$ceros = $ceros."0";
 			}
 			$codigo_generado = $ceros.$numero_transacciones;
 		}else {
-			$codigo_generado = "CAJA00001";
+			$codigo_generado = "CAJA0001";
 		}
 		return $codigo_generado;
 	}

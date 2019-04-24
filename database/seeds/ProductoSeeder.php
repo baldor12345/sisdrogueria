@@ -18,7 +18,7 @@ class ProductoSeeder extends Seeder
                 'codigo_barra' => 'AMOX9284392',
                 'descripcion' => 'AMOXICILINA(500mg tabletas-capsulas)',
                 'sustancia_activa' => 'AMOXICILINA',
-                'uso_terapeutico' => 'AMOXICILINA PARA DIARREA',
+                'uso_terapeutico' => 'AMOXICILINA PARA RESFRIO',
                 'tipo' => 1,
                 'proveedor_id' => 1,
                 'marca_id' => 1,

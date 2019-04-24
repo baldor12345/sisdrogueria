@@ -63,15 +63,15 @@ a.disabled {
 	<tbody>
 		<tr>
 			<th style="font-size: 13px">Ingresos :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format($ingresos,2) }}</th>
 		</tr>
 		<tr>
 			<th style="font-size: 13px">Egresos :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format($egresos,2) }}</th>
 		</tr>
 		<tr>
 			<th style="font-size: 13px">Saldo :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format(($ingresos-$egresos),2) }}</th>
 		</tr>
 	</tbody>
 </table>

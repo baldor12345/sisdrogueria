@@ -1,6 +1,7 @@
 
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($producto, $formData) !!}
+{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 <div class="row">
 	<div class="col-md-6">
 		<fieldset >    	
@@ -93,7 +94,7 @@
 							<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
 							<td class=" input-sm"><b>Unidad</b></td>
 							<td><input class="form-control input-sm input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
-							<td class=" input-sm"><b>P.Venta U.</b></td>
+							<td class=" input-sm"><b>P.Venta</b></td>
 							<td><input class="form-control input-sm" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
 						</tr>
@@ -325,15 +326,15 @@ function submitForm_control(idformulario) {
 	var parametros = $(idformulario).serialize();
 	parametros += datos;
 	var accion     = $(idformulario).attr('action').toLowerCase();
-	console.log('Accion: form: '+accion+'   param: '+parametros);
+	//console.log('Accion: form: '+accion+'   param: '+parametros);
 	var metodo     = $(idformulario).attr('method').toLowerCase();
-	console.log('Metodo: '+metodo);
+	//console.log('Metodo: '+metodo);
 	var respuesta  = $.ajax({
 		url : accion,
 		type: metodo,
 		data: parametros
 	});
-	console.log('Respuesta: '+respuesta);
+	//console.log('Respuesta: '+respuesta);
 	return respuesta;
 }
 function filterFloat(evt,input){
