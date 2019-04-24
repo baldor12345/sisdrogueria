@@ -117,6 +117,7 @@ class VentasController extends Controller
         $formData  = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton  = 'Registrar'; 
         $user = Auth::user();
+        $serie = $user->sucursal->serie;
         $ruta = $this->rutas;
         $fecha_defecto = date('Y-m-d');
         $igv = Propiedades::all()->last()->igv;
@@ -126,7 +127,7 @@ class VentasController extends Controller
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('venta','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto'));
+        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto'));
     }
 
     public function store(Request $request)

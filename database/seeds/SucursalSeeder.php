@@ -21,6 +21,7 @@ class SucursalSeeder extends Seeder
                 'direccion' =>'rivadeneyra',
                 'distrito_id' =>1,
                 'provincia_id' =>1,
+                'serie' =>'0001',
                 'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now
@@ -32,6 +33,7 @@ class SucursalSeeder extends Seeder
                 'direccion' =>'juan fanning',
                 'distrito_id' =>1,
                 'provincia_id' =>1,
+                'serie' =>'0002',
                 'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now
