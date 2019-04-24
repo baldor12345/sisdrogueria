@@ -236,7 +236,7 @@ class EntradaSalidaController extends Controller
                         $entrada_salida_detalle->cantidad = $request->input("cant".$i);
                         $entrada_salida_detalle->lote = $request->input("lot".$i);
                         $entrada_salida_detalle->entrada_salida_id = $entrada_salida_last[0]->id;
-                        $entrada_salida_detalle->producto_presentacion_id = $request->input("id_producto".$i);
+                        $entrada_salida_detalle->producto_presentacion_id = $request->input("id_entrada".$i);
                         $entrada_salida_detalle->save();
 
                         $entrada = Entrada::find($request->input("id_entrada".$i));

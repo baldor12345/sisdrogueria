@@ -69,7 +69,6 @@ class ProductoController extends Controller
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Codigo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Precio venta', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');

@@ -16,7 +16,7 @@ class CajaSeeder extends Seeder
         $user           = DB::table('user')->where('login','admin')->get();
 		DB::table('caja')->insert(array(
             array(
-                'num_caja' => 'CAJA00001',
+                'num_caja' => 'CAJA0001',
                 'fecha_horaapert' => $now,
                 'monto_iniciado' => 0.0,
                 'estado' => 'A',

@@ -44,7 +44,7 @@
 			{!! Form::label('monto_cierre', 'Monto Cie.:') !!}<div class="" style="display: inline-block;color: red;">*</div>
 			</div>
 			<div class="col-lg-8 col-md-8 col-sm-8">
-				{!! Form::text('monto_cierre', null, array('class' => 'form-control input-xs', 'id' => 'monto_cierre', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)')) !!}
+				{!! Form::text('monto_cierre', number_format($saldo,2), array('class' => 'form-control input-xs', 'id' => 'monto_cierre', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)', 'readonly')) !!}
 			</div>
 		</div>
 		

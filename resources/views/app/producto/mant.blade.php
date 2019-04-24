@@ -1,6 +1,7 @@
 
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($producto, $formData) !!}
+{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 <div class="row">
 	<div class="col-md-6">
 		<fieldset >    	
@@ -93,7 +94,7 @@
 							<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
 							<td class=" input-sm"><b>Unidad</b></td>
 							<td><input class="form-control input-sm input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
-							<td class=" input-sm"><b>P.Venta U.</b></td>
+							<td class=" input-sm"><b>P.Venta</b></td>
 							<td><input class="form-control input-sm" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
 						</tr>
@@ -106,7 +107,7 @@
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Unidad</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta U.</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
@@ -283,14 +284,15 @@ function guardar_producto(entidad, idboton) {
 	if ($(idformulario + ' :input[id = "listar"]').length) {
 		var listar = $(idformulario + ' :input[id = "listar"]').val()
 	};
+	$(idboton).button('loading');
 	data.done(function(msg) {
 		respuesta = msg;
-		$('#btnGuardarProducto').button('loading');
+		
 	}).fail(function(xhr, textStatus, errorThrown) {
 		respuesta = 'ERROR';
-		$('#btnGuardarProducto').removeClass('disabled');
-		$('#btnGuardarProducto').removeAttr('disabled');
-		$('#btnGuardarProducto').html('<i class="fa fa-check fa-lg"></i>Guardar');
+		$(idboton).removeClass('disabled');
+		$(idboton).removeAttr('disabled');
+		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
@@ -303,9 +305,9 @@ function guardar_producto(entidad, idboton) {
 				}        
 			} else {
 				mostrarErrores(respuesta, idformulario, entidad);
-				$('#btnGuardarProducto').removeClass('disabled');
-				$('#btnGuardarProducto').removeAttr('disabled');
-				$('#btnGuardarProducto').html('<i class="fa fa-check fa-lg"></i>Guardar');
+				$(idboton).removeClass('disabled');
+				$(idboton).removeAttr('disabled');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 			}
 		}
 	});
@@ -325,15 +327,15 @@ function submitForm_control(idformulario) {
 	var parametros = $(idformulario).serialize();
 	parametros += datos;
 	var accion     = $(idformulario).attr('action').toLowerCase();
-	console.log('Accion: form: '+accion+'   param: '+parametros);
+	//console.log('Accion: form: '+accion+'   param: '+parametros);
 	var metodo     = $(idformulario).attr('method').toLowerCase();
-	console.log('Metodo: '+metodo);
+	//console.log('Metodo: '+metodo);
 	var respuesta  = $.ajax({
 		url : accion,
 		type: metodo,
 		data: parametros
 	});
-	console.log('Respuesta: '+respuesta);
+	//console.log('Respuesta: '+respuesta);
 	return respuesta;
 }
 function filterFloat(evt,input){

@@ -32,10 +32,10 @@ a.disabled {
 			<td style="font-size: 13px" align="center">{{  $value->concepto_nombre   }}</td>
 			<td style="font-size: 13px; color:green; font-weight: bold;" align="center">{{  number_format($value->ingreso,2) }}</td>
 			<td style="font-size: 13px; color:red; font-weight: bold;" align="center">{{  number_format($value->egreso,2)   }}</td>
-			@if($value->forma_pago != 'C')
+			@if($value->forma_pago == 'CO')
 			<td style="font-size: 13px">Contado</td>
 			@else
-			<td style="font-size: 13px">Debito</td>	
+			<td style="font-size: 13px">Credito</td>	
 			@endif
 			@if($value->cliente_id != '')
 			<td style="font-size: 13px">{{  $value->cliente_apellidos.'  '.$value->cliente_nombres   }}</td>
@@ -63,15 +63,15 @@ a.disabled {
 	<tbody>
 		<tr>
 			<th style="font-size: 13px">Ingresos :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format($ingresos,2) }}</th>
 		</tr>
 		<tr>
 			<th style="font-size: 13px">Egresos :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format($egresos,2) }}</th>
 		</tr>
 		<tr>
 			<th style="font-size: 13px">Saldo :</th>
-			<th class="text-right" style="font-size: 13px">0.00</th>
+			<th class="text-right" style="font-size: 13px">{{ number_format(($ingresos-$egresos),2) }}</th>
 		</tr>
 	</tbody>
 </table>

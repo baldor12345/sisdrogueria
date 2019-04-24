@@ -395,9 +395,9 @@ function guardar_compra(entidad, idboton) {
 	if ($(idformulario + ' :input[id = "listar"]').length) {
 		var listar = $(idformulario + ' :input[id = "listar"]').val()
 	};
+	$('#btnGuardarCompra').button('loading');
 	data.done(function(msg) {
 		respuesta = msg;
-		$('#btnGuardarCompra').button('loading');
 	}).fail(function(xhr, textStatus, errorThrown) {
 		respuesta = 'ERROR';
 		$('#btnGuardarCompra').removeClass('disabled');

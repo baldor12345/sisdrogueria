@@ -44,6 +44,12 @@ class ConceptoSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now
             ),
+            array(
+                'tipo' => 'E',
+                'titulo' => 'Compra',
+                'created_at' => $now,
+                'updated_at' => $now
+            ),
         ));
     }
 }

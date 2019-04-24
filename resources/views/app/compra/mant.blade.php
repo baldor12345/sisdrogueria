@@ -353,14 +353,14 @@ function guardar_compra(entidad, idboton) {
 	if ($(idformulario + ' :input[id = "listar"]').length) {
 		var listar = $(idformulario + ' :input[id = "listar"]').val()
 	};
+	$(idboton).button('loading');
 	data.done(function(msg) {
 		respuesta = msg;
-		$(idboton).button('loading');
 	}).fail(function(xhr, textStatus, errorThrown) {
 		respuesta = 'ERROR';
 		$(idboton).removeClass('disabled');
 		$(idboton).removeAttr('disabled');
-		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+		$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
@@ -375,7 +375,7 @@ function guardar_compra(entidad, idboton) {
 				mostrarErrores(respuesta, idformulario, entidad);
 				$(idboton).removeClass('disabled');
 				$(idboton).removeAttr('disabled');
-				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
 			}
 		}
 	});

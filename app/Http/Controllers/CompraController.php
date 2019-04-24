@@ -15,6 +15,8 @@ use App\Marca;
 use App\Proveedor;
 use App\Propiedades;
 use App\Entrada;
+use App\Caja;
+use App\DetalleCaja;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -202,6 +204,19 @@ class CompraController extends Controller
                     $entrada->save();
                 }
             }
+            $user = Auth::user();
+            $caja = Caja::where('estado','=','A')->where('sucursal_id',$user->sucursal_id)->where('deleted_at','=',null)->get()[0];
+
+            $detalle_caja = new DetalleCaja();
+            $detalle_caja->caja_id = $caja->id;
+            $detalle_caja->forma_pago = $request->input('credito');
+            $detalle_caja->concepto_id = 6;
+            $detalle_caja->estado = 'P';
+            $detalle_caja->fecha = $request->input('fecha').date(' H:i:s');
+            $detalle_caja->ingreso = 0;
+            $detalle_caja->egreso = $request->input('total');
+            $detalle_caja->numero_operacion = $request->input('numero_documento');
+            $detalle_caja->save();
         });
         return is_null($error) ? "OK" : $error;
     }
