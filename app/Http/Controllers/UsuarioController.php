@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\User;
 use App\Usertype;
 use App\Sucursal;
+use App\Persona;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class UsuarioController extends Controller
             'delete' => 'usuario.eliminar',
             'search' => 'usuario.buscar',
             'index'  => 'usuario.index',
+            'listpersonas'  => 'usuario.listpersonas',
         );
 
     /**
@@ -102,11 +104,13 @@ class UsuarioController extends Controller
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Usuario';
         $usuario        = null;
+        $ruta             = $this->rutas;
         $cboTipousuario = array('' => 'Seleccione') + Usertype::pluck('name', 'id')->all();
+        $cboPersona = array('' => 'Seleccione');
         $formData       = array('usuario.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('usuario', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario'));
+        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario','cboPersona'));
     }
 
     /**
@@ -122,7 +126,7 @@ class UsuarioController extends Controller
             'login'       => 'required|max:20|unique:user,login,NULL,id,deleted_at,NULL',
             'password'    => 'required|max:20',
             'usertype_id' => 'required|integer|exists:usertype,id,deleted_at,NULL',
-            'person_id'   => 'required|integer|exists:persona,id,deleted_at,NULL',
+            'persona'   => 'required',
             );
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
@@ -133,10 +137,12 @@ class UsuarioController extends Controller
             $usuario->login        = $request->input('login');
             $usuario->password     = Hash::make($request->input('password'));
             $usuario->usertype_id  = $request->input('usertype_id');
-            $usuario->persona_id    = $request->input('person_id');
+            $usuario->person_id    = $request->input('persona');
+       
             $user = Auth::user();
-            $empresa_id = $user->empresa_id;
-            $usuario->empresa_id    = $empresa_id;
+            $usuario->sucursal_id    = $user->sucursal->id;
+            // $empresa_id = $user->empresa_id;
+            // $usuario->empresa_id = $empresa_id;
             $usuario->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -165,6 +171,7 @@ class UsuarioController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+        $ruta             = $this->rutas;
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $cboTipousuario = array('' => 'Seleccione') + Usertype::pluck('name', 'id')->all();
         $usuario        = User::find($id);
@@ -172,7 +179,7 @@ class UsuarioController extends Controller
         $formData       = array('usuario.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('usuario', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario'));
+        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario'));
     }
 
     /**
@@ -270,5 +277,19 @@ class UsuarioController extends Controller
             $usuario->save();
         });
         return is_null($error) ? "OK" : $error;
+    }
+
+    
+    public function listpersonas(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Persona::listarpersonas($term);
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->nombres." ".$tag->apellidos];
+        }
+        return \Response::json($formatted_tags);
     }
 }

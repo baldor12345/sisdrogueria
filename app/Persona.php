@@ -32,6 +32,18 @@ class Persona extends Model
             ->orderBy('nombres', 'ASC');
         			
     }
+    
+    public function scopelistarpersonas($query,$nombre_dni_ruc){
+        return $query->where(function($subquery) use($nombre_dni_ruc)
+        {
+            if (!is_null($nombre_dni_ruc)) {
+                $subquery->where("nombres",'LIKE', '%'.$nombre_dni_ruc.'%')->orwhere('apellidos','LIKE', '%'.$nombre_dni_ruc.'%')->orwhere('dni','LIKE', '%'.$nombre_dni_ruc.'%')->orwhere('ruc','LIKE', '%'.$nombre_dni_ruc.'%');
+            }
+        })
+        ->where('deleted_at','=',null)
+        ->limit(5)
+        ->orderBy('nombres', 'ASC')->get();
+    }
 
 }
 

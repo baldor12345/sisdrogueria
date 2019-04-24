@@ -37,14 +37,14 @@ class User extends Authenticatable
     public function scopelistar($query, $login)
     {
         $user = Auth::user();
-        $empresa_id = $user->empresa_id;
+        // $empresa_id = $user->empresa_id;
         return $query->where(function($subquery) use($login)
                     {
                         if (!is_null($login)) {
                             $subquery->where('login', 'LIKE', '%'.$login.'%');
                         }
                     })
-                    ->where('empresa_id', $empresa_id)
+                    // ->where('empresa_id', $empresa_id)
                     ->orderBy('login', 'ASC');
     }
 
@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
 
     public function persona(){
-        return $this->belongsTo('App\Persona', 'persona_id');
+        return $this->belongsTo('App\Persona', 'person_id');
     }
 
     public function sendPasswordResetNotification($token)

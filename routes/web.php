@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('usuario/escogerSucursal','UsuarioController@escogerSucursal')->name('usuario.escogerSucursal');
     Route::post('usuario/guardarSucursal','UsuarioController@guardarSucursal')->name('usuario.guardarSucursal');
     Route::resource('usuario', 'UsuarioController', array('except' => array('show')));
+    Route::get('usuario/listpersonas',  'UsuarioController@listpersonas')->name('usuario.listpersonas');
 
     //PROVEEDOR
     Route::post('proveedor/buscar','ProveedorController@buscar')->name('proveedor.buscar');
@@ -208,7 +209,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('trabajador/buscar','TrabajadorController@buscar')->name('trabajador.buscar');
     Route::get('trabajador/eliminar/{id}/{listarluego}','TrabajadorController@eliminar')->name('trabajador.eliminar');
     Route::resource('trabajador', 'TrabajadorController', array('except' => array('show')));
-    //Trabajador
+    
+    //Cliente
     Route::post('clientes/buscar','ClienteController@buscar')->name('clientes.buscar');
     Route::get('clientes/eliminar/{id}/{listarluego}','ClienteController@eliminar')->name('clientes.eliminar');
     Route::resource('clientes', 'ClienteController', array('except' => array('show')));

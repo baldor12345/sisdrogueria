@@ -1,7 +1,7 @@
 @php 
 $nombrepersona = NULL;
 if (!is_null($usuario)) {
-	$persona = $usuario->persona->personamaestro;
+	$persona = $usuario->persona;
 	$nombrepersona = $persona->apellidos.', '.$persona->nombres;
 }
 @endphp
@@ -17,7 +17,14 @@ if (!is_null($usuario)) {
 	</div>
 </div>
 <div class="form-group">
-<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
+		<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
+				{!! Form::label('persona', 'Persona:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+					</div>
+	<div class="col-lg-8 col-md-8 col-sm-8">
+		{!! Form::select('persona', $cboPersona, null, array('class' => 'form-control input-md', 'id' => 'persona')) !!}
+	</div>
+</div>
+{{-- <div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
 	{!! Form::label('nombrepersona', 'Persona:') !!}<div class="" style="display: inline-block;color: red;">*</div>
 		</div>
 	{!! Form::hidden('person_id', null, array('id' => 'person_id')) !!}
@@ -28,7 +35,7 @@ if (!is_null($usuario)) {
 		{!! Form::text('nombrepersona', $nombrepersona, array('class' => 'form-control input-xs', 'id' => 'nombrepersona', 'placeholder' => 'Seleccione persona')) !!}
 		@endif
 	</div>
-</div>
+</div> --}}
 <div class="form-group">
 <div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
 	{!! Form::label('login', 'Login:') !!}<div class="" style="display: inline-block;color: red;">*</div>
@@ -60,32 +67,54 @@ if (!is_null($usuario)) {
 		configurarAnchoModal('600');
 
 
-		var empleados = new Bloodhound({
-			datumTokenizer: function (d) {
-				return Bloodhound.tokenizers.whitespace(d.value);
-			},
-			limit: 5,
-			queryTokenizer: Bloodhound.tokenizers.whitespace,
-			remote: {
-				url: 'caja/empleadoautocompletar/%QUERY',
-				filter: function (empleados) {
-					return $.map(empleados, function (empleado) {
-						return {
-							value: empleado.value,
-							id: empleado.id,
-						};
-					});
+		// var empleados = new Bloodhound({
+		// 	datumTokenizer: function (d) {
+		// 		return Bloodhound.tokenizers.whitespace(d.value);
+		// 	},
+		// 	limit: 5,
+		// 	queryTokenizer: Bloodhound.tokenizers.whitespace,
+		// 	remote: {
+		// 		url: 'caja/empleadoautocompletar/%QUERY',
+		// 		filter: function (empleados) {
+		// 			return $.map(empleados, function (empleado) {
+		// 				return {
+		// 					value: empleado.value,
+		// 					id: empleado.id,
+		// 				};
+		// 			});
+		// 		}
+		// 	}
+		// });
+		$('#persona').select2({
+			dropdownParent: $("#modal"+(contadorModal-1)),
+			minimumInputLenght: 2,
+			ajax: {
+				
+				url: "{{ URL::route($ruta['listpersonas'], array()) }}",
+				dataType: 'json',
+				delay: 250,
+				data: function(params){
+					return{
+						q: $.trim(params.term)
+					};
+				},
+				processResults: function(data){
+					return{
+						results: data
+					};
 				}
+				
 			}
 		});
-		empleados.initialize();
+	
+		// empleados.initialize();
 
-		$('#nombrepersona').typeahead(null,{
-			displayKey: 'value',
-			source: empleados.ttAdapter()
-		}).on('typeahead:selected', function (object, datum) {
-			$('#person_id').val(datum.id);
-		});
+		// $('#nombrepersona').typeahead(null,{
+		// 	displayKey: 'value',
+		// 	source: empleados.ttAdapter()
+		// }).on('typeahead:selected', function (object, datum) {
+		// 	$('#person_id').val(datum.id);
+		// });
 
 		
 	}); 

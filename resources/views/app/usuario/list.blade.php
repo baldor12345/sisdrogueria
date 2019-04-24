@@ -20,7 +20,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ $value->login }}</td>
 			<td>{{ $value->usertype->name }}</td>
-			<td>{{ $value->persona->personamaestro->apellidos.' '.$value->persona->personamaestro->nombres}}</td>
+			<td>{{ $value->persona->apellidos.' '.$value->persona->nombres}}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>

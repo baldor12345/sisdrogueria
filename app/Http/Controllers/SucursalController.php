@@ -112,6 +112,7 @@ class SucursalController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas     = array('nombre' => 'required|max:50',
                             'direccion' => 'required|max:100',
+                            'serie' => 'required|max:100',
                             'telefono' => 'required|max:15',
                             'departamento' => 'required',
                             'distrito' => 'required',
@@ -126,6 +127,7 @@ class SucursalController extends Controller
             $sucursal       = new Sucursal();
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
+            $sucursal->serie = strtoupper($request->input('serie'));
             $sucursal->telefono = $request->input('telefono');
             $sucursal->distrito_id = $request->input('distrito');
             $sucursal->provincia_id = $request->input('provincia');
@@ -197,6 +199,7 @@ class SucursalController extends Controller
             $sucursal       = Sucursal::find($id);
             $sucursal->nombre = strtoupper($request->input('nombre'));
             $sucursal->direccion = strtoupper($request->input('direccion'));
+            $sucursal->serie = strtoupper($request->input('serie'));
             $sucursal->telefono = $request->input('telefono');
             $sucursal->save();
         });

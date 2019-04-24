@@ -18,6 +18,7 @@ class CrearTablaSucursal extends Migration
             $table->string('nombre',100);
             $table->string('telefono',15);
             $table->string('direccion',100);
+            $table->string('serie',100)->nullable();
             $table->integer('distrito_id')->unsigned();
             $table->integer('provincia_id')->unsigned();
             $table->integer('departamento_id')->unsigned();

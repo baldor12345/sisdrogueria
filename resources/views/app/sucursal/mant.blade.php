@@ -14,6 +14,10 @@
 			{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese dirección')) !!}
 	</div>
 	<div class="form-group col-12 col-md-12">
+		{!! Form::label('serie', 'Serie:', array('class' => '')) !!}
+			{!! Form::text('serie', null, array('class' => 'form-control input-xs', 'id' => 'serie', 'placeholder' => 'Ingrese serie')) !!}
+	</div>
+	<div class="form-group col-12 col-md-12">
 		{!! Form::label('departamento', 'Departamento: ', array('class' => '')) !!}
 		{!! Form::select('departamento', $cboDepartamentos, $sucursal !=null? $sucursal->departamento->nombre: 0 , array('class' => 'form-control input-sm', 'id' => 'departamento')) !!}
 	</div>

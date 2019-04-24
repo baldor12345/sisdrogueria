@@ -18,6 +18,7 @@ class PersonSeeder extends Seeder
 		DB::table('person')->insert(array(
                
                 'nombres'       =>'Administrador',
+                'apellidos'       =>'admin',
 				'created_at'     => $now,
 				'updated_at'     => $now
             ));
