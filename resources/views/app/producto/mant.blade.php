@@ -107,7 +107,7 @@
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Unidad</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta U.</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
@@ -284,14 +284,15 @@ function guardar_producto(entidad, idboton) {
 	if ($(idformulario + ' :input[id = "listar"]').length) {
 		var listar = $(idformulario + ' :input[id = "listar"]').val()
 	};
+	$(idboton).button('loading');
 	data.done(function(msg) {
 		respuesta = msg;
-		$('#btnGuardarProducto').button('loading');
+		
 	}).fail(function(xhr, textStatus, errorThrown) {
 		respuesta = 'ERROR';
-		$('#btnGuardarProducto').removeClass('disabled');
-		$('#btnGuardarProducto').removeAttr('disabled');
-		$('#btnGuardarProducto').html('<i class="fa fa-check fa-lg"></i>Guardar');
+		$(idboton).removeClass('disabled');
+		$(idboton).removeAttr('disabled');
+		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
@@ -304,9 +305,9 @@ function guardar_producto(entidad, idboton) {
 				}        
 			} else {
 				mostrarErrores(respuesta, idformulario, entidad);
-				$('#btnGuardarProducto').removeClass('disabled');
-				$('#btnGuardarProducto').removeAttr('disabled');
-				$('#btnGuardarProducto').html('<i class="fa fa-check fa-lg"></i>Guardar');
+				$(idboton).removeClass('disabled');
+				$(idboton).removeAttr('disabled');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 			}
 		}
 	});

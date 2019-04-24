@@ -167,14 +167,14 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Ventas',
 					'link'   => 'ventas'
 				),
-				array(
+				/*array(
 					'name' => 'Productos mas Vendidas',
 					'link'   => 'productos_mas_vendidas'
 				),
 				array(
 					'name' => 'Devoluciones',
 					'link'   => 'devoluciones'
-				)
+				)*/
 			);
 
 		for ($i=0; $i < count($datos); $i++) { 
@@ -197,14 +197,14 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Caja',
 					'link'   => 'caja'
 				),
-				array(
+				/*array(
 					'name' => 'Caja Diaria',
 					'link'   => 'caja_diaria'
 				),
 				array(
 					'name' => 'Mov. Anulados',
 					'link'   => 'anulados'
-				)
+				)*/
 			);
 
 		for ($i=0; $i < count($datos); $i++) { 

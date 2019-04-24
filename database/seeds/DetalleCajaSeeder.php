@@ -22,7 +22,7 @@ class DetalleCajaSeeder extends Seeder
                 'ingreso' => 0,
                 'egreso' => 0,
                 'estado' => 'C',
-                'forma_pago' => 'C',
+                'forma_pago' => 'CO',
                 'caja_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now,

@@ -18,7 +18,7 @@ class MenuoptioncategorySeeder extends Seeder
 				array(
 					'name'     => 'Caja',
 					'order'      => 1,
-					'icon'      => 'fa fa-bank',
+					'icon'      => 'fa fa-money',
 					'position'      => 'V',
 					'created_at' => $now,
 					'updated_at' => $now
@@ -42,7 +42,7 @@ class MenuoptioncategorySeeder extends Seeder
 				array(
 					'name'     => 'Mant. Almacen',
 					'order'      => 5,
-					'icon'      => 'fa fa-bank',
+					'icon'      => 'fa fa-cart-plus',
 					'position'      => 'V',
 					'created_at' => $now,
 					'updated_at' => $now
@@ -50,7 +50,7 @@ class MenuoptioncategorySeeder extends Seeder
 				array(
 					'name'     => 'Mantenimientos',
 					'order'      => 6,
-					'icon'      => 'fa fa-bank',
+					'icon'      => 'fa fa-gears',
 					'position'      => 'V',
 					'created_at' => $now,
 					'updated_at' => $now
@@ -58,7 +58,7 @@ class MenuoptioncategorySeeder extends Seeder
 				array(
 					'name'     => 'Personas',
 					'order'      => 7,
-					'icon'      => 'fa fa-bank',
+					'icon'      => 'fa fa-users',
 					'position'      => 'V',
 					'created_at' => $now,
 					'updated_at' => $now
@@ -66,7 +66,7 @@ class MenuoptioncategorySeeder extends Seeder
 				array(
 					'name'     => 'Usuarios',
 					'order'      => 8,
-					'icon'      => 'fa fa-bank',
+					'icon'      => 'fa fa-user',
 					'position'      => 'V',
 					'created_at' => $now,
 					'updated_at' => $now

@@ -233,7 +233,7 @@ class CajaController extends Controller
         $entidad      = 'Caja';
         $caja   = null;
         $numero_operacion   = Libreria::codigo_operacion();
-        $cboFormaPago       = [''=>'Seleccione'] + array('C'=>'Contado', 'D'=>'Debito');
+        $cboFormaPago       = [''=>'Seleccione'] + array('CO'=>'Contado', 'CR'=>'Crédito');
         $cboTipo            = [''=>'Seleccione'] + array('I'=>'Ingreso', 'E'=>'Egreso');
         $cboConcepto        = [''=>'Seleccione'];
         $cboPersona         = [''=>'Seleccione'];
@@ -404,6 +404,8 @@ class CajaController extends Controller
             ->where('tipo', '=', $idselect)
             ->where('id', '!=', 1)
             ->where('id', '!=', 2)
+            ->where('id', '!=', 5)
+            ->where('id', '!=', 6)
             ->get();
         $retorno .= '><option value="" selected="selected">Seleccione</option>';
 
