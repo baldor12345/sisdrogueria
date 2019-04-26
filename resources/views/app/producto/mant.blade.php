@@ -6,31 +6,31 @@
 	<div class="col-md-6">
 		<fieldset >    	
 			<div class="panel panel-default">
-				<div class="form-group"  style="height: 25px;">
+				<div class="form-group"  >
 					{!! Form::label('codigo', 'Codigo*:', array('class' => 'col-sm-3 col-sm-12 control-label')) !!}
-					<div class="col-sm-4 col-xs-12" style="height: 25px;">
-						{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-4 col-xs-12" >
+						{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo')) !!}
 					</div>
-					<div class="col-sm-5 col-xs-12" style="height: 25px;">
-						{!! Form::text('codigo_barra', null, array('class' => 'form-control input-xs', 'id' => 'codigo_barra', 'placeholder' => 'codigo barra Opcional', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-5 col-xs-12" >
+						{!! Form::text('codigo_barra', null, array('class' => 'form-control input-xs', 'id' => 'codigo_barra', 'placeholder' => 'codigo barra')) !!}
 					</div>
 				</div>
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('descripcion', 'Descripcion*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					<div class="col-sm-9 col-xs-12" >
 						{!! Form::text('descripcion', null, array('class' => 'form-control input-xs', 'id' => 'descripcion', 'placeholder' => 'Ingrese descripcion', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('sustancia_activa', 'Principio Activo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					<div class="col-sm-9 col-xs-12" >
 						{!! Form::text('sustancia_activa', null, array('class' => 'form-control input-xs', 'id' => 'sustancia_activa', 'placeholder' => 'Ingrese sustancia activa', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('uso_terapeutico', 'Uso Terapeutico*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" style="height: 25px;">
-						{!! Form::text('uso_terapeutico', null, array('class' => 'form-control input-xs', 'id' => 'uso_terapeutico', 'placeholder' => 'Ingrese uso terapeutico', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" >
+						{!! Form::textarea('uso_terapeutico', null, array('class' => 'form-control input-xs', 'cols'=>'8', 'rows'=>'rows', 'id' => 'uso_terapeutico', 'placeholder' => 'Ingrese uso terapeutico')) !!}
 					</div>
 				</div>
 			</div>
@@ -38,36 +38,37 @@
 
 		<fieldset>   
 			<div class="panel panel-default">
-				<div class="form-group" style="height: 25px;">
+				<div class="form-group" >
 					{!! Form::label('tipo', 'Tipo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-9 col-xs-12">
 						{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
 					</div>
 				</div>
 
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					<div class="col-sm-9 col-xs-12" >
 						{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
 		
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('marca_id', 'Marc/Lab:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					<div class="col-sm-9 col-xs-12" >
 						{!! Form::select('marca_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'marca_id', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
-				<div class="form-group " style="height: 25px;">
+				<div class="form-group " >
 					{!! Form::label('stock_minimo', 'Stock Min*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-2 col-xs-12" style="height: 25px;">
+					<div class="col-sm-2 col-xs-12" >
 						{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '', 'style'=>'height: 25px')) !!}
 					</div>
 					{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					<div class="col-sm-4 col-xs-12" >
 						{!! Form::text('ubicacion', null, array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese ubicacion', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
+				<br>
 			</div>
 		</fieldset>
 	</div>
@@ -84,7 +85,10 @@
 		</fieldset>	
 		<fieldset> 
 			<div class="panel panel-default">
-				<div class="form-group">
+				<div class="form-inline " style="height: 25px">
+					{!! Form::label('marca_id', 'Ingrese Presentaciones', array('class' => 'col-sm-12 col-xs-12 control-label', 'style'=>'text-align:center;')) !!}
+				</div>
+				<div class="form-inline">
 					<table>
 						<tr style="height: 10px;">
 							<td>&nbsp;</td>
@@ -100,7 +104,8 @@
 						</tr>
 					</table>
 				</div>
-				<div class="form-group">
+				<br>
+				<div class="form-inline">
 					<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 						<thead>
 							<tr>

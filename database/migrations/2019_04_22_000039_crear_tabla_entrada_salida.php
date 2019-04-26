@@ -17,6 +17,7 @@ class CrearTablaEntradaSalida extends Migration
             $table->increments('id');
             $table->char('tipo', 1)->nullable();
             $table->timestamp('fecha')->nullable();
+            $table->string('serie_documento',100)->nullable();
             $table->string('num_documento',100)->nullable();
             $table->string('descripcion',400)->nullable();
             $table->integer('user_id')->unsigned()->nullable();

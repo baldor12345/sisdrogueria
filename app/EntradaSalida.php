@@ -31,6 +31,7 @@ class EntradaSalida extends Model
                             'entrada_salida.tipo as tipo', 
                             'entrada_salida.fecha as fecha', 
                             'entrada_salida.num_documento as num_documento', 
+                            'entrada_salida.serie_documento as serie_documento', 
                             'entrada_salida.descripcion as descripcion'
                     )
                     ->where('entrada_salida.num_documento', 'LIKE','%'.$num_doc.'%')

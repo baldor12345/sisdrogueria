@@ -19,7 +19,7 @@
 		<tr>
 			<td>{{ $contador }}</td>
 			<td>{{ Date::parse( $value->fecha )->format('d-m-Y') }}</td>
-			<td>{{ $value->num_documento }}</td>
+			<td>{{ $value->serie_documento.'-'.$value->num_documento }}</td>
 			@if($value->tipo == 'E')
 			<td>Entrada</td>
 			@else

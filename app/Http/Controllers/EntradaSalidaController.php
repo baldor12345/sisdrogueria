@@ -161,6 +161,7 @@ class EntradaSalidaController extends Controller
                 $EntradaSalida    = new EntradaSalida();
                 $EntradaSalida->fecha = $request->input('fecha');
                 $EntradaSalida->tipo = 'E';
+                $EntradaSalida->serie_documento = $request->input('serie_documento');
                 $EntradaSalida->num_documento = $request->input('numero_documento');
                 $EntradaSalida->descripcion = $request->input('comentario');
                 $user           = Auth::user();
@@ -216,6 +217,7 @@ class EntradaSalidaController extends Controller
                 $EntradaSalida    = new EntradaSalida();
                 $EntradaSalida->fecha = $request->input('fecha');
                 $EntradaSalida->tipo = 'S';
+                $EntradaSalida->serie_documento = $request->input('serie_documento');
                 $EntradaSalida->num_documento = $request->input('numero_documento');
                 $EntradaSalida->descripcion = $request->input('comentario');
                 $user           = Auth::user();
