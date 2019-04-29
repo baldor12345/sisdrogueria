@@ -72,9 +72,15 @@
 					{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
 				</div>
 			</div>
+			<div class="form-group credito" >
+				{!! Form::label('dias', 'Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::text('dias', 0, array('class' => 'form-control input-xs', 'id' => 'dias', 'placeholder' => 'N° dias')) !!}
+				</div>
+			</div>
 
-			<div class="form-group">
-				{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+			<div class="form-group contado">
+				{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
 				</div>
@@ -83,10 +89,10 @@
 			<div class="form-group">
 				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie_documento', $serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
+					{!! Form::text('serie_documento', $serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie','readonly')) !!}
 				</div>
 				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
+					{!! Form::text('numero_documento', $numero_doc, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento','readonly')) !!}
 				</div>
 			</div>
 
@@ -124,6 +130,7 @@ $(document).ready(function() {
 	configurarAnchoModal('1500');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#detalle_prod').hide();
+	$('.credito').hide();
 	$('#cboCliente').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		minimumInputLenght: 2,
@@ -195,8 +202,15 @@ $(document).ready(function() {
 		});
 	});
 
-	$('#cboCliente').change(function(){
-                
+	$('#tipo_venta').change(function(){
+                if($(this).val() == 'CO'){
+					$('.credito').hide();
+					$('.contado').show();
+					$('#dias').val(0);
+				}else{
+					$('.contado').hide();
+					$('.credito').show();
+				}
 			
 	});
 
@@ -299,8 +313,7 @@ function agregar(){
 		alert("No hay stock suficiente para la cantidad solicitada!");
 		$('#cantidad').focus();
 	}
-
-	
+	$('#detalle_prod').hide();
 }
 
 function quitar(t, subtotal){

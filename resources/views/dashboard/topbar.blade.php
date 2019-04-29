@@ -66,7 +66,7 @@ $persona               = Persona::find($user->person_id);
 
                             <div class="nav navbar-nav navbar-right pull-right">
                                 <div class="text-center">
-                                    <a class="logo"><i class="fa fa-home"></i><span> Persona: {{ $persona->lastname }}</span> </a>
+                                    <a class="logo"><i class="fa fa-home"></i><span> Persona: {{ $persona->nombres }}</span> </a>
                                 </div>
                             </div>
                         </div>

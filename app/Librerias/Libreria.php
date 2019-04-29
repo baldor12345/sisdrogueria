@@ -5,6 +5,7 @@ use Validator;
 use App\Menuoption;
 use App\DetalleCaja;
 use App\Caja;
+use App\Venta;
 
 /**
 * Libreria de clases
@@ -488,6 +489,22 @@ class Libreria
 			$codigo_generado = $ceros.$numero_transacciones;
 		}else {
 			$codigo_generado = "CAJA0001";
+		}
+		return $codigo_generado;
+	}
+
+	public static function numero_documento(){
+		$numero_transacciones = count(Venta::all()) + 1;
+		$codigo_generado ="";
+		if($numero_transacciones > 0){
+			$digitos = strlen($numero_transacciones);
+			$ceros =  "";
+			for($i=0; $i< (8 - $digitos) ; $i ++){
+				$ceros = $ceros."0";
+			}
+			$codigo_generado = $ceros.$numero_transacciones;
+		}else {
+			$codigo_generado = "00000001";
 		}
 		return $codigo_generado;
 	}
