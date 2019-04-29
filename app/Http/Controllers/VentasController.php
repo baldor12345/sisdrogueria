@@ -172,7 +172,7 @@ class VentasController extends Controller
                 $detalle_caja->cliente_id = $id_cliente;
             }
             $detalle_caja->forma_pago = $request->input('forma_pago');
-            $detalle_caja->concepto_id = 3;
+            $detalle_caja->concepto_id = 5;
             $detalle_caja->estado = 'P';
             $detalle_caja->fecha = date('Y-m-d H:i:s');
 
