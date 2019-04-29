@@ -100,6 +100,7 @@ class VentasController extends Controller
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
         $fecha_defecto = date('Y-m-d');
+        
         return view($this->folderview.'.admin')->with(compact('entidad', 'fecha_defecto','title', 'titulo_registrar', 'ruta'));
     }
 
@@ -118,16 +119,17 @@ class VentasController extends Controller
         $boton  = 'Registrar'; 
         $user = Auth::user();
         $serie = $user->sucursal->serie;
+        $numero_doc = Libreria::numero_documento();
         $ruta = $this->rutas;
         $fecha_defecto = date('Y-m-d');
         $igv = Propiedades::all()->last()->igv;
         $cboTipos = ['CO'=>'Contado','CR'=>'Crédito'];
-        $cboDocumento = ['V'=>'Voleta','F'=>'Factura'];
+        $cboDocumento = ['B'=>'Boleta','F'=>'Factura'];
         $cboFormasPago = ['T'=>'Tarjeta','E'=>'Efectivo'];
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto'));
+        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc'));
     }
 
     public function store(Request $request)
@@ -162,8 +164,11 @@ class VentasController extends Controller
                 $venta->cliente_id = $id_cliente;
             }
             $venta->comprobante =  $request->input('documento');
-            $venta->tipo_pago =  $request->input('tipo_venta');
-            $venta->forma_pago =  $request->input('forma_pago');
+            $venta->tipo_pago   =  $request->input('tipo_venta');
+            $venta->forma_pago  =  $request->input('forma_pago');
+            $venta->serie_doc  =  $request->input('serie_documento');
+            $venta->numero_doc  =  $request->input('numero_documento');
+            $venta->dias = $request->input('dias');
             
             $cantidad = $request->input('cantidad_registros');
             $detalle_caja = new DetalleCaja();
@@ -178,7 +183,7 @@ class VentasController extends Controller
 
             $numero_operacion = Libreria::codigo_operacion();
             $venta->numero_operacion = $numero_operacion;
-            $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
+            // $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
             $detalle_caja->ingreso = $venta->total;
             $detalle_caja->numero_operacion = $numero_operacion;//se debe generar automatico
             $detalle_caja->codigo_operacion =  $venta->codigo_venta;
@@ -199,7 +204,6 @@ class VentasController extends Controller
                 $detalle_venta->producto_id =$producto->id; 
                 $detalle_venta->cantidad = $cant;
                 $detalle_venta->precio_unitario =$precio_unit;
-               
                 $detalle_venta->total = $subtotal;
                 $detalle_venta->ventas_id = $venta->id;
                 $detalle_venta->sucursal_id = $user->sucursal_id;
@@ -235,10 +239,7 @@ class VentasController extends Controller
                         break;
                     }
                 }
-
-                
             }
-
         });
         return is_null($error) ? "OK" : $error;
     }

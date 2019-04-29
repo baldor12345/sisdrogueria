@@ -15,20 +15,20 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						<label for="numero" class="input-sm">Nro:</label>
-						{!! Form::text('numero', '', array('class' => 'form-control input-sm', 'id' => 'numero')) !!}
+						<label for="numero_serie" class="input-sm">N° Doc.:</label>
+						{!! Form::text('nmero_serie', '', array('class' => 'form-control input-sm', 'id' => 'numero_serie')) !!}
 					</div>
-					<div class="form-group">
+					{{-- <div class="form-group">
 						<label for="proveedor" class="input-sm">Proveedor:</label>
 						{!! Form::text('proveedor', '', array('class' => 'form-control input-sm', 'id' => 'proveedor')) !!}
-					</div>
+					</div> --}}
 					<div class="form-group">
 						<label for="fechai" class="input-sm">Fecha Inicio:</label>
-						{!! Form::date('fechai', '', array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
+						{!! Form::date('fechai', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
 					</div>
 					<div class="form-group">
 						<label for="fechaf" class="input-sm">Fecha Fin:</label>
-						{!! Form::date('fechaf', '', array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
+						{!! Form::date('fechaf', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
 					</div>
 					<div class="form-group">
 						<label for="filas" class="input-sm">Filas a Mostrar:</label>
@@ -49,13 +49,6 @@
 </div>
 <script>
 	$(document).ready(function () {
-		var fechaActual = new Date();
-		var day = ("0" + fechaActual.getDate()).slice(-2);
-		var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
-		var fechai= (fechaActual.getFullYear()) +"-"+month+"-01";
-		var fechaf= (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-		$('#fechai').val(fechai);
-		$('#fechaf').val(fechaf);
 		buscar('{{ $entidad }}');
 		init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
 		$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="name"]').keyup(function (e) {
