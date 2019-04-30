@@ -9,7 +9,7 @@
 				<div class="form-group"  >
 					{!! Form::label('codigo', 'Codigo*:', array('class' => 'col-sm-3 col-sm-12 control-label')) !!}
 					<div class="col-sm-4 col-xs-12" >
-						{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo')) !!}
+						{!! Form::text('codigo', $codigo, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese codigo')) !!}
 					</div>
 					<div class="col-sm-5 col-xs-12" >
 						{!! Form::text('codigo_barra', null, array('class' => 'form-control input-xs', 'id' => 'codigo_barra', 'placeholder' => 'codigo barra')) !!}
@@ -54,17 +54,17 @@
 				<div class="form-group " >
 					{!! Form::label('procedencia', 'Procedencia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-9 col-xs-12" >
-						{!! Form::text('procedencia', null, array('class' => 'form-control input-xs', 'id' => 'procedencia', 'placeholder' => 'Ingrese procedencia')) !!}
+						{!! Form::text('procedencia', 'sin especificar', array('class' => 'form-control input-xs', 'id' => 'procedencia', 'placeholder' => 'Ingrese procedencia')) !!}
 					</div>
 				</div>
 				<div class="form-group " >
 					{!! Form::label('stock_minimo', 'Stock Min*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-2 col-xs-12" >
-						{!! Form::text('stock_minimo', null, array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '', 'style'=>'height: 25px')) !!}
+						{!! Form::text('stock_minimo', '5', array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '', 'style'=>'height: 25px')) !!}
 					</div>
 					{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-4 col-xs-12" >
-						{!! Form::text('ubicacion', null, array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese ubicacion', 'style'=>'height: 25px')) !!}
+						{!! Form::text('ubicacion', 'stand 01', array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese ubicacion', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
 				<br>

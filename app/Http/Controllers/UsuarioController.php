@@ -176,10 +176,11 @@ class UsuarioController extends Controller
         $cboTipousuario = array('' => 'Seleccione') + Usertype::pluck('name', 'id')->all();
         $usuario        = User::find($id);
         $entidad        = 'Usuario';
+        $cboPersona = array( $usuario->id =>  $usuario->persona->nombres.''. $usuario->persona->apellidos);
         $formData       = array('usuario.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario'));
+        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario','cboPersona'));
     }
 
     /**

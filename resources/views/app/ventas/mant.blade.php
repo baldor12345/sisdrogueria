@@ -89,7 +89,7 @@
 			<div class="form-group">
 				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie_documento', $serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie','readonly')) !!}
+					{!! Form::text('serie_documento', 'B'.$serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie','readonly')) !!}
 				</div>
 				<div class="col-sm-6 col-xs-12" style="height: 25px;">
 					{!! Form::text('numero_documento', $numero_doc, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento','readonly')) !!}
@@ -213,13 +213,26 @@ $(document).ready(function() {
 				}
 			
 	});
+	$('#documento').change(function(){
+		var serie = "{{ $serie }}";//$('#serie_documento').val();
+		$('#serie_documento').val($(this).val()+''+serie);
+                // if($(this).val() == ''){
+				// 	$('.credito').hide();
+				// 	$('.contado').show();
+				// 	$('#dias').val(0);
+				// }else{
+				// 	$('.contado').hide();
+				// 	$('.credito').show();
+				// }
+			
+	});
 
 	$('#cboPresentacion').change(function(){
 		var producto_id = $('#cboProducto').val();
 		$.get("ventas/"+producto_id+"/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
 			// console.log("Respuesta persona: "+response[3]);
 			var productoPresentacion = response;
-			var precio_unidad = productoPresentacion.precio_venta;
+			var precio_unidad = productoPresentacion.precio_venta_unitario;
 			var cantidad_unidades_presentacion = productoPresentacion.cant_unidad_x_presentacion;
 			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
 			var total_unidades = cantidad_unidades_presentacion * cantidad;

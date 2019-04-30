@@ -125,10 +125,11 @@ class ProductoController extends Controller
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $listdet_ ='';
+        $codigo = '000'.(count(Producto::all()) + 1 );
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
+        return view($this->folderview.'.mant')->with(compact('listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria','codigo'));
     }
 
     /**
