@@ -71,8 +71,8 @@ class Producto extends Model
                         'categoria.name as categoria'
                 )
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
-                ->where('producto.codigo_barra', 'LIKE','%'.$codigo.'%')
-                ->where('producto.codigo', 'LIKE','%'.$codigo.'%')
+                //->where('producto.codigo_barra', 'LIKE','%'.$codigo.'%')
+                //->where('producto.codigo', 'LIKE','%'.$codigo.'%')
                 ->where('producto.deleted_at',null);
     }
 
