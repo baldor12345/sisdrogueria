@@ -331,15 +331,13 @@ class CompraController extends Controller
                     ->join('producto','producto_presentacion.producto_id','producto.id')
                     ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
                     ->join('categoria','producto.categoria_id','categoria.id')
-                    ->join('marca','producto.marca_id','marca.id')
                     ->select(
                         'producto_presentacion.id as id',
                         'producto_presentacion.presentacion_id as presentacion_id',
-                        'producto.marca_id as marca_id',
                         'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion',
                         'producto_presentacion.precio_compra as precio_compra',
                         'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
-                        'producto.descripcion as descripcion',
+                        'producto.sustancia_activa as descripcion',
                         'presentacion.nombre as presentacion',
                         'categoria.id as categoria_id'
                     )
@@ -413,6 +411,35 @@ class CompraController extends Controller
         $tags = DB::table('producto_presentacion')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
                     ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
+                    ->select(
+                        'producto_presentacion.id as p_p_id',
+                        'producto_presentacion.presentacion_id as presentacion_id',
+                        'producto.descripcion as descripcion',
+                        'producto.sustancia_activa as sustancia_activa',
+                        'presentacion.nombre as presentacion'
+                    )
+                    ->where("producto.codigo",'LIKE', '%'.$term.'%')
+                    ->orwhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                    ->orwhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
+                    ->orwhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->p_p_id, 'text' => $tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+
+    /*
+    public function listproductos(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = DB::table('producto_presentacion')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
                     ->join('categoria','producto.categoria_id','categoria.id')
                     ->join('marca','producto.marca_id','marca.id')
                     ->select(
@@ -424,19 +451,21 @@ class CompraController extends Controller
                         'producto_presentacion.precio_compra as precio_compra',
                         'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
                         'producto.descripcion as descripcion',
+                        'producto.sustancia_activa as sustancia_activa',
                         'presentacion.nombre as presentacion'
                     )
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
-                    ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
-                    ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
-                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
+                    ->orwhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                    ->orwhere("presentacion.nombre",'LIKE', '%'.$term.'%')
+                    ->orwhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
+                    ->orwhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
         return \Response::json($formatted_tags);
-    }
+    }*/
 
 }

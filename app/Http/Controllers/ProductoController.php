@@ -144,11 +144,8 @@ class ProductoController extends Controller
             'codigo' => 'required|max:100',
             'descripcion' => 'required|max:400',
             'sustancia_activa' => 'required',
-            'uso_terapeutico' => 'required',
             'ubicacion'    => 'required',
             'stock_minimo'    => 'required',
-
-            'tipo' => 'required',
             'categoria_id' => 'required|integer|exists:categoria,id,deleted_at,NULL',
             );
         $validacion = Validator::make($request->all(),$reglas);
@@ -159,18 +156,14 @@ class ProductoController extends Controller
             $producto               = new Producto();
             $producto->codigo = $request->input('codigo');
             $producto->codigo_barra = $request->input('codigo_barra');
-            $producto->descripcion = $request->input('descripcion');
+            $producto->descripcion = strtoupper($request->input('descripcion'));
             $producto->sustancia_activa = $request->input('sustancia_activa');
             $producto->uso_terapeutico = $request->input('uso_terapeutico');
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->costo = $request->input('costo');
-            $producto->precio_publico = $request->input('precio_publico');
-
-            $producto->marca_id  = $request->input('marca_id');
+            $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->proveedor_id = $request->input('proveedor_id');
             $user           = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();

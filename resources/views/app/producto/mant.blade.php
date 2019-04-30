@@ -44,18 +44,17 @@
 						{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
 					</div>
 				</div>
-
-				<div class="form-group " >
-					{!! Form::label('proveedor_id', 'Proveedor:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12" >
-						{!! Form::select('proveedor_id', $cboProveedor, null, array('class' => 'form-control input-xs', 'id' => 'proveedor_id', 'style'=>'height: 25px')) !!}
-					</div>
-				</div>
 		
 				<div class="form-group " >
 					{!! Form::label('marca_id', 'Marc/Lab:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-9 col-xs-12" >
 						{!! Form::select('marca_id', $cboMarca, null, array('class' => 'form-control input-xs', 'id' => 'marca_id', 'style'=>'height: 25px')) !!}
+					</div>
+				</div>
+				<div class="form-group " >
+					{!! Form::label('procedencia', 'Procedencia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+					<div class="col-sm-9 col-xs-12" >
+						{!! Form::text('procedencia', null, array('class' => 'form-control input-xs', 'id' => 'procedencia', 'placeholder' => 'Ingrese procedencia')) !!}
 					</div>
 				</div>
 				<div class="form-group " >
@@ -94,11 +93,11 @@
 							<td>&nbsp;</td>
 							<td class=" input-sm"><b>Presentacion</b></td>
 							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
-							<td class=" input-sm"><b>P.Compra</b></td>
+							<td class=" input-sm"><b>P.Compra:</b></td>
 							<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-							<td class=" input-sm"><b>Unidad</b></td>
+							<td class=" input-sm"><b>Cant.Uds:</b></td>
 							<td><input class="form-control input-sm input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
-							<td class=" input-sm"><b>P.Venta</b></td>
+							<td class=" input-sm"><b>P.Venta:</b></td>
 							<td><input class="form-control input-sm" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
 						</tr>
@@ -111,7 +110,7 @@
 							<tr>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Unidad</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Cant. Uds</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
@@ -198,30 +197,6 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#proveedor_id').select2({
-		dropdownParent: $("#modal"+(contadorModal-1)),
-		
-		minimumInputLenght: 2,
-		ajax: {
-			
-			url: "{{ URL::route($ruta['listproveedores'], array()) }}",
-			dataType: 'json',
-			delay: 250,
-			data: function(params){
-				return{
-					q: $.trim(params.term)
-				};
-			},
-			processResults: function(data){
-				return{
-					results: data
-				};
-			}
-			
-		}
-	});
-
-
 
 }); 
 
@@ -237,33 +212,25 @@ function agregar(){
 	var unidad_x_presentacion 		= $('#unidad_x_presentacion').val();
 	var precioventaunitario 		= $('#precioventaunitario').val();
 	if(parseInt($('#present_id').val()) != 0){
-		if(preciocompra != ''){
-			if(unidad_x_presentacion != ''){
-				if(precioventaunitario !=''){
-					var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
-						'<td class="input-sm" width="40%" align="center">'+presentacion_dat+'</td>'+
-						'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
-						'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
-						'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
-						'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
-						'</tr>';
-					$("#tabla").append(d);
-					$('#present_id').val(0);
-					$('#preciocompra').val('');
-					$('#unidad_x_presentacion').val('');
-					$('#precioventaunitario').val('');
-				}else{
-					window.alert("Ingrese Precio de Venta Unitario!");
-					$('#precioventaunitario').focus();
-				}
-			}else{
-				window.alert("Ingrese Cantidad por presentacion!");
-				$('#preciocompra').focus();
-			}
+		if(unidad_x_presentacion != ''){
+			var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
+				'<td class="input-sm" width="40%" align="center">'+presentacion_dat+'</td>'+
+				'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
+				'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
+				'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
+				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+				'</tr>';
+			$("#tabla").append(d);
+			$('#present_id').val(0);
+			$('#preciocompra').val('');
+			$('#unidad_x_presentacion').val('');
+			$('#precioventaunitario').val('');
+			
 		}else{
-			window.alert("Ingrese Precio de Compra!");
-			$('#preciocompra').focus();
+			window.alert("Ingrese Cantidad por presentacion!");
+			$('#unidad_x_presentacion').focus();
 		}
+		
 	}else{
 		window.alert("Seleccione presentacion!");
 		$('#presentacion_id').focus();

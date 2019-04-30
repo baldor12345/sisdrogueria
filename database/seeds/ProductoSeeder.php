@@ -14,20 +14,17 @@ class ProductoSeeder extends Seeder
         $now = new DateTime;
         DB::table('producto')->insert(array(
             array(
-                'codigo' => 'AMOX211',
-                'codigo_barra' => 'AMOX9284392',
-                'descripcion' => 'AMOXICILINA(500mg tabletas-capsulas)',
-                'sustancia_activa' => 'AMOXICILINA',
-                'uso_terapeutico' => 'AMOXICILINA PARA RESFRIO',
+                'codigo' => '00001',
+                'codigo_barra' => '',
+                'descripcion' => 'ZELEDRON',
+                'sustancia_activa' => 'Ácido Zoledrónico 5mg/100ml Solucion Inyectable Caja por 1 frasco x 100mL',
+                'uso_terapeutico' => '',
                 'tipo' => 1,
-                'proveedor_id' => 1,
                 'marca_id' => 1,
                 'ubicacion' => 'STAND 001',
-                'categoria_id' => 2,
+                'categoria_id' => 1,
                 'stock_minimo' => 2,
                 'estado' => 'A',
-                'costo' => 0.50,
-                'precio_publico' => 0.80,
                 'user_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now

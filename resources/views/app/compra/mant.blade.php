@@ -26,7 +26,7 @@
 						<td>&nbsp;</td>
 						<td class=" input-sm" style="text-align:right;"><b>Fecha Venc.:</b></td>
 						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td class=" input-sm" style="text-align:right;"><b>Unidad Venta:</b></td>
+						<td class=" input-sm" style="text-align:right;"><b>Unidad Base:</b></td>
 						<td>{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-sm', 'id' => 'unidad_id','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Factor:</b></td>
 						<td><input class="form-control input-sm" id="factor" onkeypress="return filterFloat(event,this);"  size="3" name="factor" type="text" style="text-align: right;"></td>

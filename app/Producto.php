@@ -65,14 +65,14 @@ class Producto extends Model
                 ->join('categoria', 'producto.categoria_id', '=', 'categoria.id')
                 ->select(
                         'producto.id as producto_id', 
-                        'producto.codigo_barra as codigo_barra', 
-                        'producto.descripcion as producto', 
-                        'producto.precio_publico as precio_publico', 
+                        'producto.codigo as codigo_barra', 
+                        'producto.sustancia_activa as producto', 
                         'marca.name as laboratorio', 
                         'categoria.name as categoria'
                 )
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
                 ->where('producto.codigo_barra', 'LIKE','%'.$codigo.'%')
+                ->where('producto.codigo', 'LIKE','%'.$codigo.'%')
                 ->where('producto.deleted_at',null);
     }
 
