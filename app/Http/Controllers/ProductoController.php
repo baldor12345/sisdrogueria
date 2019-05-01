@@ -126,10 +126,11 @@ class ProductoController extends Controller
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
         $listdet_ ='';
+        $codigo = '000'.(count(Producto::all()) + 1 );
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('cboAfecto','listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
+        return view($this->folderview.'.mant')->with(compact('codigo','cboAfecto','listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
     }
 
     /**
@@ -221,6 +222,7 @@ class ProductoController extends Controller
         $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
+        $codigo ='';
         $listdet_       = DB::table('producto_presentacion')
                                 ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
                                 ->select(
@@ -238,7 +240,7 @@ class ProductoController extends Controller
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**

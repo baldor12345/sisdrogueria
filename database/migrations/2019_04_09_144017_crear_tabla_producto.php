@@ -17,8 +17,8 @@ class CrearTablaProducto extends Migration
             $table->increments('id');
             $table->string('codigo',100)->nullable();
             $table->string('codigo_barra',100)->nullable();
-            $table->string('descripcion',100)->nullable();//ACAROBOSA 50MG 30 TABLETAS
-            $table->string('sustancia_activa',100)->nullable();//ACAROBOSA, 
+            $table->string('descripcion',200)->nullable();//ACAROBOSA 50MG 30 TABLETAS
+            $table->string('sustancia_activa',200)->nullable();//ACAROBOSA, 
             $table->string('uso_terapeutico',100)->nullable();//ANTHIPERTENSIVO, PARA PRESION ALTA
             $table->char('tipo', 1)->nullable();//0=>SIN ESPECIFICAR, 1=>GENERICO, 2=>OTROS, 3=>PATENTE, 4=>SIMILAR
             $table->char('afecto', 1)->nullable();

@@ -164,13 +164,20 @@ class SucursalController extends Controller
         }
         $listar   = Libreria::getParam($request->input('listar'), 'NO');
         $sucursal = Sucursal::find($id);
-        $cboDistritos = [''=>'Seleccione'] + Distrito::pluck('nombre', 'id')->all();
+        $departamento = Departamento::find($sucursal->departamento_id);
+        $provincia = Provincia::find($sucursal->provincia_id);
+        $distrito = Distrito::find($sucursal->distrito_id);
+
+        $cboDistritos = [$distrito->id=>$distrito->nombre.''];
+        $cboDepartamentos = [$departamento->id=>$departamento->nombre.''];
+        $cboProvincias = [$provincia->id=>$provincia->nombre.''];
+        
         $entidad  = 'Sucursal';
         $formData = array('sucursal.update', $id);
         $formData = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Modificar';
        
-        return view($this->folderview.'.mant')->with(compact('sucursal', 'formData', 'entidad', 'boton', 'listar','cboDistritos'));
+        return view($this->folderview.'.mant')->with(compact('sucursal', 'formData', 'entidad', 'boton', 'listar','cboDistritos','cboDepartamentos','cboProvincias'));
     }
 
     /**

@@ -263,7 +263,6 @@ class VentasController extends Controller
      */
     public function edit(Request $request, $id)
     {
-
         $existe = Libreria::verificarExistencia($id, 'unidad');
         if ($existe !== true) {
             return $existe;
@@ -383,7 +382,7 @@ class VentasController extends Controller
         $tags = Producto::listarproductosventa($term);
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->descripcion." "];
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->sustancia_activa." [".$tag->descripcion."]"];
         }
         return \Response::json($formatted_tags);
     }
