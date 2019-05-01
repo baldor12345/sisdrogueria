@@ -68,7 +68,7 @@ class ProductoController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Codigo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Descripcion', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Principio Activo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
@@ -116,6 +116,7 @@ class ProductoController extends Controller
         $entidad        = 'Producto';
         $producto       = null;
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
+        $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
         $cboMarca       = array(0=>'Seleccione Marca...');
         $cboCategoria   = ['0'=>'Seleccione'] + Categoria::pluck('name', 'id')->all();
         $cboPresentacion     = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
@@ -128,7 +129,7 @@ class ProductoController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
+        return view($this->folderview.'.mant')->with(compact('cboAfecto','listdet_', 'producto', 'cboPresentacion', 'cboTipo', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboSucursal', 'cboLaboratio', 'cboProveedor', 'cboMarca','cboCategoria'));
     }
 
     /**
@@ -159,6 +160,7 @@ class ProductoController extends Controller
             $producto->descripcion = strtoupper($request->input('descripcion'));
             $producto->sustancia_activa = $request->input('sustancia_activa');
             $producto->uso_terapeutico = $request->input('uso_terapeutico');
+            $producto->afecto = $request->input('afecto');
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
@@ -216,6 +218,7 @@ class ProductoController extends Controller
         $cboPresentacion     = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
         $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
+        $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
         $producto       = Producto::find($id);
         $entidad        = 'Producto';
         $listdet_       = DB::table('producto_presentacion')
@@ -235,7 +238,7 @@ class ProductoController extends Controller
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -254,10 +257,7 @@ class ProductoController extends Controller
         $reglas = array(
             'codigo'       => 'required|max:50|unique:producto,codigo,'.$id.',id,deleted_at,NULL',
             'sustancia_activa' => 'required',
-            'uso_terapeutico' => 'required',
-            'ubicacion'    => 'required',
             'stock_minimo'    => 'required',
-            'categoria_id' => 'required',
             
             );
         $validacion = Validator::make($request->all(),$reglas);
@@ -268,20 +268,20 @@ class ProductoController extends Controller
             $producto                 = Producto::find($id);
             $producto->codigo = $request->input('codigo');
             $producto->codigo_barra = $request->input('codigo_barra');
-            $producto->descripcion = $request->input('descripcion');
+            $producto->descripcion = strtoupper($request->input('descripcion'));
             $producto->sustancia_activa = $request->input('sustancia_activa');
             $producto->uso_terapeutico = $request->input('uso_terapeutico');
+            $producto->afecto = $request->input('afecto');
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-
-            $producto->marca_id  = $request->input('marca_id');
+            $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
-            $producto->proveedor_id = $request->input('proveedor_id');
-            $user = Auth::user();
+            $user           = Auth::user();
             $producto->user_id = $user->id;
             $producto->save();
 
+            /*
             $cantidad = $request->input('cantidad');
             $detalle_present_ = ProductoPresentacion::where('producto_id',$id)->where('deleted_at',null)->get();
             if($cantidad >0){
@@ -316,6 +316,7 @@ class ProductoController extends Controller
                     
                 }
             }
+            */
 
         });
         return is_null($error) ? "OK" : $error;

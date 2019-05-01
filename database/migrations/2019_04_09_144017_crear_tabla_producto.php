@@ -21,6 +21,7 @@ class CrearTablaProducto extends Migration
             $table->string('sustancia_activa',100)->nullable();//ACAROBOSA, 
             $table->string('uso_terapeutico',100)->nullable();//ANTHIPERTENSIVO, PARA PRESION ALTA
             $table->char('tipo', 1)->nullable();//0=>SIN ESPECIFICAR, 1=>GENERICO, 2=>OTROS, 3=>PATENTE, 4=>SIMILAR
+            $table->char('afecto', 1)->nullable();
             $table->integer('marca_id')->unsigned()->nullable();//MARCA O LABORATORIO
             $table->string('ubicacion',100)->nullable();
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)

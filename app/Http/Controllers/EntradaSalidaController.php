@@ -456,14 +456,16 @@ class EntradaSalidaController extends Controller
                             'producto_presentacion.id as id',
                             'producto_presentacion.presentacion_id as presentecion_id',
                             'producto.descripcion as descripcion',
+                            'producto.sustancia_activa as sustancia_activa',
                             'presentacion.nombre as presentacion'
                         )
                         ->where("producto.codigo",'LIKE', '%'.$term.'%')
                         ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                        ->orWhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
                         ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.'   ['.$tag->presentacion.'] '];
+            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
@@ -484,12 +486,14 @@ class EntradaSalidaController extends Controller
                         'producto_presentacion.id as producto_id',
                         'entrada.id as entrada_id',
                         'producto.descripcion as descripcion',
+                        'producto.sustancia_activa as sustancia_activa',
                         'presentacion.nombre as presentacion',
                         'entrada.lote as lote'
                         )
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
                     ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
                     ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
                     ->orWhere("entrada.lote",'LIKE', '%'.$term.'%')
                     ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
                     ->limit(8)->get();

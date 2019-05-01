@@ -40,8 +40,12 @@
 			<div class="panel panel-default">
 				<div class="form-group" >
 					{!! Form::label('tipo', 'Tipo*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-9 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						{!! Form::select('tipo', $cboTipo, null, array('class' => 'form-control input-xs', 'id' => 'tipo')) !!}
+					</div>
+					{!! Form::label('afecto', 'Afecto*:', array('class' => 'col-sm-2 col-xs-12 control-label')) !!}
+					<div class="col-sm-3 col-xs-12">
+						{!! Form::select('afecto', $cboAfecto, null, array('class' => 'form-control input-xs', 'id' => 'afecto')) !!}
 					</div>
 				</div>
 		
