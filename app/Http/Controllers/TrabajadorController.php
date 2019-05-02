@@ -58,7 +58,7 @@ class TrabajadorController extends Controller
         $dni             = Libreria::getParam($request->input('dni'));
         $tipo_personal  = Libreria::getParam($request->input('cboTipo_personal'));
         
-        $resultado        = Persona::listar($nombre,$dni,$tipo_personal);
+        $resultado        = Persona::listar($nombre,$dni);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -114,12 +114,12 @@ class TrabajadorController extends Controller
         $detalle_trabajador = null;
         $cboSucursales = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
         $cboestados = array('A' => 'Activo', 'I'=>'Inactivo');
+        $cboTipo_personas = ['' =>'Seleccione'] + Tipo_persona::pluck('titulo', 'id')->all();
         $formData       = array('trabajador.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton          = 'Registrar'; 
+        $boton          = 'Registrar';
         $accion = 0;
         $fecha_default = date('Y-m-d');
-        $cboTipo_personas = ['' =>'Seleccione'] + Tipo_persona::pluck('titulo', 'id')->all();
         return view($this->folderview.'.mant')->with(compact('accion','fecha_default' ,'trabajador', 'formData', 'entidad', 'boton', 'cboestados', 'listar','cboSucursales','detalle_trabajador','cboTipo_personas'));
     }
 
@@ -196,15 +196,18 @@ class TrabajadorController extends Controller
             return $existe;
         }
         $listar = Libreria::getParam($request->input('listar'), 'NO');
-        $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
+        // $cboDistrito = array('' => 'Seleccione') + Distrito::pluck('nombre', 'id')->all();
         $trabajador = Persona::find($id);
         $entidad = 'Trabajador';
-        $detalle_trabajador = Detalle_persona::where('person_id','=',$id)->where('fecha_salida','=',null)->where('deleted_at','=',null)[0];
+        $detalle_trabajador = Detalle_persona::where('person_id','=',$id)->where('fecha_salida','=',null)->where('deleted_at','=',null)->get()[0];
         $formData       = array('trabajador.update', $id);
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
         $accion = 1;
-        return view($this->folderview.'.mant')->with(compact( 'accion' , 'trabajador', 'formData', 'entidad', 'boton', 'listar', 'cboDistrito','detalle_trabajador'));
+        $cboSucursales = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
+        $cboestados = array('A' => 'Activo', 'I'=>'Inactivo');
+        $cboTipo_personas = ['' =>'Seleccione'] + Tipo_persona::pluck('titulo', 'id')->all();
+        return view($this->folderview.'.mant')->with(compact( 'accion' , 'trabajador', 'formData', 'entidad', 'boton', 'listar','detalle_trabajador','cboTipo_personas','cboestados','cboSucursales'));
     }
 
     /**

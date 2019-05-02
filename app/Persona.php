@@ -15,9 +15,9 @@ class Persona extends Model
         return $this->belongsTo('App\Tipo_persona','tipo_persona_id');
     } 
     
-    public function scopelistar($query, $nombre, $dni, $tipo_persona_id)
+    public function scopelistar($query, $nombre, $dni)
     {
-        return $query->where(function($subquery) use($nombre, $dni, $tipo_persona_id)
+        return $query->where(function($subquery) use($nombre, $dni)
             {
                 // if($tipo_persona_id == 0){
                 //     $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni);//->where('tipo_persona_id','=', 1);
@@ -27,7 +27,7 @@ class Persona extends Model
                     }
                 // }
             })
-            ->where('tipo_persona_id','=',$tipo_persona_id)
+            // ->where('tipo_persona_id','=',$tipo_persona_id)
             ->where('deleted_at','=',null)
             ->orderBy('nombres', 'ASC');
         			

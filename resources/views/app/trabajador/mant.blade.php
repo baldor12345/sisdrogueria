@@ -3,36 +3,36 @@
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group col-6 col-md-6">
 		{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
-		{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
+		{!! Form::text('nombres', $trabajador != null? $trabajador->nombres:'', array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
-		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
+		{!! Form::text('apellidos', $trabajador != null? $trabajador->apellidos:'', array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6">
 		{!! Form::label('dni', 'DNI:', array('class' => ' control-label')) !!}
-			{!! Form::text('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese DNI')) !!}
+			{!! Form::text('dni',  $trabajador != null? $trabajador->dni:'', array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese DNI')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('ruc', 'RUC:', array('class' => ' control-label')) !!}
-			{!! Form::text('ruc', null, array('class' => 'form-control input-xs', 'id' => 'ruc', 'placeholder' => 'Ingrese RUC')) !!}
+			{!! Form::text('ruc',  $trabajador != null? $trabajador->ruc:'', array('class' => 'form-control input-xs', 'id' => 'ruc', 'placeholder' => 'Ingrese RUC')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('direccion', 'Direccion:', array('class' => ' control-label')) !!}
-			{!! Form::text('direccion', null, array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese direccion')) !!}
+			{!! Form::text('direccion',  $trabajador != null? $trabajador->direccion:'', array('class' => 'form-control input-xs', 'id' => 'direccion', 'placeholder' => 'Ingrese direccion')) !!}
 	</div>
 
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('telefono', 'Teléfono:', array('class' => 'control-label')) !!}
-			{!! Form::text('telefono', null, array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese numero telefono')) !!}
+			{!! Form::text('telefono',  $trabajador != null? $trabajador->telefono:'', array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese numero telefono')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6">
 		{!! Form::label('celular', 'Celular:', array('class' => 'control-label')) !!}
-			{!! Form::text('celular', null, array('class' => 'form-control input-xs', 'id' => 'celular', 'placeholder' => 'Ingrese numero celular')) !!}
+			{!! Form::text('celular',  $trabajador != null? $trabajador->celular:'', array('class' => 'form-control input-xs', 'id' => 'celular', 'placeholder' => 'Ingrese numero celular')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('email', 'Email:', array('class' => 'control-label')) !!}
-		{!! Form::text('email', null, array('class' => 'form-control input-xs', 'id' => 'email', 'placeholder' => 'Ingrese correo electronico')) !!}
+		{!! Form::text('email',  $trabajador != null? $trabajador->email:'', array('class' => 'form-control input-xs', 'id' => 'email', 'placeholder' => 'Ingrese correo electronico')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6">
 		{!! Form::label('fecha_nacimiento', 'Fecha de nacimiento: ', array('class' => '')) !!}
@@ -40,11 +40,11 @@
 </div>
 <div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('fecha_ingreso', 'Fecha de ingreso: ', array('class' => '')) !!}
-		{!! Form::date('fecha_ingreso', $trabajador ==null?$fecha_default:$detalle_trabajador->fecha_ingreso, array('class' => 'form-control input-xs', 'id' => 'fecha_ingreso', 'placeholder' => '')) !!}
+		{!! Form::date('fecha_ingreso', $trabajador ==null?$fecha_default:date('Y-m-d',strtotime($detalle_trabajador->fecha_ingreso)), array('class' => 'form-control input-xs', 'id' => 'fecha_ingreso', 'placeholder' => '')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('cboTipoPersona', 'Tipo_Personal: ', array('class' => '')) !!}
-		{!! Form::select('cboTipoPersona', $cboTipo_personas,$trabajador != null? $trabajador->tipopersona_id: 0 , array('class' => 'form-control input-sm', 'id' => 'cboTipoPersona')) !!}
+		{!! Form::select('cboTipoPersona', $cboTipo_personas,$trabajador != null? $trabajador->tipo_persona_id: 0 , array('class' => 'form-control input-sm', 'id' => 'cboTipoPersona')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('cboestado', 'Estado: ', array('class' => '')) !!}
