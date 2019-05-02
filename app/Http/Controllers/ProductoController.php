@@ -27,6 +27,7 @@ class ProductoController extends Controller
     protected $folderview      = 'app.producto';
     protected $tituloAdmin     = 'Producto';
     protected $tituloRegistrar = 'Registrar producto';
+    protected $titulo_presentacion = 'Presentaciones';
     protected $tituloModificar = 'Modificar producto';
     protected $tituloEliminar  = 'Eliminar producto';
     protected $rutas           = array('create' => 'producto.create', 
@@ -34,6 +35,9 @@ class ProductoController extends Controller
             'delete'        => 'producto.eliminar',
             'search'        => 'producto.buscar',
             'index'         => 'producto.index',
+
+            'presentacion'          => 'producto.presentacion',
+
             'listmarcas'    => 'producto.listmarcas',
             'listunidades'    => 'producto.listunidades',
             'listcategorias'     => 'producto.listcategorias',
@@ -71,10 +75,11 @@ class ProductoController extends Controller
         $cabecera[]       = array('valor' => 'Principio Activo', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Marc/Laboratorio', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Categoria', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
+        $titulo_presentacion  = $this->titulo_presentacion;
         $ruta             = $this->rutas;
         if (count($lista) > 0) {
             $clsLibreria     = new Libreria();
@@ -85,7 +90,7 @@ class ProductoController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
+            return view($this->folderview.'.list')->with(compact('titulo_presentacion', 'lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -240,7 +245,7 @@ class ProductoController extends Controller
         $ruta           = $this->rutas;
         $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.mant')->with(compact('codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.editar')->with(compact('codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -323,6 +328,125 @@ class ProductoController extends Controller
         });
         return is_null($error) ? "OK" : $error;
     }
+
+
+    public function presentacion($id, Request $request)
+    {
+        $existe = Libreria::verificarExistencia($id, 'producto');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listar = Libreria::getParam($request->input('listar'), 'NO');
+        $cboMarca = array('' => 'Seleccione') + Marca::pluck('name', 'id')->all();
+        $cboCategoria = array('' => 'Seleccione') + Categoria::pluck('name', 'id')->all();
+        $cboPresentacion     = [''=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboProveedor   = array('' => 'Seleccione') + Proveedor::pluck('nombre', 'id')->all();
+        $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
+        $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
+        $producto       = Producto::find($id);
+        $entidad        = 'Producto';
+        $codigo ='';
+        $listdet_       = DB::table('producto_presentacion')
+                                ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
+                                ->select(
+                                        'producto_presentacion.id as propresent_id', 
+                                        'producto_presentacion.presentacion_id as presentacion_id', 
+                                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion', 
+                                        'producto_presentacion.precio_compra as precio_compra', 
+                                        'presentacion.nombre as presentacion_nombre', 
+                                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
+                                )
+                                ->where('producto_presentacion.producto_id', $id)
+                                ->where('producto_presentacion.deleted_at',null)->get();
+        
+        $formData       = array('producto.update', $id);
+        $ruta           = $this->rutas;
+        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton          = 'Modificar';
+        return view($this->folderview.'.presentacion')->with(compact('codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updatepresentacion(Request $request, $id)
+    {
+        $existe = Libreria::verificarExistencia($id, 'producto');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $reglas = array(
+            'codigo'       => 'required|max:50|unique:producto,codigo,'.$id.',id,deleted_at,NULL',
+            'sustancia_activa' => 'required',
+            'stock_minimo'    => 'required',
+            
+            );
+        $validacion = Validator::make($request->all(),$reglas);
+        if ($validacion->fails()) {
+            return $validacion->messages()->toJson();
+        } 
+        $error = DB::transaction(function() use($request, $id){
+            $producto                 = Producto::find($id);
+            $producto->codigo = $request->input('codigo');
+            $producto->codigo_barra = $request->input('codigo_barra');
+            $producto->descripcion = strtoupper($request->input('descripcion'));
+            $producto->sustancia_activa = $request->input('sustancia_activa');
+            $producto->uso_terapeutico = $request->input('uso_terapeutico');
+            $producto->afecto = $request->input('afecto');
+            $producto->tipo = $request->input('tipo');
+            $producto->ubicacion = $request->input('ubicacion');
+            $producto->stock_minimo = $request->input('stock_minimo');
+            $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
+            $producto->categoria_id = $request->input('categoria_id');
+            $user           = Auth::user();
+            $producto->user_id = $user->id;
+            $producto->save();
+
+            /*
+            $cantidad = $request->input('cantidad');
+            $detalle_present_ = ProductoPresentacion::where('producto_id',$id)->where('deleted_at',null)->get();
+            if($cantidad >0){
+                for($i=0;$i<$cantidad; $i++){
+                    if(intval($request->input("propresent_id".$i)) == 0){
+                        $producto_presentacion = new ProductoPresentacion();
+                        $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                        $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                        $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                        $producto_presentacion->producto_id = $id;
+                        $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                        $producto_presentacion->save();
+                    }
+                    if(intval($request->input("propresent_id".$i)) != 0){
+                        foreach ($detalle_present_ as $key => $value) {
+                            echo "ids que pasan ".intval($request->input("propresent_id".$i))."  ".$value->id;
+                            if($value->id == intval($request->input("propresent_id".$i))){
+                                $producto_presentacion = ProductoPresentacion::find($value->id);
+                                $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                                $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                                $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                                $producto_presentacion->producto_id = $id;
+                                $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                                $producto_presentacion->save();
+                            }else{
+                                $producto_presentacion = ProductoPresentacion::find($value->id);
+                                $producto_presentacion->delete();
+                            }
+                        }
+                    }
+                    
+                    
+                }
+            }
+            */
+
+        });
+        return is_null($error) ? "OK" : $error;
+    }
+
 
     /**
      * Remove the specified resource from storage.
