@@ -84,6 +84,12 @@
 					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
 				</div>
 			</div>
+			<div class="form-group" >
+				{!! Form::label('afecto', 'Afecto:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}	
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+					{!! Form::select('afecto', $cboAfecto, null, array('class' => 'form-control input-sm', 'id' => 'afecto', 'onchange'=>'cambiarafecto();')) !!}
+				</div>
+			</div>
 			<div class="form-group " >
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
@@ -104,13 +110,23 @@
 				</div>
 			</div>
 			<div class="form-group" >
-				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('total', 'Total B.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
 				</div>
-				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('igv', $igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
+				</div>
+			</div>
+			<div class="form-group" >
+				{!! Form::label('total_igv', 'Total igv:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('total_igv', null, array('class' => 'form-control input-xs', 'id' => 'total_igv', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('total_n', 'Total N.:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('total_n', null, array('class' => 'form-control input-xs', 'id' => 'total_n', 'placeholder' => '', 'readonly')) !!}
 				</div>
 			</div>
 			<br>
@@ -228,6 +244,22 @@ function cambiarcredito(){
 		//$('#numero_dias').prop("readonly", true);
 	}
 }
+
+function cambiarafecto(){
+	var doc = $('#afecto').val();
+	if(doc == 'S'){
+		var total_b = $('#total').val();
+		var igv = $('#igv').val();
+		var par_ = (parseFloat(total_b)*parseFloat(igv));
+		$('#total_igv').val(par_);
+		$('#total_n').val(par_+parseFloat(total_b));
+	}
+	if(doc == 'N'){
+		$('#total_n').val(0.00);
+		$('#total_igv').val(0.00);
+	}
+}
+
 
 function agregar(){
 	//datos del producto
