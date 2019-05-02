@@ -57,7 +57,7 @@
 
 <div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 	{!! Form::label('observacion', 'Observación:', array('class' => 'control-label')) !!}
-		{!! Form::text('observacion', $trabajador != null? $trabajador->observacion:'' , array('class' => 'form-control input-xs', 'id' => 'observacion', 'placeholder' => 'Ingrese una observacion')) !!}
+	{!! Form::text('observacion', $trabajador != null? $trabajador->observacion:'' , array('class' => 'form-control input-xs', 'id' => 'observacion', 'placeholder' => 'Ingrese una observacion')) !!}
 </div>
 <div class="form-group ">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">

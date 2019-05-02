@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
 			<table id="tabla_temp">
-				<tr><td>Producto:</td><td><label id="producto_inf"></label></td><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+				<tr><td>Producto:</td><td><label id="producto_inf"></label></td><td>  Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr>
 				<tr><td>Precio s/.:</td><td><label id="precio_inf" precio='0'></label></td><td>Stock (Unidades):</td><td><label id="stock_inf" stock='0'></label></td></tr>
 				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td>Cantidad Unidades:</td><td><label id="cant_unidades_inf"></label></td></tr>
 			</table>
@@ -105,15 +105,23 @@
 			<br>
 			
 			<div class="form-group" >
+				{!! Form::label('subtotal', 'Sub Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('subtotal', 0, array('class' => 'form-control input-xs', 'id' => 'subtotal', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-3 col-xs-12" style="height: 25px;">
+					{!! Form::text('igv', 0, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
+				</div>
+			</div>
+
+			<div class="form-group" >
 				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
 				</div>
-				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('igv', $igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
-				</div>
 			</div>
+
 			<br>
 			<div class="form-group">
 				<div class="col-lg-12 col-md-12 col-sm-12 text-right">
@@ -239,6 +247,8 @@ $(document).ready(function() {
 				$('#unidad_inf').text( $('#cboPresentacion option:selected').html());
 				$('#cant_unidades_inf').text(total_unidades);
 				$('#precio_inf').text(precio_unidad);
+				// $('#precio_inf').text(precio_unidad);
+				$('#precio_inf').attr('precio',precio_unidad)
 		});      
 			
 	});
@@ -274,16 +284,24 @@ function agregar(){
 	var precioventa = parseFloat($('#precio_inf').attr('precio'));
 	var cantidad = parseInt($('#cantidad').val());
 	var fechavencimiento = $('#fecha_v_inf').attr('fecha_v');
+
 	var igv = parseFloat($('#igv').val());
+
 	var total = parseFloat($('#total').val()!=""?$('#total').val():0);
+	var subtotal = parseFloat($('#subtotal').val()!=""?$('#subtotal').val():0);
+
 	var lote = $('#unidad_inf').attr('lote');
 	var stock = $('#stock_inf').attr('stock');
 	if(stock > cantidad){
 	if(producto_id!= '0'){
 		if(presentacion_id !='0'){
 			if(cantidad!=""){
-				var subtotal = cantidad * precioventa;
-				total += subtotal;
+				var subtotal_1 = cantidad * precioventa;
+				subtotal += subtotal_1;
+
+				var subtotal_2 = cantidad * precioventa;
+				total += subtotal_2 + (18/100 * subtotal);
+
 				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 			
 				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" >'+
@@ -298,6 +316,8 @@ function agregar(){
 					'</tr>';
 				$("#tabla").append(d);
 				$('#total').val(total);
+				$('#subtotal').val(subtotal);
+				$('#igv').val((18/100 * subtotal));
 				//vaciar datos
 				$('#cboProducto').val(0);
 				$('#cboPresentacion').empty();

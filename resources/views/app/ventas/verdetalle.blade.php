@@ -59,9 +59,17 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="card-box col-4 col-md-4">
+			
+				<dl class="dl-horizontal">
+					{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
+					<dt style="">IGV</dt><dd>: <strong>{{ $venta->igv }}</strong></dd>
+					<dt style="">Sub Total</dt><dd>: <strong>{{ $venta->total - $venta->igv}}</strong></dd>
+					<dt style="">TOTAL</dt><dd>: <strong>{{ $venta->total }}</strong></dd>
+				</dl>
+			
+		</div>
 	</div>
-
-  
     <div class="form-group">
         <div class="col-lg-12 col-md-12 col-sm-12 text-right">
             {!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cerrar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
