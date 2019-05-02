@@ -17,6 +17,9 @@ class Detalle_venta extends Model
     public function producto(){
         return $this->belongsTo('App\Producto','producto_id');
     } 
+    public function presentacion(){
+        return $this->belongsTo('App\ProductoPresentacion','producto_presentacion_id');
+    } 
     
     public function scopelistardetalle($query,$id_venta)
     {

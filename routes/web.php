@@ -184,6 +184,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('ventas', 'VentasController', array('except' => array('show')));
     Route::get('ventas/listclientes',  'VentasController@listclientes')->name('ventas.listclientes');
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
+    Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
 
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
@@ -224,8 +225,8 @@ Route::group(['middleware' => 'auth'], function () {
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
 Route::get('entrada/{id?}/{dni?}','EntradaSalidaController@getDetalleREntrada');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');
-Route::get('ventas/{producto_id?}','VentasController@getProducto');
-Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion');
+Route::get('ventas/{producto_id?}','VentasController@getProducto')->name('ventas.getProducto');
+Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion')->name('ventas.getProductoPresentacion');
 // Route::get('provincia/{id}','ProvinciaController@getProvincias');
 Route::get('provincia/{departamento_id?}','ProvinciaController@getProvinciasDep');
 // Route::get('distrito/{id}','DistritoController@getDistritos');

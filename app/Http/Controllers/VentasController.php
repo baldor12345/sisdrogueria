@@ -44,6 +44,7 @@ class VentasController extends Controller
             'getProducto'    => 'ventas.getProducto',
             'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
             'create_new' => 'clientes.create',
+            'verdetalle_v' => 'ventas.verdetalle_v',
         );
 
     public function __construct()
@@ -61,13 +62,14 @@ class VentasController extends Controller
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Doc.', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Cliente', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total S/.', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Estado', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
+       
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
@@ -193,9 +195,8 @@ class VentasController extends Controller
 
             for($i=0;$i<$cantidad; $i++){
                 $producto = Producto::find($request->get('producto_id'.$i));
-               
                 $cant =$request->get('cantidad'.$i);
-               
+              
                 $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('presentacion_id'.$i))->get()[0];
                 $precio_unit = $producto_presentacion->precio_venta_unitario; 
                 $subtotal =  round($precio_unit *  $cant, 2);
@@ -208,10 +209,10 @@ class VentasController extends Controller
                 $detalle_venta->ventas_id = $venta->id;
                 $detalle_venta->sucursal_id = $user->sucursal_id;
                 $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
-                $detalle_venta->save();
-
+                
                 $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
                 
+                $lotes = "";
                 for ($i=0; $i<count($entradas) ; $i++) {
                     $cant_actual = $entradas[$i]->stock;
                     
@@ -221,24 +222,22 @@ class VentasController extends Controller
                         $entrada1->stock = 0;
                         $entrada1->save();
                         $cant = $cant - $cant_actual;
-                        $detalleventa_lote = new DetalleVentaLote();
-                        $detalleventa_lote->cantidad = $cant;
-                        $detalleventa_lote->entrada_id =$entrada1->id;
-                        $detalleventa_lote->detalle_venta_id =$detalle_venta->id;
-                        $detalleventa_lote->save();
+                        $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad)).";";
+                       
                     }else{
                         $entrada1->stock -= $cant;
                         $entrada1->save();
+                        // $lotes = $lotes.$cant.":".$entrada1->lote."";
+                        $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad))."";
                        
-                        $detalleventa_lote = new DetalleVentaLote();
-                        $detalleventa_lote->cantidad = $cant;
-                        $detalleventa_lote->entrada_id =$entrada1->id;
-                        $detalleventa_lote->detalle_venta_id =$detalle_venta->id;
-                        $detalleventa_lote->save();
                         $cant = 0;
                         break;
                     }
                 }
+
+                $detalle_venta->lotes = $lotes;
+                $detalle_venta->save();
+
             }
         });
         return is_null($error) ? "OK" : $error;
@@ -416,7 +415,18 @@ class VentasController extends Controller
         return response()->json($producto_presentacion);
     }
 
-    public function verdetalle($venta_id){
+    public function verdetalle_v($venta_id){
+        $existe = Libreria::verificarExistencia($venta_id, 'ventas');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $entidad = 'Ventas';
+        $venta  = Venta::find($venta_id);
 
+        $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->get();
+        $user = Auth::user();
+        // $ruta = $this->rutas;
+        $igv = Propiedades::all()->last()->igv;
+        return view($this->folderview.'.verdetalle')->with(compact('venta','igv','detalle_ventas', 'entidad'));
     }
 }

@@ -94,7 +94,6 @@ class Producto extends Model
 
         static::created(function($producto)
         {
-
             $binnacle             = new Binnacle();
             $binnacle->action     = 'I';
             $binnacle->date      = date('Y-m-d H:i:s');

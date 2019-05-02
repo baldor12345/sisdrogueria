@@ -19,6 +19,7 @@ class CrearTablaDetalleVentas extends Migration
             $table->decimal('precio_unitario',20, 2)->nullable();
             $table->decimal('descuento',20, 2)->nullable();
             $table->decimal('total',20, 2)->nullable();
+            $table->string('lotes', 100)->nullable();
             $table->integer('producto_id')->unsigned();
             $table->integer('ventas_id')->unsigned();
             $table->integer('sucursal_id')->unsigned();
@@ -42,7 +43,4 @@ class CrearTablaDetalleVentas extends Migration
         Schema::dropIfExists('detalle_ventas');
     }
 
-    public function listDetLotes(){
-        
-    }
 }

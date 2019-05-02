@@ -17,15 +17,16 @@
 		@foreach ($lista as $key => $value)
 		<tr>
 			<td>{{ $contador }}</td>
-			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
+			<td>{{ $value->serie_doc.'-'.$value->numero_doc }}</td>
+			
 			<td>{{ $value->cliente_id == null?"":$value->cliente->nombres." ".$value->cliente->apellidos }}</td>
 			<td>{{ $value->total }}</td>
 			<td>{{ $value->sucursal->nombre }}</td>
 			<td>{{ $value->comprobante == 'B'?'Boleta':'Factura' }}</td>
 			<td>{{ $value->forma_pago == 'T'?'Tarjeta':'Efectivo' }}</td>
-			<td>{{ $value->estado == 'P'?'Pendiente':($value->estado == 'C'?'Cancelado':'Anulado') }}</td>
-			{{-- <td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_ver.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td> --}}
-			{{-- <td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> Comprobante', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td> --}}
+			{{-- <td>{{ $value->estado == 'P'?'Pendiente':($value->estado == 'C'?'Cancelado':'Anulado') }}</td> --}}
+			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			@if($value->estado == 'P')
 			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 			@else
