@@ -124,6 +124,7 @@ class CompraController extends Controller
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboUnidad = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboAfecto       = array('N'=>'NO', 'S'=>'SI');
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
         $numero_operacion   = Libreria::codigo_operacion();
@@ -131,7 +132,7 @@ class CompraController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**

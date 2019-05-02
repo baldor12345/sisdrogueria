@@ -128,6 +128,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('producto/listproveedores',  'ProductoController@listproveedores')->name('producto.listproveedores');
     Route::get('producto/listsucursales',  'ProductoController@listsucursales')->name('producto.listsucursales');
 
+    Route::get('producto/presentacion/{id?}',  'ProductoController@presentacion')->name('producto.presentacion');
+
     //comprobante
     Route::post('comprobante/buscar','ComprobanteController@buscar')->name('comprobante.buscar');
     Route::get('comprobante/eliminar/{id}/{listarluego}','ComprobanteController@eliminar')->name('comprobante.eliminar');
