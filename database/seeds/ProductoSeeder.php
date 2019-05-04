@@ -17,7 +17,7 @@ class ProductoSeeder extends Seeder
                 'codigo' => '00001',
                 'codigo_barra' => '',
                 'descripcion' => 'ZELEDRON',
-                'sustancia_activa' => 'Ácido Zoledrónico 5mg/100ml Solucion Inyectable Caja por 1 frasco x 100mL',
+                'sustancia_activa' => 'Ácido Zoledrónico 5mg/100ml Solucion Inyectable',
                 'uso_terapeutico' => '',
                 'tipo' => 1,
                 'afecto' => 'S',

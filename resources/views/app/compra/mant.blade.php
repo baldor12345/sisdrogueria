@@ -15,12 +15,14 @@
 						<td>&nbsp;</td>
 						<td class=" input-sm" style="text-align:right;"><b>Unidad Compra:</b></td>
 						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
-						<td class=" input-sm" style="text-align:right;"><b>Cantidad/Presentacion:</b></td>
+						<td class=" input-sm" style="text-align:right;"><b>Cant./Presentacion:</b></td>
 						<td><input class="form-control input-sm input-number"   id="cantidad" size="3" name="cantidad" type="text"></td>
 						<td class=" input-sm" style="text-align:right;"><b>Unidad/Presentacion:</b></td>
 						<td><input class="form-control input-sm input-number"  id="unidad_presentacion" size="7" name="unidad_presentacion" type="text"></td>
 						<td class=" input-sm" style="text-align:right;"><b>P.Compra:</b></td>
 						<td><input class="form-control input-sm" style="width:80px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+						<td class=" input-sm" style="text-align:right;"><b>Afecto:</b></td>
+						<td>{!! Form::select('afecto', $cboAfecto, null, array('class' => 'form-control input-sm', 'id' => 'afecto','style'=>'text-align: left;')) !!}</td>
 					</tr>
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
@@ -30,7 +32,7 @@
 						<td>{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-sm', 'id' => 'unidad_id','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Factor:</b></td>
 						<td><input class="form-control input-sm" id="factor" onkeypress="return filterFloat(event,this);"  size="3" name="factor" type="text" style="text-align: right;"></td>
-						<td class=" input-sm" style="text-align:right;"><b>Precio Venta/Unidad:</b></td>
+						<td class=" input-sm" style="text-align:right;"><b>P.Venta/Unidad:</b></td>
 						<td><input class="form-control input-sm" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
 						<td class=" input-sm" style="text-align:right;"><b>Lote:</b></td>
 						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
@@ -42,8 +44,9 @@
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="45%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Producto</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Afecto</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
 		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
@@ -84,12 +87,6 @@
 					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
 				</div>
 			</div>
-			<div class="form-group" >
-				{!! Form::label('afecto', 'Afecto:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}	
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('afecto', $cboAfecto, null, array('class' => 'form-control input-sm', 'id' => 'afecto', 'onchange'=>'cambiarafecto();')) !!}
-				</div>
-			</div>
 			<div class="form-group " >
 				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-9 col-xs-12" style="height: 25px;">
@@ -110,7 +107,7 @@
 				</div>
 			</div>
 			<div class="form-group" >
-				{!! Form::label('total', 'Total B.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				{!! Form::label('total', 'Subtotal:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
 				</div>
@@ -120,12 +117,8 @@
 				</div>
 			</div>
 			<div class="form-group" >
-				{!! Form::label('total_igv', 'Total igv:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
-					{!! Form::text('total_igv', null, array('class' => 'form-control input-xs', 'id' => 'total_igv', 'placeholder' => '','readonly')) !!}
-				</div>
-				{!! Form::label('total_n', 'Total N.:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+				{!! Form::label('total_n', 'Importe Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::text('total_n', null, array('class' => 'form-control input-xs', 'id' => 'total_n', 'placeholder' => '', 'readonly')) !!}
 				</div>
 			</div>
@@ -222,6 +215,7 @@ $(document).ready(function() {
 				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
 				$('#preciocompra').val(response[0].precio_compra);
 				$('#precioventa').val(response[0].precio_venta_unitario);
+				$('#afecto').val(response[0].afecto);
 				$('#presentacion_id').prop("disabled", true);
 				//$('#factor').prop("readonly", true);
 			}else{
@@ -245,21 +239,6 @@ function cambiarcredito(){
 	}
 }
 
-function cambiarafecto(){
-	var doc = $('#afecto').val();
-	if(doc == 'S'){
-		var total_b = $('#total').val();
-		var igv = $('#igv').val();
-		var par_ = (parseFloat(total_b)*parseFloat(igv));
-		$('#total_igv').val(par_);
-		$('#total_n').val(par_+parseFloat(total_b));
-	}
-	if(doc == 'N'){
-		$('#total_n').val(0.00);
-		$('#total_igv').val(0.00);
-	}
-}
-
 
 function agregar(){
 	//datos del producto
@@ -272,6 +251,13 @@ function agregar(){
 	var select_p = "";
 	var select_p = document.getElementById('presentacion_id');
 	presentacion_dat = select_p.options[select_p.selectedIndex].innerText;
+	
+	//afecto
+	var afectto_dat ="";
+	var select_af = "";
+	var select_af = document.getElementById('afecto');
+	afectto_dat = select_af.options[select_af.selectedIndex].innerText;
+	
 
 
 	var preciocompra 		= $('#preciocompra').val();
@@ -296,23 +282,39 @@ function agregar(){
 										var subtotal ="";
 										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 										var t_parcial =0;
+										var t_igv =0;
 										if($('#total').val() != ""){
 											t_parcial = parseFloat($('#total').val());
+											t_igv = parseFloat($('#total_n').val());
 										}else{
 											t_parcial=0;
+											t_igv=0;
 										}
+
 										var total = t_parcial+subtotal;
-										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-											'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
+										
+										if(($('#afecto').val()).trim() == 'S'){
+											var Igv__= parseFloat('{{ $igv }}');
+											t_igv = (Igv__*subtotal) + total;
+										} 
+										if(($('#afecto').val()).trim() == 'N'){
+											t_igv = t_igv+subtotal;
+										} 
+										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" afect_="'+$('#afecto').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+											'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
+											'<td class="input-sm" width="5%" align="center">'+afectto_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
 											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
-											'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
-											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'<td class="input-sm" width="10%" align="center">'+parseFloat(subtotal)+'</td>'+
+											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+', '+$('#afecto').val()+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 											'</tr>';
 										$("#tabla").append(d);
+										
 										$('#total').val(total);
+										$('#total_n').val(t_igv);
+
 										//vaciar datos
 										$('#producto_id').val(0);
 										$('#unidad_id').val(0);
@@ -335,7 +337,7 @@ function agregar(){
 									$('#fechavencimiento').focus();
 								}
 							}else{
-								window.alert("seleccione Unidad de Venta!");
+								window.alert("seleccione Unidad Base!");
 								$('#unidad_id').focus();
 							}
 
@@ -366,7 +368,7 @@ function agregar(){
 	
 }
 
-function quitar(t, subtotal){
+function quitar(t, subtotal, afecto){
 	var mensaje;
     var opcion = confirm("Desea ELiminar el producto registrado?");
     if (opcion == true) {
@@ -374,8 +376,16 @@ function quitar(t, subtotal){
 		var tr = td.parentNode;
 		var table = tr.parentNode;
 		table.removeChild(tr);
-		var total_parcial = parseFloat($('#total').val());
-		$('#total').val(parseFloat(total_parcial)-subtotal);
+		if(afecto.trim() == 'N'){
+			var total_parcial = parseFloat($('#total').val());
+			$('#total').val(parseFloat(total_parcial)-parseFloat(subtotal));
+		}
+		if(afecto.trim() == 'S'){
+			var igv_ = parseFloat('{$igv}');
+			var total_parcial = parseFloat($('#total').val());
+			var cal_igv = (parseFloat(subtotal)*igv_);
+			$('#total').val(parseFloat(total_parcial)-cal_igv);
+		}
 	}
 
 }

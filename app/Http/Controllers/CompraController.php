@@ -164,7 +164,7 @@ class CompraController extends Controller
             $compra->estado = $request->input('estado');
             $compra->fecha = $request->input('fecha');
             $compra->fecha_caducidad = $request->input('fecha_caducidad');
-            $compra->total  = $request->input('total');
+            $compra->total  = $request->input('total_n');
             $compra->igv = $request->input('igv');
             $user           = Auth::user();
             $compra->user_id = $user->id;
@@ -339,6 +339,7 @@ class CompraController extends Controller
                         'producto_presentacion.precio_compra as precio_compra',
                         'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
                         'producto.sustancia_activa as descripcion',
+                        'producto.afecto as afecto',
                         'presentacion.nombre as presentacion',
                         'categoria.id as categoria_id'
                     )
@@ -425,7 +426,7 @@ class CompraController extends Controller
                     ->orwhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->p_p_id, 'text' => $tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            $formatted_tags[] = ['id' => $tag->p_p_id, 'text' => $tag->descripcion.'-'.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
