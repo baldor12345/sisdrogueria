@@ -257,8 +257,6 @@ function agregar(){
 	var select_af = "";
 	var select_af = document.getElementById('afecto');
 	afectto_dat = select_af.options[select_af.selectedIndex].innerText;
-	
-
 
 	var preciocompra 		= $('#preciocompra').val();
 	var presentacion_id 	= $('#presentacion_id').val();
@@ -308,7 +306,7 @@ function agregar(){
 											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+parseFloat(subtotal)+'</td>'+
-											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+', '+$('#afecto').val()+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+', '+($("#afecto").val())+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 											'</tr>';
 										$("#tabla").append(d);
 										

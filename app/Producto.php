@@ -66,6 +66,7 @@ class Producto extends Model
                 ->select(
                         'producto.id as producto_id', 
                         'producto.codigo as codigo_barra', 
+                        'producto.descripcion as descripcion', 
                         'producto.sustancia_activa as producto', 
                         'marca.name as laboratorio', 
                         'categoria.name as categoria'

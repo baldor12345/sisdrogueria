@@ -64,7 +64,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('700');
+	configurarAnchoModal('800');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('.input-number').on('input', function () { 
     	this.value = this.value.replace(/[^0-9]/g,'');
