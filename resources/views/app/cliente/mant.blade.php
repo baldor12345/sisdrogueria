@@ -1,22 +1,28 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($cliente, $formData) !!}	
-	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-	<div class="form-group col-6 col-md-6">
-		{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
-		{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
-	</div>
-	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
-		{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
-		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
-	</div>
+{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('cboTipoDocumento', 'Tipo Documento: ', array('class' => '')) !!}
 		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6"  style="margin-left: 3px;">
 		{!! Form::label('doc', 'N° Documento:', array('class' => ' control-label')) !!}
-			{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
+		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
 	</div>
+
+	<div class="form-group col-6 col-md-6 clas_dni">
+		{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
+		{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
+	</div>
+	<div class="form-group col-6 col-md-6 clas_dni" style="margin-left: 3px;">
+		{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
+		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
+	</div>
+
+	<div class="form-group col-12 col-md-12 clas_ruc">
+			{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
+			{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
+		</div>
 
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('direccion', 'Direccion:', array('class' => ' control-label')) !!}
@@ -43,9 +49,25 @@
 		</div>
 	</div>
 {!! Form::close() !!}
+
 <script type="text/javascript">
 $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	
+	$('.clas_ruc').hide();
+
+	
+	$('#cboTipoDocumento').change(function(){
+		
+		if($(this).val() == 'dni'){
+			$('.clas_ruc').hide();
+			$('.clas_dni').show();
+			$('#dias').val(0);
+		}else{
+			$('.clas_dni').hide();
+			$('.clas_ruc').show();
+		}
+	});
 }); 
 </script>

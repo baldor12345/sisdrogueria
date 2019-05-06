@@ -56,7 +56,7 @@ class ClienteController extends Controller
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
         $cabecera[]       = array('valor' => 'DNI o RUC', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nombres y Apellidos', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Nombres y Apellidos / Razon Social', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
@@ -121,11 +121,19 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas = array(
-            'doc'       => 'required|max:20',
-            'nombres'    => 'required|max:100',
-            'apellidos'    => 'required|max:100',
-            );
+        if($request->input('cboTipoDocumento') == 'dni'){
+            $reglas = array(
+                'doc'       => 'required|max:20',
+                'nombres'    => 'required|max:100',
+                'apellidos'    => 'required|max:100',
+                );
+        }else{
+            $reglas = array(
+                'doc'       => 'required|max:20',
+                'razon_social'    => 'required|max:100',
+                );
+        }
+       
             $mensajes   = array();
             $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
@@ -142,6 +150,7 @@ class ClienteController extends Controller
             $cliente->nombres    = strtoupper($request->input('nombres'));
             $cliente->apellidos  = strtoupper($request->input('apellidos'));
             $cliente->direccion   = strtoupper($request->input('direccion'));
+            $cliente->razon_social   = strtoupper($request->input('razon_social'));
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');
             $cliente->email       = $request->input('email');

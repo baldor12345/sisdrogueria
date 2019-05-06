@@ -256,7 +256,7 @@ $(document).ready(function() {
 				$('#cant_unidades_inf').text(total_unidades);
 				$('#precio_inf').text(precio_unidad);
 				// $('#precio_inf').text(precio_unidad);
-				$('#precio_unitario').val(precio_unidad)
+				$('#precio_unidad').val(precio_unidad)
 		});      
 			
 	});
