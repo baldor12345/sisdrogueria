@@ -292,7 +292,7 @@ function agregar(){
 
 	var lote = $('#unidad_inf').attr('lote');
 	var stock = $('#stock_inf').attr('stock');
-	if(stock > cantidad){
+	if(stock >= cantidad){
 	if(producto_id!= '0'){
 		if(presentacion_id !='0'){
 			if(cantidad!=""){
@@ -382,7 +382,12 @@ function guardar_venta(entidad, idboton) {
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
-			if (respuesta === 'OK') {
+			if (respuesta[0] === 'OK') {
+
+				var venta = respuesta[1];
+				var cliente = respuesta[2];
+				var detalla_ventas = respuesta[3];
+				console.log(venta);
 				cerrarModal();
 				if (listar === 'SI') {
 					

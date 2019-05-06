@@ -147,14 +147,17 @@ class VentasController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        
-        $error = DB::transaction(function() use($request){
+        $id_venta=null;
+        $error = DB::transaction(function() use($request, $id_venta){
             $user = Auth::user();
             $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
             $venta = new Venta();
-            $venta->total = $request->input('total');
+            $valor_total = $request->input('total');
+            $valor_igv = $request->input('igv');
+            $venta->total = $valor_total;
+            $venta->subtotal = $valor_total - $valor_igv;
             $venta->descuento = 0;//$request->input('descuento');
-            $venta->igv = $request->input('igv');//IGV= de configuraciones
+            $venta->igv = $valor_igv;//IGV= de configuraciones
             $venta->descripcion = "";//$request->input('descripcion');
             $venta->fecha = date('Y-m-d H:i:s');
             $venta->estado = 'P';//P=Pendiente, C=cancelado
@@ -191,6 +194,7 @@ class VentasController extends Controller
             $detalle_caja->codigo_operacion =  $venta->codigo_venta;
 
             $venta->save();
+            $id_venta = $venta->id;
             $detalle_caja->save();
 
             for($i=0;$i<$cantidad; $i++){
@@ -240,7 +244,15 @@ class VentasController extends Controller
 
             }
         });
-        return is_null($error) ? "OK" : $error;
+        $venta01 = Venta::all()->last();
+        // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
+        $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
+        $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
+        $err01 = is_null($error) ? "OK" : $error;
+        $respuesta = array($err01,$venta01,$cliente,$detalle_ventas);
+
+        return $respuesta; 
+
     }
 
     /**
