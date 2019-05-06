@@ -197,9 +197,10 @@ class VentasController extends Controller
             $id_venta = $venta->id;
             $detalle_caja->save();
 
-            for($i=0;$i<$cantidad; $i++){
-                $producto = Producto::find($request->get('producto_id'.$i));
-                $cant =$request->get('cantidad'.$i);
+            for($i=0;$i< $cantidad; $i++){
+                $cant = 0;
+                $producto = Producto::find($request->get('producto_id'.$i.''));
+                $cant = $request->get('cantidad'.$i.'');
               
                 $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('presentacion_id'.$i))->get()[0];
                 $precio_unit = $producto_presentacion->precio_venta_unitario; 
@@ -214,28 +215,28 @@ class VentasController extends Controller
                 $detalle_venta->sucursal_id = $user->sucursal_id;
                 $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
                 
-                $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                // $entradas = Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                 $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
                 
                 $lotes = "";
-                for ($i=0; $i<count($entradas) ; $i++) {
+                for ($i=0; $i< count($entradas) ; $i++) {
                     $cant_actual = $entradas[$i]->stock;
                     
                     $entrada1 = Entrada::find($entradas[$i]->id);
-                    
-                    if($cant > $cant_actual){
-                        $entrada1->stock = 0;
-                        $entrada1->save();
-                        $cant = $cant - $cant_actual;
-                        $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad)).";";
-                       
-                    }else{
-                        $entrada1->stock -= $cant;
-                        $entrada1->save();
-                        // $lotes = $lotes.$cant.":".$entrada1->lote."";
-                        $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad))."";
-                       
-                        $cant = 0;
-                        break;
+                    if($cant > 0){
+                        if($cant > $cant_actual){
+                            $entrada1->stock = 0;
+                            $entrada1->save();
+                            $cant = $cant - $cant_actual;
+                            $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad)).";";
+                        }else{
+                            $entrada1->stock -= $cant;
+                            $entrada1->save();
+                            // $lotes = $lotes.$cant.":".$entrada1->lote."";
+                            $lotes = $lotes.$cant.":".$entrada1->lote.":".date('d/m/Y',strtotime($entrada1->fecha_caducidad))."";
+                            $cant = 0;
+                            
+                        }
                     }
                 }
 
@@ -393,7 +394,7 @@ class VentasController extends Controller
         $tags = Producto::listarproductosventa($term);
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->sustancia_activa." [".$tag->descripcion."]"];
+            $formatted_tags[] = ['id' => $tag->id, 'text' =>$tag->descripcion." - ".$tag->sustancia_activa.""];
         }
         return \Response::json($formatted_tags);
     }

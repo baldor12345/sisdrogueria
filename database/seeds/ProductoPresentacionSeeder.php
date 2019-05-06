@@ -17,6 +17,7 @@ class ProductoPresentacionSeeder extends Seeder
                 'producto_id' => 1,
                 'presentacion_id' => 1,
                 'precio_compra' => 20,
+                'precio_venta_unitario' => 30,
                 'cant_unidad_x_presentacion' => 1,
                 'created_at' => $now,
                 'updated_at' => $now

@@ -80,7 +80,7 @@ class Producto extends Model
         return $query->where(function($subquery) use($nombre)
         {
             if (!is_null($nombre)) {
-                $subquery->where("descripcion",'LIKE', '%'.$nombre.'%')->where("sustancia_activa",'LIKE', '%'.$nombre.'%');
+                $subquery->where("descripcion",'LIKE', '%'.$nombre.'%')->orwhere("sustancia_activa",'LIKE', '%'.$nombre.'%');
             }
         })
         ->where('deleted_at','=',null)
