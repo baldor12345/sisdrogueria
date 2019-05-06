@@ -32,6 +32,10 @@ class MenuoptionSeeder extends Seeder
 				array(
 					'name' => 'Usuario',
 					'link'   => 'usuario'
+				),
+				array(
+					'name' => 'Empresa',
+					'link'   => 'datosempresa'
 				)
 			);
 

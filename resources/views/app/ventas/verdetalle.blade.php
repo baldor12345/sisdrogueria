@@ -49,7 +49,7 @@
 								}
 							}
 							?>
-							<td class="text-center input-sm" width="10%">{{ $lot}}</td>
+							<td class="text-center input-sm" width="10%">{{ $value->lotes}}</td>
 							<td class="text-center input-sm" width="10%">{{ $fecha_v }}</td>
 							<td class="text-center input-sm" width="10%">{{ $value->precio_unitario }}</td>
 							<td class="text-center input-sm" width="10%">{{ $value->total }}</td>

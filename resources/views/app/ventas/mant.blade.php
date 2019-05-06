@@ -1,6 +1,10 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+	{!! Form::hidden('afecto', null, array('id' => 'afecto')) !!}
+	{!! Form::hidden('precio_unidad', null, array('id' => 'precio_unidad')) !!}
+	{!! Form::hidden('stock', null, array('id' => 'stock')) !!}
+	{!! Form::hidden('fecha_venc', null, array('id' => 'fecha_venc')) !!}
 
 	<div class="row">
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
@@ -160,7 +164,9 @@ $(document).ready(function() {
 			
 		}
 	});
-	
+	$('#cboCliente').empty();
+	$('#cboCliente').append('<option value="1">Varios</option>');
+
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		minimumInputLenght: 2,
@@ -185,23 +191,28 @@ $(document).ready(function() {
 	$('#cboProducto').change(function(){
 		// $('#selectaval').select2("val", "0");
 		$.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
-			// console.log("Respuesta persona: "+response[3]);
 			var producto = response[0];
 			var stock = response[1];
 			var precio_unidad = response[2];
 			var cboPresentacion = response[3];
 			var fecha_venc = response[4];
 			var lote = response[5];
+
+
 				$('#producto_inf').text(producto.descripcion);
 				$('#stock_inf').text(""+stock);
-				$('#stock_inf').attr('stock',stock);
+				$('#stock').val(stock);
+				$('#precio_unidad').val(precio_unidad);
+				// $('#stock_inf').attr('stock',stock);
 				$('#precio_inf').text(precio_unidad);
-				$('#precio_inf').attr('precio',precio_unidad);
+				// $('#precio_inf').attr('precio',precio_unidad);
 				$('#unidad_inf').text("");
 				$('#unidad_inf').attr('lote',lote);
 			
 				$('#fecha_v_inf').text(fecha_venc!=null?""+fecha_venc:"");
-				$('#fecha_v_inf').attr('fecha_v',""+fecha_venc);
+				$('#fecha_venc').val(fecha_venc!=null?fecha_venc:"");
+				$('#afecto').val(producto.afecto);
+				// $('#fecha_v_inf').attr('fecha_v',""+fecha_venc);
 				$('#cboPresentacion').empty();
 				$('#cboPresentacion').append('<option value="0">Seleccione.</option>');
 				$('#cboPresentacion').append(cboPresentacion);
@@ -211,28 +222,25 @@ $(document).ready(function() {
 	});
 
 	$('#tipo_venta').change(function(){
-                if($(this).val() == 'CO'){
-					$('.credito').hide();
-					$('.contado').show();
-					$('#dias').val(0);
-				}else{
-					$('.contado').hide();
-					$('.credito').show();
-				}
-			
+		if($(this).val() == 'CO'){
+			$('.credito').hide();
+			$('.contado').show();
+			$('#dias').val(0);
+		}else{
+			$('.contado').hide();
+			$('.credito').show();
+		}
 	});
 	$('#documento').change(function(){
-		var serie = "{{ $serie }}";//$('#serie_documento').val();
+		var serie = "{{ $serie }}";
 		$('#serie_documento').val($(this).val()+''+serie);
-                // if($(this).val() == ''){
-				// 	$('.credito').hide();
-				// 	$('.contado').show();
-				// 	$('#dias').val(0);
-				// }else{
-				// 	$('.contado').hide();
-				// 	$('.credito').show();
-				// }
-			
+		if($(this).val() == 'F'){
+			$('#cboCliente').empty();
+			$('#cboCliente').append('<option value="0">Seleccione Cliente</option>');
+		}else{
+			$('#cboCliente').empty();
+			$('#cboCliente').append('<option value="1">Varios</option>');
+		}
 	});
 
 	$('#cboPresentacion').change(function(){
@@ -248,7 +256,7 @@ $(document).ready(function() {
 				$('#cant_unidades_inf').text(total_unidades);
 				$('#precio_inf').text(precio_unidad);
 				// $('#precio_inf').text(precio_unidad);
-				$('#precio_inf').attr('precio',precio_unidad)
+				$('#precio_unitario').val(precio_unidad)
 		});      
 			
 	});
@@ -281,9 +289,9 @@ function agregar(){
 	var presentacion_id = parseInt($('#cboPresentacion').val());
 	var producto_id = parseInt($('#cboProducto').val());
 
-	var precioventa = parseFloat($('#precio_inf').attr('precio'));
+	var precioventa = parseFloat($('#precio_unidad').val());
 	var cantidad = parseInt($('#cantidad').val());
-	var fechavencimiento = $('#fecha_v_inf').attr('fecha_v');
+	var fechavencimiento = $('#fecha_venc').val();
 
 	var igv = parseFloat($('#igv').val());
 
@@ -291,8 +299,8 @@ function agregar(){
 	var subtotal = parseFloat($('#subtotal').val()!=""?$('#subtotal').val():0);
 
 	var lote = $('#unidad_inf').attr('lote');
-	var stock = $('#stock_inf').attr('stock');
-	if(stock > cantidad){
+	var stock = $('#stock').val();
+	if(stock >= cantidad){
 	if(producto_id!= '0'){
 		if(presentacion_id !='0'){
 			if(cantidad!=""){
@@ -300,8 +308,12 @@ function agregar(){
 				subtotal += subtotal_1;
 
 				var subtotal_2 = cantidad * precioventa;
-				total += subtotal_2 + (18/100 * subtotal);
-
+				if($('#afecto').val() == 'S'){
+					total += subtotal_2 + (18/100 * subtotal);
+				}else{
+					total += subtotal_2;
+				}
+				
 				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 			
 				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" >'+
@@ -311,7 +323,7 @@ function agregar(){
 					'<td class="input-sm" width="5%" align="center">'+lote+'</td>'+
 					'<td class="input-sm" width="10%" align="center">'+precioventa+'</td>'+
 					'<td class="input-sm" width="10%" align="center">'+cantidad+'</td>'+
-					'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
+					'<td class="input-sm" width="10%" align="center">'+subtotal_2+'</td>'+
 					'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 					'</tr>';
 				$("#tabla").append(d);
@@ -320,9 +332,14 @@ function agregar(){
 				$('#igv').val((18/100 * subtotal));
 				//vaciar datos
 				$('#cboProducto').val(0);
+				$('#cboProducto').empty();
+				$('#cboProducto').append('<option value="0">Seleccione</option>');
 				$('#cboPresentacion').empty();
 				$('#cboPresentacion').append('<option value="0">Seleccione</option>');
-
+				$('#afecto').val('');
+				$('#precio_unidad').val('');
+				$('#stock').val('');
+				$('#fecha_venc').val('');
 				$('#producto_inf').val("");
 				$('#precio_inf').val("");
 				$('#stock_inf').val("");
@@ -364,7 +381,17 @@ function quitar(t, subtotal){
 }
 
 function guardar_venta(entidad, idboton) {
-	var idformulario = IDFORMMANTENIMIENTO + entidad;
+	var correcto = false;
+	// if($('#documento').val() == 'F' ){
+		if($('#cboCliente').val() != '0'){
+			correcto = true;
+		}else{
+			alert('Debe seleccionar un cliente antes de guardar.');
+		}
+	// }
+
+	if(correcto){
+		var idformulario = IDFORMMANTENIMIENTO + entidad;
 	var data         = submitForm_venta(idformulario);
 	var respuesta    = '';
 	var listar       = 'NO';
@@ -382,7 +409,12 @@ function guardar_venta(entidad, idboton) {
 	}).always(function() {
 		if(respuesta === 'ERROR'){
 		}else{
-			if (respuesta === 'OK') {
+			if (respuesta[0] === 'OK') {
+
+				var venta = respuesta[1];
+				var cliente = respuesta[2];
+				var detalla_ventas = respuesta[3];
+				
 				cerrarModal();
 				if (listar === 'SI') {
 					
@@ -397,16 +429,19 @@ function guardar_venta(entidad, idboton) {
 			}
 		}
 	});
+	}
+	
 }
 function submitForm_venta(idformulario) {
 	var i=0;
 	var datos="";
 	$('.datos-producto').each(function() {
-		datos += 	"&producto_id"		+i+"="+$(this).attr("producto_id")+
+		datos += 	"&producto_id"+i+"="+$(this).attr("producto_id")+
 					"&presentacion_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&cantidad"		+i+"="+$(this).attr("cantidad");
+					"&cantidad"+i+"="+$(this).attr("cantidad");
 		i++;
 	});
+
 	datos += "&cantidad_registros="+i;
 	var parametros = $(idformulario).serialize();
 	parametros += datos;

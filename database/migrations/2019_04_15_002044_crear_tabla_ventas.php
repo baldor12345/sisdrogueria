@@ -16,13 +16,14 @@ class CrearTablaVentas extends Migration
         Schema::create('ventas', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('descuento',20, 2)->nullable();
-            $table->decimal('total',20, 2)->nullable();
-            $table->decimal('igv',20, 2)->nullable();
+            $table->decimal('subtotal',20, 3)->nullable();
+            $table->decimal('total',20, 3)->nullable();
+            $table->decimal('igv',20, 3)->nullable();
             $table->string('descripcion', 400)->nullable();
             $table->string('numero_operacion', 100)->nullable();//Numero autogqneardo que coincide con el numero operacion de caja
             // $table->string('codigo_venta', 10)->nullable();//codigo para busqueda rapida en la caja de pagos
-            $table->string('serie_doc', 10)->nullable();//serie de documento factura o voleta
-            $table->string('numero_doc', 10)->nullable();//numero documento de factura o voleta
+            $table->string('serie_doc', 4)->nullable();//serie de documento factura o voleta
+            $table->string('numero_doc', 8)->nullable();//numero documento de factura o voleta
             $table->timestamp('fecha')->nullable();
             $table->char('estado', 1)->nullable();//P=pendiente, E=Entregado
             $table->integer('user_id')->unsigned();
