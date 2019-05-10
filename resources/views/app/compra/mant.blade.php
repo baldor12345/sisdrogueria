@@ -108,12 +108,8 @@
 			</div>
 			<div class="form-group" >
 				{!! Form::label('total', 'Subtotal:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+				<div class="col-sm-9 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
-				</div>
-				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
-					{!! Form::text('igv', $igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -290,14 +286,19 @@ function agregar(){
 										}
 
 										var total = t_parcial+subtotal;
-										
+										var igv_parcial = 0;
 										if(($('#afecto').val()).trim() == 'S'){
 											var Igv__= parseFloat('{{ $igv }}');
 											t_igv = (Igv__*subtotal) + total;
+											igv_parcial = (Igv__*subtotal)+subtotal;
 										} 
 										if(($('#afecto').val()).trim() == 'N'){
 											t_igv = t_igv+subtotal;
+											igv_parcial = subtotal;
 										} 
+										var afect_producto = "";
+										afect_producto = $("#afecto").val();
+
 										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" afect_="'+$('#afecto').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
@@ -306,7 +307,7 @@ function agregar(){
 											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+parseFloat(subtotal)+'</td>'+
-											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+', '+($("#afecto").val())+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'<td width="5%" align="center"><button id="btnQuitar" afect_compra="'+afect_producto+'" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar_compra(this, '+igv_parcial+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 											'</tr>';
 										$("#tabla").append(d);
 										
@@ -326,6 +327,7 @@ function agregar(){
 										$('#fechavencimiento').val("");
 										$('#factor').val("");
 										$('#lote').val("");
+										$('#afecto').val("");
 									}else{
 										window.alert("ingrese lote, debe ser obligatorio!");
 										$('#lote').focus();
@@ -366,24 +368,21 @@ function agregar(){
 	
 }
 
-function quitar(t, subtotal, afecto){
+function quitar_compra(t, subtotal){
 	var mensaje;
     var opcion = confirm("Desea ELiminar el producto registrado?");
     if (opcion == true) {
+		var afecto = $(this).attr("afect_compra");
+		console.log("el afecto que pasa es: "+afecto);
         var td = t.parentNode;
 		var tr = td.parentNode;
 		var table = tr.parentNode;
 		table.removeChild(tr);
-		if(afecto.trim() == 'N'){
-			var total_parcial = parseFloat($('#total').val());
-			$('#total').val(parseFloat(total_parcial)-parseFloat(subtotal));
-		}
-		if(afecto.trim() == 'S'){
-			var igv_ = parseFloat('{$igv}');
-			var total_parcial = parseFloat($('#total').val());
-			var cal_igv = (parseFloat(subtotal)*igv_);
-			$('#total').val(parseFloat(total_parcial)-cal_igv);
-		}
+		var total_parcial = parseFloat($('#total').val());
+		var total_parcial_igv = parseFloat($('#total_n').val());
+		$('#total').val(parseFloat(total_parcial)-parseFloat(subtotal));
+		$('#total_n').val(parseFloat(total_parcial_igv)-parseFloat(subtotal));
+		
 	}
 
 }

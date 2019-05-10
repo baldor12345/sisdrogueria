@@ -68,6 +68,7 @@ class MantenimientoProducto extends Model
                 )
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
                 ->where('presentacion.id', 'LIKE','%'.$presentacion_id.'%')
+                ->where('entrada.deleted_at',null)
                 ->groupBy('presentacion.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
                 //->orderBy('detalle_compra.fecha_caducidad', 'DSC');
     }
