@@ -215,7 +215,7 @@ class CompraController extends Controller
             $detalle_caja->estado = 'P';
             $detalle_caja->fecha = $request->input('fecha').date(' H:i:s');
             $detalle_caja->ingreso = 0;
-            $detalle_caja->egreso = $request->input('total');
+            $detalle_caja->egreso = $request->input('total_n');
             $detalle_caja->numero_operacion = $request->input('numero_documento');
             $detalle_caja->save();
         });
@@ -362,8 +362,18 @@ class CompraController extends Controller
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $producto = Compra::find($id);
-            $producto->delete();
+            $compra = Compra::find($id);
+            $detalle_compra = DetalleCompra::All();
+            foreach ($detalle_compra as $key => $value) {
+                if($value->compra_id == $compra->id){
+                    $detalle_ = DetalleCompra::find($value->id);
+                    $entrada = Entrada::where('lote', $detalle_->lote)->where('fecha_caducidad', $detalle_->fecha_caducidad)->where('deleted_at',null)->get();
+                    $entrada[0]->delete();
+                }
+            }
+            $caja_ = DetalleCaja::where('numero_operacion', $compra->numero_documento)->where('deleted_at',null)->get();
+            $caja_[0]->delete();
+            $compra->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
