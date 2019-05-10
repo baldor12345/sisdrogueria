@@ -371,6 +371,8 @@ class CompraController extends Controller
                     $entrada[0]->delete();
                 }
             }
+            $caja_ = DetalleCaja::where('numero_operacion', $compra->numero_documento)->where('deleted_at',null)->get();
+            $caja_[0]->delete();
             $compra->delete();
         });
         return is_null($error) ? "OK" : $error;
