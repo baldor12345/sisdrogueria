@@ -2,7 +2,14 @@
 
 	<div class="row">
 		<div class="card-box">	
-			<dl class="dl-horizontal">
+			<table>
+				<tr><td>Fecha de Venc.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td><td style="padding-left: 18px;">Fecha de Emisión.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td></tr>
+				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc}}</strong></td></tr>
+				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
+				<tr><td>Observación</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
+				
+			</table>
+			{{-- <dl class="dl-horizontal">
 				<dt style="text-align: left"><label>Fecha de Vencimiento</label></dt><dd>: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></dd>
 				<dt style="text-align: left">Fecha de emisión</dt><dd>: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></dd>
 				<dt style="text-align: left">Señor(es)</dt><dd>: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></dd>
@@ -10,7 +17,7 @@
 				<dt style="text-align: left">Direccion del Cliente</dt><dd>: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></dd>
 				<dt style="text-align: left">Tipo de Moneda</dt><dd>: <strong>SOLES</strong></dd>
 				<dt style="text-align: left">Observación</dt><dd>: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></dd>
-			</dl>
+			</dl> --}}
 		</div>
 	</div>
 	<div class="row">
@@ -49,7 +56,8 @@
 								}
 							}
 							?>
-							<td class="text-center input-sm" width="10%">{{ $value->lotes}}</td>
+							{{-- <td class="text-center input-sm" width="10%">{{ $value->lotes}}</td> --}}
+							<td class="text-center input-sm" width="10%">{{ $lot}}</td>
 							<td class="text-center input-sm" width="10%">{{ $fecha_v }}</td>
 							<td class="text-center input-sm" width="10%">{{ $value->precio_unitario }}</td>
 							<td class="text-center input-sm" width="10%">{{ $value->total }}</td>
@@ -63,9 +71,9 @@
 			
 				<dl class="dl-horizontal">
 					{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
-					<dt style="">IGV</dt><dd>: <strong>{{ $venta->igv }}</strong></dd>
-					<dt style="">Sub Total</dt><dd>: <strong>{{ $venta->total - $venta->igv}}</strong></dd>
-					<dt style="">TOTAL</dt><dd>: <strong>{{ $venta->total }}</strong></dd>
+					<dt style="">IGV</dt><dd>: <strong>{{ round($venta->igv,2) }}</strong></dd>
+					<dt style="">Sub Total</dt><dd>: <strong>{{ round($venta->total - $venta->igv,2) }}</strong></dd>
+					<dt style="">TOTAL</dt><dd>: <strong>{{ round($venta->total, 2) }}</strong></dd>
 				</dl>
 			
 		</div>

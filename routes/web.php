@@ -223,7 +223,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('concepto/eliminar/{id}/{listarluego}', 'ConceptoController@eliminar')->name('concepto.eliminar');
     Route::resource('concepto', 'ConceptoController', array('except' => array('show')));
 
-    /*CONCEPTO*/
+    /*empresa*/
     Route::post('datosempresa/buscar', 'DatosEmpresaController@buscar')->name('datosempresa.buscar');
     Route::get('datosempresa/eliminar/{id}/{listarluego}', 'DatosEmpresaController@eliminar')->name('datosempresa.eliminar');
     Route::resource('datosempresa', 'DatosEmpresaController', array('except' => array('show')));
