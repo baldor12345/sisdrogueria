@@ -28,7 +28,7 @@
 			@endif
 			<td>{{ $value->total }}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle"], array($value->compra_id, 'listar'=>'SI')).'\', \''.$titulo_ver.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->compra_id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular Compra', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->compra_id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;
