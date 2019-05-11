@@ -19,7 +19,7 @@
 			<td>{{ $contador }}</td>
 			<td>{{ $value->serie_doc.'-'.$value->numero_doc }}</td>
 			
-			<td>{{ $value->cliente_id == null?"":$value->cliente->nombres." ".$value->cliente->apellidos }}</td>
+			<td>{{ $value->cliente->dni == null?$value->cliente->razon_social."":$value->cliente->nombres." ".$value->cliente->apellidos }}</td>
 			<td>{{ $value->total }}</td>
 			<td>{{ $value->sucursal->nombre }}</td>
 			<td>{{ $value->comprobante == 'B'?'Boleta':'Factura' }}</td>
