@@ -78,5 +78,20 @@ class Venta extends Model
                 ->where('entrada.stock', '>',0)
                 ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
     }
+    public static function list_detalle_ventas($venta_id){
+        return  DB::table('detalle_ventas')
+        ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+        ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
+        ->select(
+            'producto.descripcion as nombre_producto', 
+            'producto.sustancia_activa as sustancia_activa', 
+            'detalle_ventas.lotes as lotes', 
+            'detalle_ventas.cantidad as cantidad', 
+            'detalle_ventas.precio_unitario as precio_unitario', 
+            'detalle_ventas.total as subtotal'         
+        )
+        ->where('detalle_ventas.ventas_id', '=',$venta_id)
+        ->where('detalle_ventas.deleted_at', '=',null)->get();
+    }
 
 }
