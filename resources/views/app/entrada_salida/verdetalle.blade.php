@@ -53,9 +53,9 @@
                                 <td class="text-center input-sm">{{ $value->producto }}</td>
                                 <td class="text-center input-sm">{{ $value->presentacion }}</td>
                                 <td class="text-center input-sm">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
+								<td class="text-center input-sm">{{ $value->cantidad }}</td>
 								<td class="text-center input-sm">{{ $value->precio_compra }}</td>
 								<td class="text-center input-sm">{{ $value->precio_venta }}</td>
-                                <td class="text-center input-sm">{{ $value->cantidad }}</td>
                                 <td class="text-center input-sm">{{ $value->lote }}</td>
                             </tr>
                         @endforeach

@@ -108,8 +108,12 @@
 			</div>
 			<div class="form-group" >
 				{!! Form::label('total', 'Subtotal:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('igv_t', 'Igv:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('igv_t', null, array('class' => 'form-control input-xs', 'id' => 'igv_t', 'placeholder' => '','readonly')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -275,29 +279,6 @@ function agregar(){
 									if(lote!=""){
 										var subtotal ="";
 										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
-										var t_parcial =0;
-										var t_igv =0;
-										if($('#total').val() != ""){
-											t_parcial = parseFloat($('#total').val());
-											t_igv = parseFloat($('#total_n').val());
-										}else{
-											t_parcial=0;
-											t_igv=0;
-										}
-
-										var total = t_parcial+subtotal;
-										var igv_parcial = 0;
-										if(($('#afecto').val()).trim() == 'S'){
-											var Igv__= parseFloat('{{ $igv }}');
-											t_igv = (Igv__*subtotal) + total;
-											igv_parcial = (Igv__*subtotal)+subtotal;
-										} 
-										if(($('#afecto').val()).trim() == 'N'){
-											t_igv = t_igv+subtotal;
-											igv_parcial = subtotal;
-										} 
-										var afect_producto = "";
-										afect_producto = $("#afecto").val();
 
 										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" afect_="'+$('#afecto').val()+'" dat_factor="'+factor+'" id_unidad="'+$('#unidad_id').val()+'" id_laboratorio="'+laboratorio_id+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
@@ -307,15 +288,15 @@ function agregar(){
 											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+parseFloat(subtotal)+'</td>'+
-											'<td width="5%" align="center"><button id="btnQuitar" afect_compra="'+afect_producto+'" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar_compra(this, '+igv_parcial+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'<td width="5%" align="center"><button id="btnQuitar"  name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar_compra(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 											'</tr>';
 										$("#tabla").append(d);
-										
-										$('#total').val(total);
-										$('#total_n').val(t_igv);
+
+										var valores = calcularPrecioCompra();
 
 										//vaciar datos
-										$('#producto_id').val(0);
+										$('#producto_id').empty();
+										$('#producto_id').append('<option value="0">Seleccione</option>');
 										$('#unidad_id').val(0);
 										$('#presentacion_id').val(0);
 										$('#categoria_id').val(0);
@@ -372,19 +353,41 @@ function quitar_compra(t, subtotal){
 	var mensaje;
     var opcion = confirm("Desea ELiminar el producto registrado?");
     if (opcion == true) {
-		var afecto = $(this).attr("afect_compra");
-		console.log("el afecto que pasa es: "+afecto);
         var td = t.parentNode;
 		var tr = td.parentNode;
 		var table = tr.parentNode;
 		table.removeChild(tr);
-		var total_parcial = parseFloat($('#total').val());
-		var total_parcial_igv = parseFloat($('#total_n').val());
-		$('#total').val(parseFloat(total_parcial)-parseFloat(subtotal));
-		$('#total_n').val(parseFloat(total_parcial_igv)-parseFloat(subtotal));
-		
+		var valores = calcularPrecioCompra();
 	}
+}
 
+function calcularPrecioCompra(){
+	var subtotal = 0;
+	var total = 0;
+	var igv = 0;
+	var porcent_igv = 0.18;
+	$('.datos-producto').each(function() {
+		var tmp_igv = 0;
+		var tmp_valor_sub = 0;
+		var precio = parseFloat($(this).attr("precio_compra"));
+		var cantidad = parseFloat($(this).attr("canti"));
+		var afecto = $(this).attr("afect_");
+		tmp_valor_sub = precio * cantidad;
+		subtotal += tmp_valor_sub;
+		if(afecto == 'S'){
+			tmp_igv = porcent_igv*tmp_valor_sub;
+		}
+		igv += tmp_igv;
+	});
+
+	total = subtotal + igv;
+
+	var res = [igv,subtotal, total];
+
+	$('#total_n').val(total);
+	$('#total').val(subtotal);
+	$('#igv_t').val(igv);
+	return res;
 }
 
 function guardar_compra(entidad, idboton) {

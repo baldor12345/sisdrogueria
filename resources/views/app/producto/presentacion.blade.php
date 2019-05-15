@@ -27,23 +27,28 @@
 					<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 						<thead>
 							<tr>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Presentacion</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="3%">#</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="37%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Cant. Uds</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
+								<th bgcolor="#E0ECF8" colspan="2" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
 						@if($listdet_=='')
 						@else
-						<tbody>
+						<tbody id="dat_comp">
+							<?php $cont=0;?>
 							@foreach($listdet_ as $key => $value)
+								<?php $cont++; ?>
 								<tr class='datos-presentacion' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
-									<td>{{ $value->presentacion_nombre }} </td>
-									<td>{{ $value->precio_compra }} </td>
-									<td>{{ $value->cant_unidad_x_presentacion }} </td>
-									<td>{{ $value->precio_venta_unitario }}</td>
-									<td><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>
+									<td class="input-sm" align="center"><?php echo $cont; ?></td>
+									<td class="input-sm" align="center">{{ $value->presentacion_nombre }} </td>
+									<td class="input-sm" align="center">{{ $value->precio_compra }} </td>
+									<td class="input-sm" align="center">{{ $value->cant_unidad_x_presentacion }} </td>
+									<td class="input-sm" align="center">{{ $value->precio_venta_unitario }}</td>
+									<td class="input-sm" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(this,<?php echo $cont; ?> );" title="" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
+									<td class="input-sm" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button" disabled="true"><i class="glyphicon glyphicon-remove"></i></button></td>
 								</tr>
 							@endforeach
 						</tbody>
@@ -133,10 +138,12 @@ function agregar(){
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
 			var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
-				'<td class="input-sm" width="40%" align="center">'+presentacion_dat+'</td>'+
+				'<td class="input-sm" width="2%" align="center">2</td>'+
+				'<td class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
 				'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
 				'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
 				'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
+				'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" disabled="true" onclick="editar(this. 3);" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
 				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 				'</tr>';
 			$("#tabla").append(d);
@@ -165,6 +172,19 @@ function quitar(t){
 		table.removeChild(tr);
 	}
 
+}
+function editar(t, item){
+	var mensaje;
+    var opcion = confirm("Desea ELiminar el producto registrado?");
+	console.log("editar "+item);
+	console.log("datos que pasan "+this.dat_comp[item]);
+	$('#preciocompra').val(this.tabla[item]);
+    if (opcion == true) {
+        var td = t.parentNode;
+		var tr = td.parentNode;
+		var table = tr.parentNode;
+		table.removeChild(tr);
+	}
 }
 
 function guardar_producto(entidad, idboton) {

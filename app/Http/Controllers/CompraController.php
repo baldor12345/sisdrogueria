@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests;
 use App\Producto;
+use App\ProductoPresentacion;
 use App\Compra;
 use App\DetalleCompra;
 use App\User;
@@ -186,6 +187,12 @@ class CompraController extends Controller
                     $detalle_compra->producto_presentacion_id = $request->input("id_producto".$i);
                     $detalle_compra->compra_id = $compra_last->id;
                     $detalle_compra->save();
+
+                    $prod_m                 = ProductoPresentacion::find($request->input("id_producto".$i));
+                    $prod_m->precio_compra = $request->input("precio_compra".$i);
+                    $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
+                    $prod_m->save();
+
                 }
             }
             if($cantidad >0){

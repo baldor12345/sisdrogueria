@@ -260,9 +260,10 @@ function agregar(){
 									$("#tabla").append(d);
 									$('#total').val(total);
 									//vaciar datos
-									$('#producto_id').val(0);
 									$('#id_presentacion').val(0);
-									$('#producto_id').value="Seleccione Producto...";
+									$('#producto_id').empty();
+									$('#producto_id').append('<option value="0">Seleccione Producto..........................</option>');
+
 									$('#preciocompra').val("");
 									$('#precioventa').val("");
 									$('#cantidad').val("");
@@ -332,7 +333,8 @@ function agregar(){
 										$("#tabla").append(d);
 										$('#total').val(total);
 										//vaciar datos
-										$('#producto_id').val(0);
+										$('#entrada_id').empty();
+										$('#entrada_id').append('<option value="0">Seleccione Producto..........................</option>');
 										$('#id_presentacion').val(0);
 										$('#preciocompra').val("");
 										$('#precioventa').val("");

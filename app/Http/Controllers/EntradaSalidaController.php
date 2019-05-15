@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests;
 use App\Producto;
+use App\ProductoPresentacion;
 use App\Compra;
 use App\DetalleCompra;
 use App\User;
@@ -183,6 +184,11 @@ class EntradaSalidaController extends Controller
                         $entrada_salida_detalle->producto_presentacion_id = $request->input("id_producto".$i);
                         $entrada_salida_detalle->save();
 
+                        $prod_m                 = ProductoPresentacion::find($request->input("id_producto".$i));
+                        $prod_m->precio_compra = $request->input("precio_compra".$i);
+                        $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
+                        $prod_m->save();
+
                         $entrada_existente = Entrada::where('lote',trim($request->input("lot".$i)))->whereDate('fecha_caducidad',$request->input("fecha_vencim".$i))->where('deleted_at',null)->get();
                         if(count($entrada_existente) != 0){
                             $entrada    = Entrada::find($entrada_existente[0]->id);
@@ -240,6 +246,11 @@ class EntradaSalidaController extends Controller
                         $entrada_salida_detalle->entrada_salida_id = $entrada_salida_last[0]->id;
                         $entrada_salida_detalle->producto_presentacion_id = $request->input("id_entrada".$i);
                         $entrada_salida_detalle->save();
+
+                        $prod_m                 = ProductoPresentacion::find($request->input("id_entrada".$i));
+                        $prod_m->precio_compra = $request->input("precio_compra".$i);
+                        $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
+                        $prod_m->save();
 
                         $entrada = Entrada::find($request->input("id_entrada".$i));
                         $entrada->stock = $entrada->stock-intval($request->input("cantid".$i));
@@ -465,7 +476,7 @@ class EntradaSalidaController extends Controller
                         ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
@@ -500,7 +511,7 @@ class EntradaSalidaController extends Controller
         
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
+            $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

@@ -477,10 +477,11 @@ function guardar_venta(entidad, idboton) {
 		}else{
 			if (respuesta[0] === 'OK') {
 
-				var venta = respuesta[1];
-				var cliente = respuesta[2];
-				var detalla_ventas = respuesta[3];
+				var venta = JSON.stringify(respuesta[1]);
+				var cliente = JSON.stringify(respuesta[2]);
+				var detalla_ventas = JSON.stringify(respuesta[3]);
 				// var lsentradas = respuesta[4];
+				declarar(venta,cliente,detalla_ventas,$("#documento").val());
 				
 				cerrarModal();
 				if (listar === 'SI') {
@@ -521,6 +522,28 @@ function submitForm_venta(idformulario) {
 	});
 	console.log('Respuesta: '+respuesta);
 	return respuesta;
+}
+
+
+function declarar(venta,cliente,detalla_ventas,idtipodoc){
+ 	if(idtipodoc=="B"){
+ 		tipodocumento = "Boleta";
+ 	}else{
+ 		tipodocumento = "Factura";
+ 	}
+    var ajax_function = $.ajax({
+        async:true,    
+        cache:false,
+        type: 'GET',
+        url: "http://localhost/clifacturacion/controlador/contComprobante.php?funcion=enviar"+tipodocumento,
+        data: "venta="+venta+"&cliente="+cliente+"&detalle="+detalla_ventas,
+        success: function (data, textStatus, jqXHR) {
+            alert("Enviado");
+        },
+        beforeSend: function (xhr) {
+            //alert("Enviando informacion");
+        }
+    });
 }
 
 
