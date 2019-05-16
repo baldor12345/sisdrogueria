@@ -11,7 +11,7 @@
 			<table id="tabla_temp" class="" style="">
 				<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
 				{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
-				<tr><td>Precio s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+				<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
 				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
 			</table>
 		</div>
@@ -324,7 +324,9 @@ function calcularPrecio(){
 		igv += tmp_igv;
 	});
 
-	total = subtotal + igv;
+	total = subtotal;
+	subtotal = total - igv;
+
 
 	var res = [igv,subtotal, total];
 
@@ -453,8 +455,6 @@ function guardar_venta(entidad, idboton) {
 	}else{
 		alert('No a seleccionado ningun pruducto');
 	}
-	
-		
 
 	if(correcto){
 		var idformulario = IDFORMMANTENIMIENTO + entidad;
@@ -498,6 +498,7 @@ function guardar_venta(entidad, idboton) {
 	}
 	
 }
+
 function submitForm_venta(idformulario) {
 	var i=0;
 	var datos="";
@@ -546,7 +547,6 @@ function declarar(venta,cliente,detalla_ventas,idtipodoc){
     });
 }
 
-
 $('.input-number').on('input', function () { 
 	this.value = this.value.replace(/[^0-9]/g,'');
 });
@@ -576,6 +576,7 @@ function filterFloat(evt,input){
 		}
 	}
 }
+
 function filter(__val__){
 	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
 	if(preg.test(__val__) === true){

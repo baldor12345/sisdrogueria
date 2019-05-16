@@ -89,10 +89,15 @@ class Venta extends Model
             'detalle_ventas.lotes as lotes', 
             'detalle_ventas.cantidad as cantidad', 
             'detalle_ventas.precio_unitario as precio_unitario', 
+<<<<<<< HEAD
             'detalle_ventas.total as subtotal',
             'marca.name as nombre_marca'  ,
              'producto.afecto as afecto'  
 
+=======
+            'detalle_ventas.total as subtotal',         
+            'marca.name as nombre_marca'         
+>>>>>>> e10a47cccee6e7a2217754c184fdee99512fe2de
         )
         ->where('detalle_ventas.ventas_id', '=',$venta_id)
         ->where('detalle_ventas.deleted_at', '=',null)->get();

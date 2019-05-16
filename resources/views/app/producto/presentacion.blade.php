@@ -4,10 +4,31 @@
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 <div class="row">
 	<div class="col-md-12">	
-		<fieldset> 
-			<div class="panel panel-default">
-				<div class="form-inline">
-					<table>
+		<div class="form_editar">
+				{!! Form::hidden('fila_editar', '', array('id' => 'fila_editar')) !!}
+			<div class="form-group text-left form_editar">
+				{!! Form::label('presentacion', 'Presentacion:', array('class' => ' c text-left')) !!}
+				{!! Form::select('presentacion', ['seleccione..'=>'0'], null, array('class' => 'form-control input-sm', 'id' => 'presentacion')) !!}
+			</div>
+			<div class="form-group text-left form_editar" style="margin-left: 3px">
+				{!! Form::label('precio_com', 'Precio Compra:', array('class' => ' text-left')) !!}
+				{!! Form::text('precio_com', null, array('class' => 'form-control input-sm', 'id' => 'precio_com', 'placeholder' => 'precio compra')) !!}
+			</div>
+			<div class="form-group  text-left form_editar" style="margin-left: 3px">
+					{!! Form::label('cantidad_p', 'Cantidad:', array('class' => '')) !!}
+					{!! Form::text('cantidad_p', null, array('class' => 'form-control input-sm', 'id' => 'cantidad_p', 'placeholder' => 'cantidad')) !!}
+				</div>
+			<div class="form-group text-left form_editar" style="margin-left: 3px">
+					{!! Form::label('precio_venta_p', 'Precio Venta:', array('class' => '')) !!}
+					{!! Form::text('precio_venta_p', null, array('class' => 'form-control input-sm', 'id' => 'precio_venta_p', 'placeholder' => 'precio_venta')) !!}
+			</div>
+			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Edi', array('class' => 'btn btn-warning btn-sm form_editar', 'id' => 'btnEdit', 'onclick' => 'modif_pres();')) !!}
+		</div>
+		
+		<fieldset class="form_vista"> 
+			<div class="panel panel-default form_vista">
+				<div class="form-inline form_vista">
+					<table class="form_vista">
 						<tr style="height: 10px;">
 							<td>&nbsp;</td>
 							<td class=" input-sm"><b>Presentacion</b></td>
@@ -41,13 +62,14 @@
 							<?php $cont=0;?>
 							@foreach($listdet_ as $key => $value)
 								<?php $cont++; ?>
-								<tr class='datos-presentacion' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
-									<td class="input-sm" align="center"><?php echo $cont; ?></td>
-									<td class="input-sm" align="center">{{ $value->presentacion_nombre }} </td>
-									<td class="input-sm" align="center">{{ $value->precio_compra }} </td>
-									<td class="input-sm" align="center">{{ $value->cant_unidad_x_presentacion }} </td>
-									<td class="input-sm" align="center">{{ $value->precio_venta_unitario }}</td>
-									<td class="input-sm" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(this,<?php echo $cont; ?> );" title="" type="button"><i class="glyphicon glyphicon-pencil"></i></button></td>
+								<tr class='datos-presentacion dat_r{{ $cont }}' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
+									<td id='cont' class="input-sm" align="center"><?php echo $cont; ?></td>
+									<td id='pres_nombre{{ $cont  }}'class="input-sm" align="center">{{ $value->presentacion_nombre }} </td>
+									<td id='precio_c{{ $cont }}' class="input-sm" align="center">{{ $value->precio_compra }} </td>
+									<td id='cant_u{{ $cont }}' class="input-sm" align="center">{{ $value->cant_unidad_x_presentacion }} </td>
+									<td id='precio_vu{{ $cont }}' class="input-sm" align="center">{{ $value->precio_venta_unitario }}</td>
+									<td class="input-sm" align="center">{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Edi', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnEdit', 'onclick' => 'editar(this,\'dat_r'.$cont.'\', \''.$cont.'\');')) !!}</td>
+
 									<td class="input-sm" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button" disabled="true"><i class="glyphicon glyphicon-remove"></i></button></td>
 								</tr>
 							@endforeach
@@ -121,6 +143,7 @@ $(document).ready(function() {
 		}
 	});
 
+	$('.form_editar').hide();
 
 }); 
 
@@ -173,18 +196,57 @@ function quitar(t){
 	}
 
 }
-function editar(t, item){
+function editar(btn, classfila, cont_fila){
 	var mensaje;
-    var opcion = confirm("Desea ELiminar el producto registrado?");
-	console.log("editar "+item);
-	console.log("datos que pasan "+this.dat_comp[item]);
-	$('#preciocompra').val(this.tabla[item]);
-    if (opcion == true) {
-        var td = t.parentNode;
-		var tr = td.parentNode;
-		var table = tr.parentNode;
-		table.removeChild(tr);
-	}
+	var cantidad = $('.'+classfila).attr('unidad_x_present');
+	var precio_compra =  $('.'+classfila).attr('preciocomp');
+	var precio_venta =  $('.'+classfila).attr('precioventaunit');
+	var presentacion_id = $('.'+classfila).attr('id_present');
+	$('.form_editar').show();
+	$('#presentacion').val(presentacion_id);
+	$('#precio_com').val(precio_compra);
+	$('#cantidad_p').val(cantidad);
+	$('#precio_venta_p').val(precio_venta);
+	$('#fila_editar').val(cont_fila);
+	$('.form_vista').hide();
+    // var opcion = confirm("Desea ELiminar el producto registrado?");
+	// console.log("editar "+item);
+	// console.log("datos que pasan "+this.dat_comp[item]);
+	// $('#preciocompra').val(this.tabla[item]);
+	
+	
+    // if (opcion == true) {
+    //     var td = t.parentNode;
+	// 	var tr = td.parentNode;
+	// 	var table = tr.parentNode;
+	// 	table.removeChild(tr);
+	// }
+}
+function modif_pres(){
+	var num_fila = $('#fila_editar').val();
+	var fila = 'dat_r'+num_fila;
+
+	var presentacion_id = $('#presentacion').val();
+	var nombrepress = $('#presentacion option:selected').html();
+	var precio = $('#precio_com').val();
+	var cantidad_p = $('#cantidad_p').val();
+	var precio_v_p = $('#precio_venta_p').val();
+
+	$('.'+fila).attr('unidad_x_present',cantidad_p );
+	$('.'+fila).attr('preciocomp',precio);
+	$('.'+fila).attr('precioventaunit',precio_v_p );
+	$('.'+fila).attr('id_present',presentacion_id );
+
+	$('#pres_nombre'+num_fila).text(nombrepress);
+	$('#precio_c'+num_fila).text(precio);
+	$('#cant_u'+num_fila).text(cantidad_p);
+	$('#precio_vu'+num_fila).text(precio_v_p);
+
+	$('.form_editar').hide();
+	$('.form_vista').show();
+
+
+
 }
 
 function guardar_producto(entidad, idboton) {
