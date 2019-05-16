@@ -343,6 +343,20 @@ class VentasController extends Controller
             // }
 
             $venta->save();
+            $detalle_ventas = Detalle_ventas::where('ventas_id','=',$venta->id)->where('deleted_at','=',null)->get();
+            foreach ($detalle_ventas as $key => $value) {
+                $lotes = explode(';',$value->lotes);
+
+                $prod_presentacion_id = $value->producto_presentacion_id;
+                for($j=0; $j<count($lotes); $j ++){
+                    $lot = explode(':',$lotes[$j]);
+                    $cant = $lot[0];
+                    $lote = $lot[1];
+                    $entrada = Entrada::where('producto_presentacion_id', '=', $prod_presentacion_id)->where('lote','=',$lote)->get()[0];
+                    $entrada->stock = $entrada->stock - $cant;
+                    $entrada->save();
+                }
+            }
         });
         return is_null($error) ? "OK" : $error;
     }

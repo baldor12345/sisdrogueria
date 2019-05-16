@@ -324,7 +324,9 @@ function calcularPrecio(){
 		igv += tmp_igv;
 	});
 
-	total = subtotal + igv;
+	total = subtotal;
+	subtotal = total - igv;
+
 
 	var res = [igv,subtotal, total];
 
@@ -453,8 +455,6 @@ function guardar_venta(entidad, idboton) {
 	}else{
 		alert('No a seleccionado ningun pruducto');
 	}
-	
-		
 
 	if(correcto){
 		var idformulario = IDFORMMANTENIMIENTO + entidad;
@@ -498,6 +498,7 @@ function guardar_venta(entidad, idboton) {
 	}
 	
 }
+
 function submitForm_venta(idformulario) {
 	var i=0;
 	var datos="";
@@ -546,7 +547,6 @@ function declarar(venta,cliente,detalla_ventas,idtipodoc){
     });
 }
 
-
 $('.input-number').on('input', function () { 
 	this.value = this.value.replace(/[^0-9]/g,'');
 });
@@ -576,6 +576,7 @@ function filterFloat(evt,input){
 		}
 	}
 }
+
 function filter(__val__){
 	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
 	if(preg.test(__val__) === true){
