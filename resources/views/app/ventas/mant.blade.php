@@ -11,7 +11,7 @@
 			<table id="tabla_temp" class="" style="">
 				<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
 				{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
-				<tr><td>Precio s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+				<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
 				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
 			</table>
 		</div>
