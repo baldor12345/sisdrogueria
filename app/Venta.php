@@ -63,13 +63,14 @@ class Venta extends Model
     public static function listarentradas( $producto_id){
         return  DB::table('entrada')
                 ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->leftjoin('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
                 ->select(
                     'entrada.id as id', 
                     'entrada.lote as lote', 
-                    'entrada.precio_venta as precio_venta', 
+                    // 'entrada.precio_venta as precio_venta', 
                     'entrada.fecha_caducidad as fecha_caducidad', 
                     'entrada.estado as estado', 
-                    'entrada.presentacion_id as presentacion_id', 
+                    //  'entrada.presentacion_id as presentacion_id', 
                     'entrada.producto_presentacion_id as producto_presentacion_id', 
                     'entrada.stock as stock',
                     'entrada.sucursal_id as sucursal_id'

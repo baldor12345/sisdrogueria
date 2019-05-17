@@ -32,4 +32,24 @@ class Entrada extends Model
 		            })
         			->orderBy('name', 'ASC');
     }
+
+    public static function listEntradas($producto_id){
+        return  DB::table('entrada')
+                ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->leftjoin('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
+                ->select(
+                    'entrada.id as id', 
+                    'entrada.lote as lote', 
+                    // 'entrada.precio_venta as precio_venta', 
+                    'entrada.fecha_caducidad as fecha_caducidad', 
+                    'entrada.estado as estado', 
+                    //  'entrada.presentacion_id as presentacion_id', 
+                    'entrada.producto_presentacion_id as producto_presentacion_id', 
+                    'entrada.stock as stock',
+                    'entrada.sucursal_id as sucursal_id'
+            )
+                ->where('producto_presentacion.producto_id', '=',$producto_id)
+                ->where('entrada.stock', '>',0)
+                ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
+    }
 }

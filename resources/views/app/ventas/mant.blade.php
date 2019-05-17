@@ -12,7 +12,7 @@
 				<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
 				{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
 				<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
-				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
+				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
 			</table>
 		</div>
 		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">   
@@ -257,7 +257,8 @@ $(document).ready(function() {
 			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
 			var total_unidades = cantidad_unidades_presentacion * cantidad;
 				$('#unidad_inf').text( $('#cboPresentacion option:selected').html());
-				$('#cant_unidades_inf').text(total_unidades);
+				$('#cant_unidades_inf').text(cantidad_unidades_presentacion);
+				$('#cant_unidades_inf').attr('cantidad_u',cantidad_unidades_presentacion);
 				$('#cant_unidades_titulo').text("Cantidad Unidades/"+$('#cboPresentacion option:selected').html()+": ");
 				$('#precio_inf').text(precio_unidad);
 				// $('#precio_inf').text(precio_unidad);
@@ -338,6 +339,7 @@ function calcularPrecio(){
 
 function agregar(){
 
+	var cant_u_present = parseInt($('#cant_unidades_inf').attr('cantidad_u'));
 	var nombre_producto = $('#cboProducto option:selected').html();
 	var nombre_presentacion = $('#cboPresentacion option:selected').html();
 	var afecto = $('#afecto_inf').attr('afecto');
@@ -346,6 +348,7 @@ function agregar(){
 
 	var precioventa = parseFloat($('#precio_unidad').val());
 	var cantidad = parseInt($('#cantidad').val());
+	var cantidad_total = cantidad * cant_u_present;
 	var fechavencimiento = $('#fecha_venc').val();
 
 
@@ -355,7 +358,7 @@ function agregar(){
 
 	var lote = $('#unidad_inf').attr('lote');
 	var stock = $('#stock').val();
-	if(stock >= cantidad){
+	if(stock >= cantidad_total){
 	if(producto_id!= '0'){
 		if(presentacion_id !='0'){
 			if(cantidad!=""){
@@ -371,7 +374,7 @@ function agregar(){
 				
 				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 			
-				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" afecto="'+afecto+'" >'+
+				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad_total+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" afecto="'+afecto+'" >'+
 					'<td class="input-sm" width="35%">'+nombre_producto+'</td>'+
 					'<td class="input-sm" width="15%" align="center">'+nombre_presentacion+'</td>'+
 					'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
