@@ -59,7 +59,7 @@ class MantenimientoProducto extends Model
         return  DB::table('entrada')
                 ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
-                ->join('presentacion', 'entrada.presentacion_id', '=', 'presentacion.id')
+                ->join('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
                 ->select(
                         'producto.descripcion as producto', 
                         'producto.stock_minimo as stock_minimo', 
