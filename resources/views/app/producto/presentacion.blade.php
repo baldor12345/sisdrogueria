@@ -158,18 +158,18 @@ function agregar(){
 	var present_id 					= $('#present_id').val();
 	var unidad_x_presentacion 		= $('#unidad_x_presentacion').val();
 	var precioventaunitario 		= $('#precioventaunitario').val();
-	var contador = 0;
+	var contador = 1;
 	$('.datos-presentacion').each(function(){
 contador ++;
 	})
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
 			var d = '<tr class="datos-presentacion dat_r'+contador+'" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
-				'<td class="input-sm" width="2%" align="center">'+contador+'</td>'+
-				'<td class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
-				'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
-				'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
-				'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
+				'<td id="cont'+contador+'" class="input-sm" width="2%" align="center">'+contador+'</td>'+
+				'<td id="pres_nombre'+contador+'" class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
+				'<td id="precio_c'+contador+'" class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
+				'<td id="cant_u'+contador+'" class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
+				'<td id="precio_vu'+contador+'" class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
 				'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(\'dat_r'+contador+'\', '+contador+');" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
 				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 				'</tr>';
