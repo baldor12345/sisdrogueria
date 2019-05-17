@@ -131,10 +131,28 @@ class EntradaSalidaController extends Controller
         $formData       = array('entrada_salida.store');
         $propiedades            = Propiedades::All()->last();
         $igv            = $propiedades->igv;
+
+        $serie =1;
+        $numero =1;
+        $entr = EntradaSalida::All();
+        $count_entr = count($entr)== 0?1:count($entr);
+        if(strlen($count_entr)==1){
+            $serie ="D00".$count_entr;
+            $numero ="00000".$count_entr;
+        }
+        if(strlen($count_entr)==2){
+            $serie ="D0".$count_entr;
+            $numero ="0000".$count_entr;
+        }
+        if(strlen($count_entr)==3){
+            $serie ="D".$count_entr;
+            $numero ="00".$count_entr;
+        }
+
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('numero_operacion', 'entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
+        return view($this->folderview.'.mant')->with(compact('serie', 'numero', 'numero_operacion', 'entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
     }
 
     /**

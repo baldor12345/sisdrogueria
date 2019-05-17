@@ -19,10 +19,10 @@
 			<div class="form-group" >
 				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie_documento', null, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
+					{!! Form::text('serie_documento', $serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie')) !!}
 				</div>
 				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_documento', null, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
+					{!! Form::text('numero_documento', $numero, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
