@@ -64,6 +64,7 @@ class Compra extends Model
                 ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
                 ->select(
                         'producto.descripcion as descripcion', 
+                        'producto.sustancia_activa as sustancia_activa', 
                         'detalle_compra.fecha_caducidad as fecha_caducidad', 
                         'detalle_compra.cantidad as cantidad', 
                         'presentacion.nombre as presentacion_nombre', 

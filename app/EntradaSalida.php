@@ -49,6 +49,7 @@ class EntradaSalida extends Model
                 ->join('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
                 ->select(
                         'producto.descripcion as producto', 
+                        'producto.sustancia_activa as sustancia_activa', 
                         'presentacion.nombre as presentacion', 
                         'entrada_salida_detalle.fecha_caducidad as fecha_caducidad', 
                         'entrada_salida_detalle.precio_compra as precio_compra', 

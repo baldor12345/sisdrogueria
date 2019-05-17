@@ -67,7 +67,7 @@
                     <tbody>
                         @foreach ($list_detalle_c as $key => $value)
                             <tr>
-                                <td class="text-center input-sm">{{ $value->descripcion }}</td>
+                                <td class="text-center input-sm">{{ $value->descripcion.' '.$value->sustancia_activa }}</td>
                                 <td class="text-center input-sm">{{ $value->presentacion_nombre }}</td>
                                 <td class="text-center input-sm">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
                                 <td class="text-center input-sm">{{ $value->cantidad }}</td>
