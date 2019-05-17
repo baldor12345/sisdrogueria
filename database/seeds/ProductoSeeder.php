@@ -24,8 +24,9 @@ class ProductoSeeder extends Seeder
                 'marca_id' => 1,
                 'ubicacion' => 'STAND 001',
                 'categoria_id' => 1,
-                'stock_minimo' => 2,
+                'stock_minimo' => 5,
                 'estado' => 'A',
+                'unidad_id' => 3,
                 'user_id' => 1,
                 'created_at' => $now,
                 'updated_at' => $now

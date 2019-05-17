@@ -201,12 +201,13 @@ class EntradaSalidaController extends Controller
                             $entrada    = new Entrada();
                             $entrada->fecha = $request->input('fecha');
                             $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
-                            $entrada->presentacion_id = $request->input('id_presentacion'.$i);
                             $entrada->precio_compra = $request->input("precio_compra".$i);
                             $entrada->precio_venta = $request->input("precio_venta".$i);
                             $entrada->stock = $request->input("cant".$i);
                             $entrada->lote = $request->input("lot".$i);
                             $entrada->producto_presentacion_id = $request->input("id_producto".$i);
+                            $product_  = Producto::find($request->input("id_producto".$i));
+                            $entrada->presentacion_id = $product_->unidad_id;
                             $user           = Auth::user();
                             $entrada->user_id = $user->id;
                             $entrada->sucursal_id = $user->sucursal_id;

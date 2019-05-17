@@ -29,10 +29,12 @@ class CrearTablaProducto extends Migration
         
             $table->char('estado', 1)->nullable();// check
             $table->string('procedencia',300)->nullable();//ACAROBOSA 50MG 30 TABLETAS
+            $table->integer('unidad_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('marca_id')->references('id')->on('marca')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('categoria_id')->references('id')->on('categoria')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('user')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('unidad_id')->references('id')->on('presentacion')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -56,6 +56,12 @@
 					</div>
 				</div>
 				<div class="form-group " >
+					{!! Form::label('unidad_id', 'Unidad:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
+					<div class="col-sm-9 col-xs-12" >
+						{!! Form::select('unidad_id', $cboUnidad, null, array('class' => 'form-control input-xs', 'id' => 'unidad_id', 'style'=>'height: 30px')) !!}
+					</div>
+				</div>
+				<div class="form-group " >
 					{!! Form::label('procedencia', 'Procedencia:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 					<div class="col-sm-9 col-xs-12" >
 						{!! Form::text('procedencia', 'sin especificar', array('class' => 'form-control input-xs', 'id' => 'procedencia', 'placeholder' => 'Ingrese procedencia')) !!}
@@ -103,29 +109,6 @@ $(document).ready(function() {
 		ajax: {
 			
 			url: "{{ URL::route($ruta['listmarcas'], array()) }}",
-			dataType: 'json',
-			delay: 250,
-			data: function(params){
-				return{
-					q: $.trim(params.term)
-				};
-			},
-			processResults: function(data){
-				return{
-					results: data
-				};
-			}
-			
-		}
-	});
-
-	$('#unidad_id').select2({
-		dropdownParent: $("#modal"+(contadorModal-1)),
-		
-		minimumInputLenght: 2,
-		ajax: {
-			
-			url: "{{ URL::route($ruta['listunidades'], array()) }}",
 			dataType: 'json',
 			delay: 250,
 			data: function(params){

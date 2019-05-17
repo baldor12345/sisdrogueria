@@ -205,7 +205,8 @@ class CompraController extends Controller
                     $entrada->stock = $request->input("factor_".$i);
                     $entrada->lote = $request->input("lot".$i);
                     $entrada->producto_presentacion_id = $request->input("id_producto".$i);
-                    $entrada->presentacion_id = $request->input("id_unidad".$i);
+                    $producto = Producto::find($request->input("id_producto".$i));
+                    $entrada->presentacion_id = $producto->unidad_id;
                     $user = Auth::user();
                     $entrada->user_id = $user->id;
                     $entrada->sucursal_id = $user->sucursal_id;
