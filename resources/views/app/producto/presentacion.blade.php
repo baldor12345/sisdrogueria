@@ -8,7 +8,7 @@
 				{!! Form::hidden('fila_editar', '', array('id' => 'fila_editar')) !!}
 			<div class="form-group text-left form_editar">
 				{!! Form::label('presentacion', 'Presentacion:', array('class' => ' c text-left')) !!}
-				{!! Form::select('presentacion', ['seleccione..'=>'0'], null, array('class' => 'form-control input-sm', 'id' => 'presentacion')) !!}
+				{!! Form::select('presentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion')) !!}
 			</div>
 			<div class="form-group text-left form_editar" style="margin-left: 3px">
 				{!! Form::label('precio_com', 'Precio Compra:', array('class' => ' text-left')) !!}
@@ -68,7 +68,7 @@
 									<td id='precio_c{{ $cont }}' class="input-sm" align="center">{{ $value->precio_compra }} </td>
 									<td id='cant_u{{ $cont }}' class="input-sm" align="center">{{ $value->cant_unidad_x_presentacion }} </td>
 									<td id='precio_vu{{ $cont }}' class="input-sm" align="center">{{ $value->precio_venta_unitario }}</td>
-									<td class="input-sm" align="center">{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Edi', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnEdit', 'onclick' => 'editar(this,\'dat_r'.$cont.'\', \''.$cont.'\');')) !!}</td>
+									<td class="input-sm" align="center">{!! Form::button('<i class="glyphicon glyphicon-pencil"></i>', array('class' => 'btn btn-info btn-xs', 'id' => 'btnEdit', 'onclick' => 'editar(\'dat_r'.$cont.'\', \''.$cont.'\');')) !!}</td>
 
 									<td class="input-sm" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button" disabled="true"><i class="glyphicon glyphicon-remove"></i></button></td>
 								</tr>
@@ -158,15 +158,19 @@ function agregar(){
 	var present_id 					= $('#present_id').val();
 	var unidad_x_presentacion 		= $('#unidad_x_presentacion').val();
 	var precioventaunitario 		= $('#precioventaunitario').val();
+	var contador = 0;
+	$('.datos-presentacion').each(function(){
+contador ++;
+	})
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
-			var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
-				'<td class="input-sm" width="2%" align="center">2</td>'+
+			var d = '<tr class="datos-presentacion dat_r'+contador+'" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
+				'<td class="input-sm" width="2%" align="center">'+contador+'</td>'+
 				'<td class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
 				'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
 				'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
 				'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
-				'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" disabled="true" onclick="editar(this. 3);" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
+				'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(\'dat_r'+contador+'\', '+contador+');" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
 				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 				'</tr>';
 			$("#tabla").append(d);
@@ -196,7 +200,7 @@ function quitar(t){
 	}
 
 }
-function editar(btn, classfila, cont_fila){
+function editar( classfila, cont_fila){
 	var mensaje;
 	var cantidad = $('.'+classfila).attr('unidad_x_present');
 	var precio_compra =  $('.'+classfila).attr('preciocomp');
