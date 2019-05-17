@@ -57,18 +57,20 @@
 				<table>
 					<tr style="height: 10px;">
 						<td>&nbsp;</td>
-						<td class=" input-sm"><b>Presentacion</b></td>
+						<td class=" input-sm"><b>Unidad</b></td>
 						<td>{!! Form::select('id_presentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'id_presentacion','style'=>'text-align: right;')) !!}</td>
 						<td class=" input-sm"><b>P.Compra</b></td>
-						<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-						<td class=" input-sm"><b>P.Venta</b></td>
-						<td><input class="form-control input-sm" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
-						<td class=" input-sm"><b>Cantidad</b></td>
-						<td><input class="form-control input-sm input-number" id="cantidad" size="3" name="cantidad" type="text">{!! Form::hidden('evaluar_cant', null, array('id' => 'evaluar_cant')) !!}</td>
-						<td class=" input-sm"><b>Fecha Venc.</b></td>
-						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td class=" input-sm"><b>Lote</b></td>
-						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
+						<td><input class="" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+						<td class="form-control input-sm"><b>P.Venta</b></td>
+						<td><input class="" style="width:60px" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
+						<td class="form-control input-sm"><b>Cantidad</b></td>
+						<td><input class=" input-number" id="cantidad" size="3" name="cantidad" type="text">
+						<td class="form-control input-sm"><b>Factor</b></td>
+						<td><input class=" input-number" id="factor" size="3" name="factor" type="text">{!! Form::hidden('unidad_presentacion', null, array('id' => 'unidad_presentacion')) !!}</td>
+						<td class="form-control input-sm"><b>Fecha Venc.</b></td>
+						<td><input class="" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
+						<td class="form-control input-sm"><b>Lote</b></td>
+						<td><input class="" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
 					</tr>
 				</table>
@@ -93,7 +95,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('1300');
+	configurarAnchoModal('1500');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
 	var fechaActual = new Date();
@@ -112,6 +114,7 @@ $(document).ready(function() {
 		}
 		if(documento == 'S'){
 			$('#oculto2').css('display','block');
+			$('#cantidad').prop("disabled", true);
 			$('#documento').prop("disabled", true);
 		}
 	});
@@ -145,7 +148,7 @@ $(document).ready(function() {
 				$('#preciocompra').val(response[0].precio_compra);
 				$('#precioventa').val(response[0].precio_venta_unitario);
 				$('#id_presentacion').val(response[0].presentacion_id);
-				$('#cantidad').val(response[0].cant_unidad_x_presentacion);
+				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
 				$('#id_presentacion').prop("disabled", true);
 			}else{
 				window.alert("Producto no esta registrado en el inventario!");
@@ -177,10 +180,19 @@ $(document).ready(function() {
 		}
 	});
 
+	$("input[name=cantidad]").change(function(event){
+		var cant = parseInt($('#cantidad').val());
+		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+		$('#factor').val('');
+		$('#factor').val(cant*cantidad_unidad);
+	});
+
+
 	$('#entrada_id').change(function(event){
 		$.get("entrada/"+$(this).val()+"", function(response, productos){
 			console.log(response);
 			if(response.length !=0 ){
+				console.log("entro por la salidaaaaaaaa");
 				$('#preciocompra').prop("readonly", true);
 				$('#precioventa').prop("readonly", true);
 				$('#fechavencimiento').prop("readonly", true);
@@ -196,9 +208,9 @@ $(document).ready(function() {
 				var dte_format = year+"-"+month+"-"+day;
 				$('#precioventa').val(response[0].precio_venta);
 				$('#id_presentacion').val(response[0].presentacion_id);
-				$('#cantidad').val(response[0].stock);
-				$('#evaluar_cant').val(response[0].stock);
 				$('#fechavencimiento').val(dte_format);
+				$('#unidad_presentacion').val(response[0].stock);
+				$('#factor').val(response[0].stock);
 				$('#lote').val(response[0].lote);
 
 			}else{
@@ -248,7 +260,7 @@ function agregar(){
 										t_parcial=0;
 									}
 									var total = t_parcial+subtotal;
-									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 										'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
 										'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 										'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -267,6 +279,7 @@ function agregar(){
 									$('#preciocompra').val("");
 									$('#precioventa').val("");
 									$('#cantidad').val("");
+									$('#factor').val("");
 									$('#fechavencimiento').val("");
 									$('#lote').val("");
 								}else{
@@ -308,30 +321,23 @@ function agregar(){
 			if(id_presentacion !=""){
 				if(preciocompra !=""){
 					if(precioventa !=""){
-						if(cantidad!=""){
-							if(parseInt($('#evaluar_cant').val()) > parseInt(cantidad)){
+						if($('#factor').val()!=""){
+							if(parseInt($('#factor').val())<= parseInt($('#unidad_presentacion').val())){
+
 								if(fechavencimiento!=""){
 									if(lote!=""){
 										var subtotal ="";
-										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
-										var t_parcial =0;
-										if($('#total').val() != ""){
-											t_parcial = parseFloat($('#total').val());
-										}else{
-											t_parcial=0;
-										}
-										var total = t_parcial+subtotal;
-										var d = '<tr class="datos-producto" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+										subtotal = parseInt(parseInt($('#factor').val()))*parseFloat(preciocompra);
+										var d = '<tr class="datos-producto" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
-											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
+											'<td class="input-sm" width="5%" align="center">'+parseInt($('#factor').val())+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
 											'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
 											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 											'</tr>';
 										$("#tabla").append(d);
-										$('#total').val(total);
 										//vaciar datos
 										$('#entrada_id').empty();
 										$('#entrada_id').append('<option value="0">Seleccione Producto..........................</option>');
@@ -339,6 +345,7 @@ function agregar(){
 										$('#preciocompra').val("");
 										$('#precioventa').val("");
 										$('#cantidad').val("");
+										$('#factor').val("");
 										$('#fechavencimiento').val("");
 										$('#lote').val("");
 									}else{
@@ -349,9 +356,10 @@ function agregar(){
 									window.alert("seleccione fecha de vencimiento!");
 									$('#fechavencimiento').focus();
 								}
+
 							}else{
-								window.alert("el valor ingresado no puede ser menor de "+$('#evaluar_cant').val());
-								$('#cantidad').focus();
+								window.alert("cantidad ingresada incorrecta!");
+								$('#factor').focus();	
 							}
 						}else{
 							window.alert("ingrese cantidad a comprar!");

@@ -129,6 +129,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('producto/listsucursales',  'ProductoController@listsucursales')->name('producto.listsucursales');
 
     Route::get('producto/presentacion/{id?}',  'ProductoController@presentacion')->name('producto.presentacion');
+    Route::post('producto/update_present/{id?}',  'ProductoController@update_present')->name('producto.update_present');
 
     //comprobante
     Route::post('comprobante/buscar','ComprobanteController@buscar')->name('comprobante.buscar');

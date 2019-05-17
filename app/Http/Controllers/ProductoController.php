@@ -37,6 +37,7 @@ class ProductoController extends Controller
             'index'         => 'producto.index',
 
             'presentacion'          => 'producto.presentacion',
+            'update_present'          => 'producto.update_present',
 
             'listmarcas'    => 'producto.listmarcas',
             'listunidades'    => 'producto.listunidades',
@@ -365,11 +366,11 @@ class ProductoController extends Controller
                                 ->where('producto_presentacion.producto_id', $id)
                                 ->where('producto_presentacion.deleted_at',null)->get();
         
-        $formData       = array('producto.update', $id);
+        $formData       = array('producto.update_present', $id);
         $ruta           = $this->rutas;
-        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Modificar';
-        return view($this->folderview.'.presentacion')->with(compact('codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.presentacion')->with(compact('id', 'codigo', 'cboAfecto', 'listdet_', 'ruta', 'producto', 'cboPresentacion', 'formData', 'entidad', 'boton', 'listar', 'cboTipo', 'cboProveedor', 'cboSucursal', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -379,42 +380,20 @@ class ProductoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function updatepresentacion(Request $request, $id)
+    public function update_present(Request $request, $id)
     {
         $existe = Libreria::verificarExistencia($id, 'producto');
         if ($existe !== true) {
             return $existe;
         }
-        $reglas = array(
-            'codigo'       => 'required|max:50|unique:producto,codigo,'.$id.',id,deleted_at,NULL',
-            'sustancia_activa' => 'required',
-            'stock_minimo'    => 'required',
-            
-            );
+        $reglas = array();
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id){
-            $producto                 = Producto::find($id);
-            $producto->codigo = $request->input('codigo');
-            $producto->codigo_barra = $request->input('codigo_barra');
-            $producto->descripcion = strtoupper($request->input('descripcion'));
-            $producto->sustancia_activa = $request->input('sustancia_activa');
-            $producto->uso_terapeutico = $request->input('uso_terapeutico');
-            $producto->afecto = $request->input('afecto');
-            $producto->tipo = $request->input('tipo');
-            $producto->ubicacion = $request->input('ubicacion');
-            $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
-            $producto->categoria_id = $request->input('categoria_id');
-            $user           = Auth::user();
-            $producto->user_id = $user->id;
-            $producto->save();
 
-            /*
             $cantidad = $request->input('cantidad');
-            $detalle_present_ = ProductoPresentacion::where('producto_id',$id)->where('deleted_at',null)->get();
             if($cantidad >0){
                 for($i=0;$i<$cantidad; $i++){
                     if(intval($request->input("propresent_id".$i)) == 0){
@@ -427,27 +406,16 @@ class ProductoController extends Controller
                         $producto_presentacion->save();
                     }
                     if(intval($request->input("propresent_id".$i)) != 0){
-                        foreach ($detalle_present_ as $key => $value) {
-                            echo "ids que pasan ".intval($request->input("propresent_id".$i))."  ".$value->id;
-                            if($value->id == intval($request->input("propresent_id".$i))){
-                                $producto_presentacion = ProductoPresentacion::find($value->id);
-                                $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
-                                $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
-                                $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
-                                $producto_presentacion->producto_id = $id;
-                                $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
-                                $producto_presentacion->save();
-                            }else{
-                                $producto_presentacion = ProductoPresentacion::find($value->id);
-                                $producto_presentacion->delete();
-                            }
-                        }
-                    }
-                    
-                    
+                        $producto_presentacion = ProductoPresentacion::find(intval($request->input("propresent_id".$i)));
+                        $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
+                        $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
+                        $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                        $producto_presentacion->producto_id = $id;
+                        $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
+                        $producto_presentacion->save();
+                    } 
                 }
             }
-            */
 
         });
         return is_null($error) ? "OK" : $error;

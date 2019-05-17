@@ -14,26 +14,26 @@
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
 						<td class=" input-sm" style="text-align:right;"><b>Unidad Compra:</b></td>
-						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
+						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => '', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Cant./Presentacion:</b></td>
-						<td><input class="form-control input-sm input-number"   id="cantidad" size="3" name="cantidad" type="text"></td>
-						<td class=" input-sm" style="text-align:right;"><b>Cant./Presentacion:</b></td>
-						<td><input class="form-control input-sm input-number"  id="unidad_presentacion" size="7" name="unidad_presentacion" type="text"></td>
+						<td><input class=" input-number"   id="cantidad" size="5" name="cantidad" type="text"></td>
+						<td class=" input-sm" style="text-align:right;"><b> Cant./Presentacion:</b></td>
+						<td><input class=" input-number"  id="unidad_presentacion" size="7" name="unidad_presentacion" type="text"></td>
 						<td class=" input-sm" style="text-align:right;"><b>P.Compra:</b></td>
-						<td><input class="form-control input-sm" style="width:80px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+						<td><input class=""  onkeypress="return filterFloat(event,this);" id="preciocompra" size="7" name="preciocompra" type="text" style="text-align: right;"></td>
 					</tr>
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
 						<td class=" input-sm" style="text-align:right;"><b>Fecha Venc.:</b></td>
-						<td><input class="form-control input-sm" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
+						<td><input class="" id="fechavencimiento" size="10" name="fechavencimiento" type="date"></td>
 						<td class=" input-sm" style="text-align:right;"><b>Afecto:</b></td>
-						<td>{!! Form::select('afecto', $cboAfecto, null, array('class' => 'form-control input-sm', 'id' => 'afecto','style'=>'text-align: left;')) !!}</td>
+						<td>{!! Form::select('afecto', $cboAfecto, null, array('class' => '', 'id' => 'afecto','style'=>'text-align: left;')) !!}</td>
 						<td class=" input-sm" style="text-align:right;"><b>Factor:</b></td>
-						<td><input class="form-control input-sm" id="factor" onkeypress="return filterFloat(event,this);"  size="3" name="factor" type="text" style="text-align: right;"></td>
+						<td><input class="" id="factor" onkeypress="return filterFloat(event,this);"  size="7" name="factor" type="text" style="text-align: right;"></td>
 						<td class=" input-sm" style="text-align:right;"><b>P.Venta:</b></td>
-						<td><input class="form-control input-sm" id="precioventa" onkeypress="return filterFloat(event,this);"  size="3" name="precioventa" type="text" style="text-align: right;"></td>
+						<td><input class="" id="precioventa" onkeypress="return filterFloat(event,this);"  size="7" name="precioventa" type="text" style="text-align: right;"></td>
 						<td class=" input-sm" style="text-align:right;"><b>Lote:</b></td>
-						<td><input class="form-control input-sm" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
+						<td><input class="" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td style="text-align:center;"><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i> agregar</button></td>
 					</tr>
 				</table>

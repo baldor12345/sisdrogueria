@@ -22,7 +22,7 @@
 					{!! Form::label('precio_venta_p', 'Precio Venta:', array('class' => '')) !!}
 					{!! Form::text('precio_venta_p', null, array('class' => 'form-control input-sm', 'id' => 'precio_venta_p', 'placeholder' => 'precio_venta')) !!}
 			</div>
-			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Edi', array('class' => 'btn btn-warning btn-sm form_editar', 'id' => 'btnEdit', 'onclick' => 'modif_pres();')) !!}
+			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Guardar', array('class' => 'btn btn-warning btn-sm form_editar', 'id' => 'btnEdit', 'onclick' => 'modif_pres();')) !!}
 		</div>
 		
 		<fieldset class="form_vista"> 
@@ -32,13 +32,13 @@
 						<tr style="height: 10px;">
 							<td>&nbsp;</td>
 							<td class=" input-sm"><b>Presentacion</b></td>
-							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
-							<td class=" input-sm"><b>P.Compra:</b></td>
-							<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-							<td class=" input-sm"><b>Cant.Uds:</b></td>
-							<td><input class="form-control input-sm input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
-							<td class=" input-sm"><b>P.Venta:</b></td>
-							<td><input class="form-control input-sm" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
+							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => '', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
+							<td class=" input-sm" align="right"><b>P.Compra:</b></td>
+							<td><input class="" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+							<td class=" input-sm" align="right"><b>Cant.Uds:</b></td>
+							<td><input class=" input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
+							<td class=" input-sm" align="right"><b>P.Venta:</b></td>
+							<td><input class="" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i> Agregar</button></td>
 						</tr>
 					</table>
@@ -81,7 +81,7 @@
 		</fieldset>
 		
 	</div>
-	<div class="form-group">
+	<div class="form-group botones">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarProducto', 'onclick' => 'guardar_producto(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
@@ -164,7 +164,7 @@ contador ++;
 	})
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
-			var d = '<tr class="datos-presentacion dat_r'+contador+'" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
+			var d = '<tr class="datos-presentacion dat_r'+contador+'" id_producto_presentacion="0" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
 				'<td id="cont'+contador+'" class="input-sm" width="2%" align="center">'+contador+'</td>'+
 				'<td id="pres_nombre'+contador+'" class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
 				'<td id="precio_c'+contador+'" class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
@@ -225,6 +225,7 @@ function editar( classfila, cont_fila){
 	// 	var table = tr.parentNode;
 	// 	table.removeChild(tr);
 	// }
+	$('.botones').hide();
 }
 function modif_pres(){
 	var num_fila = $('#fila_editar').val();
@@ -248,6 +249,7 @@ function modif_pres(){
 
 	$('.form_editar').hide();
 	$('.form_vista').show();
+	$('.botones').show();
 
 
 

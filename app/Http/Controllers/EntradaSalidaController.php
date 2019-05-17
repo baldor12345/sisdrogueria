@@ -189,30 +189,16 @@ class EntradaSalidaController extends Controller
                         $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
                         $prod_m->save();
 
-                        $entrada_existente = Entrada::where('lote',trim($request->input("lot".$i)))->whereDate('fecha_caducidad',$request->input("fecha_vencim".$i))->where('deleted_at',null)->get();
-                        if(count($entrada_existente) != 0){
-                            $entrada    = Entrada::find($entrada_existente[0]->id);
-                            $entrada->precio_compra = $request->input("precio_compra".$i);
-                            $entrada->precio_venta = $request->input("precio_venta".$i);
-                            $entrada->stock = intval($request->input("cant".$i))+$entrada_existente[0]->stock;
-                            $entrada->save();
-                        }
-                        if(count($entrada_existente) == 0){
-                            $entrada    = new Entrada();
-                            $entrada->fecha = $request->input('fecha');
-                            $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
-                            $entrada->precio_compra = $request->input("precio_compra".$i);
-                            $entrada->precio_venta = $request->input("precio_venta".$i);
-                            $entrada->stock = $request->input("cant".$i);
-                            $entrada->lote = $request->input("lot".$i);
-                            $entrada->producto_presentacion_id = $request->input("id_producto".$i);
-                            $product_  = Producto::find($request->input("id_producto".$i));
-                            $entrada->presentacion_id = $product_->unidad_id;
-                            $user           = Auth::user();
-                            $entrada->user_id = $user->id;
-                            $entrada->sucursal_id = $user->sucursal_id;
-                            $entrada->save();
-                        }
+                        $entrada    = new Entrada();
+                        $entrada->fecha = $request->input('fecha');
+                        $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
+                        $entrada->stock = $request->input("cant".$i);
+                        $entrada->lote = $request->input("lot".$i);
+                        $entrada->producto_presentacion_id = $request->input("id_producto".$i);
+                        $user           = Auth::user();
+                        $entrada->user_id = $user->id;
+                        $entrada->sucursal_id = $user->sucursal_id;
+                        $entrada->save();
                         
                     }
                 }
@@ -300,13 +286,13 @@ class EntradaSalidaController extends Controller
             $tags = DB::table('entrada')
                     ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
-                    ->join('presentacion','entrada.presentacion_id','presentacion.id')
+                    ->join('presentacion','producto.unidad_id','presentacion.id')
                     ->select(
                         'presentacion.id as presentacion_id',
                         'presentacion.nombre as presentacion_nombre',
                         'entrada.fecha_caducidad as fecha_caducidad',
-                        'entrada.precio_compra as precio_compra',
-                        'entrada.precio_venta as precio_venta',
+                        'producto_presentacion.precio_compra as precio_compra',
+                        'producto_presentacion.precio_venta_unitario as precio_venta',
                         'entrada.stock as stock',
                         'entrada.lote as lote'
                         )
@@ -493,7 +479,7 @@ class EntradaSalidaController extends Controller
         $tags = DB::table('entrada')
                     ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
-                    ->join('presentacion','entrada.presentacion_id','presentacion.id')
+                    ->join('presentacion','producto.unidad_id','presentacion.id')
                     ->select(
                         'producto_presentacion.id as producto_id',
                         'entrada.id as entrada_id',
