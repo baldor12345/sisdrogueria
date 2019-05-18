@@ -18,7 +18,7 @@
 						<td class="form-control input-sm" style="text-align:right;"><b>Cant./Presentacion:</b></td>
 						<td><input class=" input-number"   id="cantidad" size="5" name="cantidad" type="text"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b> Cant./Presentacion:</b></td>
-						<td><input class=" input-number"  id="unidad_presentacion" size="7" name="unidad_presentacion" type="text"></td>
+						<td><input class=" input-number"  id="unidad_presentacion" readonly="true" size="7" name="unidad_presentacion" type="text"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>P.Compra:</b></td>
 						<td><input class=""  onkeypress="return filterFloat(event,this);" id="preciocompra" size="7" name="preciocompra" type="text" style="text-align: right;"></td>
 					</tr>
@@ -29,7 +29,7 @@
 						<td class="form-control input-sm" style="text-align:right;"><b>Afecto:</b></td>
 						<td>{!! Form::select('afecto', $cboAfecto, null, array('class' => '', 'id' => 'afecto','style'=>'text-align: left;')) !!}</td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Factor:</b></td>
-						<td><input class="" id="factor" onkeypress="return filterFloat(event,this);"  size="7" name="factor" type="text" style="text-align: right;"></td>
+						<td><input class="" id="factor" readonly="true" onkeypress="return filterFloat(event,this);"  size="7" name="factor" type="text" style="text-align: right;"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>P.Venta:</b></td>
 						<td><input class="" id="precioventa" onkeypress="return filterFloat(event,this);"  size="7" name="precioventa" type="text" style="text-align: right;"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Lote:</b></td>

@@ -49,6 +49,7 @@ class MantenimientoProducto extends Model
                         'marca.name as laboratorio'
                 )
                 ->where('entrada.lote', 'LIKE','%'.$lote.'%')
+                ->where('entrada.stock', '!=',0)
                 ->where('entrada.fecha_caducidad', '>=', $fechai)
                 ->where('entrada.fecha_caducidad', '<=', $fechaf)
                 ->where('entrada.deleted_at',null)
@@ -68,6 +69,7 @@ class MantenimientoProducto extends Model
                 )
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
                 ->where('producto.unidad_id', 'LIKE','%'.$presentacion_id.'%')
+                ->where('entrada.stock', '!=',0)
                 ->where('entrada.deleted_at',null)
                 ->groupBy('presentacion.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
                 //->orderBy('detalle_compra.fecha_caducidad', 'DSC');

@@ -52,4 +52,33 @@ class Entrada extends Model
                 ->where('entrada.stock', '>',0)
                 ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
     }
+
+    public function scopelistarsalida($query,$term){
+        return $query->where(function($subquery) use($term)
+        {
+            if (!is_null($term)) {
+                $subquery->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto.unidad_id','presentacion.id')
+                    ->select(
+                        'producto_presentacion.id as producto_id',
+                        'entrada.id as entrada_id',
+                        'producto.descripcion as descripcion',
+                        'producto.sustancia_activa as sustancia_activa',
+                        'presentacion.nombre as presentacion',
+                        'entrada.lote as lote'
+                        )
+                    //->where("producto.codigo",'LIKE', '%'.$term.'%')
+                    //->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')
+                    ->orWhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
+                    ->orWhere("entrada.lote",'LIKE', '%'.$term.'%');
+            }
+        })
+        ->where('deleted_at','=',null)
+        ->limit(5)->get();
+    }
+   
+
+
 }

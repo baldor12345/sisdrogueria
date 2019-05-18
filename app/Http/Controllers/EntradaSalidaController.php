@@ -473,7 +473,8 @@ class EntradaSalidaController extends Controller
                             'producto_presentacion.presentacion_id as presentecion_id',
                             'producto.descripcion as descripcion',
                             'producto.sustancia_activa as sustancia_activa',
-                            'presentacion.nombre as presentacion'
+                            'presentacion.nombre as presentacion',
+                            'producto.deleted_at as deleted_at'
                         )
                         ->where("producto.codigo",'LIKE', '%'.$term.'%')
                         ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
@@ -481,7 +482,9 @@ class EntradaSalidaController extends Controller
                         ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            if($tag->deleted_at == null){
+                 $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            }
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
@@ -494,6 +497,7 @@ class EntradaSalidaController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
+        
         $tags = DB::table('entrada')
                     ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
@@ -504,6 +508,8 @@ class EntradaSalidaController extends Controller
                         'producto.descripcion as descripcion',
                         'producto.sustancia_activa as sustancia_activa',
                         'presentacion.nombre as presentacion',
+                        'entrada.stock as stock',
+                        'entrada.deleted_at as deleted_at',
                         'entrada.lote as lote'
                         )
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
@@ -511,12 +517,12 @@ class EntradaSalidaController extends Controller
                     ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')
                     ->orWhere("producto.sustancia_activa",'LIKE', '%'.$term.'%')
                     ->orWhere("entrada.lote",'LIKE', '%'.$term.'%')
-                    ->orWhere("presentacion.nombre",'LIKE', '%'.$term.'%')
                     ->limit(8)->get();
-        
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
+            if($tag->stock != 0 && $tag->deleted_at == null){
+                $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
+            }
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 

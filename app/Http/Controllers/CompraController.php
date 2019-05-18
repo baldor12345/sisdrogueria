@@ -436,6 +436,7 @@ class CompraController extends Controller
                         'producto_presentacion.presentacion_id as presentacion_id',
                         'producto.descripcion as descripcion',
                         'producto.sustancia_activa as sustancia_activa',
+                        'producto.deleted_at as deleted_at',
                         'presentacion.nombre as presentacion'
                     )
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
@@ -444,7 +445,9 @@ class CompraController extends Controller
                     ->orwhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            $formatted_tags[] = ['id' => $tag->p_p_id, 'text' => $tag->descripcion.'-'.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            if($tag->deleted_at == null){
+                $formatted_tags[] = ['id' => $tag->p_p_id, 'text' => $tag->descripcion.'-'.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            }
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
 
