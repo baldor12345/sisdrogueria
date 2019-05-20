@@ -367,12 +367,12 @@ function calcularPrecioCompra(){
 		igv += tmp_igv;
 	});
 
-	total = subtotal + igv;
+	total = subtotal-igv;
 
 	var res = [igv,subtotal, total];
 
-	$('#total_n').val(total);
-	$('#total').val(subtotal);
+	$('#total').val(total);
+	$('#total_n').val(subtotal);
 	$('#igv_t').val(igv);
 	return res;
 }

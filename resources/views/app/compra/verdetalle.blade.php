@@ -44,8 +44,12 @@
 			</div>
 			<div class="form-group" >
 				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
 					{!! Form::text('total', $compra->total, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+				</div>
+				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-1 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+				<div class="col-sm-4 col-xs-12" style="height: 25px;">
+					{!! Form::text('igv', $compra->igv, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '','readonly')) !!}
 				</div>
 			</div>
 		</div>		

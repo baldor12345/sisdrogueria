@@ -166,7 +166,7 @@ class CompraController extends Controller
             $compra->fecha = $request->input('fecha');
             $compra->fecha_caducidad = $request->input('fecha_caducidad');
             $compra->total  = $request->input('total_n');
-            $compra->igv = $request->input('igv');
+            $compra->igv = $request->input('igv_t');
             $user           = Auth::user();
             $compra->user_id = $user->id;
             $compra->sucursal_id = $user->sucursal_id;

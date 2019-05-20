@@ -416,7 +416,7 @@ class EntradaSalidaController extends Controller
         }
         $error = DB::transaction(function() use($id){
             $producto = Compra::find($id);
-            $producto->delete();
+            //$producto->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
