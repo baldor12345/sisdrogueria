@@ -315,7 +315,8 @@ function calcularPrecio(){
 		var tmp_igv = 0;
 		var tmp_valor_sub = 0;
 		var precio = parseFloat($(this).attr("precio_venta"));
-		var cantidad = parseFloat($(this).attr("cantidad"));
+		// var cantidad = parseFloat($(this).attr("cantidad"));
+		var cantidad = parseFloat($(this).attr("cantidad_presentacion"));
 		var afecto = $(this).attr("afecto");
 		tmp_valor_sub = precio * cantidad;
 		subtotal += tmp_valor_sub;
@@ -374,7 +375,7 @@ function agregar(){
 				
 				// subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 			
-				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad_total+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" afecto="'+afecto+'" >'+
+				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad_total+'" cantidad_presentacion="'+cantidad+'" presentacion_id="'+presentacion_id+'"  precio_venta="'+precioventa+'"  fecha_venc="'+fechavencimiento+'" afecto="'+afecto+'" >'+
 					'<td class="input-sm" width="35%">'+nombre_producto+'</td>'+
 					'<td class="input-sm" width="15%" align="center">'+nombre_presentacion+'</td>'+
 					'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -508,7 +509,7 @@ function submitForm_venta(idformulario) {
 	$('.datos-producto').each(function() {
 		datos += 	"&prod_id"+i+"="+$(this).attr("producto_id")+
 					"&present_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&cant_prod"+i+"="+$(this).attr("cantidad");
+					"&cant_prod"+i+"="+$(this).attr("cantidad_presentacion");
 		i++;
 	});
 
