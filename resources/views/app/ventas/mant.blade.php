@@ -509,7 +509,8 @@ function submitForm_venta(idformulario) {
 	$('.datos-producto').each(function() {
 		datos += 	"&prod_id"+i+"="+$(this).attr("producto_id")+
 					"&present_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&cant_prod"+i+"="+$(this).attr("cantidad_presentacion");
+					"&cant_pres"	+i+"="+$(this).attr("cantidad_presentacion")+
+					"&cant_prod"+i+"="+$(this).attr("cantidad");
 		i++;
 	});
 

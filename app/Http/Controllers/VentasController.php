@@ -202,13 +202,14 @@ class VentasController extends Controller
                 // $cant = 0;
                 $producto = Producto::find($request->get('prod_id'.$i.''));
                 $cant = $request->get('cant_prod'.$i.'');
+                $cant_pres = $request->get('cant_pres'.$i.'');
                 $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
                 $precio_unit = $producto_presentacion->precio_venta_unitario; 
                 $id_prodPresent = $producto_presentacion->id; 
                 $subtotal =  round($precio_unit *  $cant, 2);
                 $detalle_venta = new Detalle_venta();
                 $detalle_venta->producto_id =$producto->id; 
-                $detalle_venta->cantidad = $cant;
+                $detalle_venta->cantidad = $cant_pres;
                 $detalle_venta->precio_unitario =$precio_unit;
                 $detalle_venta->total = $subtotal;
                 $detalle_venta->ventas_id = $venta->id;
