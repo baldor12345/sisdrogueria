@@ -25,18 +25,19 @@
 			<td>{{ $value->comprobante == 'B'?'Boleta':'Factura' }}</td>
 			<td>{{ $value->forma_pago == 'T'?'Tarjeta':'Efectivo' }}</td>
 			@if($value->tipo_pago == 'CR')
-			@php
-				$fecha_init= date("Y-m-d");
-				$fecha_inicial = new DateTime($fecha_init);
+				@php
+					$fecha_init= date("Y-m-d");
+					$fecha_inicial = new DateTime($fecha_init);
 
-				$fecha_fin= date("Y-m-d", strtotime(date("Y-m-d",strtotime($value->fecha."+ ".$value->dias." day"))));
-				$fecha_final = new DateTime($fecha_fin);
+					$fecha_fin= date("Y-m-d", strtotime(date("Y-m-d",strtotime($value->fecha."+ ".$value->dias." day"))));
+					$fecha_final = new DateTime($fecha_fin);
 
-				$diferencia = $fecha_inicial->diff($fecha_final);
-				$numeroDias = $diferencia->format('%R%a días');
-			@endphp
-
-			<td>{{ $numeroDias }}</td>
+					$diferencia = $fecha_inicial->diff($fecha_final);
+					$numeroDias = $diferencia->format('%R%a días');
+				@endphp
+				<td>{{ $numeroDias." " }}</td>
+			@endif
+			
 			{{-- <td>{{ $value->estado == 'P'?'Pendiente':($value->estado == 'C'?'Cancelado':'Anulado') }}</td> --}}
 			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
