@@ -18,7 +18,7 @@ use App\DetalleCaja;
 use App\Propiedades;
 use App\DetalleVentaLote;
 use App\ProductoPresentacion;
-
+use DateTime;
 // use App\Movimiento;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
@@ -62,7 +62,7 @@ class VentasController extends Controller
         $estado   = Libreria::getParam($request->input('cboTipoVentas'));
         $numero_serie = Libreria::getParam($request->input('numero_serie'));
         $tipo = Libreria::getParam($request->input('cboTipoV'));
-
+        // $this_contr = $this;
         $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
@@ -73,6 +73,9 @@ class VentasController extends Controller
         // $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
+        if($tipo == 'CR'){
+            $cabecera[]       = array('valor' => 'Días Restantes', 'numero' => '1');
+        }
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
        
         $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
@@ -486,5 +489,17 @@ class VentasController extends Controller
         // $ruta = $this->rutas;
         $igv = Propiedades::all()->last()->igv;
         return view($this->folderview.'.verdetalle')->with(compact('venta','igv','detalle_ventas', 'entidad'));
+    }
+
+    function getNumDias_dosFechas($fecha_inicial, $fecha_final){
+        $fecha_init= date("Y-m-d", strtotime($fecha_inicial));
+        $fecha_inicial = new DateTime($fecha_init);
+
+        $fecha_fin= date("Y-m-d", strtotime($fecha_final));
+        $fecha_final = new DateTime($fecha_fin);
+
+        $diferencia = $fecha_inicial->diff($fecha_final);
+        $numeroDias = $diferencia->format('%R%a días');
+        return $numeroDias;
     }
 }
