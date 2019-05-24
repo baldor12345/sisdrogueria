@@ -53,6 +53,7 @@ class Caja extends Model
                 ->join('caja', 'detalle_caja.caja_id', '=', 'caja.id')
                 ->join('user', 'caja.user_id', '=', 'user.id')
                 ->leftJoin('cliente', 'detalle_caja.cliente_id', '=', 'cliente.id')
+                ->leftJoin('person', 'detalle_caja.personal_id', '=', 'person.id')
                 ->join('concepto', 'detalle_caja.concepto_id', '=', 'concepto.id')
                 ->select(
                         'caja.num_caja as num_caja', 
@@ -63,8 +64,11 @@ class Caja extends Model
                         'concepto.titulo as concepto_nombre', 
                         'detalle_caja.ingreso as ingreso',
                         'detalle_caja.cliente_id as cliente_id',  
+                        'detalle_caja.personal_id as personal_id',  
                         'cliente.nombres as cliente_nombres',  
                         'cliente.apellidos as cliente_apellidos', 
+                        'person.nombres as personal_nombres',  
+                        'person.apellidos as personal_apellidos', 
                         'detalle_caja.egreso as egreso',  
                         'detalle_caja.forma_pago as forma_pago',  
                         'detalle_caja.comentario as comentario' 

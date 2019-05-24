@@ -34,13 +34,17 @@ a.disabled {
 			<td style="font-size: 13px; color:red; font-weight: bold;" align="center">{{  number_format($value->egreso,2)   }}</td>
 			@if($value->forma_pago == 'CO')
 			<td style="font-size: 13px">Contado</td>
+			@elseif($value->forma_pago == 'CR')
+			<td style="font-size: 13px">Credito</td>
 			@else
-			<td style="font-size: 13px">Credito</td>	
+			<td style="font-size: 13px">--</td>	
 			@endif
 			@if($value->cliente_id != '')
 			<td style="font-size: 13px">{{  $value->cliente_apellidos.'  '.$value->cliente_nombres   }}</td>
+			@elseif($value->personal_id != '')
+			<td style="font-size: 13px">{{  $value->personal_apellidos.'  '.$value->personal_nombres   }}</td>
 			@else
-			<td style="font-size: 13px">--</td>	
+			<td style="font-size: 13px">--</td>
 			@endif
 			<td style="font-size: 13px">{{ $value->comentario }}</td>	
 			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>

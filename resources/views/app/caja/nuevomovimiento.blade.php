@@ -68,7 +68,7 @@ function cargarselect2(entidad){
                 {!! Form::label('comentario', 'Comentario:') !!}
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
-                    {!! Form::text('comentario', null, array('class' => 'form-control input-xs', 'id' => 'comentario', 'placeholder' => 'Ingrese comentario')) !!}
+                    {!! Form::textarea('comentario', null, array('class' => 'form-control input-xs', 'cols'=>'10', 'rows'=>'rows', 'id' => 'comentario', 'placeholder' => 'Ingrese comentario')) !!}
                 </div>
             </div>
 		</fieldset>	
@@ -96,7 +96,7 @@ function cargarselect2(entidad){
                 {!! Form::label('total', 'Total:') !!}
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
-                    {!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => 'Ingrese nombre', 'onkeypress'=>'return filterFloat(event,this)' )) !!}
+                    {!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => 'Ingrese monto', 'onkeypress'=>'return filterFloat(event,this)' )) !!}
                 </div>
             </div>
             <div class="form-group">
@@ -109,11 +109,17 @@ function cargarselect2(entidad){
             </div>
             <div class="form-group">
                 <div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 10px">
-                    {!! Form::label('persona_id', 'Entregado A:') !!}
+                    {!! Form::label('tipo_pers', 'Entregado A:') !!}
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
-                    {!! Form::select('persona_id', $cboPersona, null, array('class' => 'form-control input-xs', 'id' => 'persona_id')) !!}
+                    {!! Form::select('tipo_pers', $cboTtipoPersonal, null, array('class' => 'form-control input-xs', 'id' => 'tipo_pers', 'onchange'=>'cambiartipoper();')) !!}
                 </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12" id="personal_ad" style="display:none;">
+                    {!! Form::select('personal_id', $cboPersonal, null, array('class' => '', 'id' => 'personal_id')) !!}
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12" id="clientes" style="display:none;">
+                    {!! Form::select('cliente_id', $cboCliente, null, array('class' => '', 'id' => 'cliente_id')) !!}
             </div>
 
 		</fieldset>
@@ -136,7 +142,7 @@ $(document).ready(function() {
 	});
 
 
-	$('#persona_id').select2({
+	$('#personal_id').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
 		
 		minimumInputLenght: 2,
@@ -159,8 +165,45 @@ $(document).ready(function() {
 		}
 	});
 
+    $('#cliente_id').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listclientes'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
 
+    
 }); 
+
+function cambiartipoper(){
+    $('#personal_ad').css('display','none');
+	$('#clientes').css('display','none');
+	var doc = $('#tipo_pers').val();
+	if(doc == 'P'){
+		$('#personal_ad').css('display','block');
+		$('#clientes').css('display','none');
+	}
+	if(doc == 'C'){
+		$('#personal_ad').css('display','none');
+		$('#clientes').css('display','block');
+	}
+}
 
 function guardar_movimiento (entidad, x) {
     var idformulario = IDFORMMANTENIMIENTO + entidad;
