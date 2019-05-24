@@ -422,6 +422,7 @@ function submitForm_control(idformulario) {
 					"&cant"				+i+"="+$(this).attr("canti")+
 					"&fecha_vencim"		+i+"="+$(this).attr("fecha_venc")+
 					"&factor_"			+i+"="+$(this).attr("dat_factor")+
+					"&afecto_1"			+i+"="+$(this).attr("afect_")+
 					"&lot"				+i+"="+$(this).attr("lot");
 		i++;
 	});

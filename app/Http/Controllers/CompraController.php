@@ -193,6 +193,10 @@ class CompraController extends Controller
                     $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
                     $prod_m->save();
 
+                    $prod_ = Producto::find($prod_m->producto_id);
+                    $prod_->afecto = $request->input("afecto_1".$i);
+                    $prod_->save();
+
                 }
             }
             if($cantidad >0){
