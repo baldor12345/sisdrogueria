@@ -7,6 +7,9 @@
 				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc}}</strong></td></tr>
 				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
 				<tr><td>Condicion de Pag.</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
+				@if($venta->tipo_pago == 'CR')
+				<tr><td>N° Días a pagar</td><td style="padding-left: 18px;">: <strong>{{  $venta->dias }}</strong></td><td style="padding-left: 18px;">Fecha venc. cred.</td><td style="padding-left: 18px;">: <strong>{{  date("d/m/Y",strtotime($venta->fecha."+ ".$venta->dias." day")) }}</strong></td></tr>
+				@endif
 				
 			</table>
 			{{-- <dl class="dl-horizontal">

@@ -61,8 +61,9 @@ class VentasController extends Controller
         $fechaf   = Libreria::getParam($request->input('fechaf'));
         $estado   = Libreria::getParam($request->input('cboTipoVentas'));
         $numero_serie = Libreria::getParam($request->input('numero_serie'));
+        $tipo = Libreria::getParam($request->input('cboTipoV'));
 
-        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado );
+        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');

@@ -49,7 +49,7 @@ class Venta extends Model
      * @param  string $name  nombre
      * @return sql        sql
      */
-    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado)
+    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo)
     {
         $fechai = date("Y-m-d",strtotime($fechai."- 1 month"));
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 month"));
@@ -61,6 +61,7 @@ class Venta extends Model
                 }
             })
             ->where('estado','=',$estado)
+            ->where('tipo_pago','=',$tipo)
             ->where('numero_doc','LIKE','%'.$numero_serie.'%')
             ->orderBy('fecha', 'ASC');
     }

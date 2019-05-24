@@ -20,8 +20,11 @@
 					</div>
 					<div class="form-group">
 							<label for="cboTipoVentas" class="input-md">Tipo ventas:</label>
-						
 						{!! Form::select('cboTipoVentas', ['P'=>'Activas','A'=>'Anuladas'], 'P', array('class' => 'form-control input-md', 'id' => 'cboTipoVentas', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+					</div>
+					<div class="form-group">
+							<label for="cboTipoV" class="input-md"></label>
+						{!! Form::select('cboTipoV', ['CO'=>'Contado','CR'=>'Crédito'], 'CO', array('class' => 'form-control input-md', 'id' => 'cboTipoV', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					{{-- <div class="form-group">
 						<label for="proveedor" class="input-sm">Proveedor:</label>
