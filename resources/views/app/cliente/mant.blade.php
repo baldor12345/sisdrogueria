@@ -19,10 +19,15 @@
 		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
 	</div>
 
+	<div class="form-group col-12 col-md-12">
+		{!! Form::label('codigo_medico', 'Código de Médico Asignado:', array('class' => ' control-label')) !!}
+		{!! Form::text('codigo_medico', null, array('class' => 'form-control input-xs', 'id' => 'codigo_medico', 'placeholder' => 'Código Médico asignado')) !!}
+	</div>
+
 	<div class="form-group col-12 col-md-12 clas_ruc">
-			{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
-			{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
-		</div>
+		{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
+		{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
+	</div>
 
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('direccion', 'Direccion:', array('class' => ' control-label')) !!}
@@ -68,6 +73,9 @@ $(document).ready(function() {
 			$('.clas_dni').hide();
 			$('.clas_ruc').show();
 		}
+	});
+	$("#modal"+(contadorModal - 1)).on('hidden.bs.modal', function () {
+		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
 	});
 }); 
 </script>

@@ -15,27 +15,32 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						<label for="numero_serie" class="input-sm">N° Doc.:</label>
-						{!! Form::text('nmero_serie', '', array('class' => 'form-control input-sm', 'id' => 'numero_serie')) !!}
+						<label for="numero_serie" class="input-md">N° Doc.:</label>
+						{!! Form::text('numero_serie', '', array('class' => 'form-control input-md', 'id' => 'numero_serie')) !!}
+					</div>
+					<div class="form-group">
+							<label for="cboTipoVentas" class="input-md">Tipo ventas:</label>
+						
+						{!! Form::select('cboTipoVentas', ['P'=>'Activas','A'=>'Anuladas'], 'P', array('class' => 'form-control input-md', 'id' => 'cboTipoVentas', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					{{-- <div class="form-group">
 						<label for="proveedor" class="input-sm">Proveedor:</label>
 						{!! Form::text('proveedor', '', array('class' => 'form-control input-sm', 'id' => 'proveedor')) !!}
 					</div> --}}
 					<div class="form-group">
-						<label for="fechai" class="input-sm">Fecha Inicio:</label>
-						{!! Form::date('fechai', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fechai')) !!}
+						<label for="fechai" class="input-md">Fecha Inicio:</label>
+						{!! Form::date('fechai', $fecha_defecto, array('class' => 'form-control input-md', 'id' => 'fechai', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					<div class="form-group">
-						<label for="fechaf" class="input-sm">Fecha Fin:</label>
-						{!! Form::date('fechaf', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fechaf')) !!}
+						<label for="fechaf" class="input-md">Fecha Fin:</label>
+						{!! Form::date('fechaf', $fecha_defecto, array('class' => 'form-control input-md', 'id' => 'fechaf',  'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					<div class="form-group">
-						<label for="filas" class="input-sm">Filas a Mostrar:</label>
-						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+						<label for="filas" class="input-md">Filas a Mostrar:</label>
+						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-md', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
-					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-xs', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
-					{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-xs', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
+					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
+					{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevo', 'onclick' => 'modal (\''.URL::route($ruta["create"], array('listar'=>'SI')).'\', \''.$titulo_registrar.'\', this);')) !!}
 					{!! Form::close() !!}
 		 		</div>
             </div>

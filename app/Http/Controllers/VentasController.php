@@ -54,23 +54,27 @@ class VentasController extends Controller
 
     public function buscar(Request $request)
     {
-        $pagina           = $request->input('page');
-        $filas            = $request->input('filas');
-        $entidad          = 'Ventas';
-        $fecha           = Libreria::getParam($request->input('fecha_inicio'));
-        $resultado        = Venta::listar($fecha);
+        $pagina   = $request->input('page');
+        $filas    = $request->input('filas');
+        $entidad  = 'Ventas';
+        $fechai   = Libreria::getParam($request->input('fechai'));
+        $fechaf   = Libreria::getParam($request->input('fechaf'));
+        $estado   = Libreria::getParam($request->input('cboTipoVentas'));
+        $numero_serie = Libreria::getParam($request->input('numero_serie'));
+
+        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado );
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Doc.', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Serie - N°Doc.', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Cliente', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total S/.', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
+        // $cabecera[]       = array('valor' => 'Sucursal', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Forma de pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
        
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -357,6 +361,8 @@ class VentasController extends Controller
                     $entrada->save();
                 }
             }
+            $detalle_caja = DetalleCaja::where('numero_operacion','=', $venta->numero_operacion)->get()[0];
+            $detalle_caja->delete();
         });
         return is_null($error) ? "OK" : $error;
     }

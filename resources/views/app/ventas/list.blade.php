@@ -21,12 +21,12 @@
 			
 			<td>{{ $value->cliente->dni == null?$value->cliente->razon_social."":$value->cliente->nombres." ".$value->cliente->apellidos }}</td>
 			<td>{{ $value->total }}</td>
-			<td>{{ $value->sucursal->nombre }}</td>
+			{{-- <td>{{ $value->sucursal->nombre }}</td> --}}
 			<td>{{ $value->comprobante == 'B'?'Boleta':'Factura' }}</td>
 			<td>{{ $value->forma_pago == 'T'?'Tarjeta':'Efectivo' }}</td>
 			{{-- <td>{{ $value->estado == 'P'?'Pendiente':($value->estado == 'C'?'Cancelado':'Anulado') }}</td> --}}
 			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> PDF', array('onclick' => 'window.open(\'http://localhost/clifacturacion/controlador/contComprobante.php?funcion=generarPDF&numero='.$value->serie_doc.'-'.$value->numero_doc.'\',\'_blank\');', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			@if($value->estado == 'P')
 			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>

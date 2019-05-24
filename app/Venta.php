@@ -49,14 +49,19 @@ class Venta extends Model
      * @param  string $name  nombre
      * @return sql        sql
      */
-    public function scopelistar($query, $fecha)
+    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado)
     {
-        return $query->where(function($subquery) use($fecha)
+        $fechai = date("Y-m-d",strtotime($fechai."- 1 month"));
+        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 month"));
+        return $query->where(function($subquery) use($fechai, $fechaf)
             {
-                if (!is_null($fecha)) {
-                    $subquery->where('fecha', '>=', $fecha);
+                if (!is_null($fechai)) {
+                    // $subquery->where('fecha', '>=', $fechai)->where('fecha', '<=', $fechaf);
+                    $subquery->whereBetween('fecha', [$fechai, $fechaf]);
                 }
             })
+            ->where('estado','=',$estado)
+            ->where('numero_doc','LIKE','%'.$numero_serie.'%')
             ->orderBy('fecha', 'ASC');
     }
 

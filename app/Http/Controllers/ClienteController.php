@@ -154,6 +154,7 @@ class ClienteController extends Controller
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');
             $cliente->email       = $request->input('email');
+            $cliente->codigo_medico       = $request->input('codigo_medico');
             $cliente->save();
         });
         return is_null($error) ? "OK" : $error;

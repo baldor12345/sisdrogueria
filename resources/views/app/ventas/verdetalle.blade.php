@@ -6,7 +6,7 @@
 				<tr><td>Fecha de Venc.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td><td style="padding-left: 18px;">Fecha de Emisión.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td></tr>
 				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc}}</strong></td></tr>
 				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
-				<tr><td>Observación</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
+				<tr><td>Condicion de Pag.</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
 				
 			</table>
 			{{-- <dl class="dl-horizontal">
@@ -39,7 +39,7 @@
 						<tr>
 							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>presentacion
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
-							<td class=" input-sm" width="40%">{{ strtoupper($value->producto->descripcion.' - '.$value->producto->sustancia_activa) }}</td>
+							<td class=" input-sm" width="40%">{{ strtoupper($value->producto->descripcion.' - '.$value->presentacion->presentacion->nombre.' x '.$value->presentacion->cant_unidad_x_presentacion.' Unidades') }}</td>
 							<?php
 							$lot = "";
 							$fecha_v = "";
