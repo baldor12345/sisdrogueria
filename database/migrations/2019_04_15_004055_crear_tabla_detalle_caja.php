@@ -20,6 +20,7 @@ class CrearTablaDetalleCaja extends Migration
             $table->string('numero_operacion', 400)->nullable();
             $table->integer('concepto_id')->unsigned()->nullable();
             $table->integer('cliente_id')->unsigned()->nullable();
+            $table->integer('personal_id')->unsigned()->nullable();
             $table->decimal('ingreso',20, 3);
             $table->decimal('egreso',20, 3)->nullable();
             $table->char('estado', 1)->nullable();//C=>Cancelado, P=>Pendiente
@@ -27,6 +28,7 @@ class CrearTablaDetalleCaja extends Migration
             $table->string('comentario', 400)->nullable();
             $table->integer('caja_id')->unsigned()->nullable();
             $table->foreign('cliente_id')->references('id')->on('cliente')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('personal_id')->references('id')->on('person')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('caja_id')->references('id')->on('caja')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('concepto_id')->references('id')->on('concepto')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();

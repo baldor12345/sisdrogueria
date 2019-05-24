@@ -23,6 +23,9 @@ class DetalleCaja extends Model
     public function cliente(){
         return $this->belongsTo('App\Cliente','cliente_id');
     } 
+    public function personal(){
+        return $this->belongsTo('App\Person','personal_id');
+    } 
     
     public function scopelistar($query,$caja_id)
     {

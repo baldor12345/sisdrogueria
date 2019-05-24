@@ -46,6 +46,7 @@ class CajaController extends Controller
 
             'cargarselect'      => 'caja.cargarselect',
             'listpersonas'      =>'caja.listpersonas',
+            'listclientes'      =>'caja.listclientes',
         );
 
     public function __construct()
@@ -235,8 +236,10 @@ class CajaController extends Controller
         $numero_operacion   = Libreria::codigo_operacion();
         $cboFormaPago       = [''=>'Seleccione'] + array('CO'=>'Contado', 'CR'=>'Crédito');
         $cboTipo            = [''=>'Seleccione'] + array('I'=>'Ingreso', 'E'=>'Egreso');
+        $cboTtipoPersonal   = ['0'=>'Seleccione'] + array('P'=>'Personal', 'C'=>'Cliente');
         $cboConcepto        = [''=>'Seleccione'];
-        $cboPersona         = [''=>'Seleccione'];
+        $cboPersonal         = [''=>'Seleccione personal'];
+        $cboCliente         = [''=>'Seleccione cliente'];
 
         $user           = Auth::user();
         $cajero_dat    = Persona::find($user->person_id);
@@ -249,7 +252,7 @@ class CajaController extends Controller
         $ruta = $this->rutas;
         $formData     = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton        = 'Registrar';
-        return view($this->folderview.'.nuevomovimiento')->with(compact('fecha', 'count_caja', 'cboPersona','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.nuevomovimiento')->with(compact('cboTtipoPersonal', 'fecha', 'count_caja', 'cboPersonal','cboCliente','ruta','cboFormaPago', 'cboTipo', 'cboConcepto', 'numero_operacion', 'user' , 'num_caja', 'caja', 'cajero_dat', 'formData', 'entidad', 'boton', 'listar'));
     }
 
     public function guardarnuevomovimiento(Request $request)
@@ -272,7 +275,20 @@ class CajaController extends Controller
             $detalle_caja->fecha = $request->input('fecha').date(" H:i:s");
             $detalle_caja->numero_operacion = $numero_operacion;
             $detalle_caja->concepto_id = $request->input('concepto_id');
-            $detalle_caja->cliente_id = $request->input('persona_id');
+
+            if($request->input('tipo_pers') == '0'){
+                $detalle_caja->cliente_id = null;
+                $detalle_caja->personal_id = null;
+            }
+            if($request->input('tipo_pers') == 'P'){
+                $detalle_caja->cliente_id = null;
+                $detalle_caja->personal_id = $request->input('personal_id');
+            }
+            if($request->input('tipo_pers') == 'C'){
+                $detalle_caja->cliente_id = $request->input('cliente_id');
+                $detalle_caja->personal_id = null;
+            }
+            
             if($request->input('tipo_id') == 'I'){
                 $detalle_caja->ingreso = $request->input('total');
                 $detalle_caja->egreso = 0;
@@ -281,7 +297,7 @@ class CajaController extends Controller
                 $detalle_caja->egreso = $request->input('total');
                 $detalle_caja->ingreso = 0;
             }
-            $detalle_caja->estado = $request->input('C');
+            $detalle_caja->estado = 'C';
             $detalle_caja->forma_pago = $request->input('forma_pago');
             $detalle_caja->comentario = $request->input('comentario');
             $detalle_caja->caja_id = $request->input('caja_id');
@@ -373,6 +389,20 @@ class CajaController extends Controller
 
 
     public function listpersonas(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Persona::where("nombres",'LIKE', '%'.$term.'%')->orwhere('apellidos', '%'.$term.'%')->orwhere('dni', '%'.$term.'%')->orwhere('ruc', '%'.$term.'%')->limit(5)->get();
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->apellidos.' '.$tag->nombres];
+            //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
+        }
+
+        return \Response::json($formatted_tags);
+    }
+    public function listclientes(Request $request){
         $term = trim($request->q);
         if (empty($term)) {
             return \Response::json([]);

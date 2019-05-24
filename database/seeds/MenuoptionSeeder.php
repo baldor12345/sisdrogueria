@@ -198,13 +198,14 @@ class MenuoptionSeeder extends Seeder
 
 		$datos = array(
 				array(
-					'name' => 'Caja',
+					'name' => 'Caja Diaria',
 					'link'   => 'caja'
 				),
-				/*array(
-					'name' => 'Caja Diaria',
-					'link'   => 'caja_diaria'
+				array(
+					'name' => 'Pendientes',
+					'link'   => 'pendientes'
 				),
+				/*
 				array(
 					'name' => 'Mov. Anulados',
 					'link'   => 'anulados'

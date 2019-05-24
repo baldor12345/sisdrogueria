@@ -151,6 +151,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('caja/cargarreapertura/{id}/{listarluego}', 'CajaController@cargarreapertura')->name('caja.cargarreapertura');
     Route::get('caja/guardarreapertura', 'CajaController@guardarreapertura')->name('caja.guardarreapertura');
     Route::get('caja/listpersonas',  'CajaController@listpersonas')->name('caja.listpersonas');
+    Route::get('caja/listclientes',  'CajaController@listclientes')->name('caja.listclientes');
   
 
     //COMPRA
