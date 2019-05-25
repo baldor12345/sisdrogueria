@@ -40,7 +40,7 @@
 				<tbody>
 						@foreach ($detalle_ventas as $key => $value)
 						<tr>
-							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>presentacion
+							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
 							<td class=" input-sm" width="40%">{{ strtoupper($value->producto->descripcion.' - '.$value->presentacion->presentacion->nombre.' x '.$value->presentacion->cant_unidad_x_presentacion.' Unidades') }}</td>
 							<?php
