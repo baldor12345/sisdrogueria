@@ -2,7 +2,7 @@
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	{!! Form::hidden('afecto', null, array('id' => 'afecto')) !!}
-	{!! Form::hidden('precio_unidad', null, array('id' => 'precio_unidad')) !!}
+	{{-- {!! Form::hidden('precio_unidad', null, array('id' => 'precio_unidad')) !!} --}}
 	{!! Form::hidden('stock', null, array('id' => 'stock')) !!}
 	{!! Form::hidden('fecha_venc', null, array('id' => 'fecha_venc')) !!}
 
@@ -26,9 +26,13 @@
 				{!! Form::select('cboPresentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
 			</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-					{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
-					{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
-				</div>
+				{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
+				{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
+			</div>
+			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+				{!! Form::label('precio_unidad', 'Precio:', array('class' => 'col-sm-3 col-xs-12')) !!}
+				{!! Form::text('precio_unidad', null, array('class' => 'form-control input-sm', 'id' => 'precio_unidad', 'placeholder' => 'Precio')) !!}
+			</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
 				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
 				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
@@ -253,6 +257,7 @@ $(document).ready(function() {
 			// console.log("Respuesta persona: "+response[3]);
 			var productoPresentacion = response;
 			var precio_unidad = productoPresentacion.precio_venta_unitario;
+			// var precio_unidad = productoPresentacion.precio_venta_unitario * productoPresentacion.cant_unidad_x_presentacion;
 			var cantidad_unidades_presentacion = productoPresentacion.cant_unidad_x_presentacion;
 			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
 			var total_unidades = cantidad_unidades_presentacion * cantidad;
