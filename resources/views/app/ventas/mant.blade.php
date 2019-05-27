@@ -6,139 +6,146 @@
 	{!! Form::hidden('stock', null, array('id' => 'stock')) !!}
 	{!! Form::hidden('fecha_venc', null, array('id' => 'fecha_venc')) !!}
 
-	<div class="row">
-		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
-			<table id="tabla_temp" class="" style="">
-				<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
-				{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
-				<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
-				<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
-			</table>
+	<div class="form-group row">
+		
+		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 ">  
+			<div class="card-box">
+				<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
+					<table id="tabla_temp" class="" style="">
+						<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
+						{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
+						<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
+						<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
+					</table>
+				</div>
+				<div class="form-group">
+	
+					<div class="form-group col-5 col-md-5 col-sm-6 col-xs-12 text-left">
+						{!! Form::label('cboProducto', 'Producto:', array('class' => ' col-md-12 text-left')) !!}
+						{!! Form::select('cboProducto', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
+					</div>
+					<div class="form-group col-4 col-md-4 text-left" style="margin-left: 3px">
+						{!! Form::label('cboPresentacion', 'Unidad:', array('class' => ' col-md-12 text-left')) !!}
+						{!! Form::select('cboPresentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
+					</div>
+					<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+						{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
+						{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad',  'onkeypress'=>'return filterFloat(event,this)')) !!}
+					</div>
+					<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+						{!! Form::label('precio_unidad', 'Precio:', array('class' => 'col-sm-3 col-xs-12')) !!}
+						{!! Form::text('precio_unidad', null, array('class' => 'form-control input-sm', 'id' => 'precio_unidad', 'placeholder' => 'Precio',  'onkeypress'=>'return filterFloat(event,this)')) !!}
+					</div>
+					<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
+						{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
+						{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
+					</div>
+					
+				</div>
+				<div class="table-responsive">
+					<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
+						<thead>
+							<tr>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="35%">Producto</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Lote</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div> 
 		</div>
-		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">   
 
-			<div class="form-group col-6 col-md-6 text-left">
-				{!! Form::label('cboProducto', 'Producto:', array('class' => ' col-md-12 text-left')) !!}
-				{!! Form::select('cboProducto', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
-			</div>
-			<div class="form-group col-4 col-md-4 text-left" style="margin-left: 3px">
-				{!! Form::label('cboPresentacion', 'Unidad:', array('class' => ' col-md-12 text-left')) !!}
-				{!! Form::select('cboPresentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
-			</div>
-			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
-				{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad')) !!}
-			</div>
-			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('precio_unidad', 'Precio:', array('class' => 'col-sm-3 col-xs-12')) !!}
-				{!! Form::text('precio_unidad', null, array('class' => 'form-control input-sm', 'id' => 'precio_unidad', 'placeholder' => 'Precio')) !!}
-			</div>
-			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
-				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
-			</div>
-			
-			<div class="form-group">
-				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
-		            <thead>
-		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="35%">Producto</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">F. Venc.</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Lote</th>
-							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
-							<th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Cantidad</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>
-		                </tr>
-		            </thead>
-		        </table>
-			</div>
-		</div>
+		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+			<div class="card-box">
+				<div class="form-group ">
+					{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+						{!! Form::select('documento', $cboDocumento, null, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+					</div>
+				</div>
+				<div class="form-group">
+					{!! Form::label('cboCliente', 'Cliente:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
+					<div class="input-group" style="">
+						{!! Form::select('cboCliente', $cboCliente, null, array('class' => 'form-control input-md', 'id' => 'cboCliente')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
+							
+							{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!} --}}
+						</span>
+					</div>
+				</div>
 
-		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 card-box">
-			<div class="form-group ">
-				{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('documento', $cboDocumento, null, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+				<div class="form-group">
+					{!! Form::label('tipo_venta', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+						{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				{!! Form::label('cboCliente', 'Cliente:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
-				<div class="input-group" style="">
-					{!! Form::select('cboCliente', $cboCliente, null, array('class' => 'form-control input-md', 'id' => 'cboCliente')) !!}
-					<span class="input-group-btn">
-						{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
-						
-						{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!} --}}
-					</span>
+				<div class="form-group credito" >
+					{!! Form::label('dias', 'Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+						{!! Form::text('dias', 0, array('class' => 'form-control input-xs', 'id' => 'dias', 'placeholder' => 'N° dias')) !!}
+					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				{!! Form::label('tipo_venta', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
+				<div class="form-group contado">
+					{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+						{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
+					</div>
 				</div>
-			</div>
-			<div class="form-group credito" >
-				{!! Form::label('dias', 'Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::text('dias', 0, array('class' => 'form-control input-xs', 'id' => 'dias', 'placeholder' => 'N° dias')) !!}
-				</div>
-			</div>
 
-			<div class="form-group contado">
-				{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
+				<div class="form-group">
+					{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-3 col-xs-12" style="height: 25px;">
+						{!! Form::text('serie_documento', 'B'.$serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie','readonly')) !!}
+					</div>
+					<div class="col-sm-6 col-xs-12" style="height: 25px;">
+						{!! Form::text('numero_documento', $numero_doc, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento','readonly')) !!}
+					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('serie_documento', 'B'.$serie, array('class' => 'form-control input-xs', 'id' => 'serie_documento', 'placeholder' => 'serie','readonly')) !!}
+				<div class="form-group">
+					{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-9 col-xs-12" style="height: 25px;">
+						{!! Form::date('fecha', $fecha_defecto, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+					</div>
 				</div>
-				<div class="col-sm-6 col-xs-12" style="height: 25px;">
-					{!! Form::text('numero_documento', $numero_doc, array('class' => 'form-control input-xs', 'id' => 'numero_documento', 'placeholder' => 'num documento','readonly')) !!}
+				<br>
+				
+				<div class="form-group" >
+					{!! Form::label('subtotal', 'Sub Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-4 col-xs-12" style="height: 25px;">
+						{!! Form::text('subtotal', 0, array('class' => 'form-control input-xs', 'id' => 'subtotal', 'placeholder' => '','readonly')) !!}
+					</div>
+					{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-3 col-xs-12" style="height: 25px;">
+						{!! Form::text('igv', 0, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
+					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				{!! Form::label('fecha', 'Fecha:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-9 col-xs-12" style="height: 25px;">
-					{!! Form::date('fecha', $fecha_defecto, array('class' => 'form-control input-xs', 'id' => 'fecha')) !!}
+				<div class="form-group" >
+					{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
+					<div class="col-sm-4 col-xs-12" style="height: 25px;">
+						{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+					</div>
 				</div>
-			</div>
-			<br>
-			
-			<div class="form-group" >
-				{!! Form::label('subtotal', 'Sub Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
-					{!! Form::text('subtotal', 0, array('class' => 'form-control input-xs', 'id' => 'subtotal', 'placeholder' => '','readonly')) !!}
-				</div>
-				{!! Form::label('igv', 'Igv:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-3 col-xs-12" style="height: 25px;">
-					{!! Form::text('igv', 0, array('class' => 'form-control input-xs', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
-				</div>
-			</div>
 
-			<div class="form-group" >
-				{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
-				<div class="col-sm-4 col-xs-12" style="height: 25px;">
-					{!! Form::text('total', null, array('class' => 'form-control input-xs', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+				<br>
+				<div class="form-group">
+					<div class="col-lg-12 col-md-12 col-sm-12 text-right">
+						{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarVenta', 'onclick' => 'guardar_venta(\''.$entidad.'\', this)')) !!}
+						{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
+					</div>
 				</div>
-			</div>
-
-			<br>
-			<div class="form-group">
-				<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-					{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarVenta', 'onclick' => 'guardar_venta(\''.$entidad.'\', this)')) !!}
-					{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
-				</div>
-			</div>
-		</div>		
+			</div>	
+		</div>	
 	</div>
 {!! Form::close() !!}
 

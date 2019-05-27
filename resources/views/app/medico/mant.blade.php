@@ -12,18 +12,18 @@
 	</div>
 
 	<div class="form-group col-6 col-md-6" >
-		{!! Form::label('codigo', 'Código:', array('class' => ' control-label')) !!}<div class="" style="display: inline-block;color: red;">*</div>
+		{!! Form::label('codigo', 'Código:', array('class' => ' control-label',  'onkeypress'=>'return filterFloat(event,this)')) !!}<div class="" style="display: inline-block;color: red;">*</div>
 		{{-- {!! Form::text('codigo', $medico != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese código de medico')) !!} --}}
 		{!! Form::text('codigo', null, array('class' => 'form-control input-xs', 'id' => 'codigo', 'placeholder' => 'Ingrese código de medico')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
 		{!! Form::label('dni', 'DNI:', array('class' => ' control-label')) !!}
-		{!! Form::text('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese DNI')) !!}
+		{!! Form::text('dni', null, array('class' => 'form-control input-xs', 'id' => 'dni', 'placeholder' => 'Ingrese DNI',  'onkeypress'=>'return filterFloat(event,this)')) !!}
 	</div>
 
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('telefono', 'Teléfono:', array('class' => 'control-label')) !!}
-			{!! Form::text('telefono', null, array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese numero telefono')) !!}
+			{!! Form::text('telefono', null, array('class' => 'form-control input-xs', 'id' => 'telefono', 'placeholder' => 'Ingrese numero telefono',  'onkeypress'=>'return filterFloat(event,this)')) !!}
 	</div>
 
 	<div class="form-group col-6 col-md-6" style="margin-left: 3px;">
@@ -48,4 +48,41 @@ $(document).ready(function() {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
 	});
 }); 
+
+function filterFloat(evt,input){
+	// Backspace = 8, Enter = 13, ‘0′ = 48, ‘9′ = 57, ‘.’ = 46, ‘-’ = 43
+	var key = window.Event ? evt.which : evt.keyCode;    
+	var chark = String.fromCharCode(key);
+	var tempValue = input.value+chark;
+	if(key >= 48 && key <= 57){
+		if(filter(tempValue)=== false){
+			return false;
+		}else{       
+			return true;
+		}
+	}else{
+		if(key == 8 || key == 13 || key == 0) {     
+			return true;              
+		}else if(key == 46){
+				if(filter(tempValue)=== false){
+					return false;
+				}else{       
+					return true;
+				}
+		}else{
+			return false;
+		}
+	}
+}
+
+function filter(__val__){
+	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+	if(preg.test(__val__) === true){
+		return true;
+	}else{
+	return false;
+	}
+	
+}
+
 </script>
