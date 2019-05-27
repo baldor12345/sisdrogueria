@@ -82,6 +82,18 @@
 				</div>
 
 				<div class="form-group">
+					{!! Form::label('cboMedico', 'Medico:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
+					<div class="input-group" style="">
+						{!! Form::select('cboMedico', $cboMedico, null, array('class' => 'form-control input-md', 'id' => 'cboMedico')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoMed', 'onclick' => 'modal (\''.URL::route($ruta["create_med"], array('listar'=>'SI')).'\', \''."Registrar Medico".'\', this);')) !!}
+							
+							{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!} --}}
+						</span>
+					</div>
+				</div>
+
+				<div class="form-group">
 					{!! Form::label('tipo_venta', 'Tipo:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'height: 25px')) !!}
 					<div class="col-sm-9 col-xs-12" style="height: 25px;">
 						{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
@@ -185,6 +197,28 @@ $(document).ready(function() {
 		ajax: {
 			
 			url: "{{ URL::route($ruta['listproductos'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+
+	$('#cboMedico').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listmedicos'], array()) }}",
 			dataType: 'json',
 			delay: 250,
 			data: function(params){
@@ -471,46 +505,52 @@ function guardar_venta(entidad, idboton) {
 	}else{
 		alert('No a seleccionado ningun pruducto');
 	}
-
+	var idformulario = IDFORMMANTENIMIENTO + entidad;
 	if(correcto){
-		var idformulario = IDFORMMANTENIMIENTO + entidad;
-	var data         = submitForm_venta(idformulario);
-	var respuesta    = '';
-	var listar       = 'NO';
-	if ($(idformulario + ' :input[id = "listar"]').length) {
-		var listar = $(idformulario + ' :input[id = "listar"]').val()
-	};
-	data.done(function(msg) {
-		respuesta = msg;
-		$(idboton).button('loading');
-	}).fail(function(xhr, textStatus, errorThrown) {
-		respuesta = 'ERROR';
-		$(idboton).removeClass('disabled');
-		$(idboton).removeAttr('disabled');
-		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
-	}).always(function() {
-		if(respuesta === 'ERROR'){
-		}else{
-			if (respuesta[0] === 'OK') {
+		
+		var data         = submitForm_venta(idformulario);
+		var respuesta    = '';
+		var listar       = 'NO';
+		if ($(idformulario + ' :input[id = "listar"]').length) {
+			var listar = $(idformulario + ' :input[id = "listar"]').val()
+		};
+		data.done(function(msg) {
+			respuesta = msg;
+			if(respuesta[0]== 'OK'){
+				$(idboton).button('loading');
+			}
+			
+		}).fail(function(xhr, textStatus, errorThrown) {
+			respuesta = 'ERROR';
+			$(idboton).removeClass('disabled');
+			$(idboton).removeAttr('disabled');
+			$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+		}).always(function() {
+			if(respuesta === 'ERROR'){
+			}else{
+				if (respuesta[0] === 'OK') {
 
-				var venta = JSON.stringify(respuesta[1]);
-				var cliente = JSON.stringify(respuesta[2]);
-				var detalla_ventas = JSON.stringify(respuesta[3]);
-				// var lsentradas = respuesta[4];
-				declarar(venta,cliente,detalla_ventas,$("#documento").val());
-				
-				cerrarModal();
-				if (listar === 'SI') {
-					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
-				}        
-			} else {
-				mostrarErrores(respuesta, idformulario, entidad);
+					var venta = JSON.stringify(respuesta[1]);
+					var cliente = JSON.stringify(respuesta[2]);
+					var detalla_ventas = JSON.stringify(respuesta[3]);
+					// var lsentradas = respuesta[4];
+					declarar(venta,cliente,detalla_ventas,$("#documento").val());
+					
+					cerrarModal();
+					if (listar === 'SI') {
+						buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+					}        
+				} else {
+				// alert(respuesta[0]);
+				$('#divMensajeError'+entidad).html('<div class="alert alert-danger"><strong>'+respuesta[0]+'</strong></div>');
+				//mostrarErrores(respuesta, idformulario, entidad);
 				$(idboton).removeClass('disabled');
 				$(idboton).removeAttr('disabled');
 				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+				}
+				
 			}
-		}
-	});
+		});
 	}
 	
 }

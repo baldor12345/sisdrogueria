@@ -187,6 +187,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ventas/eliminar/{id}/{listarluego}','VentasController@eliminar')->name('ventas.eliminar');
     Route::resource('ventas', 'VentasController', array('except' => array('show')));
     Route::get('ventas/listclientes',  'VentasController@listclientes')->name('ventas.listclientes');
+    Route::get('ventas/listmedicos',  'VentasController@listmedicos')->name('ventas.listmedicos');
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
     Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
 

@@ -28,7 +28,7 @@ class CrearTablaVentas extends Migration
             $table->char('estado', 1)->nullable();//P=pendiente, E=Entregado
             $table->integer('user_id')->unsigned();
             $table->integer('caja_id')->unsigned();
-            $table->integer('medico_id')->unsigned();
+            $table->integer('medico_id')->unsigned()->nullable();
             $table->integer('sucursal_id')->unsigned();
             $table->integer('cliente_id')->unsigned()->nullable();
             $table->char('comprobante',1)->nullable();//V = Voleta, F = Factura

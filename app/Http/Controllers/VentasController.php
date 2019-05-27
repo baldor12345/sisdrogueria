@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Sucursal;
 use App\Distrito;
 use App\Venta;
+use App\Medico;
 use App\Cliente;
 use App\Producto;
 use App\Presentacion;
@@ -40,10 +41,12 @@ class VentasController extends Controller
             'search'   => 'ventas.buscar',
             'index'    => 'ventas.index',
             'listclientes'    => 'ventas.listclientes',
+            'listmedicos'    => 'ventas.listmedicos',
             'listproductos'    => 'ventas.listproductos',
             'getProducto'    => 'ventas.getProducto',
             'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
             'create_new' => 'clientes.create',
+            'create_med' => 'medico.create',
             'verdetalle_v' => 'ventas.verdetalle_v',
         );
 
@@ -138,8 +141,9 @@ class VentasController extends Controller
         $cboFormasPago = ['T'=>'Tarjeta','E'=>'Efectivo'];
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
+        $cboMedico = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc'));
+        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc', 'cboMedico'));
     }
 
     public function store(Request $request)
@@ -155,108 +159,133 @@ class VentasController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
+        $respuesta=array();
         $id_venta=null;
-        $error = DB::transaction(function() use($request, $id_venta){
-            $user = Auth::user();
-            $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
-            $venta = new Venta();
-            $valor_total = $request->input('total');
-            $valor_igv = $request->input('igv');
-            $venta->total = $valor_total;
-            $venta->subtotal = $valor_total - $valor_igv;
-            $venta->descuento = 0;//$request->input('descuento');
-            $venta->igv = $valor_igv;//IGV= de configuraciones
-            $venta->descripcion = "";//$request->input('descripcion');
-            $venta->fecha = date('Y-m-d H:i:s');
-            $venta->estado = 'P';//P=Pendiente, C=cancelado
-            $venta->user_id = $user->id;
-            $venta->caja_id = $caja->id;
-            $venta->sucursal_id = $user->sucursal_id;
-            $id_cliente = $request->input('cboCliente');
-            if($id_cliente != 0){
-                $venta->cliente_id = $id_cliente;
+        $valor_total = $request->input('total');
+        $monto_limite =700;
+        $valido =true;
+        $mensaje_err ="";
+        if( $valor_total > $monto_limite){
+            // echo("valor: ".$valor_total);
+            $cliente = Cliente::find($request->input('cboCliente'));
+            // echo($cliente->dni);
+            if($cliente->dni == null | $cliente->dni == ""){
+                $valido = false;
+                $mensaje_err = "Para ventas mayor a s/. ".$monto_limite.", debe seleccionar un cliente con DNI válido.";
             }
-            $venta->comprobante =  $request->input('documento');
-            $venta->tipo_pago   =  $request->input('tipo_venta');
-            $venta->forma_pago  =  $request->input('forma_pago');
-            $venta->serie_doc  =  $request->input('serie_documento');
-            $venta->numero_doc  =  $request->input('numero_documento');
-            $venta->dias = $request->input('dias');
-            
-            
-            $detalle_caja = new DetalleCaja();
-            $detalle_caja->caja_id = $caja->id;
-            if($id_cliente != 0){
-                $detalle_caja->cliente_id = $id_cliente;
-            }
-            $detalle_caja->forma_pago = $request->input('forma_pago');
-            $detalle_caja->concepto_id = 5;
-            $detalle_caja->estado = 'P';
-            $detalle_caja->fecha = date('Y-m-d H:i:s');
+        }
+        if($valido){
 
-            $numero_operacion = Libreria::codigo_operacion();
-            $venta->numero_operacion = $numero_operacion;
-            // $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
-            $detalle_caja->ingreso = $venta->total;
-            $detalle_caja->numero_operacion = $numero_operacion;//se debe generar automatico
-            $detalle_caja->codigo_operacion =  $venta->codigo_venta;
-
-            $venta->save();
-            $id_venta = $venta->id;
-            $detalle_caja->save();
-
-            $cantidad_registros = $request->input('cantidad_registros_prod');
-            for($i=0;$i< $cantidad_registros; $i++){
-                // $cant = 0;
-                $producto = Producto::find($request->get('prod_id'.$i.''));
-                $cant = $request->get('cant_prod'.$i.'');
-                $cant_pres = $request->get('cant_pres'.$i.'');
-                $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
-                $precio_unit = $producto_presentacion->precio_venta_unitario; 
-                $id_prodPresent = $producto_presentacion->id; 
-                $subtotal =  round($precio_unit *  $cant, 2);
-                $detalle_venta = new Detalle_venta();
-                $detalle_venta->producto_id =$producto->id; 
-                $detalle_venta->cantidad = $cant_pres;
-                $detalle_venta->precio_unitario =$precio_unit;
-                $detalle_venta->total = $subtotal;
-                $detalle_venta->ventas_id = $venta->id;
-                $detalle_venta->sucursal_id = $user->sucursal_id;
-                $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
-           
-                //$entradas = Entrada::where('producto_presentacion_id','=', $id_prodPresent)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-                $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-                $lotes = "";
-                    for ($j=0; $j< count($entradas) ; $j++) {
-                        $entrad = Entrada::find($entradas[$j]->id);
-                        $cant_actual = $entrad->stock;
-                            if($cant > 0){
-                                if($cant > $cant_actual){
-                                    $entrad->stock = 0;
-                                    $entrad->save();
-                                    $cant = $cant - $cant_actual;
-                                    $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad)).";";
-                                }else{
-                                    $entrad->stock = $cant_actual - $cant;
-                                    $entrad->save();
-                                    $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad))."";
-                                    $cant = 0;
+            $error = DB::transaction(function() use($request, $id_venta, $valor_total){
+                $user = Auth::user();
+                $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
+                $venta = new Venta();
+                
+                $valor_igv = $request->input('igv');
+                $venta->total = $valor_total;
+                $venta->subtotal = $valor_total - $valor_igv;
+                $venta->descuento = 0;//$request->input('descuento');
+                $venta->igv = $valor_igv;//IGV= de configuraciones
+                $venta->descripcion = "";//$request->input('descripcion');
+                $venta->fecha = date('Y-m-d H:i:s');
+                $venta->estado = 'P';//P=Pendiente, C=cancelado
+                $venta->user_id = $user->id;
+                $venta->caja_id = $caja->id;
+                $venta->sucursal_id = $user->sucursal_id;
+                $id_cliente = $request->input('cboCliente');
+                
+                $id_medico = $request->input('cboMedico');
+                if($id_medico != 0){
+                    $venta->medico_id = $id_medico;
+                }
+                
+                if($id_cliente != 0){
+                    $venta->cliente_id = $id_cliente;
+                }
+                $venta->comprobante =  $request->input('documento');
+                $venta->tipo_pago   =  $request->input('tipo_venta');
+                $venta->forma_pago  =  $request->input('forma_pago');
+                $venta->serie_doc  =  $request->input('serie_documento');
+                $venta->numero_doc  =  $request->input('numero_documento');
+                $venta->dias = $request->input('dias');
+                
+                
+                $detalle_caja = new DetalleCaja();
+                $detalle_caja->caja_id = $caja->id;
+                if($id_cliente != 0){
+                    $detalle_caja->cliente_id = $id_cliente;
+                }
+                $detalle_caja->forma_pago = $request->input('forma_pago');
+                $detalle_caja->concepto_id = 5;
+                $detalle_caja->estado = 'P';
+                $detalle_caja->fecha = date('Y-m-d H:i:s');
+    
+                $numero_operacion = Libreria::codigo_operacion();
+                $venta->numero_operacion = $numero_operacion;
+                // $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
+                $detalle_caja->ingreso = $venta->total;
+                $detalle_caja->numero_operacion = $numero_operacion;//se debe generar automatico
+                $detalle_caja->codigo_operacion =  $venta->codigo_venta;
+    
+                $venta->save();
+                $id_venta = $venta->id;
+                $detalle_caja->save();
+    
+                $cantidad_registros = $request->input('cantidad_registros_prod');
+                for($i=0;$i< $cantidad_registros; $i++){
+                    // $cant = 0;
+                    $producto = Producto::find($request->get('prod_id'.$i.''));
+                    $cant = $request->get('cant_prod'.$i.'');
+                    $cant_pres = $request->get('cant_pres'.$i.'');
+                    $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
+                    $precio_unit = $producto_presentacion->precio_venta_unitario; 
+                    $id_prodPresent = $producto_presentacion->id; 
+                    $subtotal =  round($precio_unit *  $cant, 2);
+                    $detalle_venta = new Detalle_venta();
+                    $detalle_venta->producto_id =$producto->id; 
+                    $detalle_venta->cantidad = $cant_pres;
+                    $detalle_venta->precio_unitario =$precio_unit;
+                    $detalle_venta->total = $subtotal;
+                    $detalle_venta->ventas_id = $venta->id;
+                    $detalle_venta->sucursal_id = $user->sucursal_id;
+                    $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
+               
+                    //$entradas = Entrada::where('producto_presentacion_id','=', $id_prodPresent)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                    $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                    $lotes = "";
+                        for ($j=0; $j< count($entradas) ; $j++) {
+                            $entrad = Entrada::find($entradas[$j]->id);
+                            $cant_actual = $entrad->stock;
+                                if($cant > 0){
+                                    if($cant > $cant_actual){
+                                        $entrad->stock = 0;
+                                        $entrad->save();
+                                        $cant = $cant - $cant_actual;
+                                        $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad)).";";
+                                    }else{
+                                        $entrad->stock = $cant_actual - $cant;
+                                        $entrad->save();
+                                        $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad))."";
+                                        $cant = 0;
+                                    }
                                 }
-                            }
-                    }
-
-                $detalle_venta->lotes = $lotes;
-                $detalle_venta->save();
-
-            }
-        });
-        $venta01 = Venta::all()->last();
-        // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
-        $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
-        $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
-        $err01 = is_null($error) ? "OK" : $error;
-        // $entradas = Entrada::where('producto_presentacion_id','=', $producto_presentacion->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-        $respuesta = array($err01,$venta01,$cliente,$detalle_ventas);
+                        }
+    
+                    $detalle_venta->lotes = $lotes;
+                    $detalle_venta->save();
+    
+                }
+            });
+            $venta01 = Venta::all()->last();
+            // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
+            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
+            $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
+            $err01 = is_null($error) ? "OK" : $error;
+            // $entradas = Entrada::where('producto_presentacion_id','=', $producto_presentacion->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas);
+        }else{
+            $respuesta = array($mensaje_err);
+        }
 
         return $respuesta; 
 
@@ -404,6 +433,18 @@ class VentasController extends Controller
         $formatted_tags = [];
         foreach ($tags as $tag) {
             $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->dni == null?$tag->razon_social:$tag->nombres." ".$tag->apellidos];
+        }
+        return \Response::json($formatted_tags);
+    }
+    public function listmedicos(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Medico::listarmedicos($term);
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->codigo."-".$tag->nombres." ".$tag->apellidos];
         }
         return \Response::json($formatted_tags);
     }

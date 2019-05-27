@@ -26,7 +26,7 @@ class Medico extends Model
     }
 
     public function scopelistarmedicos($query,$nombre_dni_cod){
-        return $query->where(function($subquery)use($nombre_dni_ruc)
+        return $query->where(function($subquery)use($nombre_dni_cod)
         {
             if (!is_null($nombre_dni_cod)) {
                 $subquery->where("nombres",'LIKE', '%'.$nombre_dni_cod.'%')->orwhere('apellidos','LIKE', '%'.$nombre_dni_cod.'%')->orwhere('dni','LIKE', '%'.$nombre_dni_cod.'%')->orwhere('codigo','LIKE', '%'.$nombre_dni_cod.'%');

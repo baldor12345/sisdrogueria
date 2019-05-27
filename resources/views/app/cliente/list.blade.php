@@ -20,7 +20,7 @@
 			<tr>
 				<td>{{ $contador }}</td>
 				<td>{{ $value->dni ==null?$value->ruc :$value->dni   }}</td>
-				<td>{{ $value->dni ==null?$value->razon_social :$value->nombres.' '.$value->apellidos }}</td>
+				<td>{{ ($value->ruc ==null)?$value->nombres.' '.$value->apellidos :$value->razon_social }}</td>
 				<td>{{ $value->celular}}</td>
 				<td>{{ $value->telefono}}</td>
 				<td>{{ $value->direccion}}</td>

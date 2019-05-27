@@ -19,10 +19,10 @@
 		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
 	</div>
 
-	<div class="form-group col-12 col-md-12">
+	{{-- <div class="form-group col-12 col-md-12">
 		{!! Form::label('codigo_medico', 'Código de Médico Asignado:', array('class' => ' control-label')) !!}
 		{!! Form::text('codigo_medico', null, array('class' => 'form-control input-xs', 'id' => 'codigo_medico', 'placeholder' => 'Código Médico asignado')) !!}
-	</div>
+	</div> --}}
 
 	<div class="form-group col-12 col-md-12 clas_ruc">
 		{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
