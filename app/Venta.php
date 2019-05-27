@@ -26,6 +26,9 @@ class Venta extends Model
     public function cliente(){
         return $this->belongsTo('App\Cliente','cliente_id');
     } 
+    public function medico(){
+        return $this->belongsTo('App\Medico','medico_id');
+    } 
 
     // public function scopelistardetalle($query, $venta_id){
     //     return $query->where(function($subquery) use($fecha)

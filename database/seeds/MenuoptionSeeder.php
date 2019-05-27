@@ -116,6 +116,10 @@ class MenuoptionSeeder extends Seeder
 					'link'   => 'trabajador'
 				),
 				array(
+					'name' => 'Médicos',
+					'link'   => 'medico'
+				),
+				array(
 					'name' => 'Departamentos',
 					'link'   => 'departamento'
 				),

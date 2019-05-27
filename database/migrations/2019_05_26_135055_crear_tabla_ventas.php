@@ -28,6 +28,7 @@ class CrearTablaVentas extends Migration
             $table->char('estado', 1)->nullable();//P=pendiente, E=Entregado
             $table->integer('user_id')->unsigned();
             $table->integer('caja_id')->unsigned();
+            $table->integer('medico_id')->unsigned();
             $table->integer('sucursal_id')->unsigned();
             $table->integer('cliente_id')->unsigned()->nullable();
             $table->char('comprobante',1)->nullable();//V = Voleta, F = Factura
@@ -38,6 +39,7 @@ class CrearTablaVentas extends Migration
             $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('caja_id')->references('id')->on('caja')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('cliente_id')->references('id')->on('cliente')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('medico_id')->references('id')->on('medico')->onDelete('restrict')->onUpdate('restrict');
             // $table->foreign('comprobante_id')->references('id')->on('comprobante')->onDelete('restrict')->onUpdate('restrict');
             // $table->foreign('forma_pago_id')->references('id')->on('forma_pago')->onDelete('restrict')->onUpdate('restrict');
             $table->timestamps();
