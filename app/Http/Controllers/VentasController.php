@@ -199,10 +199,11 @@ class VentasController extends Controller
                 $id_cliente = $request->input('cboCliente');
                 
                 $id_medico = $request->input('cboMedico');
+                $id_vendedor = $request->input('cboVendedor');
                 if($id_medico != 0){
                     $venta->medico_id = $id_medico;
                 }
-                
+                $venta->vendedor_id = $id_vendedor;
                 if($id_cliente != 0){
                     $venta->cliente_id = $id_cliente;
                 }

@@ -95,6 +95,7 @@ class Venta extends Model
         return  DB::table('detalle_ventas')
         ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
         ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
+        ->leftjoin('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
         ->leftjoin('marca', 'producto.marca_id', '=', 'marca.id')
         ->select(
             'producto.descripcion as nombre_producto', 
@@ -103,9 +104,9 @@ class Venta extends Model
             'detalle_ventas.cantidad as cantidad', 
             'detalle_ventas.precio_unitario as precio_unitario', 
             'detalle_ventas.total as subtotal',
-            'marca.name as nombre_marca'  ,
-             'producto.afecto as afecto'  
-
+            'marca.name as nombre_marca',
+            'producto.afecto as afecto',  
+            'presentacion.nombre as unidad_base'  
         )
         ->where('detalle_ventas.ventas_id', '=',$venta_id)
         ->where('detalle_ventas.deleted_at', '=',null)->get();

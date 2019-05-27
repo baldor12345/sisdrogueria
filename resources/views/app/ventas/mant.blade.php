@@ -531,13 +531,21 @@ function guardar_venta(entidad, idboton) {
 	var correcto = false;
 	if(contar_registros() > 0){
 		if($('#cboCliente').val() != '0'){
-			correcto = true;
+			if($('#cboVendedor').val() != '0'){
+				correcto = true;
+			}else{
+				correcto = false;
+				alert('Debe seleccionar un vendedor antes de guardar.');
+			}
 		}else{
+			correcto = false;
 			alert('Debe seleccionar un cliente antes de guardar.');
 		}
+		
 	}else{
-		alert('No a seleccionado ningun pruducto');
+		alert('No a seleccionado ningun producto');
 	}
+
 	var idformulario = IDFORMMANTENIMIENTO + entidad;
 	if(correcto){
 		
