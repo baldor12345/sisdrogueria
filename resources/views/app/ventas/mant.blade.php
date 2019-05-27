@@ -12,10 +12,10 @@
 			<div class="card-box">
 				<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
 					<table id="tabla_temp" class="" style="">
-						<tr><td>Producto:</td><td style="padding-left: 10px;"><label id="producto_inf"></label></td></tr>
+						<tr><td>Producto</td><td style="padding-left: 10px;"><label id="producto_inf">: </label></td></tr>
 						{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_inf" fecha_v=''></label></td></tr> --}}
-						<tr><td>Precio Venta s/.:</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'></label></td><td style="padding-left: 10px;"> Stock (Unidades):</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'></label></td><td style="padding-left: 10px;"> Fecha Venc.:</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''></label></td></tr>
-						<tr><td>Unidad:</td><td><label id="unidad_inf" lote=''></label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades:</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_inf"></label></td><td style="padding-left: 10px;"> Afecto:</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''></label></td></tr>
+						<tr><td>Precio Venta s/.</td><td style="padding-left: 10px;"><label id="precio_inf" precio='0'>: </label></td><td style="padding-left: 10px;"> Stock (Unidades)</td><td style="padding-left: 10px;"><label id="stock_inf" stock='0'>: </label></td><td style="padding-left: 10px;"> Fecha Venc.</td><td style="padding-left: 10px;"><label id="fecha_v_inf" fecha_v=''>: </label></td></tr>
+						<tr><td>Unidad</td><td><label id="unidad_inf" lote=''>: </label></td><td id="cant_unidades_titulo" style="padding-left: 10px;">Cantidad Unidades</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_inf">: </label></td><td style="padding-left: 10px;"> Afecto</td><td style="padding-left: 10px;"><label id='afecto_inf' afecto=''>: </label></td></tr>
 					</table>
 				</div>
 				<div class="form-group">
@@ -87,6 +87,17 @@
 						{!! Form::select('cboMedico', $cboMedico, null, array('class' => 'form-control input-md', 'id' => 'cboMedico')) !!}
 						<span class="input-group-btn">
 							{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoMed', 'onclick' => 'modal (\''.URL::route($ruta["create_med"], array('listar'=>'SI')).'\', \''."Registrar Medico".'\', this);')) !!}
+							
+							{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!} --}}
+						</span>
+					</div>
+				</div>
+				<div class="form-group">
+					{!! Form::label('cboVendedor', 'Vendedor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
+					<div class="input-group" style="">
+						{!! Form::select('cboVendedor', $cboMedico, null, array('class' => 'form-control input-md', 'id' => 'cboVendedor')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoVend', 'onclick' => 'modal (\''.URL::route($ruta["create_vend"], array('listar'=>'SI')).'\', \''."Registrar Vendedor".'\', this);')) !!}
 							
 							{{-- {!! Form::button('<i class="fa fa-plus fa-lg"></i> ', array('class' => 'btn btn-success btn-sm', 'id' => 'btnNuevoCli', 'onclick' => '')) !!} --}}
 						</span>
@@ -234,6 +245,28 @@ $(document).ready(function() {
 			
 		}
 	});
+	$('#cboVendedor').select2({
+		dropdownParent: $("#modal"+(contadorModal-1)),
+		minimumInputLenght: 2,
+		ajax: {
+			
+			url: "{{ URL::route($ruta['listvendedores'], array()) }}",
+			dataType: 'json',
+			delay: 250,
+			data: function(params){
+				return{
+					q: $.trim(params.term)
+				};
+			},
+			processResults: function(data){
+				return{
+					results: data
+				};
+			}
+			
+		}
+	});
+
 	$('#cboProducto').change(function(){
 		// $('#selectaval').select2("val", "0");
 		$.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
@@ -246,19 +279,19 @@ $(document).ready(function() {
 			var fecha_venc = response[4];
 			var lote = response[5];
 
-				$('#producto_inf').text(producto.descripcion);
-				$('#stock_inf').text(""+stock);
+				$('#producto_inf').text(": "+producto.descripcion);
+				$('#stock_inf').text(": "+stock);
 				$('#stock').val(stock);
 				$('#precio_unidad').val(precio_unidad);
 				// $('#stock_inf').attr('stock',stock);
-				$('#precio_inf').text(precio_unidad);
+				$('#precio_inf').text(": "+precio_unidad);
 				// $('#precio_inf').attr('precio',precio_unidad);
 				$('#unidad_inf').text("");
-				$('#afecto_inf').text(producto.afecto == 'S'? "SI":"NO");
+				$('#afecto_inf').text(producto.afecto == 'S'? ": SI":": NO");
 				$('#afecto_inf').attr('afecto',producto.afecto);
 				$('#unidad_inf').attr('lote',lote);
 			
-				$('#fecha_v_inf').text(fecha_venc!=null?""+fecha_venc:"");
+				$('#fecha_v_inf').text(fecha_venc!=null?": "+fecha_venc:": ");
 				$('#fecha_venc').val(fecha_venc!=null?fecha_venc:"");
 				$('#afecto').val(producto.afecto);
 				// $('#fecha_v_inf').attr('fecha_v',""+fecha_venc);
@@ -302,11 +335,11 @@ $(document).ready(function() {
 			var cantidad_unidades_presentacion = productoPresentacion.cant_unidad_x_presentacion;
 			var cantidad = $('#cantidad').val()==""?1:$('#cantidad').val();
 			var total_unidades = cantidad_unidades_presentacion * cantidad;
-				$('#unidad_inf').text( $('#cboPresentacion option:selected').html());
-				$('#cant_unidades_inf').text(cantidad_unidades_presentacion);
+				$('#unidad_inf').text(": "+ $('#cboPresentacion option:selected').html());
+				$('#cant_unidades_inf').text(": "+cantidad_unidades_presentacion);
 				$('#cant_unidades_inf').attr('cantidad_u',cantidad_unidades_presentacion);
-				$('#cant_unidades_titulo').text("Cantidad Unidades/"+$('#cboPresentacion option:selected').html()+": ");
-				$('#precio_inf').text(precio_unidad);
+				$('#cant_unidades_titulo').text("Cantidad Unidades/"+$('#cboPresentacion option:selected').html()+" ");
+				$('#precio_inf').text(": "+precio_unidad);
 				// $('#precio_inf').text(precio_unidad);
 				$('#precio_unidad').val(precio_unidad)
 		});      

@@ -9,6 +9,7 @@ use App\Sucursal;
 use App\Distrito;
 use App\Venta;
 use App\Medico;
+use App\Vendedor;
 use App\Cliente;
 use App\Producto;
 use App\Presentacion;
@@ -42,11 +43,13 @@ class VentasController extends Controller
             'index'    => 'ventas.index',
             'listclientes'    => 'ventas.listclientes',
             'listmedicos'    => 'ventas.listmedicos',
+            'listvendedores'    => 'ventas.listvendedores',
             'listproductos'    => 'ventas.listproductos',
             'getProducto'    => 'ventas.getProducto',
             'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
             'create_new' => 'clientes.create',
             'create_med' => 'medico.create',
+            'create_vend' => 'vendedor.create',
             'verdetalle_v' => 'ventas.verdetalle_v',
         );
 
@@ -142,8 +145,9 @@ class VentasController extends Controller
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
         $cboMedico = ['0'=>'Seleccione'];
+        $cboVendedor = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc', 'cboMedico'));
+        return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc', 'cboMedico','cboVendedor'));
     }
 
     public function store(Request $request)
@@ -277,12 +281,14 @@ class VentasController extends Controller
                 }
             });
             $venta01 = Venta::all()->last();
+            $codigo_medico = $venta01->medico_id != null? $venta01->medico->codigo: "";
+            $iniciales_vendedor = $venta01->vendedor->iniciales;
             // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
             $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
             $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
             $err01 = is_null($error) ? "OK" : $error;
             // $entradas = Entrada::where('producto_presentacion_id','=', $producto_presentacion->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas);
+            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas,$codigo_medico, $iniciales_vendedor);
         }else{
             $respuesta = array($mensaje_err);
         }
@@ -445,6 +451,18 @@ class VentasController extends Controller
         $formatted_tags = [];
         foreach ($tags as $tag) {
             $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->codigo."-".$tag->nombres." ".$tag->apellidos];
+        }
+        return \Response::json($formatted_tags);
+    }
+    public function listvendedores(Request $request){
+        $term = trim($request->q);
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+        $tags = Vendedor::listarvendedores($term);
+        $formatted_tags = [];
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->iniciales."-".$tag->nombres." ".$tag->apellidos];
         }
         return \Response::json($formatted_tags);
     }

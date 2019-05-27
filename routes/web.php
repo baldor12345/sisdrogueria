@@ -188,6 +188,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('ventas', 'VentasController', array('except' => array('show')));
     Route::get('ventas/listclientes',  'VentasController@listclientes')->name('ventas.listclientes');
     Route::get('ventas/listmedicos',  'VentasController@listmedicos')->name('ventas.listmedicos');
+    Route::get('ventas/listvendedores',  'VentasController@listvendedores')->name('ventas.listvendedores');
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
     Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
 
@@ -224,6 +225,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('medico/buscar','MedicoController@buscar')->name('medico.buscar');
     Route::get('medico/eliminar/{id}/{listarluego}','MedicoController@eliminar')->name('medico.eliminar');
     Route::resource('medico', 'MedicoController', array('except' => array('show')));
+    //Vendedor
+    Route::post('vendedor/buscar','VendedorController@buscar')->name('vendedor.buscar');
+    Route::get('vendedor/eliminar/{id}/{listarluego}','VendedorController@eliminar')->name('vendedor.eliminar');
+    Route::resource('vendedor', 'VendedorController', array('except' => array('show')));
 
     /*CONCEPTO*/
     Route::post('concepto/buscar', 'ConceptoController@buscar')->name('concepto.buscar');
