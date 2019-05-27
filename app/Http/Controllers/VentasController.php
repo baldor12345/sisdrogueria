@@ -225,12 +225,13 @@ class VentasController extends Controller
                 $detalle_caja->estado = 'P';
                 $detalle_caja->fecha = date('Y-m-d H:i:s');
     
-                $numero_operacion = Libreria::codigo_operacion();
+                // $numero_operacion = Libreria::codigo_operacion();
+                $numero_operacion =  Libreria::codigo_operacion();
                 $venta->numero_operacion = $numero_operacion;
                 // $venta->codigo_venta = Count(Venta::where('caja_id','=',$caja->id)->get());
                 $detalle_caja->ingreso = $venta->total;
                 $detalle_caja->numero_operacion = $numero_operacion;//se debe generar automatico
-                $detalle_caja->codigo_operacion =  $venta->codigo_venta;
+                $detalle_caja->codigo_operacion =  $numero_operacion;
     
                 $venta->save();
                 $id_venta = $venta->id;
@@ -284,12 +285,26 @@ class VentasController extends Controller
             $venta01 = Venta::all()->last();
             $codigo_medico = $venta01->medico_id != null? $venta01->medico->codigo: "";
             $iniciales_vendedor = $venta01->vendedor->iniciales;
+            $datos_empresa = DatosEmpresa::find(1);
             // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
             $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
             $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
             $err01 = is_null($error) ? "OK" : $error;
+            $bancos = array(
+                [
+                    "nombre_banco"=>"BBVA Continental",
+                    "sigla_banco"=>"BBVA",
+                    "numero_cuenta"=>"0011-0285-010015821445"
+                ],
+                [
+                    "nombre_banco"=>"Banco de Crédito de Perú",
+                    "sigla_banco"=>"BCP",
+                    "numero_cuenta"=>"3052570348017"
+                ]
+
+            );
             // $entradas = Entrada::where('producto_presentacion_id','=', $producto_presentacion->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas,$codigo_medico, $iniciales_vendedor);
+            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas,$codigo_medico, $iniciales_vendedor,$datos_empresa,$bancos );
         }else{
             $respuesta = array($mensaje_err);
         }
@@ -401,7 +416,7 @@ class VentasController extends Controller
                     $entrada->save();
                 }
             }
-            $detalle_caja = DetalleCaja::where('numero_operacion','=', $venta->numero_operacion)->get()[0];
+            $detalle_caja = DetalleCaja::where('codigo_operacion','=', $venta->numero_operacion)->get()[0];
             $detalle_caja->delete();
         });
         return is_null($error) ? "OK" : $error;
