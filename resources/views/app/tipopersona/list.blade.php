@@ -1,6 +1,6 @@
 @if(count($lista) == 0)
 <?php
-		echo('Lista:  '.$lista);
+		
 		?>
 <h3 class="text-warning">No se encontraron resultados.</h3>
 @else
