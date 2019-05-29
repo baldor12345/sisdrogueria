@@ -179,6 +179,10 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Ventas',
 					'link'   => 'ventas'
 				),
+				array(
+					'name' => 'Productos Vendidos',
+					'link'   => 'productoventa'
+				),
 				/*array(
 					'name' => 'Productos mas Vendidas',
 					'link'   => 'productos_mas_vendidas'

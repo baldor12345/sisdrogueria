@@ -229,6 +229,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('vendedor/buscar','VendedorController@buscar')->name('vendedor.buscar');
     Route::get('vendedor/eliminar/{id}/{listarluego}','VendedorController@eliminar')->name('vendedor.eliminar');
     Route::resource('vendedor', 'VendedorController', array('except' => array('show')));
+    
+    //Vendedor
+    Route::post('productoventa/buscar','ProdVendidosController@buscar')->name('productoventa.buscar');
+    Route::get('productoventa/eliminar/{id}/{listarluego}','ProdVendidosController@eliminar')->name('productoventa.eliminar');
+    Route::resource('productoventa', 'ProdVendidosController', array('except' => array('show')));
 
     /*CONCEPTO*/
     Route::post('concepto/buscar', 'ConceptoController@buscar')->name('concepto.buscar');

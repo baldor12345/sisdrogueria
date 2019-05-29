@@ -15,6 +15,7 @@ use App\Producto;
 use App\Presentacion;
 use App\Caja;
 use App\Detalle_venta;
+use App\DatosEmpresa;
 use App\Entrada;
 use App\DetalleCaja;
 use App\Propiedades;

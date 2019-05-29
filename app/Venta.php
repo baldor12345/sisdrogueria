@@ -72,6 +72,27 @@ class Venta extends Model
             ->orderBy('fecha', 'ASC');
     }
 
+    public static function listarproductosvendidos($nombre, $fechai, $fechaf)
+    {
+        $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        return  DB::table('producto')
+                ->leftjoin('detalle_ventas', 'detalle_ventas.producto_id', '=', 'producto.id')
+                ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+                ->leftjoin('producto_presentacion', 'detalle_ventas.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->select(
+                     'producto.descripcion as descripcion',
+                    
+                    DB::raw("SUM(detalle_ventas.cantidad * producto_presentacion.cant_unidad_x_presentacion) as cantidad_unidades"),
+                    DB::raw("SUM(detalle_ventas.cantidad) as cantidad_unidades")
+            )
+                ->where('ventas.fecha', '>=',$fechai)
+                ->where('ventas.fecha', '<=',$fechaf)
+                // ->where('producto.descripcion', 'LIKE','%'.$nombre.'%')
+                ->groupBy('producto.id');
+                // ->orderBy('cantidad_unidades', 'ASC')->get();
+    }
+
     public static function listarentradas( $producto_id){
         return  DB::table('entrada')
                 ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
