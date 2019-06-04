@@ -7,7 +7,7 @@
 	</div>
 	<div class="form-group col-6 col-md-6"  style="margin-left: 3px;">
 		{!! Form::label('doc', 'N° Documento:', array('class' => ' control-label')) !!}
-		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
+		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '10470718566', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
 	</div>
 
 	<div class="form-group col-6 col-md-6 clas_dni">
@@ -49,6 +49,7 @@
 
 <div class="form-group ">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> ConsultarDni', array('class' => 'btn btn-success btn-sm', 'id' => 'btnConsultarDni', 'onclick' => 'consultaDNI()')) !!}
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
@@ -78,4 +79,45 @@ $(document).ready(function() {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
 	});
 }); 
+
+
+function consultaDNI(){
+
+	var param = "";
+	var doc = $("#doc").val();
+	var tipodoc = $('#cboTipoDocumento').val();
+	if(tipodoc == 'dni'){
+		console.log('entro en dni');
+		param = "accion=consultaDNI&dni="+doc;
+	}else{
+		console.log('entro en ruc');
+		param = "accion=consultaRUC&ruc="+doc;
+	}
+	console.log('param: '+param);
+	$.ajax({
+		url: 'clientes/buscarclienteSunat',
+		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+		type: 'POST',
+		data: ""+param,
+		beforeSend: function(){ 
+			// alert("Consultando...");
+		},
+		success: function(res){
+			console.log(res);
+			if(tipodoc = 'dni'){
+ 				$("#nombres").val(res.nombres);
+ 				$("#apellidos").val(res.apepat+" "+res.apemat);
+
+			}else{
+
+			//	$('#razon_social').val("");
+			}
+		}
+	}).fail(function(){
+		
+		mostrarMensaje ("Error de servidor", "ERROR");
+	});
+}
+
+
 </script>

@@ -221,6 +221,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('clientes/buscar','ClienteController@buscar')->name('clientes.buscar');
     Route::get('clientes/eliminar/{id}/{listarluego}','ClienteController@eliminar')->name('clientes.eliminar');
     Route::resource('clientes', 'ClienteController', array('except' => array('show')));
+    Route::post('clientes/buscarclienteSunat','ClienteController@buscarclienteSunat')->name('clientes.buscarclienteSunat');
     //Medico
     Route::post('medico/buscar','MedicoController@buscar')->name('medico.buscar');
     Route::get('medico/eliminar/{id}/{listarluego}','MedicoController@eliminar')->name('medico.eliminar');
@@ -246,6 +247,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('datosempresa', 'DatosEmpresaController', array('except' => array('show')));
 
 });
+
+
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
 Route::get('entrada/{id?}/{dni?}','EntradaSalidaController@getDetalleREntrada');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');

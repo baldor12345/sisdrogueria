@@ -578,4 +578,6 @@ class VentasController extends Controller
         $numeroDias = $diferencia->format('%R%a días');
         return $numeroDias;
     }
+
+  
 }

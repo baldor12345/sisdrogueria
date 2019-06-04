@@ -9,8 +9,15 @@ use Validator;
 use App\Http\Requests;
 
 use App\Cliente;
+// use App\Curl;
 // use App\Personamaestro;
 use App\Librerias\Libreria;
+// use App\Librerias\Curl;
+
+use App\Libsunat\Sunat;
+ use App\Libsunat\cURL;
+
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +33,8 @@ class ClienteController extends Controller
             'edit'   => 'clientes.edit', 
             'delete' => 'clientes.eliminar',
             'search' => 'clientes.buscar',
-            'index'  => 'clientes.index'
+            'index'  => 'clientes.index',
+            'buscarclienteSunat'  => 'clientes.buscarclienteSunat'
         );
 
     /**
@@ -274,4 +282,38 @@ class ClienteController extends Controller
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
+
+    function buscarclienteSunat(Request $request){
+
+        if($request->get('accion')=="consultaDNI"){
+            // require("/curl.php");
+            $token = 'qusEj_w7aHEpX';
+            $cc = new Curl(false,'http://45.58.136.7/facturacion/buscaCliente/BuscaCliente2.php');
+            $url = 'http://45.58.136.7/facturacion/buscaCliente/BuscaCliente2.php?token='.$token.'&dni='.$request->get('dni').'&fe=N';
+            $Page = $cc->get($url,array());
+            $datos = json_decode($Page);
+            return response()->json($datos);
+            // header('Content-Type: application/json');
+            // echo json_encode($datos,JSON_PRETTY_PRINT);
+        }else if($request->get('accion')=="consultaRUC"){
+            header("Access-Control-Allow-Origin: * ");
+            // require ("curl.php");
+            // require ("sunat.php");
+            $cliente = new Sunat();
+            //$ruc = $_GET["ruc"];//print_r($ruc);exit();
+            // $ruc="10470718566";
+            $ruc=$request->get('ruc');
+            header('Content-Type: application/json');
+            //$empresa = $cliente->BuscaDatosSunat($ruc);
+            //$cliente->BuscaDatosSunat($ruc);
+            echo ('Llego a consulta RUC: ');
+            // $respuesta = $cliente->BuscaDatosSunat($ruc);
+            // echo("res: ".response()->json($respuesta)." ");
+            // echo('nroRnd: '.$cliente->ProcesaNumRand());
+            echo json_encode( $cliente->BuscaDatosSunat($ruc), JSON_PRETTY_PRINT );
+            //  return response()->json($cliente->BuscaDatosSunat($ruc));
+        }
+      
+    }
+
 }
