@@ -59,6 +59,7 @@ class StockController extends Controller
         $cabecera[]       = array('valor' => 'Producto', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Presentacion', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Stock', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Inf Stock', 'numero' => '1');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
