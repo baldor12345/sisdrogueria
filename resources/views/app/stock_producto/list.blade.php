@@ -21,6 +21,11 @@
 			<td>{{ $value->producto }}</td>
 			<td>{{ $value->presentacion}}</td>
 			<td>{{ $value->stock }}</td>
+			@if($value->stock < $value->stock_minimo)
+			<td>{!! Form::button('<div class=""></div>===', array('class' => 'btn btn-xs btn-danger')) !!}</td>
+			@else
+			<td>{!! Form::button('<div class=""></div>===', array('class' => 'btn btn-xs btn-success')) !!}</td>
+			@endif
 		</tr>
 		<?php
 		$contador = $contador + 1;
