@@ -269,4 +269,12 @@ class MedicoController extends Controller
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
+    public function getMedicos(Request $request){
+        if($request->ajax()){
+            $medicos = Medico::where('deleted_at','=', null)->get();
+            $cantidad = count($medicos);
+            $res = array($cantidad, $medicos);
+            return response()->json($res);
+        }
+    }
 }

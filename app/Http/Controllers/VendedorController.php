@@ -268,4 +268,14 @@ class VendedorController extends Controller
         $boton    = 'Eliminar';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
+
+    public function getVendedores(Request $request){
+        if($request->ajax()){
+            $vendedores = Vendedor::where('deleted_at','=',null)->get();
+            $cantidad = count($vendedores);
+            $res = array($cantidad, $vendedores);
+            return response()->json($res);
+        }
+    }
+
 }

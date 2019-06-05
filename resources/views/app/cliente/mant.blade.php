@@ -75,6 +75,18 @@ $(document).ready(function() {
 			$('.clas_ruc').show();
 		}
 	});
+	
+	
+	$('#doc').keyup(function(e){
+		
+		if($(this).val().length ==8){
+			consultaDNI();
+		}else{
+			$("#nombres").val("");
+ 			$("#apellidos").val("");
+		}
+	});
+
 	$("#modal"+(contadorModal - 1)).on('hidden.bs.modal', function () {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
 	});
@@ -87,13 +99,10 @@ function consultaDNI(){
 	var doc = $("#doc").val();
 	var tipodoc = $('#cboTipoDocumento').val();
 	if(tipodoc == 'dni'){
-		console.log('entro en dni');
 		param = "accion=consultaDNI&dni="+doc;
 	}else{
-		console.log('entro en ruc');
 		param = "accion=consultaRUC&ruc="+doc;
 	}
-	console.log('param: '+param);
 	$.ajax({
 		url: 'clientes/buscarclienteSunat',
 		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
@@ -105,19 +114,74 @@ function consultaDNI(){
 		success: function(res){
 			console.log(res);
 			if(tipodoc = 'dni'){
- 				$("#nombres").val(res.nombres);
- 				$("#apellidos").val(res.apepat+" "+res.apemat);
-
+				if(res.apepat == undefined){
+					$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El DNI ingresado es incorrecto</div>");
+					$('#divMensajeError{{ $entidad }}').show();
+				}else{
+					$('#divMensajeError{{ $entidad }}').hide();
+					$("#nombres").val(res.nombres);
+ 					$("#apellidos").val(res.apepat+" "+res.apemat);
+				}
 			}else{
 
-			//	$('#razon_social').val("");
+			//$('#razon_social').val("");
 			}
 		}
 	}).fail(function(){
 		
 		mostrarMensaje ("Error de servidor", "ERROR");
 	});
+	
+	
 }
+// function consulta( random, ruc){
+// 	var respuesta ="";
+// 	$.ajax({
+// 		url: 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias?',
+// 		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+// 		type: 'POST',
+// 		data: 'nroRuc='+ruc+'&accion=consPorRuc&numRnd='+random,
+// 		beforeSend: function(){ 
+// 			// alert("Consultando...");
+// 		},
+// 		success: function(res){
+// 			console.log(res);
+// 			respuesta = res;
+			
+// 		}
+// 	}).fail(function(){
+		
+// 		mostrarMensaje ("Error de servidor", "ERROR");
+// 	});
+// 	return respuesta;
+// }
+
+// function rdnnn(){
+	
+// 	$.ajax({
+// 		url: 'clientes/buscarclienteSunat',
+// 		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+// 		type: 'POST',
+// 		data: ""+param,
+// 		beforeSend: function(){ 
+// 			// alert("Consultando...");
+// 		},
+// 		success: function(res){
+// 			console.log(res);
+// 			if(tipodoc = 'dni'){
+//  				$("#nombres").val(res.nombres);
+//  				$("#apellidos").val(res.apepat+" "+res.apemat);
+
+// 			}else{
+
+// 			//	$('#razon_social').val("");
+// 			}
+// 		}
+// 	}).fail(function(){
+		
+// 		mostrarMensaje ("Error de servidor", "ERROR");
+// 	});
+// }
 
 
 </script>

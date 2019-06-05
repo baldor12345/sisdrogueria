@@ -258,3 +258,6 @@ Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProdu
 Route::get('provincia/{departamento_id?}','ProvinciaController@getProvinciasDep');
 // Route::get('distrito/{id}','DistritoController@getDistritos');
 Route::get('distrito/{provincia_id?}','DistritoController@getDistritosProvincia');
+Route::get('medico/{medico_id?}','MedicoController@getMedicos');
+Route::get('vendedor/{vendedor_id?}','VendedorController@getVendedores');
+Route::get('clientes/{dni?}/{tipo_doc?}','ClienteController@getCliente');

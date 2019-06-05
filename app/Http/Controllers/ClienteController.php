@@ -131,6 +131,7 @@ class ClienteController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         if($request->input('cboTipoDocumento') == 'dni'){
             $reglas = array(
+                'dni'       => 'required|max:20',
                 'doc'       => 'required|max:20',
                 'nombres'    => 'required|max:100',
                 'apellidos'    => 'required|max:100',
@@ -314,6 +315,14 @@ class ClienteController extends Controller
             //  return response()->json($cliente->BuscaDatosSunat($ruc));
         }
       
+    }
+    public function getCliente(Request $request, $doc, $tipo_doc){
+        if($request->ajax()){
+            $cliente = Cliente::where(($tipo_doc == 'B'?'dni':'ruc'),'=',$doc)->where('deleted_at','=',null)->get();
+            $sidatos = count($cliente) > 0?'OK':'NO';
+            $res = array($sidatos, $sidatos=='OK'?$cliente[0]:null);
+            return response()->json($res);
+        }
     }
 
 }

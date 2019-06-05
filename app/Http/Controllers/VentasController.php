@@ -145,10 +145,26 @@ class VentasController extends Controller
         $cboFormasPago = ['T'=>'Tarjeta','E'=>'Efectivo'];
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboCliente = ['0'=>'Seleccione'];
-        $cboMedico = ['0'=>'Seleccione'];
-        $cboVendedor = ['0'=>'Seleccione'];
+        $cboMedico = ['0'=>'Seleccione']+$this->cboMedicos();
+        $cboVendedor = ['0'=>'Seleccione']+$this->cboVendedores();
         $cboProducto = ['0'=>'Seleccione'];
         return view($this->folderview.'.mant')->with(compact('venta','serie','igv','formData', 'entidad', 'boton', 'listar','cboTipos','ruta','cboDocumento','cboFormasPago','cboPresentacion','cboCliente','cboProducto','fecha_defecto','numero_doc', 'cboMedico','cboVendedor'));
+    }
+    public function cboMedicos(){
+        $medicos = Medico::where('deleted_at','=',null)->get();
+        $cboMed = array();
+        foreach ($medicos as $key => $medico) {
+            $cboMed[$medico->id] =$medico->codigo.' - '.$medico->nombres.' '.$medico->apellidos;
+        }
+        return $cboMed;
+    }
+    public function cboVendedores(){
+        $vendedores = Vendedor::where('deleted_at','=',null)->get();
+        $cboVend = array();
+        foreach ($vendedores as $key => $vendedor) {
+            $cboVend[$vendedor->id] = $vendedor->iniciales.' - '.$vendedor->nombres.' '.$vendedor->apellidos;
+        }
+        return $cboVend;
     }
 
     public function store(Request $request)
@@ -184,8 +200,24 @@ class VentasController extends Controller
             $error = DB::transaction(function() use($request, $id_venta, $valor_total){
                 $user = Auth::user();
                 $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
+
+                $tipodoc = $request->input('documento');
+                $clientec = Cliente::where(( $tipodoc == 'B'?'dni':'ruc'),'=',$request->input('doccliente'))->where('deleted_at','=',null)->get();
+                $id_cliente=null;
+                if(count($clientec) == 0){
+                    $clientenuevo = new Cliente();
+                    $clientenuevo->dni = $request->input('doccliente');
+                    $clientenuevo->nombres = $request->input('nombrescliente');
+                    $clientenuevo->apellidos = $request->input('apellidoscliente');
+                    $clientenuevo->direccion = $request->input('direccioncliente');
+                    $clientenuevo->save();
+
+                    $id_cliente = $clientenuevo->id;
+                }else{
+                    $id_cliente = $clientec[0]->id;
+                }
+
                 $venta = new Venta();
-                
                 $valor_igv = $request->input('igv');
                 $venta->total = $valor_total;
                 $venta->subtotal = $valor_total - $valor_igv;
@@ -197,7 +229,7 @@ class VentasController extends Controller
                 $venta->user_id = $user->id;
                 $venta->caja_id = $caja->id;
                 $venta->sucursal_id = $user->sucursal_id;
-                $id_cliente = $request->input('cboCliente');
+                
                 
                 $id_medico = $request->input('cboMedico');
                 $id_vendedor = $request->input('cboVendedor');

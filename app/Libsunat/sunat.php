@@ -1,5 +1,6 @@
 <?php
 namespace App\Libsunat;
+use App\Libsunat\cURL;
 	//error_reporting(E_ALL);
 	class Sunat{
 		var $cc;  //Class cUrl
@@ -8,7 +9,7 @@ namespace App\Libsunat;
 		{
 			$this->path = dirname(__FILE__);
 			
-			$this->cc = new cURL(true,'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias','cookies.txt');
+			$this->cc = new cURL(true,'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias',$this->path.'cookies.txt');
 			// $this->cc = new cURL(true,'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias',$this->path.'/cookies.txt');
 			//$this->cc = new cURL(true,'http://www.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias',$this->path.'/cookies.txt');
 		}
