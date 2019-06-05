@@ -57,15 +57,15 @@ class Venta extends Model
      */
     public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo)
     {
-        $fechai = date("Y-m-d",strtotime($fechai."- 1 month"));
-        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 month"));
-        return $query->where(function($subquery) use($fechai, $fechaf)
+        // $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        return $query->where(function($subquery) use($fechai, $fechaf, $estado)
             {
                 if (!is_null($fechai)) {
-                    // $subquery->where('fecha', '>=', $fechai)->where('fecha', '<=', $fechaf);
-                    $subquery->whereBetween('fecha', [$fechai, $fechaf]);
+                    
                 }
             })
+            ->whereBetween('fecha', [$fechai, $fechaf])
             ->where('estado','=',$estado)
             ->where('tipo_pago','=',$tipo)
             ->where('numero_doc','LIKE','%'.$numero_serie.'%')

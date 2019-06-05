@@ -377,6 +377,8 @@ $(document).ready(function() {
 
 }); 
 
+
+
 function selectTipo(combo){//tipo a Credito o a Contado
 	$(combo).val();
 	if($(combo).val() == 'CR'){//Credito
@@ -714,6 +716,7 @@ function consultaDOC(){
 						}else{
 
 						//$('#razon_social').val("");
+
 						}
 					}
 				}).fail(function(){

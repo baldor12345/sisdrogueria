@@ -4,7 +4,7 @@
 		<div class="card-box">	
 			<table>
 				<tr><td>Fecha de Venc.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td><td style="padding-left: 18px;">Fecha de Emisión.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td></tr>
-				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc}}</strong></td></tr>
+				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">DNI/RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc|$venta->cliente->dni|""}}</strong></td></tr>
 				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
 				<tr><td>Condicion de Pag.</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
 				@if($venta->tipo_pago == 'CR')
@@ -12,6 +12,7 @@
 				@endif
 				
 			</table>
+
 			{{-- <dl class="dl-horizontal">
 				<dt style="text-align: left"><label>Fecha de Vencimiento</label></dt><dd>: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></dd>
 				<dt style="text-align: left">Fecha de emisión</dt><dd>: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></dd>
@@ -21,6 +22,7 @@
 				<dt style="text-align: left">Tipo de Moneda</dt><dd>: <strong>SOLES</strong></dd>
 				<dt style="text-align: left">Observación</dt><dd>: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></dd>
 			</dl> --}}
+
 		</div>
 	</div>
 	<div class="row">
@@ -44,20 +46,20 @@
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
 							<td class=" input-sm" width="40%">{{ strtoupper($value->producto->descripcion.' - '.$value->presentacion->presentacion->nombre.' x '.$value->presentacion->cant_unidad_x_presentacion.' Unidades') }}</td>
 							<?php
-							$lot = "";
-							$fecha_v = "";
-							$tmp = explode(';',$value->lotes);
-							$cant = count($tmp);
-							for($i = 0; $i<$cant; $i++){
-								$tmp1 = explode(':',$tmp[$i]);
-								if($i <($cant-1)){
-									$lot = $lot.$tmp1[1].', ';
-									$fecha_v = $fecha_v.$tmp1[2].', ';
-								}else{
-									$lot = $lot.$tmp1[1].'';
-									$fecha_v = $fecha_v.$tmp1[2].'';
+								$lot = "";
+								$fecha_v = "";
+								$tmp = explode(';',$value->lotes);
+								$cant = count($tmp);
+								for($i = 0; $i<$cant; $i++){
+									$tmp1 = explode(':',$tmp[$i]);
+									if($i <($cant-1)){
+										$lot = $lot.$tmp1[1].', ';
+										$fecha_v = $fecha_v.$tmp1[2].', ';
+									}else{
+										$lot = $lot.$tmp1[1].'';
+										$fecha_v = $fecha_v.$tmp1[2].'';
+									}
 								}
-							}
 							?>
 							{{-- <td class="text-center input-sm" width="10%">{{ $value->lotes}}</td> --}}
 							<td class="text-center input-sm" width="10%">{{ $lot}}</td>

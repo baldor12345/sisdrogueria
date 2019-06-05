@@ -46,6 +46,9 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$("#modal"+(contadorModal - 1)).on('hidden.bs.modal', function () {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
+		if( typeof cargarselectVendedor !== 'undefined' && jQuery.isFunction( cargarselectVendedor ) ){
+			cargarselectVendedor();
+		}
 	});
 }); 
 
