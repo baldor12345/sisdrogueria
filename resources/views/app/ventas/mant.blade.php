@@ -1,3 +1,27 @@
+<style>
+	.glyphicon-refresh-animate {
+		-animation: spin .8s infinite linear;
+		-ms-animation: spin .8s infinite linear;
+		-webkit-animation: spinw .8s infinite linear;
+		-moz-animation: spinm .8s infinite linear;
+	}
+
+	@keyframes spin {
+		from { transform: scale(1) rotate(0deg);}
+		to { transform: scale(1) rotate(360deg);}
+	}
+	
+	@-webkit-keyframes spinw {
+		from { -webkit-transform: rotate(0deg);}
+		to { -webkit-transform: rotate(360deg);}
+	}
+
+	@-moz-keyframes spinm {
+		from { -moz-transform: rotate(0deg);}
+		to { -moz-transform: rotate(360deg);}
+	}
+</style>
+
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($venta, $formData) !!}	
 	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
@@ -32,7 +56,7 @@
 					</div>
 				</div>
 				<div class="form-group credito " >
-					{!! Form::label('dias', 'Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+					{!! Form::label('dias', 'N° Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
 						{!! Form::text('dias', 0, array('class' => 'form-control input-sm', 'id' => 'dias', 'placeholder' => 'N° dias')) !!}
 					</div>
@@ -82,7 +106,7 @@
 						{!! Form::text('igv', 0, array('class' => 'form-control input-sm', 'id' => 'igv', 'placeholder' => '', 'readonly')) !!}
 					</div>
 				</div>
-				<div class="form-group text-right" >
+				<div class="form-group text-right">
 					{!! Form::label('total', 'Total : s/.', array('class' => 'col-sm-6 col-xs-12 control-label input-md', 'style'=>'')) !!}
 					<div class="col-sm-4 col-xs-12" style="">
 						{!! Form::text('total', null, array('class' => 'form-control input-md', 'id' => 'total', 'placeholder' => '','readonly')) !!}
@@ -99,7 +123,7 @@
 				<div class="input-group" style="">
 					{!! Form::text('doccliente', null, array('class' => 'form-control input-sm', 'id' => 'doccliente', 'placeholder' => 'N° DNI', 'maxlength'=>'8')) !!}
 					<span class="input-group-btn">
-						{!! Form::button('<i class="glyphicon glyphicon-refresh"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick' => 'consultaDOC();')) !!}
+						{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnConsultar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick' => 'consultaDOC();')) !!}
 						{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
 					</span>
 				</div>
@@ -266,14 +290,14 @@ $(document).ready(function() {
 			$('#doccliente').attr('placeholder','N° RUC');
 			$('#lbldniruc').text('RUC:');
 			$('#lblnombrerazon').text('Razon Social:');
-			$('#doccliente').val("");
+			// $('#doccliente').val("");
 			$("#nombrecompleto").val("");
 		}else{
-			$('#doccliente').attr('maxlength',8);
+			$('#doccliente').attr('maxlength',11);
 			$('#doccliente').attr('placeholder','N° DNI');
 			$('#lbldniruc').text('DNI');
 			$('#lblnombrerazon').text('Nombre Apellidos:');
-			$('#doccliente').val("");
+			// $('#doccliente').val("");
 			$("#nombrecompleto").val("");
 		
 		}
@@ -299,8 +323,6 @@ $(document).ready(function() {
 		});      
 			
 	});
-
-	
 	$("#doccliente").keyup(function(e){
 		if($('#documento').val() == 'B'){
 
@@ -322,11 +344,7 @@ $(document).ready(function() {
 		}
 	
 	});
-
-
 }); 
-
-
 
 function selectTipo(combo){//tipo a Credito o a Contado
 	$(combo).val();
@@ -355,7 +373,6 @@ function contar_registros(){
 	});
 	return cont;
 }
-
 function calcularPrecio(){
 	var subtotal = 0;
 	var total = 0;
@@ -627,8 +644,11 @@ function consultaDOC(){
 
 	var param = "";
 	var doc = $("#doccliente").val();
-	if(doc.length >6){
+	if(doc.length >7){
 		var tipodoc = $('#documento').val();
+		$('#ibtnConsultar').addClass('glyphicon-refresh-animate');
+		$('#btnConsultar').addClass('btn-warning');
+		$('#btnConsultar').removeClass('btn-success');
 		$.get("clientes/"+doc+"/"+tipodoc,function(response, facultad){
 			if(response[0]=='OK'){
 				var nombrecompleto = "";
@@ -642,7 +662,7 @@ function consultaDOC(){
 				$('#direccioncliente').val(response[1].direccion);
 			}else{
 				$('#direccioncliente').val('');
-				if(tipodoc == 'B'){
+				if(tipodoc == 'B' && doc.length < 9){
 					param = "accion=consultaDNI&dni="+doc;
 					$.ajax({
 						url: 'clientes/buscarclienteSunat',
@@ -650,9 +670,16 @@ function consultaDOC(){
 						type: 'POST',
 						data: ""+param,
 						beforeSend: function(){ 
+							$('#ibtnConsultar').addClass('glyphicon-refresh-animate');
+							$('#btnConsultar').addClass('btn-warning');
+							$('#btnConsultar').removeClass('btn-success');
 						},
 						success: function(res){
 							console.log(res);
+							
+							$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
+							$('#btnConsultar').addClass('btn-success');
+							$('#btnConsultar').removeClass('btn-warning');
 							if(res.apepat == undefined){
 								$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>"+res.mensaje+"</div>");
 								$('#divMensajeError{{ $entidad }}').show();
@@ -664,10 +691,21 @@ function consultaDOC(){
 							}
 						}
 					}).fail(function(){
-						mostrarMensaje ("Error de servidor", "ERROR");
+						
+						$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
+						$('#btnConsultar').addClass('btn-success');
+						$('#btnConsultar').removeClass('btn-warning');
 					});
 				}else{
-					consultaRUC();
+					if(doc.length == 11){
+						consultaRUC();
+					}else{
+						
+						$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
+						$('#btnConsultar').addClass('btn-success');
+						$('#btnConsultar').removeClass('btn-warning');
+					}
+					
 				}
 			}
 		}); 
@@ -682,13 +720,22 @@ function consultaRUC(){
         url: "http://localhost/SunatPHP/demo.php",
         data: "ruc="+ruc,
         beforeSend(){
-        	//alert("Consultando...");
+        	
         },
         success: function (data, textStatus, jqXHR) {
             $("#nombrecompleto").val(data.RazonSocial);
             $("#direccioncliente").val(data.Direccion);
+			$("#nombrescliente").val(data.RazonSocial);
+		
+			$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
+			$('#btnConsultar').removeClass('btn-warning');
+			$('#btnConsultar').addClass('btn-success');
         }
-    });
+    }).fail(function(){
+		$('#ibtnConsultar').addClass('glyphicon-refresh-animate btn-success');
+		$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
+		$('#ibtnConsultar').removeClass('btn-warning');
+	});
 }
 
 

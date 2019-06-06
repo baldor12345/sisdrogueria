@@ -131,7 +131,7 @@ class ClienteController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         if($request->input('cboTipoDocumento') == 'dni'){
             $reglas = array(
-                'dni'       => 'required|max:20',
+                // 'dni'       => 'required|max:20',
                 'doc'       => 'required|max:20',
                 'nombres'    => 'required|max:100',
                 'apellidos'    => 'required|max:100',
@@ -151,19 +151,18 @@ class ClienteController extends Controller
         $error = DB::transaction(function() use($request){
             $cliente  = new Cliente();
             if($request->input('cboTipoDocumento') == 'dni'){
-                $cliente->dni        = $request->input('doc');
+                $cliente->dni  = $request->input('doc');
+                $cliente->nombres    = strtoupper($request->input('nombres'));
+                $cliente->apellidos  = strtoupper($request->input('apellidos'));
             }else{
-                $cliente->ruc        = $request->input('doc');
+                $cliente->ruc  = $request->input('doc');
+                $cliente->razon_social   = strtoupper($request->input('razon_social'));
             }
-            // $cliente->dni        = $request->input('dni');
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
+           
             $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->razon_social   = strtoupper($request->input('razon_social'));
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');
             $cliente->email       = $request->input('email');
-            // $cliente->codigo_medico       = $request->input('codigo_medico');
             $cliente->save();
         });
         return is_null($error) ? "OK" : $error;
@@ -213,21 +212,41 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas = array(
-            'dni'       => 'required|max:8',
-            'nombres'    => 'required|max:100',
-            'apellidos'    => 'required|max:100',
-            );
+        $reglas = null;
+       
+            if($request->input('cboTipoDocumento') == 'dni'){
+                if($request->input('doc') == '00000000'){
+                    $reglas = array(
+                    'nombres'    => 'required|max:100',
+                    );
+                }else{
+                    $reglas = array(
+                    'nombres'    => 'required|max:100',
+                    'apellidos'    => 'required|max:100',
+                    );
+                }
+                
+            }else if($request->input('cboTipoDocumento') == 'ruc'){
+                $reglas = array(
+                'doc'    => 'required|max:200',
+                'razon_social'    => 'required|max:200',
+                );
+            }
             $mensajes   = array();
             $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         }
-        $error = DB::transaction(function() use($request){
-            $cliente  =Cliente::find($id);
-            $cliente->dni        = $request->input('dni');
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
+        $error = DB::transaction(function() use($request , $id){
+            $cliente  = Cliente::find($id);
+            if($request->input('cboTipoDocumento') == 'dni'){
+                $cliente->dni        = $request->input('doc');
+                $cliente->nombres    = strtoupper($request->input('nombres'));
+                $cliente->apellidos  = strtoupper($request->input('apellidos'));
+            }else{
+                $cliente->ruc        = $request->input('doc');
+                $cliente->razon_social  = strtoupper($request->input('razon_social'));
+            }
             $cliente->direccion   = strtoupper($request->input('direccion'));
             $cliente->telefono    = $request->input('telefono');
             $cliente->celular     = $request->input('celular');

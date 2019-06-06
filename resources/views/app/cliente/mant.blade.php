@@ -3,12 +3,26 @@
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('cboTipoDocumento', 'Tipo Documento: ', array('class' => '')) !!}
-		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento')) !!}
+		@if($cliente != null)
+		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento','disabled'=>true)) !!}
+		@else
+		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento')) !!}
+		@endif
 	</div>
-	<div class="form-group col-6 col-md-6"  style="margin-left: 3px;">
+	<div class="form-group  col-6 col-md-6" style="margin-left: 3px;">
+		{!! Form::label('doc', 'DNI:', array('class' => 'control-label')) !!}
+		<div class="input-group" style="">
+			{{-- {!! Form::text('doc', null, array('class' => 'form-control input-sm', 'id' => 'doc', 'placeholder' => 'N° DNI', 'maxlength'=>'8')) !!} --}}
+			{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-sm', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.','maxlength'=>'11')) !!}
+			<span class="input-group-btn">
+				{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnConsultar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick' => 'consultaDNIRUC();')) !!}
+			</span>
+		</div>
+	</div>
+	{{-- <div class="form-group col-6 col-md-6"  style="margin-left: 3px;">
 		{!! Form::label('doc', 'N° Documento:', array('class' => ' control-label')) !!}
-		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '10470718566', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.')) !!}
-	</div>
+		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.','maxlength'=>'11')) !!}
+	</div> --}}
 
 	<div class="form-group col-6 col-md-6 clas_dni">
 		{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
@@ -77,20 +91,18 @@ $(document).ready(function() {
 	});
 	
 	
-	$('#doc').keyup(function(e){
+	// $('#doc').keyup(function(e){
 		
-		if($(this).val().length ==8){
-			consultaDNI();
-		}else{
-			$("#nombres").val("");
- 			$("#apellidos").val("");
-		}
-	});
+	// 	if($(this).val().length ==8){
+	// 		consultaDNI();
+	// 	}else{
+	// 		$("#nombres").val("");
+ 	// 		$("#apellidos").val("");
+	// 	}
+	// });
 
 	$("#modal"+(contadorModal - 1)).on('hidden.bs.modal', function () {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
-		
-		
 	});
 }); 
 
@@ -101,103 +113,50 @@ function consultaRUC(){
         url: "http://localhost/SunatPHP/demo.php",
         data: "ruc="+ruc,
         beforeSend(){
-        	//alert("Consultando...");
         },
         success: function (data, textStatus, jqXHR) {
-        	//alert("Datos Recibidos");
             $("#razon_social").val(data.RazonSocial);
             $("#direccion").val(data.Direccion);
-            $("#txtNombres").focus();
-            $("#txtDireccion").focus();
+            // $("#txtNombres").focus();
+            // $("#txtDireccion").focus();
         }
     });
 }
 
-function consultaDNI(){
+function consultaDNIRUC(){
 
 	var param = "";
 	var doc = $("#doc").val();
 	var tipodoc = $('#cboTipoDocumento').val();
-	if(tipodoc == 'dni'){
-		param = "accion=consultaDNI&dni="+doc;
-		$.ajax({
-			url: 'clientes/buscarclienteSunat',
-			headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-			type: 'POST',
-			data: ""+param,
-			beforeSend: function(){ 
-				// alert("Consultando...");
-			},
-			success: function(res){
-				console.log(res);
-				//if(tipodoc = 'dni'){
+	if(doc != '00000000' && doc.length >7){
+		if(tipodoc == 'dni'){
+			param = "accion=consultaDNI&dni="+doc;
+			$.ajax({
+				url: 'clientes/buscarclienteSunat',
+				headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+				type: 'POST',
+				data: ""+param,
+				beforeSend: function(){ 
+					// alert("Consultando...");
+				},
+				success: function(res){
 					if(res.apepat == undefined){
 						$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El DNI ingresado es incorrecto</div>");
 						$('#divMensajeError{{ $entidad }}').show();
 					}else{
 						$('#divMensajeError{{ $entidad }}').hide();
 						$("#nombres").val(res.nombres);
-	 					$("#apellidos").val(res.apepat+" "+res.apemat);
+						$("#apellidos").val(res.apepat+" "+res.apemat);
 					}
-				//}
-			}
-		}).fail(function(){
-			
-			mostrarMensaje ("Error de servidor", "ERROR");
-		});
-	}else{
-		//param = "accion=consultaRUC&ruc="+doc;
-		consultaRUC();
+				}
+			}).fail(function(){
+				mostrarMensaje ("Error de servidor", "ERROR");
+			});
+		}else{
+			consultaRUC();
+		}
 	}
-}
-// function consulta( random, ruc){
-// 	var respuesta ="";
-// 	$.ajax({
-// 		url: 'http://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias?',
-// 		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-// 		type: 'POST',
-// 		data: 'nroRuc='+ruc+'&accion=consPorRuc&numRnd='+random,
-// 		beforeSend: function(){ 
-// 			// alert("Consultando...");
-// 		},
-// 		success: function(res){
-// 			console.log(res);
-// 			respuesta = res;
-			
-// 		}
-// 	}).fail(function(){
-		
-// 		mostrarMensaje ("Error de servidor", "ERROR");
-// 	});
-// 	return respuesta;
-// }
-
-// function rdnnn(){
 	
-// 	$.ajax({
-// 		url: 'clientes/buscarclienteSunat',
-// 		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-// 		type: 'POST',
-// 		data: ""+param,
-// 		beforeSend: function(){ 
-// 			// alert("Consultando...");
-// 		},
-// 		success: function(res){
-// 			console.log(res);
-// 			if(tipodoc = 'dni'){
-//  				$("#nombres").val(res.nombres);
-//  				$("#apellidos").val(res.apepat+" "+res.apemat);
-
-// 			}else{
-
-// 			//	$('#razon_social').val("");
-// 			}
-// 		}
-// 	}).fail(function(){
-		
-// 		mostrarMensaje ("Error de servidor", "ERROR");
-// 	});
-// }
-
+}
 
 </script>
