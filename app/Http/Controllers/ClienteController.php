@@ -129,9 +129,12 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        if($request->input('cboTipoDocumento') == 'dni'){
+        $respuesta = "";
+        $num_doc = $request->input('cboTipoDocumento');
+        
+        if( $num_doc== 'dni'){
             $reglas = array(
-                // 'dni'       => 'required|max:20',
+                
                 'doc'       => 'required|max:20',
                 'nombres'    => 'required|max:100',
                 'apellidos'    => 'required|max:100',
@@ -212,7 +215,7 @@ class ClienteController extends Controller
     public function update(Request $request, $id)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas = null;
+        $reglas = array();
        
             if($request->input('cboTipoDocumento') == 'dni'){
                 if($request->input('doc') == '00000000'){

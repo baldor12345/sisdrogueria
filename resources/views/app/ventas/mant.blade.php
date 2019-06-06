@@ -646,9 +646,9 @@ function consultaDOC(){
 	var doc = $("#doccliente").val();
 	if(doc.length >7){
 		var tipodoc = $('#documento').val();
-		$('#ibtnConsultar').addClass('glyphicon-refresh-animate');
-		$('#btnConsultar').addClass('btn-warning');
-		$('#btnConsultar').removeClass('btn-success');
+		// $('#ibtnConsultar').addClass('glyphicon-refresh-animate');
+		// $('#btnConsultar').addClass('btn-warning');
+		// $('#btnConsultar').removeClass('btn-success');
 		$.get("clientes/"+doc+"/"+tipodoc,function(response, facultad){
 			if(response[0]=='OK'){
 				var nombrecompleto = "";
@@ -734,7 +734,7 @@ function consultaRUC(){
     }).fail(function(){
 		$('#ibtnConsultar').addClass('glyphicon-refresh-animate btn-success');
 		$('#ibtnConsultar').removeClass('glyphicon-refresh-animate');
-		$('#ibtnConsultar').removeClass('btn-warning');
+		// $('#ibtnConsultar').removeClass('btn-warning');
 	});
 }
 
