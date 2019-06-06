@@ -135,18 +135,18 @@ class EntradaSalidaController extends Controller
         $serie =1;
         $numero =1;
         $entr = EntradaSalida::All();
-        $count_entr = count($entr)== 0?1:count($entr);
+        $count_entr = count($entr)== 0?0:count($entr);
         if(strlen($count_entr)==1){
-            $serie ="D00".$count_entr;
-            $numero ="00000".$count_entr;
+            $serie ="D00".($count_entr+1);
+            $numero ="00000".($count_entr+1);
         }
         if(strlen($count_entr)==2){
-            $serie ="D0".$count_entr;
-            $numero ="0000".$count_entr;
+            $serie ="D0".($count_entr+1);
+            $numero ="0000".($count_entr+1);
         }
         if(strlen($count_entr)==3){
-            $serie ="D".$count_entr;
-            $numero ="00".$count_entr;
+            $serie ="D".($count_entr+1);
+            $numero ="00".($count_entr+1);
         }
 
         $ruta             = $this->rutas;
@@ -258,15 +258,11 @@ class EntradaSalidaController extends Controller
                         $entrada_salida_detalle->cantidad = $request->input("cantid".$i);
                         $entrada_salida_detalle->lote = $request->input("lot".$i);
                         $entrada_salida_detalle->entrada_salida_id = $entrada_salida_last[0]->id;
-                        $entrada_salida_detalle->producto_presentacion_id = $request->input("id_entrada".$i);
+                        $entrada = Entrada::find($request->input("id_entrad".$i));
+                        $entrada_salida_detalle->producto_presentacion_id = $entrada->producto_presentacion_id;
                         $entrada_salida_detalle->save();
 
-                        $prod_m                 = ProductoPresentacion::find($request->input("id_entrada".$i));
-                        $prod_m->precio_compra = $request->input("precio_compra".$i);
-                        $prod_m->precio_venta_unitario = $request->input("precio_venta".$i);
-                        $prod_m->save();
-
-                        $entrada = Entrada::find($request->input("id_entrada".$i));
+                        
                         $entrada->stock = $entrada->stock-intval($request->input("cantid".$i));
                         $entrada->save();
                     }

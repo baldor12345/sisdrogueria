@@ -32,9 +32,15 @@
 				{{-- 2da fila --}}
 				<div class="form-group col-4 col-md-4" >
 					{!! Form::label('doccliente', 'DNI o RUC Cliente:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
-					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('doccliente', null, array('class' => 'form-control input-sm', 'id' => 'doccliente', 'placeholder' => 'DNI o RUC')) !!}
+					<div class="input-group" style="">
+						{!! Form::text('doccliente', null, array('class' => 'form-control input-sm', 'id' => 'doccliente', 'placeholder' => 'DNI o RUC', 'maxlength'=>'8')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
+						</span>
 					</div>
+					{{-- <div class="col-sm-9 col-xs-12" style="">
+						
+					</div> --}}
 				</div>
 				<div class="form-group contado  col-4 col-md-4">
 					{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'')) !!}
@@ -108,10 +114,10 @@
 					</div>
 				</div>
 
-				<div class="form-group  col-4 col-md-4" >
-					{!! Form::label('total', 'Total:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+				<div class="form-group  col-4 col-md-4 text-right" >
+					{!! Form::label('total', 'Total : s/.', array('class' => 'col-sm-6 col-xs-12 control-label input-md', 'style'=>'')) !!}
 					<div class="col-sm-4 col-xs-12" style="">
-						{!! Form::text('total', null, array('class' => 'form-control input-sm', 'id' => 'total', 'placeholder' => '','readonly')) !!}
+						{!! Form::text('total', null, array('class' => 'form-control input-md', 'id' => 'total', 'placeholder' => '','readonly')) !!}
 					</div>
 				</div>
 				
@@ -225,29 +231,29 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#detalle_prod').hide();
 	$('.credito').hide();
-	$('#cboCliente').select2({
-		dropdownParent: $("#modal"+(contadorModal-1)),
-		minimumInputLenght: 2,
-		ajax: {
+	// $('#cboCliente').select2({
+	// 	dropdownParent: $("#modal"+(contadorModal-1)),
+	// 	minimumInputLenght: 2,
+	// 	ajax: {
 			
-			url: "{{ URL::route($ruta['listclientes'], array()) }}",
-			dataType: 'json',
-			delay: 250,
-			data: function(params){
-				return{
-					q: $.trim(params.term)
-				};
-			},
-			processResults: function(data){
-				return{
-					results: data
-				};
-			}
+	// 		url: "{{ URL::route($ruta['listclientes'], array()) }}",
+	// 		dataType: 'json',
+	// 		delay: 250,
+	// 		data: function(params){
+	// 			return{
+	// 				q: $.trim(params.term)
+	// 			};
+	// 		},
+	// 		processResults: function(data){
+	// 			return{
+	// 				results: data
+	// 			};
+	// 		}
 			
-		}
-	});
-	$('#cboCliente').empty();
-	$('#cboCliente').append('<option value="1">Varios</option>');
+	// 	}
+	// });
+	// $('#cboCliente').empty();
+	// $('#cboCliente').append('<option value="1">Varios</option>');
 
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
@@ -322,11 +328,17 @@ $(document).ready(function() {
 		var serie = "{{ $serie }}";
 		$('#serie_documento').val($(this).val()+''+serie);
 		if($(this).val() == 'F'){
-			$('#cboCliente').empty();
-			$('#cboCliente').append('<option value="0">Seleccione Cliente</option>');
+			$('#doccliente').attr('maxlength',11);
+			$('#doccliente').val("");
+			$("#nombrecompleto").val("");
+			// $('#cboCliente').empty();
+			// $('#cboCliente').append('<option value="0">Seleccione Cliente</option>');
 		}else{
-			$('#cboCliente').empty();
-			$('#cboCliente').append('<option value="1">Varios</option>');
+			$('#doccliente').attr('maxlength',8);
+			$('#doccliente').val("");
+			$("#nombrecompleto").val("");
+			// $('#cboCliente').empty();
+			// $('#cboCliente').append('<option value="1">Varios</option>');
 		}
 	});
 
@@ -551,22 +563,27 @@ function quitar(t, subtotal){
 
 function guardar_venta(entidad, idboton) {
 	var correcto = false;
-	if(contar_registros() > 0){
-		if($('#cboCliente').val() != '0'){
-			if($('#cboVendedor').val() != '0'){
-				correcto = true;
+	if($('#nombrecompleto').val() != ""){
+		if(contar_registros() > 0){
+			if($('#cboCliente').val() != '0'){
+				if($('#cboVendedor').val() != '0'){
+					correcto = true;
+				}else{
+					correcto = false;
+					alert('Debe seleccionar un vendedor antes de guardar.');
+				}
 			}else{
 				correcto = false;
-				alert('Debe seleccionar un vendedor antes de guardar.');
+				alert('Debe seleccionar un cliente antes de guardar.');
 			}
+			
 		}else{
-			correcto = false;
-			alert('Debe seleccionar un cliente antes de guardar.');
+			alert('No a seleccionado ningun producto');
 		}
-		
 	}else{
-		alert('No a seleccionado ningun producto');
+		alert('Asegurese de ingresar un dni válido');
 	}
+	
 
 	var idformulario = IDFORMMANTENIMIENTO + entidad;
 	if(correcto){
@@ -596,8 +613,10 @@ function guardar_venta(entidad, idboton) {
 					var venta = JSON.stringify(respuesta[1]);
 					var cliente = JSON.stringify(respuesta[2]);
 					var detalla_ventas = JSON.stringify(respuesta[3]);
+					var codigo_medico = JSON.stringify(respuesta[4]);
+					var iniciales_vendedor = JSON.stringify(respuesta[5]);
 					// var lsentradas = respuesta[4];
-					declarar(venta,cliente,detalla_ventas,$("#documento").val());
+					declarar(venta,cliente,detalla_ventas,$("#documento").val(),codigo_medico,iniciales_vendedor);
 					
 					cerrarModal();
 					if (listar === 'SI') {
@@ -646,7 +665,7 @@ function submitForm_venta(idformulario) {
 }
 
 
-function declarar(venta,cliente,detalla_ventas,idtipodoc){
+function declarar(venta,cliente,detalla_ventas,idtipodoc,medico,vendedor){
  	if(idtipodoc=="B"){
  		tipodocumento = "Boleta";
  	}else{
@@ -657,7 +676,7 @@ function declarar(venta,cliente,detalla_ventas,idtipodoc){
         cache:false,
         type: 'GET',
         url: "http://localhost/clifacturacion/controlador/contComprobante.php?funcion=enviar"+tipodocumento,
-        data: "venta="+venta+"&cliente="+cliente+"&detalle="+detalla_ventas,
+        data: "venta="+venta+"&cliente="+cliente+"&medico="+medico+"&vendedor="+vendedor+"&detalle="+detalla_ventas,
         success: function (data, textStatus, jqXHR) {
             alert("Enviado");
         },
@@ -714,8 +733,9 @@ function consultaDOC(){
 								$("#nombrecompleto").val(res.nombres+" "+res.apepat+" "+res.apemat);
 							}
 						}else{
-
+						//	$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El RUC ingresado es incorrecto</div>");
 						//$('#razon_social').val("");
+						consultaRUC(doc);
 
 						}
 					}
@@ -727,9 +747,60 @@ function consultaDOC(){
 			
 		}); 
 
-	
+}
 
+function consultaRUC(ruc){
+    
+    $.ajax({
+        type: 'GET',
+        url: "http://localhost/SunatPHP/demo.php",
+        data: "ruc="+ruc,
+        beforeSend(){
+        	//alert("Consultando...");
+        },
+        success: function (data, textStatus, jqXHR) {
+            $("#nombrecompleto").val(data.RazonSocial);
+            $("#direccioncliente").val(data.Direccion);
+        }
+    });
+}
 
+function consultaDNI(){
+
+	var param = "";
+	var doc = $("#doc").val();
+	var tipodoc = $('#cboTipoDocumento').val();
+	if(tipodoc == 'dni'){
+		param = "accion=consultaDNI&dni="+doc;
+		$.ajax({
+			url: 'clientes/buscarclienteSunat',
+			headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+			type: 'POST',
+			data: ""+param,
+			beforeSend: function(){ 
+				// alert("Consultando...");
+			},
+			success: function(res){
+				console.log(res);
+				//if(tipodoc = 'dni'){
+					if(res.apepat == undefined){
+						$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El DNI ingresado es incorrecto</div>");
+						$('#divMensajeError{{ $entidad }}').show();
+					}else{
+						$('#divMensajeError{{ $entidad }}').hide();
+						$("#nombres").val(res.nombres);
+	 					$("#apellidos").val(res.apepat+" "+res.apemat);
+					}
+				//}
+			}
+		}).fail(function(){
+			
+			mostrarMensaje ("Error de servidor", "ERROR");
+		});
+	}else{
+		//param = "accion=consultaRUC&ruc="+doc;
+		consultaRUC();
+	}
 }
 
 function cargarselectMedico(){

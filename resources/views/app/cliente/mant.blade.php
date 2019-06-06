@@ -49,7 +49,7 @@
 
 <div class="form-group ">
 		<div class="col-lg-12 col-md-12 col-sm-12 text-right">
-			{!! Form::button('<i class="fa fa-check fa-lg"></i> ConsultarDni', array('class' => 'btn btn-success btn-sm', 'id' => 'btnConsultarDni', 'onclick' => 'consultaDNI()')) !!}
+			{!! Form::button('<i class="fa fa-check fa-lg"></i> ConsultarDni', array('class' => 'btn btn-success btn-sm', 'id' => 'btnConsultarDni', 'onclick' => 'consultaRUC()')) !!}
 			{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardar', 'onclick' => 'guardar(\''.$entidad.'\', this)')) !!}
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelar'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 		</div>
@@ -94,6 +94,24 @@ $(document).ready(function() {
 	});
 }); 
 
+function consultaRUC(){
+    var ruc = $("#doc").val();
+    $.ajax({
+        type: 'GET',
+        url: "http://localhost/SunatPHP/demo.php",
+        data: "ruc="+ruc,
+        beforeSend(){
+        	//alert("Consultando...");
+        },
+        success: function (data, textStatus, jqXHR) {
+        	//alert("Datos Recibidos");
+            $("#razon_social").val(data.RazonSocial);
+            $("#direccion").val(data.Direccion);
+            $("#txtNombres").focus();
+            $("#txtDireccion").focus();
+        }
+    });
+}
 
 function consultaDNI(){
 
@@ -102,39 +120,35 @@ function consultaDNI(){
 	var tipodoc = $('#cboTipoDocumento').val();
 	if(tipodoc == 'dni'){
 		param = "accion=consultaDNI&dni="+doc;
-	}else{
-		param = "accion=consultaRUC&ruc="+doc;
-	}
-	$.ajax({
-		url: 'clientes/buscarclienteSunat',
-		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-		type: 'POST',
-		data: ""+param,
-		beforeSend: function(){ 
-			// alert("Consultando...");
-		},
-		success: function(res){
-			console.log(res);
-			if(tipodoc = 'dni'){
-				if(res.apepat == undefined){
-					$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El DNI ingresado es incorrecto</div>");
-					$('#divMensajeError{{ $entidad }}').show();
-				}else{
-					$('#divMensajeError{{ $entidad }}').hide();
-					$("#nombres").val(res.nombres);
- 					$("#apellidos").val(res.apepat+" "+res.apemat);
-				}
-			}else{
-
-			//$('#razon_social').val("");
+		$.ajax({
+			url: 'clientes/buscarclienteSunat',
+			headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+			type: 'POST',
+			data: ""+param,
+			beforeSend: function(){ 
+				// alert("Consultando...");
+			},
+			success: function(res){
+				console.log(res);
+				//if(tipodoc = 'dni'){
+					if(res.apepat == undefined){
+						$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>El DNI ingresado es incorrecto</div>");
+						$('#divMensajeError{{ $entidad }}').show();
+					}else{
+						$('#divMensajeError{{ $entidad }}').hide();
+						$("#nombres").val(res.nombres);
+	 					$("#apellidos").val(res.apepat+" "+res.apemat);
+					}
+				//}
 			}
-		}
-	}).fail(function(){
-		
-		mostrarMensaje ("Error de servidor", "ERROR");
-	});
-	
-	
+		}).fail(function(){
+			
+			mostrarMensaje ("Error de servidor", "ERROR");
+		});
+	}else{
+		//param = "accion=consultaRUC&ruc="+doc;
+		consultaRUC();
+	}
 }
 // function consulta( random, ruc){
 // 	var respuesta ="";

@@ -320,7 +320,7 @@ class VentasController extends Controller
             $iniciales_vendedor = $venta01->vendedor->iniciales;
             $datos_empresa = DatosEmpresa::find(1);
             // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
-            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion')->get()[0];
+            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion','telefono')->get()[0];
             $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
             $err01 = is_null($error) ? "OK" : $error;
             $bancos = array(

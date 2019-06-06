@@ -328,7 +328,7 @@ function agregar(){
 									if(lote!=""){
 										var subtotal ="";
 										subtotal = parseInt(parseInt($('#factor').val()))*parseFloat(preciocompra);
-										var d = '<tr class="datos-producto" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -453,8 +453,8 @@ function submitForm_control(idformulario) {
 	}
 
 	if(dato_documento =='S'){
-		$('.datos-producto').each(function() {
-			datos += 	"&id_entrada"		+i+"="+$(this).attr("id_entrada")+
+		$('.datos-entrada').each(function() {
+			datos += 	"&id_entrad"		+i+"="+$(this).attr("id_entrada")+
 						"&id_presentacion"	+i+"="+$(this).attr("id_presentacion")+
 						"&precio_compra"	+i+"="+$(this).attr("precio_compra")+
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
