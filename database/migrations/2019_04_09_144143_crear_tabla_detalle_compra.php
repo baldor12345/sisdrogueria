@@ -16,6 +16,7 @@ class CrearTablaDetalleCompra extends Migration
         Schema::create('detalle_compra', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('fecha_caducidad')->nullable();
+            $table->char('fecha_completa')->nullable();//S=>SI, N=>NO
             $table->string('ubicacion',100)->nullable();
             $table->decimal('precio_compra',10,2)->nullable();//precio por la unidad de medida
             $table->decimal('precio_venta',10,2)->nullable();//precio al publico

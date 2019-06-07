@@ -125,7 +125,8 @@ class CompraController extends Controller
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboUnidad = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
-        $cboAfecto       = array('N'=>'NO', 'S'=>'SI');
+        $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
+        $cboFecha       = array('N'=>'NO', 'S'=>'SI');
         $formData       = array('compra.store');
         $propiedades            = Propiedades::All()->last();
         $numero_operacion   = Libreria::codigo_operacion();
@@ -133,7 +134,7 @@ class CompraController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('cboFecha','cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -181,6 +182,7 @@ class CompraController extends Controller
                     $detalle_compra->fecha_caducidad = $request->input("fecha_vencim".$i);
                     $detalle_compra->ubicacion = '';
                     $detalle_compra->precio_compra = $request->input("precio_compra".$i);
+                    $detalle_compra->fecha_completa = $request->input("fecha_co".$i);
                     $detalle_compra->precio_venta = $request->input("precio_venta".$i);
                     $detalle_compra->cantidad = $request->input("cant".$i);
                     $detalle_compra->lote = $request->input("lot".$i);
@@ -204,6 +206,7 @@ class CompraController extends Controller
                     $entrada = new Entrada();
                     $entrada->fecha = $request->input('fecha');
                     $entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
+                    $entrada->fecha_completa = $request->input("fecha_co".$i);
                     // $entrada->precio_compra = $request->input("precio_compra".$i);
                     // $entrada->precio_venta = $request->input("precio_venta".$i);
                     $entrada->stock = $request->input("factor_".$i);

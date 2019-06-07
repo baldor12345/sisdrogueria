@@ -69,6 +69,8 @@
 						<td><input class=" input-number" id="factor" size="3" name="factor" type="text">{!! Form::hidden('unidad_presentacion', null, array('id' => 'unidad_presentacion')) !!}</td>
 						<td class="form-control input-sm"><b>Fecha Venc.</b></td>
 						<td><input class="" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
+						<td class="form-control input-sm" style="text-align:right;"><b>F. Comp.:</b></td>
+						<td>{!! Form::select('fecha_comp', $cboFecha, null, array('class' => '', 'id' => 'fecha_comp','style'=>'text-align: left;')) !!}</td>
 						<td class="form-control input-sm"><b>Lote</b></td>
 						<td><input class="" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
@@ -260,7 +262,7 @@ function agregar(){
 										t_parcial=0;
 									}
 									var total = t_parcial+subtotal;
-									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" fecha_c="'+$('#fecha_comp').val()+'"  precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 										'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
 										'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 										'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -328,7 +330,7 @@ function agregar(){
 									if(lote!=""){
 										var subtotal ="";
 										subtotal = parseInt(parseInt($('#factor').val()))*parseFloat(preciocompra);
-										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" fecha_c="'+$('#fecha_comp').val()+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -447,6 +449,7 @@ function submitForm_control(idformulario) {
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 						"&cant"				+i+"="+$(this).attr("canti")+
 						"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
+						"&fecha_co"			+i+"="+$(this).attr("fecha_c")+
 						"&lot"			+i+"="+$(this).attr("lot");
 			i++;
 		});
@@ -460,6 +463,7 @@ function submitForm_control(idformulario) {
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 						"&cantid"				+i+"="+$(this).attr("cantidad_entrada")+
 						"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
+						"&fecha_co"			+i+"="+$(this).attr("fecha_c")+
 						"&lot"			+i+"="+$(this).attr("lot");
 			i++;
 		});

@@ -21,6 +21,8 @@
 						<td><input class=" input-number"  id="unidad_presentacion" readonly="true" size="7" name="unidad_presentacion" type="text"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>P.Compra:</b></td>
 						<td><input class=""  onkeypress="return filterFloat(event,this);" id="preciocompra" size="7" name="preciocompra" type="text" style="text-align: right;"></td>
+						<td class="form-control input-sm" style="text-align:right;"><b>Fecha Comp.:</b></td>
+						<td>{!! Form::select('fecha_comp', $cboFecha, null, array('class' => '', 'id' => 'fecha_comp','style'=>'text-align: left;')) !!}</td>
 					</tr>
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
@@ -275,7 +277,7 @@ function agregar(){
 									var subtotal ="";
 									subtotal = parseInt(cantidad)*parseFloat(preciocompra);
 
-									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" afect_="'+$('#afecto').val()+'" dat_factor="'+factor+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" afect_="'+$('#afecto').val()+'" dat_factor="'+factor+'" fecha_c="'+$('#fecha_comp').val()+'" precio_compra="'+preciocompra+'"  precio_venta="'+precioventa+'" canti="'+cantidad+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 										'<td class="input-sm" width="40%">'+producto_dat+'</td>'+
 										'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 										'<td class="input-sm" width="5%" align="center">'+afectto_dat+'</td>'+
@@ -423,6 +425,7 @@ function submitForm_control(idformulario) {
 					"&fecha_vencim"		+i+"="+$(this).attr("fecha_venc")+
 					"&factor_"			+i+"="+$(this).attr("dat_factor")+
 					"&afecto_1"			+i+"="+$(this).attr("afect_")+
+					"&fecha_co"			+i+"="+$(this).attr("fecha_c")+
 					"&lot"				+i+"="+$(this).attr("lot");
 		i++;
 	});

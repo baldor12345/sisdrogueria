@@ -127,6 +127,7 @@ class EntradaSalidaController extends Controller
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
         $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
+        $cboFecha       = array('N'=>'NO', 'S'=>'SI');
         $numero_operacion   = Libreria::codigo_operacion();
         $formData       = array('entrada_salida.store');
         $propiedades            = Propiedades::All()->last();
@@ -152,7 +153,7 @@ class EntradaSalidaController extends Controller
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('serie', 'numero', 'numero_operacion', 'entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
+        return view($this->folderview.'.mant')->with(compact('cboFecha','serie', 'numero', 'numero_operacion', 'entradasalida', 'cboEntrada', 'cboPresentacion','cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboTipo'));
     }
 
     /**
@@ -194,6 +195,7 @@ class EntradaSalidaController extends Controller
                     for($i=0;$i<$cantidad; $i++){
                         $entrada_salida_detalle    = new EntradaSalidaDetalle();
                         $entrada_salida_detalle->fecha_caducidad = $request->input("fecha_vencim".$i);
+                        $entrada_salida_detalle->fecha_completa = $request->input("fecha_co".$i);
                         $entrada_salida_detalle->precio_compra = $request->input("precio_compra".$i);
                         $entrada_salida_detalle->precio_venta = $request->input("precio_venta".$i);
                         $entrada_salida_detalle->cantidad = $request->input("cant".$i);
@@ -218,6 +220,7 @@ class EntradaSalidaController extends Controller
                             $entrada    = new Entrada();
                             $entrada->fecha = $request->input('fecha');
                             $entrada->fecha_caducidad = $request->input('fecha_vencim'.$i);
+                            $entrada->fecha_completa = $request->input("fecha_co".$i);
                             $entrada->stock = $request->input("cant".$i);
                             $entrada->lote = $request->input("lot".$i);
                             $entrada->producto_presentacion_id = $request->input("id_producto".$i);
