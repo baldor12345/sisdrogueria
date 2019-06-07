@@ -660,6 +660,7 @@ function consultaDOC(){
 
 				$('#nombrecompleto').val(nombrecompleto);
 				$('#direccioncliente').val(response[1].direccion);
+				$('#telefono').val(response[1].telefono);
 			}else{
 				$('#direccioncliente').val('');
 				if(tipodoc == 'B' && doc.length < 9){

@@ -189,9 +189,14 @@ class VentasController extends Controller
         if( $valor_total > $monto_limite){
             // echo("valor: ".$valor_total);
             // echo($cliente->dni);
-            if($request->input('doccliente') == "00000000" |$request->input('doccliente') == "" | $request->input('nombrescliente')  == "" | $request->input('apellidoscliente')  == "" ){
+            if( $request->input('doccliente') == ""){
                 $valido = false;
                 $mensaje_err = "Para ventas mayor a s/. ".$monto_limite.", debe seleccionar un cliente con DNI válido.";
+            }
+
+            if($request->input('doccliente') == "00000000"){
+                $valido = false;
+                $mensaje_err = "Para ventas mayor a s/. ".$monto_limite.", debe seleccionar un cliente con DNI válido.";           
             }
         }
         if($valido){
@@ -284,7 +289,7 @@ class VentasController extends Controller
                     $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
                     $precio_unit = $producto_presentacion->precio_venta_unitario; 
                     $id_prodPresent = $producto_presentacion->id; 
-                    $subtotal =  round($precio_unit *  $cant, 2);
+                    $subtotal =  round($precio_unit *  $cant_pres, 2);
                     $detalle_venta = new Detalle_venta();
                     $detalle_venta->producto_id =$producto->id; 
                     $detalle_venta->cantidad = $cant_pres;
