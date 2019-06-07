@@ -188,9 +188,8 @@ class VentasController extends Controller
         $mensaje_err ="";
         if( $valor_total > $monto_limite){
             // echo("valor: ".$valor_total);
-            $cliente = Cliente::find($request->input('cboCliente'));
             // echo($cliente->dni);
-            if($cliente->dni == null | $cliente->dni == ""){
+            if($request->input('doccliente') == "00000000" |$request->input('doccliente') == "" | $request->input('nombrescliente')  == "" | $request->input('apellidoscliente')  == "" ){
                 $valido = false;
                 $mensaje_err = "Para ventas mayor a s/. ".$monto_limite.", debe seleccionar un cliente con DNI válido.";
             }
@@ -206,10 +205,16 @@ class VentasController extends Controller
                 $id_cliente=null;
                 if(count($clientec) == 0){
                     $clientenuevo = new Cliente();
-                    $clientenuevo->dni = $request->input('doccliente');
-                    $clientenuevo->nombres = $request->input('nombrescliente');
-                    $clientenuevo->apellidos = $request->input('apellidoscliente');
+                    if($tipodoc == 'B'){
+                        $clientenuevo->dni = $request->input('doccliente');
+                        $clientenuevo->nombres = $request->input('nombrescliente');
+                        $clientenuevo->apellidos = $request->input('apellidoscliente');
+                    }else{
+                        $clientenuevo->ruc = $request->input('doccliente');
+                        $clientenuevo->razon_social = $request->input('nombrescliente');
+                    }
                     $clientenuevo->direccion = $request->input('direccioncliente');
+                    $clientenuevo->telefono = $request->input('telefono');
                     $clientenuevo->save();
 
                     $id_cliente = $clientenuevo->id;
