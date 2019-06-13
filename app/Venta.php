@@ -69,7 +69,7 @@ class Venta extends Model
             ->where('estado','=',$estado)
             ->where('tipo_pago','=',$tipo)
             ->where('numero_doc','LIKE','%'.$numero_serie.'%')
-            ->orderBy('fecha', 'ASC');
+            ->orderBy('fecha', 'DSC');
     }
 
     public static function listarproductosvendidos($nombre, $fechai, $fechaf)
@@ -118,6 +118,7 @@ class Venta extends Model
         ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
         ->leftjoin('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
         ->leftjoin('marca', 'producto.marca_id', '=', 'marca.id')
+        ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'detalle_ventas.producto_presentacion_id')
         ->select(
             'producto.descripcion as nombre_producto', 
             'producto.sustancia_activa as sustancia_activa', 
@@ -127,7 +128,8 @@ class Venta extends Model
             'detalle_ventas.total as subtotal',
             'marca.name as nombre_marca',
             'producto.afecto as afecto',  
-            'presentacion.nombre as unidad_base'  
+            'presentacion.nombre as unidad_base',
+            'producto_presentacion.id as id_presentacion_v'
         )
         ->where('detalle_ventas.ventas_id', '=',$venta_id)
         ->where('detalle_ventas.deleted_at', '=',null)->get();
