@@ -38,25 +38,29 @@
 				<table id="tabla" class="table table-bordered table-striped table-condensed table-hover">
 		            <thead>
 		                <tr>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Producto</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">Presentacion</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">F. Venc.</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">P. Compra</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">P. Venta</th>
-		                    <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Lote</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="40%">Producto</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="20%">Presentacion</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="15%">F. Venc.</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="5%">Cantidad</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="5%">P. Compra</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="5%">P. Venta</th>
+		                    <th bgcolor="#E0ECF8" class="text-center input-xs" width="10%">Lote</th>
 		                </tr>
 		            </thead>
                     <tbody>
                         @foreach ($list_detalle_es as $key => $value)
                             <tr>
-                                <td class="text-center input-sm">{{ $value->producto.' '.$value->sustancia_activa }}</td>
-                                <td class="text-center input-sm">{{ $value->presentacion }}</td>
-                                <td class="text-center input-sm">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
-								<td class="text-center input-sm">{{ $value->cantidad }}</td>
-								<td class="text-center input-sm">{{ $value->precio_compra }}</td>
-								<td class="text-center input-sm">{{ $value->precio_venta }}</td>
-                                <td class="text-center input-sm">{{ $value->lote }}</td>
+                                <td class="text-left input-xs">{{ $value->producto.' '.$value->sustancia_activa }}</td>
+                                <td class="text-center input-xs">{{ $value->presentacion }}</td>
+								@if($value->fecha_completa == 'N')
+                                <td class="text-center input-xs">{{ Date::parse( $value->fecha_caducidad )->format('m-Y') }}</td>
+								@else
+                                <td class="text-center input-xs">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
+								@endif
+								<td class="text-center input-xs">{{ $value->cantidad }}</td>
+								<td class="text-center input-xs">{{ $value->precio_compra }}</td>
+								<td class="text-center input-xs">{{ $value->precio_venta }}</td>
+                                <td class="text-center input-xs">{{ $value->lote }}</td>
                             </tr>
                         @endforeach
                     </tbody>

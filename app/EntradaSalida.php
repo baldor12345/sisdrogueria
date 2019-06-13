@@ -39,7 +39,7 @@ class EntradaSalida extends Model
                     ->where('entrada_salida.fecha', '>=', $fechai)
                     ->where('entrada_salida.fecha', '<=', $fechaf)
                     ->where('entrada_salida.deleted_at',null)
-                    ->orderBy('entrada_salida.deleted_at', 'DSC');
+                    ->orderBy('entrada_salida.fecha', 'DSC');
     }
 
     public static function listdetalleES($id){
@@ -55,7 +55,8 @@ class EntradaSalida extends Model
                         'entrada_salida_detalle.precio_compra as precio_compra', 
                         'entrada_salida_detalle.precio_venta as precio_venta', 
                         'entrada_salida_detalle.cantidad as cantidad', 
-                        'entrada_salida_detalle.lote as lote'
+                        'entrada_salida_detalle.lote as lote',
+                        'entrada_salida_detalle.fecha_completa as fecha_completa'
                 )
                 ->where('entrada_salida_detalle.entrada_salida_id', $id)
                 ->where('entrada_salida_detalle.deleted_at',null);

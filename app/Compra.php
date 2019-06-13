@@ -68,7 +68,8 @@ class Compra extends Model
                         'detalle_compra.fecha_caducidad as fecha_caducidad', 
                         'detalle_compra.cantidad as cantidad', 
                         'presentacion.nombre as presentacion_nombre', 
-                        'detalle_compra.precio_compra as precio_compra'
+                        'detalle_compra.precio_compra as precio_compra',
+                        'detalle_compra.fecha_completa as fecha_completa'
                 )
                 ->where('detalle_compra.compra_id', '=', $id)
                 ->where('detalle_compra.deleted_at',null);
