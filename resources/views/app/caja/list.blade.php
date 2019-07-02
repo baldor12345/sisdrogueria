@@ -47,7 +47,7 @@ a.disabled {
 			<td style="font-size: 13px">--</td>
 			@endif
 			<td style="font-size: 13px">{{ $value->comentario }}</td>	
-			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
+			<!--td>{!! Form::button('<div class="glyphicon glyphicon-print"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td-->
 			<td>{!! Form::button('<div class="glyphicon glyphicon-usd"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-success')) !!}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-remove-circle"></div>', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_cerrarCaja.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 		</tr>

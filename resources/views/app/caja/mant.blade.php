@@ -33,7 +33,7 @@
 <div class="form-group">
 	{!! Form::label('monto_ini', 'Monto In.:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
 	<div class="col-sm-9 col-xs-12">
-		{!! Form::text('monto_ini', number_format($ingresos,2), array('class' => 'form-control input-xs', 'id' => 'monto_ini', 'placeholder' => 'S/.','readonly')) !!}
+		{!! Form::text('monto_ini', $ingresos, array('class' => 'form-control input-xs', 'id' => 'monto_ini', 'placeholder' => 'S/.','readonly')) !!}
 	</div>
 </div>
 

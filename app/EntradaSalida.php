@@ -25,6 +25,7 @@ class EntradaSalida extends Model
      * @return sql        sql
      */
     public static function listar($num_doc, $tipo, $fechai, $fechaf){
+        $user = Auth::user();
         return  DB::table('entrada_salida')
                     ->select(
                             'entrada_salida.id as es_id',
@@ -38,6 +39,7 @@ class EntradaSalida extends Model
                     ->where('entrada_salida.tipo', 'LIKE','%'.$tipo.'%')
                     ->where('entrada_salida.fecha', '>=', $fechai)
                     ->where('entrada_salida.fecha', '<=', $fechaf)
+                    ->where('entrada_salida.sucursal_id', '=', $user->sucursal_id)
                     ->where('entrada_salida.deleted_at',null)
                     ->orderBy('entrada_salida.fecha', 'DSC');
     }

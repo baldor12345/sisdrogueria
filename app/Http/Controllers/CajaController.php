@@ -77,7 +77,7 @@ class CajaController extends Controller
         $cabecera[]       = array('valor' => 'Forma Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Entregado a', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Comentario', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $user           = Auth::user();
         $caja_last      = Caja::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
@@ -145,7 +145,7 @@ class CajaController extends Controller
         $ingresos = (count($caja_last) != 0)?$caja_last[0]->monto_cierre:0;
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Caja';
-        $num_caja       = Libreria::codigo_operacioncaja();
+        $num_caja       = Libreria::codigo_operacioncaja($user->sucursal_id);
         $cboConcepto            =  array(1=>'Apertura de Caja');
 
         $fecha_apertura = date('Y-m-d');

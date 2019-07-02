@@ -538,7 +538,7 @@ class EntradaSalidaController extends Controller
         if (empty($term)) {
             return \Response::json([]);
         }
-        
+        $user = Auth::user();
         $tags = DB::table('entrada')
                     ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
@@ -551,7 +551,8 @@ class EntradaSalidaController extends Controller
                         'presentacion.nombre as presentacion',
                         'entrada.stock as stock',
                         'entrada.deleted_at as deleted_at',
-                        'entrada.lote as lote'
+                        'entrada.lote as lote',
+                        'entrada.sucursal_id as sucursal_id'
                         )
                     ->where("producto.codigo",'LIKE', '%'.$term.'%')
                     ->orWhere("producto.codigo_barra",'LIKE', '%'.$term.'%')
@@ -561,7 +562,7 @@ class EntradaSalidaController extends Controller
                     ->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            if($tag->stock != 0 && $tag->deleted_at == null){
+            if($tag->stock != 0 && $tag->deleted_at == null && $tag->sucursal_id == $user->sucursal_id){
                 $formatted_tags[] = ['id' => $tag->entrada_id,  'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.' - '.$tag->lote.'] '];
             }
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];

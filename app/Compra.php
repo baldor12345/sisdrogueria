@@ -38,6 +38,7 @@ class Compra extends Model
     }
 
     public static function listarcompra($numero, $proveedor, $fechai, $fechaf){
+        $user = Auth::user();
         return  DB::table('compra')
                 ->join('proveedor', 'compra.proveedor_id', '=', 'proveedor.id')
                 ->select(
@@ -54,6 +55,7 @@ class Compra extends Model
                 ->where('proveedor.nombre', 'LIKE','%'.$proveedor.'%')
                 ->where('compra.fecha', '>=', $fechai)
                 ->where('compra.fecha', '<=', $fechaf)
+                ->where('compra.sucursal_id', '=', $user->sucursal_id)
                 ->where('compra.deleted_at',null)
                 ->orderBy('compra.fecha', 'DSC');
     }

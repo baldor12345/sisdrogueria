@@ -23,6 +23,7 @@ class DetalleSalida extends Model
     
     public function scopelistar($query,$id_salida)
     {
+        $user = Auth::user();
         return $query->where(function($subquery) use($id_salida)
 		            {
                         
@@ -31,6 +32,7 @@ class DetalleSalida extends Model
                         }
                         
                     })
+                    ->where('sucursal_id','=',$user->sucursal_id)
                     ->where('deleted_at','=',null)
         			->orderBy('fecha', 'ASC');
         			

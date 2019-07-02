@@ -5,6 +5,7 @@ use Validator;
 use App\Menuoption;
 use App\DetalleCaja;
 use App\Caja;
+use App\Sucursal;
 use App\Venta;
 
 /**
@@ -477,12 +478,15 @@ class Libreria
 		return $codigo_generado;
 	}
 
-	public static function codigo_operacioncaja(){
-		$numero_transacciones = count(Caja::where('deleted_at','=',null)->get()) + 1;
+	public static function codigo_operacioncaja($sucursal_id){
+
+		$numero_transacciones = count(Caja::where('deleted_at','=',null)->where('sucursal_id',$sucursal_id)->get()) + 1;
+		$sucursal = Sucursal::find($sucursal_id);
+		$acronimo_sucur = explode("_",$sucursal->nombre)[1];
 		$codigo_generado ="";
 		if($numero_transacciones > 0){
 			$digitos = strlen($numero_transacciones);
-			$ceros =  "CAJA";
+			$ceros =  "CS".$acronimo_sucur;
 			for($i=0; $i< (4 - $digitos) ; $i ++){
 				$ceros = $ceros."0";
 			}

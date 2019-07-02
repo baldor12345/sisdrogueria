@@ -37,6 +37,7 @@ class MantenimientoProducto extends Model
         }
             
     public static function listarlotescaducidad($lote, $fechai, $fechaf){
+        $user = Auth::user();
         return  DB::table('entrada')
                 ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
@@ -50,6 +51,7 @@ class MantenimientoProducto extends Model
                 )
                 ->where('entrada.lote', 'LIKE','%'.$lote.'%')
                 ->where('entrada.stock', '!=',0)
+                ->where('entrada.sucursal_id', '=',$user->sucursal_id)
                 ->where('entrada.fecha_caducidad', '>=', $fechai)
                 ->where('entrada.fecha_caducidad', '<=', $fechaf)
                 ->where('entrada.deleted_at',null)
@@ -57,6 +59,7 @@ class MantenimientoProducto extends Model
     }
     
     public static function listarstock_producto($descripcion, $presentacion_id){
+        $user = Auth::user();
         return  DB::table('entrada')
                 ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
@@ -70,6 +73,7 @@ class MantenimientoProducto extends Model
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
                 ->where('producto.unidad_id', 'LIKE','%'.$presentacion_id.'%')
                 ->where('entrada.stock', '!=',0)
+                ->where('entrada.sucursal_id', '=',$user->sucursal_id)
                 ->where('entrada.deleted_at',null)
                 ->groupBy('presentacion.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
                 //->orderBy('detalle_compra.fecha_caducidad', 'DSC');
