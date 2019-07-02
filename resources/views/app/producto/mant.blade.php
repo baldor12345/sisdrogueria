@@ -69,12 +69,16 @@
 				</div>
 				<div class="form-group " >
 					{!! Form::label('stock_minimo', 'Stock Min*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-2 col-xs-12" >
+					<div class="col-sm-1 col-xs-12" >
 						{!! Form::text('stock_minimo', '5', array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '', 'style'=>'height: 25px')) !!}
 					</div>
 					{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-4 col-xs-12" >
+					<div class="col-sm-2 col-xs-12" >
 						{!! Form::text('ubicacion', 'stand 01', array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese ubicacion', 'style'=>'height: 25px')) !!}
+					</div>
+					{!! Form::label('puntos', 'Puntos:', array('class' => 'col-sm-1 col-xs-12 control-label')) !!}
+					<div class="col-sm-2 col-xs-12" >
+						{!! Form::text('puntos', '1', array('class' => 'form-control input-xs', 'id' => 'puntos', 'placeholder' => 'Puntos', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
 				<br>

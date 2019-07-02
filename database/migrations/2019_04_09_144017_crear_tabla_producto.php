@@ -26,6 +26,7 @@ class CrearTablaProducto extends Migration
             $table->string('ubicacion',100)->nullable();
             $table->integer('categoria_id')->unsigned()->nullable();//PRESENTACION(TABLETAS, AMPOLLAS, ETC)
             $table->integer('stock_minimo')->nullable();
+            $table->integer('puntos')->nullable();
         
             $table->char('estado', 1)->nullable();// check
             $table->string('procedencia',300)->nullable();//ACAROBOSA 50MG 30 TABLETAS
