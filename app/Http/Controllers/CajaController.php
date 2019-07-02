@@ -81,16 +81,19 @@ class CajaController extends Controller
         
         $user           = Auth::user();
         $caja_last      = Caja::where('sucursal_id',$user->sucursal_id)->orderBy('created_at','DSC')->take(1)->get();
-        $caja_det_      = DetalleCaja::where('caja_id',$caja_last[0]->id)->where('deleted_at',null)->get();
         
         $ingresos =0;
         $egresos =0;
-        foreach ($caja_det_ as $key => $value) {
-            if($value->concepto_id != 2){
-                $ingresos +=    $value->ingreso;
-                $egresos  +=    $value->egreso;
-            } 
+        if(count($caja_last) != 0){
+            $caja_det_      = DetalleCaja::where('caja_id',$caja_last[0]->id)->where('deleted_at',null)->get();
+            foreach ($caja_det_ as $key => $value) {
+                if($value->concepto_id != 2){
+                    $ingresos +=    $value->ingreso;
+                    $egresos  +=    $value->egreso;
+                } 
+            }
         }
+        
 
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -151,7 +154,7 @@ class CajaController extends Controller
         $fecha_apertura = date('Y-m-d');
         $hora_apertura = date('H:i');
         $cajero_dat    = Persona::find($user->person_id);
-        $limit_day = Date::parse($caja_last[0]->fecha_horaapert)->format('Y-m-d');
+        $limit_day = (count($caja_last) !=0)?Date::parse($caja_last[0]->fecha_horaapert)->format('Y-m-d'):date('Y-m-d');
         
         $caja_abierta = Caja::where('estado','A')->where('sucursal_id',$user->sucursal_id)->count();
         $caja        = null;
