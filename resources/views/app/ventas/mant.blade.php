@@ -285,6 +285,7 @@ $(document).ready(function() {
 	$('#documento').change(function(){
 		var serie = "{{ $serie }}";
 		$('#serie_documento').val($(this).val()+''+serie);
+
 		if($(this).val() == 'F'){
 			$('#doccliente').attr('maxlength',11);
 			$('#doccliente').attr('placeholder','N° RUC');
@@ -292,6 +293,8 @@ $(document).ready(function() {
 			$('#lblnombrerazon').text('Razon Social:');
 			// $('#doccliente').val("");
 			$("#nombrecompleto").val("");
+			 getNumero_doc('F');
+			
 		}else{
 			$('#doccliente').attr('maxlength',11);
 			$('#doccliente').attr('placeholder','N° DNI');
@@ -299,7 +302,8 @@ $(document).ready(function() {
 			$('#lblnombrerazon').text('Nombre Apellidos:');
 			// $('#doccliente').val("");
 			$("#nombrecompleto").val("");
-		
+			 getNumero_doc('B');
+			
 		}
 	});
 
@@ -345,6 +349,15 @@ $(document).ready(function() {
 	
 	});
 }); 
+function getNumero_doc(tipo_doc){
+	
+	$.get("ventas/numerodoc/"+tipo_doc+"/1",function(response, facultad){//obtener cod_numero
+		 numero_doc = response+"";
+		 $('#numero_documento').val(numero_doc);
+	}); 
+	;
+	
+}
 
 function selectTipo(combo){//tipo a Credito o a Contado
 	$(combo).val();
