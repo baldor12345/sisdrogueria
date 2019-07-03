@@ -241,7 +241,7 @@ class TrabajadorController extends Controller
             $trabajador = Persona::find($id);
             
             $user = Auth::user();
-            $trabajador  = new Persona();
+            
             $trabajador->dni        = $request->input('dni');
             $trabajador->nombres    = strtoupper($request->input('nombres'));
             $trabajador->apellidos  = strtoupper($request->input('apellidos'));

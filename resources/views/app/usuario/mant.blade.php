@@ -24,6 +24,15 @@ if (!is_null($usuario)) {
 		{!! Form::select('persona', $cboPersona, null, array('class' => 'form-control input-md', 'id' => 'persona')) !!}
 	</div>
 </div>
+<div class="form-group">
+		<div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
+				{!! Form::label('cbsucursal', 'Sucursal:') !!}<div class="" style="display: inline-block;color: red;">*</div>
+					</div>
+	<div class="col-lg-8 col-md-8 col-sm-8">
+		{!! Form::select('cbsucursal', $cboSucursales, $usuario != null? $usuario->sucursal_id:0 , array('class' => 'form-control input-md', 'id' => 'cbusuario')) !!}
+	</div>
+</div>
+
 {{-- <div class="control-label col-lg-4 col-md-4 col-sm-4" style ="padding-top: 15px">
 	{!! Form::label('nombrepersona', 'Persona:') !!}<div class="" style="display: inline-block;color: red;">*</div>
 		</div>

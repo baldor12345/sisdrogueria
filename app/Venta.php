@@ -4,7 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
 class Venta extends Model
 {
     use SoftDeletes;
@@ -58,6 +58,7 @@ class Venta extends Model
     public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo)
     {
         // $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $user = Auth::user();
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
         return $query->where(function($subquery) use($fechai, $fechaf, $estado)
             {
@@ -69,11 +70,13 @@ class Venta extends Model
             ->where('estado','=',$estado)
             ->where('tipo_pago','=',$tipo)
             ->where('numero_doc','LIKE','%'.$numero_serie.'%')
+            ->where('sucursal_id','=',$user->sucursal_id)
             ->orderBy('fecha', 'DSC');
     }
 
     public static function listarproductosvendidos($nombre, $fechai, $fechaf)
     {
+        $user = Auth::user();
         $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
         return  DB::table('producto')
@@ -88,12 +91,14 @@ class Venta extends Model
             )
                 ->where('ventas.fecha', '>=',$fechai)
                 ->where('ventas.fecha', '<=',$fechaf)
+                ->where('ventas.sucursal_id','=',$user->sucursal_id)
                 // ->where('producto.descripcion', 'LIKE','%'.$nombre.'%')
                 ->groupBy('producto.id');
                 // ->orderBy('cantidad_unidades', 'ASC')->get();
     }
 
     public static function listarentradas( $producto_id){
+        $user = Auth::user();
         return  DB::table('entrada')
                 ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->leftjoin('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
@@ -110,9 +115,11 @@ class Venta extends Model
             )
                 ->where('producto_presentacion.producto_id', '=',$producto_id)
                 ->where('entrada.stock', '>',0)
+                ->where('entrada.sucursal_id','=',$user->sucursal_id)
                 ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
     }
     public static function list_detalle_ventas($venta_id){
+        $user = Auth::user();
         return  DB::table('detalle_ventas')
         ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
         ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
@@ -132,6 +139,7 @@ class Venta extends Model
             'producto_presentacion.id as id_presentacion_v'
         )
         ->where('detalle_ventas.ventas_id', '=',$venta_id)
+        ->where('ventas.sucursal_id','=',$user->sucursal_id)
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
