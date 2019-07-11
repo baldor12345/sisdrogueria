@@ -107,6 +107,7 @@ class Venta extends Model
                     'entrada.lote as lote', 
                     // 'entrada.precio_venta as precio_venta', 
                     'entrada.fecha_caducidad as fecha_caducidad', 
+                    'entrada.fecha_caducidad_string as fecha_caducidad_string', 
                     'entrada.estado as estado', 
                     //  'entrada.presentacion_id as presentacion_id', 
                     'entrada.producto_presentacion_id as producto_presentacion_id', 

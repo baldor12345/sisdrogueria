@@ -311,11 +311,13 @@ class VentasController extends Controller
                                         $entrad->stock = 0;
                                         $entrad->save();
                                         $cant = $cant - $cant_actual;
-                                        $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad)).";";
+                                        // $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad)).";";
+                                        $lotes = $lotes.$cant.":".$entrad->lote.":".$entrad->fecha_caducidad_string.";";
                                     }else{
                                         $entrad->stock = $cant_actual - $cant;
                                         $entrad->save();
-                                        $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad))."";
+                                        // $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad))."";
+                                        $lotes = $lotes.$cant.":".$entrad->lote.":".$entrad->fecha_caducidad_string."";
                                         $cant = 0;
                                     }
                                 }
@@ -545,7 +547,8 @@ class VentasController extends Controller
             $producto = Producto::find($producto_id);
             $entradas = Venta::listarentradas($producto_id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
-            $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad)):null;
+            // $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad)):null;
+            $fecha_venc= count($entradas)>0?$entradas[0]->fecha_caducidad_string:null;
             $precio_unidad = count($entradas)>0?$entradas[0]->precio_venta:0;
             $lote = count($entradas)>0?$entradas[0]->lote:0;
             $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('deleted_at','=',null)->get();
@@ -571,7 +574,8 @@ class VentasController extends Controller
             
             $entradas = Venta::listarentradas($producto_id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
             $stock = 0;
-            $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad)):null;
+            // $fecha_venc= count($entradas)>0?date('Y-m-d',strtotime($entradas[0]->fecha_caducidad_string)):null;
+            $fecha_venc= count($entradas)>0?$entradas[0]->fecha_caducidad_string:null;
             $precio_unidad ='';// count($entradas)>0?$entradas[0]->precio_venta:0;
             $lote = count($entradas)>0?$entradas[0]->lote:0;
             $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('deleted_at','=',null)->get();
