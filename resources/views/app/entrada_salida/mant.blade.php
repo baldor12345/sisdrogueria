@@ -68,9 +68,7 @@
 						<td class="form-control input-sm"><b>Factor</b></td>
 						<td><input class=" input-number" id="factor" size="3" name="factor" type="text">{!! Form::hidden('unidad_presentacion', null, array('id' => 'unidad_presentacion')) !!}</td>
 						<td class="form-control input-sm"><b>Fecha Venc.</b></td>
-						<td><input class="" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="date"></td>
-						<td class="form-control input-sm" style="text-align:right;"><b>F. Comp.:</b></td>
-						<td>{!! Form::select('fecha_comp', $cboFecha, null, array('class' => '', 'id' => 'fecha_comp','style'=>'text-align: left;')) !!}</td>
+						<td><input class="" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="text" placeholder="dd/mm/yyyy"></td>
 						<td class="form-control input-sm"><b>Lote</b></td>
 						<td><input class="" id="lote" size="6" style="width:80px" name="lote" type="text"></td>
 						<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
@@ -104,7 +102,7 @@ $(document).ready(function() {
 	var day = ("0" + fechaActual.getDate()).slice(-2);
 	var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
 	var fecha_horaApert = (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-	$('#fechavencimiento').val(fecha_horaApert);
+	$('#fechavencimiento').val('{{ $fecha_form }}');
 	$('#fecha').val(fecha_horaApert);
 	$('#fecha_caducidad').val(fecha_horaApert);
 
@@ -201,16 +199,9 @@ $(document).ready(function() {
 				$('#lote').prop("readonly", true);
 				$('#id_presentacion').prop("disabled", true);
 				$('#preciocompra').val(response[0].precio_compra);
-				var fecha = response[0].fecha_caducidad.split('-');
-				var year = fecha[0];
-				var month = fecha[1];
-				var day_p = fecha[2].split(':');
-				var day_p1 = day_p[0].split(' ');
-				var day = day_p1[0];
-				var dte_format = year+"-"+month+"-"+day;
 				$('#precioventa').val(response[0].precio_venta);
 				$('#id_presentacion').val(response[0].presentacion_id);
-				$('#fechavencimiento').val(dte_format);
+				$('#fechavencimiento').val(response[0].fecha_caducidad_string);
 				$('#unidad_presentacion').val(response[0].stock);
 				$('#factor').val(response[0].stock);
 				$('#lote').val(response[0].lote);
@@ -262,7 +253,7 @@ function agregar(){
 										t_parcial=0;
 									}
 									var total = t_parcial+subtotal;
-									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" fecha_c="'+$('#fecha_comp').val()+'"  precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 										'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
 										'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 										'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -330,7 +321,7 @@ function agregar(){
 									if(lote!=""){
 										var subtotal ="";
 										subtotal = parseInt(parseInt($('#factor').val()))*parseFloat(preciocompra);
-										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" fecha_c="'+$('#fecha_comp').val()+'"  precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -403,39 +394,52 @@ function quitar(t, subtotal){
 }
 
 function guardar_compra(entidad, idboton) {
-	var idformulario = IDFORMMANTENIMIENTO + entidad;
-	var data         = submitForm_control(idformulario);
-	var respuesta    = '';
-	var listar       = 'NO';
-	if ($(idformulario + ' :input[id = "listar"]').length) {
-		var listar = $(idformulario + ' :input[id = "listar"]').val()
-	};
-	$('#btnGuardarCompra').button('loading');
-	data.done(function(msg) {
-		respuesta = msg;
-	}).fail(function(xhr, textStatus, errorThrown) {
-		respuesta = 'ERROR';
-		$('#btnGuardarCompra').removeClass('disabled');
-		$('#btnGuardarCompra').removeAttr('disabled');
-		$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
-	}).always(function() {
-		if(respuesta === 'ERROR'){
-		}else{
-			if (respuesta === 'OK') {
-				cerrarModal();
-				if (listar === 'SI') {
-					
-					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
-					
-				}        
-			} else {
-				mostrarErrores(respuesta, idformulario, entidad);
-				$('#btnGuardarCompra').removeClass('disabled');
-				$('#btnGuardarCompra').removeAttr('disabled');
-				$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
-			}
-		}
+	$cont =0;
+	$('.datos-entrada').each(function() {
+		$cont++;
 	});
+	$('.datos-producto').each(function() {
+		$cont++;
+	});
+
+	if($cont !=0){
+		var idformulario = IDFORMMANTENIMIENTO + entidad;
+		var data         = submitForm_control(idformulario);
+		var respuesta    = '';
+		var listar       = 'NO';
+		if ($(idformulario + ' :input[id = "listar"]').length) {
+			var listar = $(idformulario + ' :input[id = "listar"]').val()
+		};
+		$('#btnGuardarCompra').button('loading');
+		data.done(function(msg) {
+			respuesta = msg;
+		}).fail(function(xhr, textStatus, errorThrown) {
+			respuesta = 'ERROR';
+			$('#btnGuardarCompra').removeClass('disabled');
+			$('#btnGuardarCompra').removeAttr('disabled');
+			$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
+		}).always(function() {
+			if(respuesta === 'ERROR'){
+			}else{
+				if (respuesta === 'OK') {
+					cerrarModal();
+					if (listar === 'SI') {
+						
+						buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+						
+					}        
+				} else {
+					mostrarErrores(respuesta, idformulario, entidad);
+					$('#btnGuardarCompra').removeClass('disabled');
+					$('#btnGuardarCompra').removeAttr('disabled');
+					$('#btnGuardarCompra').html('<i class="fa fa-check fa-lg"></i>Guardar');
+				}
+			}
+		});
+	}else{
+		window.alert("ingrese productos!");
+	}
+	
 }
 function submitForm_control(idformulario) {
 	var i=0;
@@ -449,7 +453,6 @@ function submitForm_control(idformulario) {
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 						"&cant"				+i+"="+$(this).attr("canti")+
 						"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
-						"&fecha_co"			+i+"="+$(this).attr("fecha_c")+
 						"&lot"			+i+"="+$(this).attr("lot");
 			i++;
 		});
@@ -463,7 +466,6 @@ function submitForm_control(idformulario) {
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 						"&cantid"				+i+"="+$(this).attr("cantidad_entrada")+
 						"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
-						"&fecha_co"			+i+"="+$(this).attr("fecha_c")+
 						"&lot"			+i+"="+$(this).attr("lot");
 			i++;
 		});

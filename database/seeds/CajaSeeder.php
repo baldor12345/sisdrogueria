@@ -13,15 +13,29 @@ class CajaSeeder extends Seeder
     public function run()
     {
         $now = new DateTime;
-        $user           = DB::table('user')->where('login','admin')->get();
+        $user1           = DB::table('user')->where('login','adminA')->get();
 		DB::table('caja')->insert(array(
             array(
-                'num_caja' => 'CAJA0001',
+                'num_caja' => 'CSA0001',
                 'fecha_horaapert' => $now,
                 'monto_iniciado' => 0.0,
                 'estado' => 'A',
-                'user_id' => $user[0]->id,
-                'sucursal_id' => $user[0]->sucursal_id,
+                'user_id' => $user1[0]->id,
+                'sucursal_id' => $user1[0]->sucursal_id,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'updated_at' => $now
+            )
+        ));
+        $user2           = DB::table('user')->where('login','adminB')->get();
+		DB::table('caja')->insert(array(
+            array(
+                'num_caja' => 'CSB0001',
+                'fecha_horaapert' => $now,
+                'monto_iniciado' => 0.0,
+                'estado' => 'A',
+                'user_id' => $user2[0]->id,
+                'sucursal_id' => $user2[0]->sucursal_id,
                 'created_at' => $now,
                 'updated_at' => $now,
                 'updated_at' => $now

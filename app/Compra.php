@@ -68,6 +68,7 @@ class Compra extends Model
                         'producto.descripcion as descripcion', 
                         'producto.sustancia_activa as sustancia_activa', 
                         'detalle_compra.fecha_caducidad as fecha_caducidad', 
+                        'detalle_compra.fecha_caducidad_string as fecha_caducidad_string', 
                         'detalle_compra.cantidad as cantidad', 
                         'presentacion.nombre as presentacion_nombre', 
                         'detalle_compra.precio_compra as precio_compra',

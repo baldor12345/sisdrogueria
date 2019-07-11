@@ -54,6 +54,7 @@ class EntradaSalida extends Model
                         'producto.sustancia_activa as sustancia_activa', 
                         'presentacion.nombre as presentacion', 
                         'entrada_salida_detalle.fecha_caducidad as fecha_caducidad', 
+                        'entrada_salida_detalle.fecha_caducidad_string as fecha_caducidad_string', 
                         'entrada_salida_detalle.precio_compra as precio_compra', 
                         'entrada_salida_detalle.precio_venta as precio_venta', 
                         'entrada_salida_detalle.cantidad as cantidad', 

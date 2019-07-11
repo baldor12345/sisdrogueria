@@ -20,7 +20,7 @@
 		   <td>{{ $contador }}</td>
 			<td>{{ $value->producto }}</td>
 			<td>{{ $value->lote }}</td>
-			<td>{{ Date::parse( $value->fecha_venc )->format('d-m-Y') }}</td>
+			<td>{{ $value->fecha_venc_string}}</td>
 			<td>{{ $value->cantidad }}</td>
 			<td>{{ $value->laboratorio }}</td>
 		</tr>

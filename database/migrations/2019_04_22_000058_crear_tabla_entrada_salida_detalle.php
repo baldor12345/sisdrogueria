@@ -16,6 +16,7 @@ class CrearTablaEntradaSalidaDetalle extends Migration
         Schema::create('entrada_salida_detalle', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamp('fecha_caducidad')->nullable();
+            $table->string('fecha_caducidad_string')->nullable();
             $table->char('fecha_completa')->nullable();//S=>SI, N=>NO
             $table->decimal('precio_compra',10,2)->nullable();//precio por la unidad de medida
             $table->decimal('precio_venta',10,2)->nullable();//precio al publico

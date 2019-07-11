@@ -132,9 +132,10 @@ class CompraController extends Controller
         $numero_operacion   = Libreria::codigo_operacion();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
+        $fech_form = date('d-m-Y');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('cboFecha','cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
+        return view($this->folderview.'.mant')->with(compact('fech_form', 'cboFecha','cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));
     }
 
     /**
@@ -179,7 +180,102 @@ class CompraController extends Controller
             if($cantidad >0){
                 for($i=0;$i<$cantidad; $i++){
                     $detalle_compra = new DetalleCompra();
-                    $detalle_compra->fecha_caducidad = $request->input("fecha_vencim".$i);
+                    $detalle_compra->fecha_caducidad_string = trim($request->input("fecha_vencim".$i));
+                    $fec_string = trim($request->input("fecha_vencim".$i));
+                    $slash   = '/';
+                    $punto   = '.';
+                    $dos_puntos   = ':';
+                    $guion   = '-';
+                    $fecha_for = "";
+
+                    if(strpos($fec_string, $slash) !== false){
+                        $fech_explode = explode('/', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $punto) !== false){
+                        $fech_explode = explode('.', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $dos_puntos) !== false){
+                        $fech_explode = explode(':', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $guion) !== false){
+                        $fech_explode = explode('-', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $detalle_compra->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
                     $detalle_compra->ubicacion = '';
                     $detalle_compra->precio_compra = $request->input("precio_compra".$i);
                     $detalle_compra->fecha_completa = $request->input("fecha_co".$i);
@@ -205,15 +301,106 @@ class CompraController extends Controller
                 for($i=0;$i<$cantidad; $i++){
                     $entrada = new Entrada();
                     $entrada->fecha = $request->input('fecha');
-                    $entrada->fecha_caducidad = $request->input("fecha_vencim".$i);
+                    $entrada->fecha_caducidad_string = trim($request->input("fecha_vencim".$i));
+                    $fec_string = trim($request->input("fecha_vencim".$i));
+                    $slash   = '/';
+                    $punto   = '.';
+                    $dos_puntos   = ':';
+                    $guion   = '-';
+                    $fecha_for = "";
+
+                    if(strpos($fec_string, $slash) !== false){
+                        $fech_explode = explode('/', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $punto) !== false){
+                        $fech_explode = explode('.', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $dos_puntos) !== false){
+                        $fech_explode = explode(':', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
+                    if(strpos($fec_string, $guion) !== false){
+                        $fech_explode = explode('-', $fec_string);
+                        if(count($fech_explode) == 2){
+                            if(strlen($fech_explode[1]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[1]."-".$fech_explode[0]."-01"));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                            
+                        }
+                        if(count($fech_explode) == 3){
+                            if(strlen($fech_explode[2]) == 2){
+                                $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }else{
+                                $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                $entrada->fecha_caducidad = $fecha_for;
+                            }
+                        }
+                    }
                     $entrada->fecha_completa = $request->input("fecha_co".$i);
-                    // $entrada->precio_compra = $request->input("precio_compra".$i);
-                    // $entrada->precio_venta = $request->input("precio_venta".$i);
                     $entrada->stock = $request->input("factor_".$i);
                     $entrada->lote = $request->input("lot".$i);
                     $entrada->producto_presentacion_id = $request->input("id_producto".$i);
-                    // $producto = Producto::find($request->input("id_producto".$i));
-                    // $entrada->presentacion_id = $producto->unidad_id;
                     $user = Auth::user();
                     $entrada->user_id = $user->id;
                     $entrada->sucursal_id = $user->sucursal_id;
@@ -382,7 +569,7 @@ class CompraController extends Controller
             foreach ($detalle_compra as $key => $value) {
                 if($value->compra_id == $compra->id){
                     $detalle_ = DetalleCompra::find($value->id);
-                    $entrada = Entrada::where('lote', $detalle_->lote)->where('fecha_caducidad', $detalle_->fecha_caducidad)->where('deleted_at',null)->get();
+                    $entrada = Entrada::where('lote', $detalle_->lote)->where('fecha_caducidad_string', $detalle_->fecha_caducidad_string)->where('deleted_at',null)->get();
                     $entrada[0]->delete();
                 }
             }

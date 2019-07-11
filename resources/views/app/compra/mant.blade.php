@@ -15,19 +15,17 @@
 						<td>&nbsp;</td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Unidad Compra:</b></td>
 						<td>{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => '', 'id' => 'presentacion_id','style'=>'text-align: left;')) !!}</td>
-						<td class="form-control input-sm" style="text-align:right;"><b>Cant./Presentacion:</b></td>
+						<td class="form-control input-sm" style="text-align:right;"><b>Cantidad:</b></td>
 						<td><input class=" input-number"   id="cantidad" size="5" name="cantidad" type="text"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b> Cant./Presentacion:</b></td>
 						<td><input class=" input-number"  id="unidad_presentacion" readonly="true" size="7" name="unidad_presentacion" type="text"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>P.Compra:</b></td>
 						<td><input class=""  onkeypress="return filterFloat(event,this);" id="preciocompra" size="7" name="preciocompra" type="text" style="text-align: right;"></td>
-						<td class="form-control input-sm" style="text-align:right;"><b>Fecha Comp.:</b></td>
-						<td>{!! Form::select('fecha_comp', $cboFecha, null, array('class' => '', 'id' => 'fecha_comp','style'=>'text-align: left;')) !!}</td>
 					</tr>
 					<tr style="height: 20px; padding-top:20px">
 						<td>&nbsp;</td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Fecha Venc.:</b></td>
-						<td><input class="" id="fechavencimiento" size="10" name="fechavencimiento" type="date"></td>
+						<td><input class="" id="fechavencimiento" name="fechavencimiento" type="text" placeholder="dd/mm/yyyy"></td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Afecto:</b></td>
 						<td>{!! Form::select('afecto', $cboAfecto, null, array('class' => '', 'id' => 'afecto','style'=>'text-align: left;')) !!}</td>
 						<td class="form-control input-sm" style="text-align:right;"><b>Factor:</b></td>
@@ -141,7 +139,7 @@ $(document).ready(function() {
 	var day = ("0" + fechaActual.getDate()).slice(-2);
 	var month = ("0" + (fechaActual.getMonth() + 1)).slice(-2);
 	var fecha_horaApert = (fechaActual.getFullYear()) +"-"+month+"-"+day+"";
-	$('#fechavencimiento').val(fecha_horaApert);
+	$('#fechavencimiento').val('{{ $fech_form }}');
 	$('#fecha').val(fecha_horaApert);
 	$('#fecha_caducidad').val(fecha_horaApert);
 
@@ -380,39 +378,48 @@ function calcularPrecioCompra(){
 }
 
 function guardar_compra(entidad, idboton) {
-	var idformulario = IDFORMMANTENIMIENTO + entidad;
-	var data         = submitForm_control(idformulario);
-	var respuesta    = '';
-	var listar       = 'NO';
-	if ($(idformulario + ' :input[id = "listar"]').length) {
-		var listar = $(idformulario + ' :input[id = "listar"]').val()
-	};
-	$(idboton).button('loading');
-	data.done(function(msg) {
-		respuesta = msg;
-	}).fail(function(xhr, textStatus, errorThrown) {
-		respuesta = 'ERROR';
-		$(idboton).removeClass('disabled');
-		$(idboton).removeAttr('disabled');
-		$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
-	}).always(function() {
-		if(respuesta === 'ERROR'){
-		}else{
-			if (respuesta === 'OK') {
-				cerrarModal();
-				if (listar === 'SI') {
-					
-					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
-					
-				}        
-			} else {
-				mostrarErrores(respuesta, idformulario, entidad);
-				$(idboton).removeClass('disabled');
-				$(idboton).removeAttr('disabled');
-				$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
-			}
-		}
+	$cont=0;
+	$('.datos-producto').each( function() {
+		$cont++;
 	});
+	if($cont !=0){
+		var idformulario = IDFORMMANTENIMIENTO + entidad;
+		var data         = submitForm_control(idformulario);
+		var respuesta    = '';
+		var listar       = 'NO';
+		if ($(idformulario + ' :input[id = "listar"]').length) {
+			var listar = $(idformulario + ' :input[id = "listar"]').val()
+		};
+		$(idboton).button('loading');
+		data.done(function(msg) {
+			respuesta = msg;
+		}).fail(function(xhr, textStatus, errorThrown) {
+			respuesta = 'ERROR';
+			$(idboton).removeClass('disabled');
+			$(idboton).removeAttr('disabled');
+			$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
+		}).always(function() {
+			if(respuesta === 'ERROR'){
+			}else{
+				if (respuesta === 'OK') {
+					cerrarModal();
+					if (listar === 'SI') {
+						
+						buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+						
+					}        
+				} else {
+					mostrarErrores(respuesta, idformulario, entidad);
+					$(idboton).removeClass('disabled');
+					$(idboton).removeAttr('disabled');
+					$(idboton).html('<i class="fa fa-check fa-lg"></i>Registrar');
+				}
+			}
+		});
+	}else{
+		window.alert("Registre producto comprados!");
+	}
+	
 }
 function submitForm_control(idformulario) {
 	var i=0;

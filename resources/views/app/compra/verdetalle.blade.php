@@ -73,11 +73,7 @@
                             <tr>
                                 <td class="text-left input-xs">{{ $value->descripcion.' '.$value->sustancia_activa }}</td>
                                 <td class="text-center input-xs">{{ $value->presentacion_nombre }}</td>
-								@if($value->fecha_completa == 'N')
-                                <td class="text-center input-xs">{{ Date::parse( $value->fecha_caducidad )->format('m-Y') }}</td>
-								@else
-								<td class="text-center input-xs">{{ Date::parse( $value->fecha_caducidad )->format('d-m-Y') }}</td>
-								@endif
+								<td class="text-center input-xs">{{ $value->fecha_caducidad_string }}</td>
                                 <td class="text-center input-xs">{{ $value->cantidad }}</td>
                                 <td class="text-center input-xs">{{ $value->precio_compra }}</td>
                                 <td class="text-center input-xs">{{ number_format($value->precio_compra*$value->cantidad,2) }}</td>

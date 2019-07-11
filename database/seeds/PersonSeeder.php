@@ -17,11 +17,18 @@ class PersonSeeder extends Seeder
 		$now = new DateTime;
 		DB::table('person')->insert(array(
                
-                'nombres'       =>'Administrador',
+                'nombres'       =>'Administrador1',
                 'apellidos'       =>'admin',
 				'created_at'     => $now,
 				'updated_at'     => $now
-            ));
+        ));
+		DB::table('person')->insert(array(
+               
+                'nombres'       =>'Administrador2',
+                'apellidos'       =>'admin',
+				'created_at'     => $now,
+				'updated_at'     => $now
+        ));
 
     }
 }

@@ -24,6 +24,7 @@ class MantenimientoProducto extends Model
                                 'producto.descripcion as descripcion', 
                                 'presentacion.nombre as presentacion', 
                                 'entrada.fecha_caducidad as fecha_cad', 
+                                'entrada.fecha_caducidad_string as fecha_cad_string', 
                                 'entrada.precio_venta as precio_venta', 
                                 'entrada.lote as lote', 
                                 'entrada.stock as stock'
@@ -46,6 +47,7 @@ class MantenimientoProducto extends Model
                         'producto.descripcion as producto', 
                         'entrada.lote as lote', 
                         'entrada.fecha_caducidad as fecha_venc', 
+                        'entrada.fecha_caducidad_string as fecha_venc_string', 
                         'entrada.stock as cantidad', 
                         'marca.name as laboratorio'
                 )

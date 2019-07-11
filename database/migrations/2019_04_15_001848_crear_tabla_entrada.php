@@ -18,6 +18,7 @@ class CrearTablaEntrada extends Migration
             $table->increments('id');
             $table->timestamp('fecha')->nullable();
             $table->timestamp('fecha_caducidad')->nullable();
+            $table->string('fecha_caducidad_string')->nullable();
             $table->char('fecha_completa')->nullable();//S=>SI, N=>NO
             $table->integer('stock')->nullable();
             $table->string('lote',100)->nullable();
