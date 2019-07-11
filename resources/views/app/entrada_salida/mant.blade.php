@@ -243,42 +243,48 @@ function agregar(){
 					if(precioventa !=""){
 						if(cantidad!=""){
 							if(fechavencimiento!=""){
-								if(lote!=""){
-									var subtotal ="";
-									subtotal = parseInt(cantidad)*parseFloat(preciocompra);
-									var t_parcial =0;
-									if($('#total').val() != ""){
-										t_parcial = parseFloat($('#total').val());
-									}else{
-										t_parcial=0;
-									}
-									var total = t_parcial+subtotal;
-									var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
-										'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
-										'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
-										'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
-										'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
-										'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
-										'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
-										'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
-										'</tr>';
-									$("#tabla").append(d);
-									$('#total').val(total);
-									//vaciar datos
-									$('#id_presentacion').val(0);
-									$('#producto_id').empty();
-									$('#producto_id').append('<option value="0">Seleccione Producto..........................</option>');
+								if(evaluar_fecha() == true){
+									if(lote!=""){
+										var subtotal ="";
+										subtotal = parseInt(cantidad)*parseFloat(preciocompra);
+										var t_parcial =0;
+										if($('#total').val() != ""){
+											t_parcial = parseFloat($('#total').val());
+										}else{
+											t_parcial=0;
+										}
+										var total = t_parcial+subtotal;
+										var d = '<tr class="datos-producto" id_producto="'+$('#producto_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" canti="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+											'<td class="input-sm" width="45%">'+producto_dat+'</td>'+
+											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
+											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
+											'<td class="input-sm" width="5%" align="center">'+cantidad+'</td>'+
+											'<td class="input-sm" width="10%" align="center">'+preciocompra+'</td>'+
+											'<td class="input-sm" width="10%" align="center">'+subtotal+'</td>'+
+											'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+subtotal+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+											'</tr>';
+										$("#tabla").append(d);
+										$('#total').val(total);
+										//vaciar datos
+										$('#id_presentacion').val(0);
+										$('#producto_id').empty();
+										$('#producto_id').append('<option value="0">Seleccione Producto..........................</option>');
 
-									$('#preciocompra').val("");
-									$('#precioventa').val("");
-									$('#cantidad').val("");
-									$('#factor').val("");
-									$('#fechavencimiento').val("");
-									$('#lote').val("");
+										$('#preciocompra').val("");
+										$('#precioventa').val("");
+										$('#cantidad').val("");
+										$('#factor').val("");
+										$('#fechavencimiento').val("");
+										$('#lote').val("");
+									}else{
+										window.alert("ingrese lote!");
+										$('#lote').focus();
+									}
 								}else{
-									window.alert("ingrese lote!");
-									$('#lote').focus();
+									window.alert("formato de fecha de vencimiento incorrecto revise, asugurese que tenga el formato siguiente dd/mm/yyyy o mm/yyyy!");
+									$('#fechavencimiento').focus();
 								}
+								
 							}else{
 								window.alert("seleccione fecha de vencimiento!");
 								$('#fechavencimiento').focus();
@@ -523,6 +529,92 @@ function filter(__val__){
 		return true;
 	}else{
 	return false;
+	}
+	
+}
+
+function evaluar_fecha(){
+	var date_af = $('#fechavencimiento').val();
+	var punto=".";
+	var dos_puntos =":";
+	var slash = "/";
+	var gion = "-";
+	
+	if(date_af.indexOf(punto) !== -1){
+		var date_formt = date_af.split(punto);
+		if(date_formt.length == 2){
+			if(date_formt[0]>0 && date_formt[0]<13){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		if(date_formt.length == 3){
+			if(date_formt[0]<32 && date_formt[0]>0){
+				if(date_formt[1]>0 && date_formt[1]<13){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+	}
+	if(date_af.indexOf(dos_puntos) !== -1){
+		var date_formt = date_af.split(dos_puntos);
+		if(date_formt.length == 2){
+			if(date_formt[0]>0 && date_formt[0]<13){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		if(date_formt.length == 3){
+			if(date_formt[0]<32 && date_formt[0]>0){
+				if(date_formt[1]>0 && date_formt[1]<13){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+	}
+	if(date_af.indexOf(slash) !== -1){
+		var date_formt = date_af.split(slash);
+		if(date_formt.length == 2){
+			if(date_formt[0]>0 && date_formt[0]<13){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		if(date_formt.length == 3){
+			if(date_formt[0]<32 && date_formt[0]>0){
+				if(date_formt[1]>0 && date_formt[1]<13){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
+	}
+	if(date_af.indexOf(gion) !== -1){
+		var date_formt = date_af.split(gion);
+		if(date_formt.length == 2){
+			if(date_formt[0]>0 && date_formt[0]<13){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		if(date_formt.length == 3){
+			if(date_formt[0]<32 && date_formt[0]>0){
+				if(date_formt[1]>0 && date_formt[1]<13){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		}
 	}
 	
 }
