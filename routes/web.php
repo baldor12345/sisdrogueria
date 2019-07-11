@@ -254,6 +254,7 @@ Route::get('entrada/{id?}/{dni?}','EntradaSalidaController@getDetalleREntrada');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto')->name('ventas.getProducto');
 Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion')->name('ventas.getProductoPresentacion');
+Route::get('ventas/numerodoc/{tipo_doc?}/{opcional}','VentasController@getNumeroBoleta_Factura')->name('ventas.getNumeroBoleta_Factura');
 // Route::get('provincia/{id}','ProvinciaController@getProvincias');
 Route::get('provincia/{departamento_id?}','ProvinciaController@getProvinciasDep');
 // Route::get('distrito/{id}','DistritoController@getDistritos');

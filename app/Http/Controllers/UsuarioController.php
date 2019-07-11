@@ -106,11 +106,12 @@ class UsuarioController extends Controller
         $usuario        = null;
         $ruta             = $this->rutas;
         $cboTipousuario = array('' => 'Seleccione') + Usertype::pluck('name', 'id')->all();
+        $cboSucursales = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
         $cboPersona = array('' => 'Seleccione');
         $formData       = array('usuario.store');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario','cboPersona'));
+        return view($this->folderview.'.mant')->with(compact('usuario','ruta', 'formData', 'entidad', 'boton', 'listar', 'cboTipousuario','cboPersona','cboSucursales'));
     }
 
     /**
@@ -123,7 +124,7 @@ class UsuarioController extends Controller
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $reglas = array(
-            'login'       => 'required|max:20|unique:user,login,NULL,id,deleted_at,NULL',
+            'login'       => 'required|max:20',
             'password'    => 'required|max:20',
             'usertype_id' => 'required|integer|exists:usertype,id,deleted_at,NULL',
             'persona'   => 'required',
@@ -138,9 +139,7 @@ class UsuarioController extends Controller
             $usuario->password     = Hash::make($request->input('password'));
             $usuario->usertype_id  = $request->input('usertype_id');
             $usuario->person_id    = $request->input('persona');
-       
-            $user = Auth::user();
-            $usuario->sucursal_id    = $user->sucursal->id;
+            $usuario->sucursal_id  = $request->input('cbsucursal');
             // $empresa_id = $user->empresa_id;
             // $usuario->empresa_id = $empresa_id;
             $usuario->save();
@@ -174,6 +173,7 @@ class UsuarioController extends Controller
         $ruta             = $this->rutas;
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $cboTipousuario = array('' => 'Seleccione') + Usertype::pluck('name', 'id')->all();
+        $cboSucursales = array('' => 'Seleccione') + Sucursal::pluck('nombre', 'id')->all();
         $usuario        = User::find($id);
         $entidad        = 'Usuario';
         $cboPersona = array( $usuario->id =>  $usuario->persona->nombres.''. $usuario->persona->apellidos);
@@ -205,12 +205,13 @@ class UsuarioController extends Controller
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id){
-            $usuario                 = User::find($id);
-            $usuario->login          = $request->input('login');
+            $usuario = User::find($id);
+            $usuario->login = $request->input('login');
             if ($request->input('password') != null && $request->input('password') != '') {
                 $usuario->password = Hash::make($request->input('password'));
             }
             $usuario->usertype_id = $request->input('usertype_id');
+            $usuario->sucursal_id  = $request->input('cbsucursal');
             $usuario->save();
         });
         return is_null($error) ? "OK" : $error;

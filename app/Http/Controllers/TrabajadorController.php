@@ -219,100 +219,50 @@ class TrabajadorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'person');
         if ($existe !== true) {
             return $existe;
         }
-        $documento = $request->input('documento');
+        $documento = $request->input('dni');
         $tamCadena = strlen($documento);
-        if($tamCadena == 8){
-            $reglas = array(
-                'documento'       => 'required|max:8|unique:personamaestro,dni,'.$id.',id,deleted_at,NULL',
-                'nombres'    => 'required|max:100',
-                'apellidos'    => 'required|max:100',
-                );
-        }else{
-            $reglas = array(
-            'documento'       => 'required|max:11|unique:personamaestro,ruc,'.$id.',id,deleted_at,NULL',
-S            );
-        }
+       
+        $reglas = array(
+            'dni'       => 'required|max:8|unique:person,dni,'.$id.',id,deleted_at,NULL',
+            'nombres'    => 'required|max:100',
+            'apellidos'    => 'required|max:100',
+            );
+        
+        
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id, $tamCadena){
-            $cliente               = Personamaestro::find($id);
-            if($tamCadena == 8){
-                $cliente->dni        = $request->input('documento');
-            }else{
-                $cliente->ruc        = $request->input('documento');
-            }
-            $cliente->nombres    = strtoupper($request->input('nombres'));
-            $cliente->apellidos  = strtoupper($request->input('apellidos'));
-            $cliente->razonsocial = strtoupper($request->input('razonsocial')); 
-            $cliente->direccion   = strtoupper($request->input('direccion'));
-            $cliente->telefono    = $request->input('telefono');
-            $cliente->celular     = $request->input('celular');
-            $cliente->email       = $request->input('email');
-            $value =Libreria::getParam($request->input('fechanacimiento'));
-            $cliente->fechanacimiento        = $value;
-            $cliente->distrito_id  = $request->input('distrito_id');
-            $cliente->save();
-
+            $trabajador = Persona::find($id);
+            
             $user = Auth::user();
-            $empresa_id = $user->empresa_id;
-            $persona = Persona::where('empresa_id', '=', $empresa_id)
-                                ->where('personamaestro_id', '=', $id)->first();
-                       
-            $tipocliente = $request->input('cliente');
-            $tipoproveedor = $request->input('proveedor');
-            $tipotrabajador = $request->input('trabajador');
-
-
-            if( $tipocliente !==null && $tipoproveedor == null && $tipotrabajador == null ){
-                //CLIENTE
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //PROVEEDOR
-                $persona->type  = $tipoproveedor;
-                $persona->secondtype  = null;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor == null && $tipotrabajador !== null ){
-                //TRABAJADOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor == null && $tipotrabajador !== null ){
-                // CLIENTE Y TRABAJADOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipotrabajador;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador == null ){
-                //CLIENTE Y PROVEEDOR
-                $persona->type  = $tipocliente;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = 0;
-            }
-            elseif( $tipocliente == null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TRABAJADOR Y PROVEEDOR
-                $persona->type  = $tipotrabajador;
-                $persona->secondtype  = $tipoproveedor;
-                $persona->comision = $request->input('comision');
-            }
-            elseif( $tipocliente !== null && $tipoproveedor !== null && $tipotrabajador !== null ){
-                //TODOS
-                $persona->type  = 'T';
-                $persona->secondtype  = null;
-                $persona->comision = $request->input('comision');
-            }
-
-            $persona->save();
+            
+            $trabajador->dni        = $request->input('dni');
+            $trabajador->nombres    = strtoupper($request->input('nombres'));
+            $trabajador->apellidos  = strtoupper($request->input('apellidos'));
+            $trabajador->ruc = strtoupper($request->input('ruc')); 
+            $trabajador->direccion   = strtoupper($request->input('direccion'));
+            $trabajador->telefono    = $request->input('telefono');
+            $trabajador->celular     = $request->input('celular');
+            $trabajador->email       = $request->input('email');
+            $trabajador->fecha_nacimiento =Libreria::getParam($request->input('fecha_nacimiento'));
+            // $trabajador->distrito_id  = $request->input('distrito_id');
+            $trabajador->tipo_persona_id  = $request->input('cboTipoPersona');
+            $trabajador->estado  = $request->input('cboestado');
+            $trabajador->observacion  = $request->input('observacion');
+            $trabajador->save();
+            
+             /*REGISTRAMOS el trabajador EN LA sucursal */
+            $detalle_persona = new Detalle_persona();
+            $detalle_persona->fecha_ingreso = $request->input('fecha_ingreso');
+            $detalle_persona->person_id = $trabajador->id;
+            $detalle_persona->sucursal_id = $request->input('cbosucursal');
+            $detalle_persona->save();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -325,17 +275,17 @@ S            );
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'person');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $cliente = Personamaestro::find($id);
-            $persona = Persona::where('personamaestro_id','=',$id)->get()->first();
-            if(!is_null($persona)){
-                $persona->delete();
+           
+            $trabajador = Persona::where('id','=',$id)->get()->first();
+            if(!is_null($trabajador)){
+                $trabajador->delete();
             }
-            $cliente->delete();
+           
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -348,7 +298,7 @@ S            );
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'person');
         if ($existe !== true) {
             return $existe;
         }
@@ -356,7 +306,7 @@ S            );
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Personamaestro::find($id);
+        $modelo   = Persona::find($id);
         $entidad  = 'Trabajador';
         $formData = array('route' => array('trabajador.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
@@ -365,7 +315,7 @@ S            );
 
     
     public function repetido($id, $listarLuego){
-        $existe = Libreria::verificarExistencia($id, 'personamaestro');
+        $existe = Libreria::verificarExistencia($id, 'person');
         if ($existe !== true) {
             return $existe;
         }
@@ -374,7 +324,7 @@ S            );
             $listar = $listarLuego;
         }
 
-        $modelo   = Personamaestro::find($id);
+        $modelo   = Persona::find($id);
 
         if($modelo->distrito_id != null){
             $distrito = Distrito::find($modelo->distrito_id);

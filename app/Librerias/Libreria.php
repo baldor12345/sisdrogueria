@@ -7,6 +7,7 @@ use App\DetalleCaja;
 use App\Caja;
 use App\Sucursal;
 use App\Venta;
+use Illuminate\Support\Facades\Auth;
 
 /**
 * Libreria de clases
@@ -497,8 +498,15 @@ class Libreria
 		return $codigo_generado;
 	}
 
-	public static function numero_documento(){
-		$numero_transacciones = count(Venta::all()) + 1;
+	public static function numero_documento($tipo){
+		$numero_transacciones = 0;
+		$user = Auth::user();
+		if($tipo == 'B'){
+			$numero_transacciones = count(Venta::where('comprobante','=', 'B')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
+		}else{
+			$numero_transacciones = count(Venta::where('comprobante','=', 'F')->get()) + 1;
+		}
+		
 		$codigo_generado ="";
 		if($numero_transacciones > 0){
 			$digitos = strlen($numero_transacciones);

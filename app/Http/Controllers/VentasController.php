@@ -48,6 +48,7 @@ class VentasController extends Controller
             'listproductos'    => 'ventas.listproductos',
             'getProducto'    => 'ventas.getProducto',
             'getProductoPresentacion'    => 'ventas.getProductoPresentacion',
+            'getNumeroBoleta_Factura'    => 'ventas.getNumeroBoleta_Factura',
             'create_new' => 'clientes.create',
             'create_med' => 'medico.create',
             'create_vend' => 'vendedor.create',
@@ -136,7 +137,7 @@ class VentasController extends Controller
         $boton  = 'Registrar'; 
         $user = Auth::user();
         $serie = $user->sucursal->serie;
-        $numero_doc = Libreria::numero_documento();
+        $numero_doc = Libreria::numero_documento('B');
         $ruta = $this->rutas;
         $fecha_defecto = date('Y-m-d');
         $igv = Propiedades::all()->last()->igv;
@@ -592,6 +593,10 @@ class VentasController extends Controller
     public function getProductoPresentacion(Request $request, $producto_id, $presentacion_id){
         $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('presentacion_id','=',$presentacion_id)->where('deleted_at','=',null)->get()[0];
         return response()->json($producto_presentacion);
+    }
+    public function getNumeroBoleta_Factura(Request $request, $tipo, $opcional){
+        $numero_doc = Libreria::numero_documento($tipo);
+        return response()->json($numero_doc);
     }
 
     public function verdetalle_v($venta_id){
