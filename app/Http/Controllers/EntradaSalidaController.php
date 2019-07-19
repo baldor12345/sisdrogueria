@@ -808,8 +808,11 @@ class EntradaSalidaController extends Controller
                         ->orWhere("producto.descripcion",'LIKE', '%'.$term.'%')->limit(8)->get();
         $formatted_tags = [];
         foreach ($tags as $tag) {
-            if($tag->deleted_at == null){
+            /*if($tag->deleted_at == null){
                  $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.' '.$tag->sustancia_activa.'   ['.$tag->presentacion.'] '];
+            }*/
+            if($tag->deleted_at == null){
+                 $formatted_tags[] = ['id' => $tag->id, 'presentecion_id'=>$tag->presentecion_id, 'text' => $tag->descripcion.' - ['.$tag->presentacion.'] '];
             }
             //$formatted_tags[] = ['id'=> '', 'text'=>"seleccione socio"];
         }
