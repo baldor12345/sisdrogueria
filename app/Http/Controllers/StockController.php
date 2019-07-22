@@ -10,6 +10,7 @@ use App\User;
 use App\Presentacion;
 use App\Marca;
 use App\MantenimientoProducto;
+use App\ProductoPresentacion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +62,8 @@ class StockController extends Controller
         $cabecera[]       = array('valor' => 'Stock', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Inf Stock', 'numero' => '1');
         
+       
+
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
         $titulo_ver  = $this->titulo_ver;
@@ -74,7 +77,14 @@ class StockController extends Controller
             $paginaactual    = $paramPaginacion['nuevapagina'];
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta','titulo_ver'));
+
+            $listPresentaciones = array();
+            foreach ($lista as $key => $producto) {
+                $listPre = ProductoPresentacion::where('producto_id','=',$producto->producto_id)->get();
+                $listPresentaciones[$producto->producto_id] = $listPre;
+            }
+
+            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta','titulo_ver','listPresentaciones'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
