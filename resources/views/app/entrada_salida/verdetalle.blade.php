@@ -53,7 +53,7 @@
                                 <td class="text-left input-xs">{{ $value->producto.' '.$value->sustancia_activa }}</td>
                                 <td class="text-center input-xs">{{ $value->presentacion }}</td>
 								<td class="text-center input-xs">{{ $value->fecha_caducidad_string }}</td>
-								<td class="text-center input-xs">{{ $value->cantidad }}</td>
+								<td class="text-center input-xs">{{ $value->cantidad/$value->cantidad_unidad_x_presentacion }}</td>
 								<td class="text-center input-xs">{{ $value->precio_compra }}</td>
 								<td class="text-center input-xs">{{ $value->precio_venta }}</td>
                                 <td class="text-center input-xs">{{ $value->lote }}</td>

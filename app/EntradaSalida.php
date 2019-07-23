@@ -58,6 +58,7 @@ class EntradaSalida extends Model
                         'entrada_salida_detalle.precio_compra as precio_compra', 
                         'entrada_salida_detalle.precio_venta as precio_venta', 
                         'entrada_salida_detalle.cantidad as cantidad', 
+                        'producto_presentacion.cant_unidad_x_presentacion as cantidad_unidad_x_presentacion', 
                         'entrada_salida_detalle.lote as lote',
                         'entrada_salida_detalle.fecha_completa as fecha_completa'
                 )
