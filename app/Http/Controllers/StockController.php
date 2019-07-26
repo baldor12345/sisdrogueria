@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use PDF;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -102,6 +103,32 @@ class StockController extends Controller
         $ruta             = $this->rutas;
         $cboPresentacion     = [''=>'Todos'] + Presentacion::pluck('nombre', 'id')->all();
         return view($this->folderview.'.admin')->with(compact('entidad', 'cboPresentacion','title', 'titulo_registrar', 'ruta'));
+    }
+
+    public function reportestockPDF(Request $request)
+    {    
+        $list        = MantenimientoProducto::listarstock_producto('', null);
+        $lista           = $list->get();
+        $titulo = "STOCK DISPONIBLE";
+        $inicio =0;
+
+        $listPresentaciones = array();
+        foreach ($lista as $key => $producto) {
+            $listPre = ProductoPresentacion::where('producto_id','=',$producto->producto_id)->get();
+            $listPresentaciones[$producto->producto_id] = $listPre;
+        }
+
+        $view = \View::make('app.stock_producto.reportestockPDF')->with(compact('lista', 'titulo','inicio', 'listPresentaciones'));
+        $html_content = $view->render();      
+ 
+        PDF::SetTitle($titulo);
+        PDF::AddPage('P', 'A4', 'es');
+        PDF::SetTopMargin(0);
+        // PDF::SetLeftMargin(20);
+        //PDF::SetRightMargin(110);
+        PDF::SetDisplayMode('fullpage');
+        PDF::writeHTML($html_content, true, false, true, false, '');
+        PDF::Output($titulo.'.pdf', 'I');
     }
 
     /**

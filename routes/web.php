@@ -175,11 +175,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('lotes_caducidad/buscar','lotescaducidadController@buscar')->name('lotes_caducidad.buscar');
     Route::get('lotes_caducidad/eliminar/{id}/{listarluego}','lotescaducidadController@eliminar')->name('lotes_caducidad.eliminar');
     Route::resource('lotes_caducidad', 'lotescaducidadController', array('except' => array('show')));
+    Route::get('/lotes_caducidadPDF', 'lotescaducidadController@lotes_caducidadPDF')->name('lotes_caducidadPDF');
     
     //STOCK
     Route::post('stock_producto/buscar','StockController@buscar')->name('stock_producto.buscar');
     Route::get('stock_producto/eliminar/{id}/{listarluego}','StockController@eliminar')->name('stock_producto.eliminar');
     Route::resource('stock_producto', 'StockController', array('except' => array('show')));
+    Route::get('/reportestockPDF', 'StockController@reportestockPDF')->name('reportestockPDF');
     
     
     //VENTA

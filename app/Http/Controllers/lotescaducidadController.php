@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use PDF;
 use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests;
@@ -93,6 +94,26 @@ class lotescaducidadController extends Controller
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
         return view($this->folderview.'.admin')->with(compact('entidad', 'title', 'titulo_registrar', 'ruta'));
+    }
+
+    public function lotes_caducidadPDF(Request $request)
+    {  
+        $resultado        = MantenimientoProducto::listarlotescaducidad(1, null, null);
+        $lista            = $resultado->get();
+        $titulo = "LOTES Y CADUCIDAD";
+        $inicio =0;
+
+        $view = \View::make('app.lostes_caducidad.lote_caducidadPDF')->with(compact('lista', 'titulo','inicio'));
+        $html_content = $view->render();      
+ 
+        PDF::SetTitle($titulo);
+        PDF::AddPage('P', 'A4', 'es');
+        PDF::SetTopMargin(0);
+        // PDF::SetLeftMargin(20);
+        //PDF::SetRightMargin(110);
+        PDF::SetDisplayMode('fullpage');
+        PDF::writeHTML($html_content, true, false, true, false, '');
+        PDF::Output($titulo.'.pdf', 'I');
     }
 
     /**
