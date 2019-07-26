@@ -10,6 +10,7 @@ use App\DetalleCompra;
 use App\User;
 use App\Presentacion;
 use App\Marca;
+use App\Sucursal;
 use App\MantenimientoProducto;
 use App\ProductoPresentacion;
 use App\Librerias\Libreria;
@@ -111,14 +112,17 @@ class StockController extends Controller
         $lista           = $list->get();
         $titulo = "STOCK DISPONIBLE";
         $inicio =0;
-
+        $fecha = date("Y-m-d H:i:s");
+        $id = Auth::id();
+        $usuario = DB::table('person')->join('user', 'user.person_id', '=', 'person.id')->select('nombres as nombres', 'apellidos as apellidos', 'dni as dni', 'ruc as ruc', 'direccion as direccion')->where('user.id',$id)->get();
+        $sucursal = DB::table('user')->join('sucursal', 'user.sucursal_id', '=', 'sucursal.id')->select('nombre as nombre', 'telefono as telefono', 'direccion as direccion')->where('user.id',$id)->get();
         $listPresentaciones = array();
         foreach ($lista as $key => $producto) {
             $listPre = ProductoPresentacion::where('producto_id','=',$producto->producto_id)->get();
             $listPresentaciones[$producto->producto_id] = $listPre;
         }
 
-        $view = \View::make('app.stock_producto.reportestockPDF')->with(compact('lista', 'titulo','inicio', 'listPresentaciones'));
+        $view = \View::make('app.stock_producto.reportestockPDF')->with(compact('lista', 'titulo','inicio', 'listPresentaciones','usuario','fecha', 'sucursal'));
         $html_content = $view->render();      
  
         PDF::SetTitle($titulo);

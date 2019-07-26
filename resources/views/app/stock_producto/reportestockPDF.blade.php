@@ -55,22 +55,38 @@
 
 </head>
 <body>
-	<div class="contenedor">
-		<table border="0" cellspacing="3" cellpadding="2" style="margin: 50px;" class="table table-striped">
-			<tr>
-				<td align="center" style="font-size: 15px" colspan="4">{{ $titulo }}</td>
-			</tr>
-		</table>
-	</div>
-
+    <table width="100%" border="0px" class="">
+        <tr>
+            <td align="center" style="font-size: 13px" colspan="9"><br> OSTEOMEDIC </td>
+            <td rowspan="3" colspan="2" align="right" ><img src="" width="140" height="100" /></td>
+        </tr>
+        <tr>
+            <td style="font-size: 10px" colspan="9" rowspan="" align="center"><strong>{{ $titulo }}</strong></td>
+        </tr>   
+        <tr>
+            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}FECHA Y HORA:</strong> </td>
+            <td style="font-size: 10px" colspan="5" cellpadding="2">{{ Date::parse( $fecha )->format('Y-m-d H:i') }}</td>
+        </tr>
+        <tr>
+            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}USUARIO:</strong></td>
+            <td style="font-size: 10px" colspan="5" cellpadding="2">{{ $usuario[0]->apellidos.' '.$usuario[0]->nombres }}<strong>   {{ '  DNI: '}} </strong>{{ $usuario[0]->dni}}</td>
+        </tr>
+        <tr>
+            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}SUCURSAL:</strong> </td>
+            <td style="font-size: 10px" colspan="5" cellpadding="2">{{ $sucursal[0]->nombre }}<strong>   {{ '  DIRECCION: '}} </strong>{{ $sucursal[0]->direccion }}</td>
+        </tr>
+        
+    </table>
+    <br>
+    <br>
 	<table width="100%" class="tabla3">
             <thead>
 				<tr>
 					<td width="5%" align="center" class="fondo"><strong>#</strong></td>
 					<td width="40%" align="center" class="fondo"><strong>PRODUCTO</strong></td>
 					<td width="20%" align="center" class="fondo"><strong>PRESENTACION</strong></td>
-					<td width="28%" align="center" class="fondo"><strong>STOCK</strong></td>
-					<td width="6%" align="center" class="fondo"><strong>INF</strong></td>
+					<td width="34%" align="center" class="fondo"><strong>STOCK</strong></td>
+					<!-- <td width="6%" align="center" class="fondo"><strong>STOCK</strong></td> -->
 				</tr>
 			</thead>
             <tbody>
@@ -90,17 +106,17 @@
                     ?>
                         @if($ind == 0)
                             <td width="20%" align="left" >{{ $prod_present->presentacion->nombre}}</td>
-                            <td width="28%" align="left" >{{ $valor." ".$prod_present->presentacion->sigla.'(s)'.($cant_prest > 1?" + ".($value->stock - $valor * $cant_prest).' unds': "" )}}</td>
-                            @if($value->stock < $value->stock_minimo)
+                            <td width="34%" align="left" >{{ $valor." ".$prod_present->presentacion->sigla.'(s)'.($cant_prest > 1?" + ".($value->stock - $valor * $cant_prest).' unds': "" )}}</td>
+                            <!-- @if($value->stock < $value->stock_minimo)
                             <td width="6%" align="left" rowspan="{{ count($listPresentaciones[$value->producto_id]) }}"><div style="background: white"></div></td>
                             @else
                             <td width="6%" align="left" rowspan="{{ count($listPresentaciones[$value->producto_id]) }}"><div></div></td>
-                            @endif
+                            @endif -->
                         </tr>
                         @else
                         <tr>
                             <td width="20%" align="left">{{ $prod_present->presentacion->nombre}}</td>
-                            <td width="28%" align="left" >{{ $valor." ".$prod_present->presentacion->sigla.'(s)'.($cant_prest > 1?" + ".($value->stock - $valor * $cant_prest).' unds': "" )}}</td>
+                            <td width="34%" align="left" >{{ $valor." ".$prod_present->presentacion->sigla.'(s)'.($cant_prest > 1?" + ".($value->stock - $valor * $cant_prest).' unds': "" )}}</td>
                             
                             {{-- <td>{{ $valor." ".($cant_prest > 1?"+ ".($value->stock - $valor * $cant_prest): "" )}}</td> --}}
 
