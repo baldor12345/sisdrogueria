@@ -69,16 +69,12 @@
 				</div>
 				<div class="form-group " >
 					{!! Form::label('stock_minimo', 'Stock Min*:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-1 col-xs-12" >
+					<div class="col-sm-3 col-xs-12" >
 						{!! Form::text('stock_minimo', '5', array('class' => 'form-control input-xs input-number', 'id' => 'stock_minimo', 'placeholder' => '', 'style'=>'height: 25px')) !!}
 					</div>
 					{!! Form::label('ubicacion', 'Ubicacion:', array('class' => 'col-sm-3 col-xs-12 control-label')) !!}
-					<div class="col-sm-2 col-xs-12" >
+					<div class="col-sm-3 col-xs-12" >
 						{!! Form::text('ubicacion', 'stand 01', array('class' => 'form-control input-xs', 'id' => 'ubicacion', 'placeholder' => 'Ingrese ubicacion', 'style'=>'height: 25px')) !!}
-					</div>
-					{!! Form::label('puntos', 'Puntos:', array('class' => 'col-sm-1 col-xs-12 control-label')) !!}
-					<div class="col-sm-2 col-xs-12" >
-						{!! Form::text('puntos', '1', array('class' => 'form-control input-xs', 'id' => 'puntos', 'placeholder' => 'Puntos', 'style'=>'height: 25px')) !!}
 					</div>
 				</div>
 				<br>
@@ -105,14 +101,16 @@
 					<table>
 						<tr style="height: 10px;">
 							<td>&nbsp;</td>
-							<td class=" input-sm"><b>Presentacion</b></td>
-							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
+							<td class=" input-sm"><b>Present.</b></td>
+							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => ' input-sm', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
 							<td class=" input-sm"><b>P.Compra:</b></td>
-							<td><input class="form-control input-sm" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
+							<td><input class="" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
 							<td class=" input-sm"><b>Cant.Uds:</b></td>
-							<td><input class="form-control input-sm input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
+							<td><input class=" input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
 							<td class=" input-sm"><b>P.Venta:</b></td>
-							<td><input class="form-control input-sm" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
+							<td><input class="" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
+							<td class=" input-sm"><b>Puntos:</b></td>
+							<td><input class="" style="width:30px" id="puntos" onkeypress="return filterFloat(event,this);"  size="3" name="puntos" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i></button></td>
 						</tr>
 					</table>
@@ -124,8 +122,9 @@
 							<tr>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="40%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Cant. Uds</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="12%">Cant. Uds</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="12%">P. Venta</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="11%">Puntos</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
@@ -138,6 +137,7 @@
 									<td>{{ $value->precio_compra }} </td>
 									<td>{{ $value->cant_unidad_x_presentacion }} </td>
 									<td>{{ $value->precio_venta_unitario }}</td>
+									<td>{{ $value->puntos }}</td>
 									<td><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>
 								</tr>
 							@endforeach
@@ -202,20 +202,27 @@ function agregar(){
 	var present_id 					= $('#present_id').val();
 	var unidad_x_presentacion 		= $('#unidad_x_presentacion').val();
 	var precioventaunitario 		= $('#precioventaunitario').val();
+	var puntos 		= $('#puntos').val();
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
-			var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
+			if(puntos != ''){
+				var d = '<tr class="datos-presentacion" id_present="'+$('#present_id').val()+'" pnts = "'+$('#puntos').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
 				'<td class="input-sm" width="40%" align="center">'+presentacion_dat+'</td>'+
 				'<td class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
-				'<td class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
-				'<td class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
+				'<td class="input-sm" width="12%" align="center">'+unidad_x_presentacion+'</td>'+
+				'<td class="input-sm" width="12%" align="center">'+precioventaunitario+'</td>'+
+				'<td class="input-sm" width="11%" align="center">'+puntos+'</td>'+
 				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 				'</tr>';
-			$("#tabla").append(d);
-			$('#present_id').val(0);
-			$('#preciocompra').val('');
-			$('#unidad_x_presentacion').val('');
-			$('#precioventaunitario').val('');
+				$("#tabla").append(d);
+				$('#present_id').val(0);
+				$('#preciocompra').val('');
+				$('#unidad_x_presentacion').val('');
+				$('#precioventaunitario').val('');
+			}else{
+				window.alert("Ingrese puntos!");
+				$('#puntos').focus();
+			}
 			
 		}else{
 			window.alert("Ingrese Cantidad por presentacion!");
@@ -283,7 +290,8 @@ function submitForm_control(idformulario) {
 					"&propresent_id"	+i+"="+$(this).attr("id_producto_presentacion")+
 					"&preciocomp"	+i+"="+$(this).attr("preciocomp")+
 					"&unidad_x_present"	+i+"="+$(this).attr("unidad_x_present")+
-					"&precioventaunit"	+i+"="+$(this).attr("precioventaunit");
+					"&precioventaunit"	+i+"="+$(this).attr("precioventaunit")+
+					"&pntos"	+i+"="+$(this).attr("pnts");
 		i++;
 	});
 	datos += "&cantidad="+i;

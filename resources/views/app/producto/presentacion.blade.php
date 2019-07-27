@@ -2,6 +2,9 @@
 <div id="divMensajeError{!! $entidad !!}"></div>
 {!! Form::model($producto, $formData) !!}
 {!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+<div>
+	<p><strong>{{ $producto->descripcion.'  '.$producto->sustancia_activa }}</strong></p>
+</div>
 <div class="row">
 	<div class="col-md-12">	
 		<div class="form_editar">
@@ -22,6 +25,10 @@
 					{!! Form::label('precio_venta_p', 'Precio Venta:', array('class' => '')) !!}
 					{!! Form::text('precio_venta_p', null, array('class' => 'form-control input-sm', 'id' => 'precio_venta_p', 'placeholder' => 'precio_venta')) !!}
 			</div>
+			<div class="form-group text-left form_editar" style="margin-left: 3px">
+					{!! Form::label('puntos_p', 'Puntos:', array('class' => '')) !!}
+					{!! Form::text('puntos_p', null, array('class' => 'form-control input-sm', 'id' => 'puntos_p', 'placeholder' => 'precio_venta')) !!}
+			</div>
 			{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Guardar', array('class' => 'btn btn-warning btn-sm form_editar', 'id' => 'btnEdit', 'onclick' => 'modif_pres();')) !!}
 		</div>
 		
@@ -31,7 +38,7 @@
 					<table class="form_vista">
 						<tr style="height: 10px;">
 							<td>&nbsp;</td>
-							<td class=" input-sm"><b>Presentacion</b></td>
+							<td class=" input-sm"><b>Present.</b></td>
 							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => '', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
 							<td class=" input-sm" align="right"><b>P.Compra:</b></td>
 							<td><input class="" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
@@ -39,6 +46,8 @@
 							<td><input class=" input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
 							<td class=" input-sm" align="right"><b>P.Venta:</b></td>
 							<td><input class="" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
+							<td class=" input-sm" align="right"><b>Puntos:</b></td>
+							<td><input class="" style="width:30px" id="puntos" onkeypress="return filterFloat(event,this);"  size="3" name="puntos" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i> Agregar</button></td>
 						</tr>
 					</table>
@@ -51,8 +60,9 @@
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="3%">#</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="37%">Presentacion</th>
 								<th bgcolor="#E0ECF8" class="text-center input-sm" width="20%">P. Compra</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Cant. Uds</th>
-								<th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">P. Venta</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="12%">Cant. Uds</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="12%">P. Venta</th>
+								<th bgcolor="#E0ECF8" class="text-center input-sm" width="11%">Puntos</th>
 								<th bgcolor="#E0ECF8" colspan="2" class="text-center input-sm" width="5%">Elim</th>                            
 							</tr>
 						</thead>
@@ -62,12 +72,13 @@
 							<?php $cont=0;?>
 							@foreach($listdet_ as $key => $value)
 								<?php $cont++; ?>
-								<tr class='datos-presentacion dat_r{{ $cont }}' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
+								<tr class='datos-presentacion dat_r{{ $cont }}' pnts_v='{{ $value->puntos }}' id_producto_presentacion='{{$value->propresent_id}}' id_present='{{ $value->presentacion_id }}'  preciocomp='{{ $value->precio_compra}}'  unidad_x_present='{{ $value->cant_unidad_x_presentacion}}' precioventaunit='{{ $value->precio_venta_unitario }}'>
 									<td id='cont' class="input-sm" align="center"><?php echo $cont; ?></td>
 									<td id='pres_nombre{{ $cont  }}'class="input-sm" align="center">{{ $value->presentacion_nombre }} </td>
 									<td id='precio_c{{ $cont }}' class="input-sm" align="center">{{ $value->precio_compra }} </td>
 									<td id='cant_u{{ $cont }}' class="input-sm" align="center">{{ $value->cant_unidad_x_presentacion }} </td>
 									<td id='precio_vu{{ $cont }}' class="input-sm" align="center">{{ $value->precio_venta_unitario }}</td>
+									<td id='puntos_v{{ $cont }}' class="input-sm" align="center">{{ $value->puntos }}</td>
 									<td class="input-sm" align="center">{!! Form::button('<i class="glyphicon glyphicon-pencil"></i>', array('class' => 'btn btn-info btn-xs', 'id' => 'btnEdit', 'onclick' => 'editar(\'dat_r'.$cont.'\', \''.$cont.'\');')) !!}</td>
 
 									<td class="input-sm" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button" disabled="true"><i class="glyphicon glyphicon-remove"></i></button></td>
@@ -158,27 +169,30 @@ function agregar(){
 	var present_id 					= $('#present_id').val();
 	var unidad_x_presentacion 		= $('#unidad_x_presentacion').val();
 	var precioventaunitario 		= $('#precioventaunitario').val();
+	var puntos 		= $('#puntos').val();
 	var contador = 1;
 	$('.datos-presentacion').each(function(){
 contador ++;
 	})
 	if(parseInt($('#present_id').val()) != 0){
 		if(unidad_x_presentacion != ''){
-			var d = '<tr class="datos-presentacion dat_r'+contador+'" id_producto_presentacion="0" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
-				'<td id="cont'+contador+'" class="input-sm" width="2%" align="center">'+contador+'</td>'+
-				'<td id="pres_nombre'+contador+'" class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
-				'<td id="precio_c'+contador+'" class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
-				'<td id="cant_u'+contador+'" class="input-sm" width="15%" align="center">'+unidad_x_presentacion+'</td>'+
-				'<td id="precio_vu'+contador+'" class="input-sm" width="15%" align="center">'+precioventaunitario+'</td>'+
-				'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(\'dat_r'+contador+'\', '+contador+');" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
-				'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
-				'</tr>';
-			$("#tabla").append(d);
-			$('#present_id').val(0);
-			$('#preciocompra').val('');
-			$('#unidad_x_presentacion').val('');
-			$('#precioventaunitario').val('');
-			
+			if(puntos != ''){
+				var d = '<tr class="datos-presentacion dat_r'+contador+'" pnts_v="'+$('#puntos').val()+'" id_producto_presentacion="0" id_present="'+$('#present_id').val()+'"  preciocomp="'+preciocompra+'"  unidad_x_present="'+unidad_x_presentacion+'" precioventaunit="'+precioventaunitario+'">'+
+					'<td id="cont'+contador+'" class="input-sm" width="2%" align="center">'+contador+'</td>'+
+					'<td id="pres_nombre'+contador+'" class="input-sm" width="38%" align="center">'+presentacion_dat+'</td>'+
+					'<td id="precio_c'+contador+'" class="input-sm" width="20%" align="center">'+preciocompra+'</td>'+
+					'<td id="cant_u'+contador+'" class="input-sm" width="12%" align="center">'+unidad_x_presentacion+'</td>'+
+					'<td id="precio_vu'+contador+'" class="input-sm" width="12%" align="center">'+precioventaunitario+'</td>'+
+					'<td id="puntos_v'+contador+'" class="input-sm" width="11%" align="center">'+puntos+'</td>'+
+					'<td width="5%" align="center"><button id="btnEditar" name="btnEditar"  class="btn btn-info btn-xs" onclick="editar(\'dat_r'+contador+'\', '+contador+');" title="" type="button"><i class="glyphicon glyphicon-pencil" ></i></button></td>'+
+					'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this);" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+					'</tr>';
+				$("#tabla").append(d);
+				$('#present_id').val(0);
+				$('#preciocompra').val('');
+				$('#unidad_x_presentacion').val('');
+				$('#precioventaunitario').val('');
+			}			
 		}else{
 			window.alert("Ingrese Cantidad por presentacion!");
 			$('#unidad_x_presentacion').focus();
@@ -206,11 +220,13 @@ function editar( classfila, cont_fila){
 	var precio_compra =  $('.'+classfila).attr('preciocomp');
 	var precio_venta =  $('.'+classfila).attr('precioventaunit');
 	var presentacion_id = $('.'+classfila).attr('id_present');
+	var punt__ = $('.'+classfila).attr('pnts_v');
 	$('.form_editar').show();
 	$('#presentacion').val(presentacion_id);
 	$('#precio_com').val(precio_compra);
 	$('#cantidad_p').val(cantidad);
 	$('#precio_venta_p').val(precio_venta);
+	$('#puntos_p').val(punt__);
 	$('#fila_editar').val(cont_fila);
 	$('.form_vista').hide();
     // var opcion = confirm("Desea ELiminar el producto registrado?");
@@ -236,6 +252,7 @@ function modif_pres(){
 	var precio = $('#precio_com').val();
 	var cantidad_p = $('#cantidad_p').val();
 	var precio_v_p = $('#precio_venta_p').val();
+	var puntos_v_p = $('#puntos_p').val();
 
 	$('.'+fila).attr('unidad_x_present',cantidad_p );
 	$('.'+fila).attr('preciocomp',precio);
@@ -246,6 +263,7 @@ function modif_pres(){
 	$('#precio_c'+num_fila).text(precio);
 	$('#cant_u'+num_fila).text(cantidad_p);
 	$('#precio_vu'+num_fila).text(precio_v_p);
+	$('#puntos_v'+num_fila).text(puntos_v_p);
 
 	$('.form_editar').hide();
 	$('.form_vista').show();
@@ -299,7 +317,8 @@ function submitForm_control(idformulario) {
 					"&propresent_id"	+i+"="+$(this).attr("id_producto_presentacion")+
 					"&preciocomp"	+i+"="+$(this).attr("preciocomp")+
 					"&unidad_x_present"	+i+"="+$(this).attr("unidad_x_present")+
-					"&precioventaunit"	+i+"="+$(this).attr("precioventaunit");
+					"&precioventaunit"	+i+"="+$(this).attr("precioventaunit")+
+					"&ptos_"	+i+"="+$(this).attr("pnts_v");
 		i++;
 	});
 	datos += "&cantidad="+i;

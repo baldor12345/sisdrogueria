@@ -122,7 +122,7 @@ class ProductoController extends Controller
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'Producto';
         $producto       = null;
-        $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'GENERICO', 2=>'OTROS', 3=>'PATENTE', 4=>'SIMILAR');
+        $cboTipo       = array(0=>'SIN ESPECIFICAR', 1=>'COMERCIAL', 2=>'GENERICO', 3=>'OTROS', 4=>'PATENTE', 5=>'SIMILAR');
         $cboAfecto       = array('S'=>'SI', 'N'=>'NO');
         $cboMarca       = array(0=>'Seleccione Marca...');
         $cboCategoria   = ['0'=>'Seleccione'] + Categoria::pluck('name', 'id')->all();
@@ -174,7 +174,7 @@ class ProductoController extends Controller
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->puntos = $request->input('puntos');
+            // $producto->puntos = $request->input('puntos');
             $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
             $user           = Auth::user();
@@ -191,6 +191,7 @@ class ProductoController extends Controller
                     $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
                     $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
                     $producto_presentacion->producto_id = $producto_last->id;
+                    $producto_presentacion->puntos = $request->input("pntos".$i);
                     $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
                     $producto_presentacion->save();
                 }
@@ -242,6 +243,7 @@ class ProductoController extends Controller
                                         'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion', 
                                         'producto_presentacion.precio_compra as precio_compra', 
                                         'presentacion.nombre as presentacion_nombre', 
+                                        'producto_presentacion.puntos as puntos',
                                         'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
                                 )
                                 ->where('producto_presentacion.producto_id', $id)
@@ -289,7 +291,7 @@ class ProductoController extends Controller
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
-            $producto->puntos = $request->input('puntos');
+            // $producto->puntos = $request->input('puntos');
             $producto->unidad_id = $request->input('unidad_id');
             $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');
@@ -363,7 +365,8 @@ class ProductoController extends Controller
                                         'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion', 
                                         'producto_presentacion.precio_compra as precio_compra', 
                                         'presentacion.nombre as presentacion_nombre', 
-                                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
+                                        'producto_presentacion.precio_venta_unitario as precio_venta_unitario',
+                                        'producto_presentacion.puntos as puntos'
                                 )
                                 ->where('producto_presentacion.producto_id', $id)
                                 ->where('producto_presentacion.deleted_at',null)->get();
@@ -403,6 +406,7 @@ class ProductoController extends Controller
                         $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
                         $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
                         $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                        $producto_presentacion->puntos =  $request->input("ptos_".$i);
                         $producto_presentacion->producto_id = $id;
                         $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
                         $producto_presentacion->save();
@@ -412,6 +416,7 @@ class ProductoController extends Controller
                         $producto_presentacion->precio_compra =  $request->input("preciocomp".$i);
                         $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_present".$i);
                         $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunit".$i);
+                        $producto_presentacion->puntos =  $request->input("ptos_".$i);
                         $producto_presentacion->producto_id = $id;
                         $producto_presentacion->Presentacion_id = $request->input("id_present".$i);
                         $producto_presentacion->save();

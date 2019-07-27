@@ -222,6 +222,54 @@ $(document).ready(function() {
 		});
 	});
 
+
+	$("input[name=numero_dias]").change(function(event){
+		var num_day = parseInt($('#numero_dias').val())+1;
+
+		var fech = new Date($('#fecha').val());
+		fech.setDate(fech.getDate() + num_day);
+
+		var month =0;
+		var day =0;
+
+		if((fech.getMonth()+1)<10){
+			month = '0'+(fech.getMonth()+1);
+		}else{
+			month = (fech.getMonth()+1);
+		}
+		if(fech.getDate() < 10){
+			day = '0'+fech.getDate();
+		}else{
+			day = fech.getDate();
+		}
+
+		$('#fecha_caducidad').val(fech.getFullYear()+ '-' + month + '-' + day);
+	});
+
+	
+	$("input[name=fecha]").change(function(event){
+		var num_day = parseInt($('#numero_dias').val())+1;
+
+		var fech = new Date($('#fecha').val());
+		fech.setDate(fech.getDate() + num_day);
+
+		var month =0;
+		var day =0;
+
+		if((fech.getMonth()+1)<10){
+			month = '0'+(fech.getMonth()+1);
+		}else{
+			month = (fech.getMonth()+1);
+		}
+		if(fech.getDate() < 10){
+			day = '0'+fech.getDate();
+		}else{
+			day = fech.getDate();
+		}
+
+		$('#fecha_caducidad').val(fech.getFullYear()+ '-' + month + '-' + day);
+	});
+
 }); 
 
 function cambiarcredito(){
