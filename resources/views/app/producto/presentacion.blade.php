@@ -42,11 +42,11 @@
 							<td>{!! Form::select('present_id', $cboPresentacion, null, array('class' => '', 'id' => 'present_id','style'=>'text-align: right;')) !!}</td>
 							<td class=" input-sm" align="right"><b>P.Compra:</b></td>
 							<td><input class="" style="width:60px" onkeypress="return filterFloat(event,this);" id="preciocompra" size="3" name="preciocompra" type="text" style="text-align: right;"></td>
-							<td class=" input-sm" align="right"><b>Cant.Uds:</b></td>
+							<td class=" input-sm" align="right"><b>Cant.</b></td>
 							<td><input class=" input-number" id="unidad_x_presentacion" size="3" name="unidad_x_presentacion" type="text"></td>
 							<td class=" input-sm" align="right"><b>P.Venta:</b></td>
 							<td><input class="" style="width:60px" id="precioventaunitario" onkeypress="return filterFloat(event,this);"  size="3" name="precioventaunitario" type="text" style="text-align: right;"></td>
-							<td class=" input-sm" align="right"><b>Puntos:</b></td>
+							<td class=" input-sm" align="right"><b>Ptos:</b></td>
 							<td><input class="" style="width:30px" id="puntos" onkeypress="return filterFloat(event,this);"  size="3" name="puntos" type="text" style="text-align: right;"></td>
 							<td><button id="btnAgregar" name="btnAgregar" class="btn btn-info btn-xs" onclick="agregar();" title="" type="button"><i class="glyphicon glyphicon-plus"></i> Agregar</button></td>
 						</tr>
@@ -102,7 +102,7 @@
 {!! Form::close() !!}
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('800');
+	configurarAnchoModal('900');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('.input-number').on('input', function () { 
     	this.value = this.value.replace(/[^0-9]/g,'');
