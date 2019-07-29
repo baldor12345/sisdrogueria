@@ -55,7 +55,8 @@ class StockController extends Controller
         $entidad          = 'StockProducto';
         $descripcion      = Libreria::getParam($request->input('descripcion'));
         $presentacion_id      = Libreria::getParam($request->input('presentacion_id'));
-        $resultado        = MantenimientoProducto::listarstock_producto($descripcion, $presentacion_id);
+        // $resultado        = MantenimientoProducto::listarstock_producto($descripcion, $presentacion_id);
+        $resultado        = MantenimientoProducto::listarstock_producto($descripcion, null);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');

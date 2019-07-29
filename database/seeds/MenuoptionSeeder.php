@@ -183,6 +183,10 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Productos Vendidos',
 					'link'   => 'productoventa'
 				),
+				array(
+					'name' => 'Puntos Acumulados',
+					'link'   => 'puntos_medicos'
+				),
 				/*array(
 					'name' => 'Productos mas Vendidas',
 					'link'   => 'productos_mas_vendidas'

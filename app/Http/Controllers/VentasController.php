@@ -287,7 +287,8 @@ class VentasController extends Controller
                     $producto = Producto::find($request->get('prod_id'.$i.''));
                     $cant = $request->get('cant_prod'.$i.'');
                     $cant_pres = $request->get('cant_pres'.$i.'');
-                    $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
+                    // $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto->id)->where('presentacion_id','=',$request->get('present_id'.$i))->get()[0];
+                    $producto_presentacion = ProductoPresentacion::find($request->get('present_id'.$i));
                     $precio_unit = $producto_presentacion->precio_venta_unitario; 
                     $id_prodPresent = $producto_presentacion->id; 
                     $subtotal =  round($precio_unit *  $cant_pres, 2);
@@ -299,6 +300,8 @@ class VentasController extends Controller
                     $detalle_venta->ventas_id = $venta->id;
                     $detalle_venta->sucursal_id = $user->sucursal_id;
                     $detalle_venta->producto_presentacion_id = $producto_presentacion->id;
+                    $puntos_acum =  $producto_presentacion->puntos == null?0: $producto_presentacion->puntos;
+                    $detalle_venta->puntos_acumulados = $cant_pres * $puntos_acum;
                
                     //$entradas = Entrada::where('producto_presentacion_id','=', $id_prodPresent)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
                     $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
@@ -582,7 +585,7 @@ class VentasController extends Controller
             
             $cboPresentacion = '';
             foreach ($producto_presentacion as $key => $value) {
-                $cboPresentacion =  $cboPresentacion.'<option value="'.$value->presentacion->id.'">'.$value->presentacion->nombre.'</option>';
+                $cboPresentacion =  $cboPresentacion.'<option value="'.$value->id.'">'.$value->presentacion->nombre.' X '.$value->cant_unidad_x_presentacion.'</option>';
             }
             if(count($entradas) > 0){
                 foreach ($entradas as $key => $value) {
@@ -594,8 +597,8 @@ class VentasController extends Controller
             return response()->json($res);
         }
     }
-    public function getProductoPresentacion(Request $request, $producto_id, $presentacion_id){
-        $producto_presentacion = ProductoPresentacion::where('producto_id','=',$producto_id)->where('presentacion_id','=',$presentacion_id)->where('deleted_at','=',null)->get()[0];
+    public function getProductoPresentacion(Request $request, $producto_id, $prod_presentacion_id){
+        $producto_presentacion = ProductoPresentacion::where('id','=',$prod_presentacion_id)->where('deleted_at','=',null)->get()[0];
         return response()->json($producto_presentacion);
     }
     public function getNumeroBoleta_Factura(Request $request, $tipo, $opcional){

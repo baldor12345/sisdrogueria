@@ -65,23 +65,23 @@ class MantenimientoProducto extends Model
         return  DB::table('entrada')
                 ->join('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
                 ->join('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
-                ->join('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
+                // ->join('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
                 ->select(
                         'producto.id as producto_id',
                         // 'producto_presentacion.id as ppe_id',
                         
                         'producto.descripcion as producto',
                         'producto.stock_minimo as stock_minimo',
-                        'presentacion.nombre as presentacion', 
+                        // 'presentacion.nombre as presentacion', 
                         
                         DB::raw('sum(entrada.stock) as stock')
                 )
                 ->where('producto.descripcion', 'LIKE','%'.$descripcion.'%')
-                ->where('producto.unidad_id', 'LIKE','%'.$presentacion_id.'%')
+                // ->where('producto.unidad_id', 'LIKE','%'.$presentacion_id.'%')
                 ->where('entrada.stock', '!=',0)
                 ->where('entrada.sucursal_id', '=',$user->sucursal_id)
                 ->where('entrada.deleted_at',null)
-                ->groupBy('presentacion.id','producto.id','producto.descripcion','producto.stock_minimo','presentacion.nombre');
+                ->groupBy('producto.id','producto.descripcion','producto.stock_minimo');
                 // ->groupBy('presentacion.id','producto.id','producto.descripcion','producto.stock_minimo','presentacion.nombre','producto_presentacion.id');
                 //->orderBy('detalle_compra.fecha_caducidad', 'DSC');
     }
