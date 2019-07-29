@@ -75,6 +75,12 @@
             <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}SUCURSAL:</strong> </td>
             <td style="font-size: 10px" colspan="5" cellpadding="2">{{ $sucursal->nombre }}<strong>   {{ '  DIRECCION: '}} </strong>{{ $sucursal[0]->direccion }}</td>
         </tr>
+        <tr>
+            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}FECHA INICIO:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ $fecha_inicio }}</td>
+            <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}FECHA FINAL:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ $fecha_fin }}</td>
+        </tr>
         
     </table>
     <br>
@@ -83,9 +89,9 @@
             <thead>
 				<tr>
 					<td width="5%" align="center" class="fondo"><strong>#</strong></td>
-					<td width="40%" align="center" class="fondo"><strong>PRODUCTO</strong></td>
-					<td width="20%" align="center" class="fondo"><strong>PRESENTACION</strong></td>
-					<td width="34%" align="center" class="fondo"><strong>STOCK</strong></td>
+					<td width="40%" align="center" class="fondo"><strong>COD. MEDICO</strong></td>
+					<td width="20%" align="center" class="fondo"><strong>APELLIDOS Y NOMBRES</strong></td>
+					<td width="34%" align="center" class="fondo"><strong>PUNTOS ACUMULADOS</strong></td>
 					<!-- <td width="6%" align="center" class="fondo"><strong>STOCK</strong></td> -->
 				</tr>
 			</thead>
