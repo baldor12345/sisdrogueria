@@ -37,6 +37,7 @@ class CompraController extends Controller
             'search'        => 'compra.buscar',
             'index'         => 'compra.index',
             'verdetalle'         => 'compra.verdetalle',
+            'buscard'       => 'compra.buscard',
             'listproveedores'    => 'compra.listproveedores',
             'listproductos'    => 'compra.listproductos'
         );
@@ -75,7 +76,7 @@ class CompraController extends Controller
         $cabecera[]       = array('valor' => 'Nro', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo Pago', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -509,22 +510,23 @@ class CompraController extends Controller
     //para vista de ver detalle
     public function verdetalle($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'compra');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $listar = Libreria::getParam($request->input('listar'), 'NO');
         $cboDocumento       = array(1=>'FACTURA DE COMPRA', 2=>'BOLETA DE COMPRA', 3=>'GUIA INTERNA', 4=>'NOTA DE CREDITO', 5=>'TICKET');
         $cboCredito       = ['CO'=>'Contado','CR'=>'Crédito'];
         $compra       = Compra::find($id);
-        $list_detalle_c = Compra::listardetallecompra($id)->get();
         $proveedor      = Proveedor::find($compra->proveedor_id);
-        $entidad        = 'Compra';
-        $formData       = array('compra.update', $id);
+        $entidad        = 'Compra1';
         $ruta           = $this->rutas;
-        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton          = 'Modificar';
-        return view($this->folderview.'.verdetalle')->with(compact('ruta', 'compra', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_c','cboDocumento','cboCredito'));
+        return view($this->folderview.'.verdetalle')->with(compact('ruta', 'compra', 'id', 'proveedor', 'formData', 'entidad', 'boton', 'listar','cboDocumento','cboCredito'));
+    }
+
+    public function buscard(Request $request){
+        $entidad ='Compra1';
+        $id =  Libreria::getParam($request->input('idc'));
+        $lista = Compra::listardetallecompra($id)->get();
+        $inicio           = 0;
+        $ruta             = $this->rutas;
+        $titulo_eliminar = "Eliminar Registro";
+        return view($this->folderview.'.listd')->with(compact('titulo_eliminar','lista', 'entidad', 'cabecera', 'ruta', 'inicio'));
     }
 
     //listar el objeto producto_presentacion por dni
@@ -559,23 +561,38 @@ class CompraController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'compra');
+        $existe = Libreria::verificarExistencia($id, 'detalle_compra');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $compra = Compra::find($id);
-            $detalle_compra = DetalleCompra::All();
-            foreach ($detalle_compra as $key => $value) {
-                if($value->compra_id == $compra->id){
-                    $detalle_ = DetalleCompra::find($value->id);
-                    $entrada = Entrada::where('lote', $detalle_->lote)->where('fecha_caducidad_string', $detalle_->fecha_caducidad_string)->where('deleted_at',null)->get();
-                    $entrada[0]->delete();
-                }
+            $compra_d = DetalleCompra::find($id);
+            $compra = Compra::find($compra_d->compra_id);
+            $entrada_ = Entrada::where('fecha_caducidad_string' , $compra_d->fecha_caducidad_string)->where('lote', $compra_d->lote)->where('producto_presentacion_id', $compra_d->producto_presentacion_id)->get()[0];
+            $prod_pr = ProductoPresentacion::find($compra_d->producto_presentacion_id);
+
+            if(count($entrada_) != 0){
+                $entrada_->stock = ($entrada_->stock-($compra_d->cantidad*$prod_pr->cant_unidad_x_presentacion));
+                $entrada_->save();
             }
+            
+            $prop_last = Propiedades::all()->last();
+            $compra->total = ($compra->total-$compra_d->precio_compra*$compra_d->cantidad);
+            $compra->igv = ($compra->igv-($compra_d->precio_compra*$compra_d->cantidad)*$prop_last->igv);
+            
             $caja_ = DetalleCaja::where('numero_operacion', $compra->numero_documento)->where('deleted_at',null)->get();
-            $caja_[0]->delete();
-            $compra->delete();
+            $caja_[0]->egreso = $caja_[0]->egreso-$compra_d->precio_compra*$compra_d->cantidad;
+            $caja_[0]->save();
+            $compra_d->delete();
+            $compra->save();
+            if($caja_[0]->egreso == 0){
+                $caja_[0]->delete();
+            }
+
+            $compra_d = DetalleCompra::where('id', $compra_d->compra_id )->where('deleted_at', null)->count();
+            if($compra_d ==0){
+                $compra->delete();
+            }
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -588,7 +605,7 @@ class CompraController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'compra');
+        $existe = Libreria::verificarExistencia($id, 'detalle_compra');
         if ($existe !== true) {
             return $existe;
         }
@@ -596,11 +613,24 @@ class CompraController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = Compra::find($id);
-        $entidad  = 'Compra';
-        $formData = array('route' => array('compra.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        $entidad  = 'Compra1';
+        $modelo   = DetalleCompra::find($id);
+
+        $find_c   = Compra::find($modelo->compra_id);
+        $delete_ent =  Entrada::where('lote',$modelo->lote)->where('fecha_caducidad_string',$modelo->fecha_caducidad_string)->where('deleted_at',null)->get()[0];
+        
+        $prod_pr = ProductoPresentacion::find($modelo->producto_presentacion_id);
+        if($delete_ent->stock >= ($modelo->cantidad*$prod_pr->cant_unidad_x_presentacion)){
+            $formData = array('route' => array('compra.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimientoCompra1', 'autocomplete' => 'off');
+            $boton    = 'Eliminar';
+            return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }else{
+            return view($this->folderview.'.messagecompra')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }
+        
+        
+
+
     }
 
     public function listproveedores(Request $request){

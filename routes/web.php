@@ -161,6 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('compra/listproveedores',  'CompraController@listproveedores')->name('compra.listproveedores');
     Route::get('compra/listproductos',  'CompraController@listproductos')->name('compra.listproductos');
     Route::get('compra/verdetalle/{id?}',  'CompraController@verdetalle')->name('compra.verdetalle');
+    Route::get('compra/buscard', 'CompraController@buscard')->name('compra.buscard');
     
     //LOTES Y CADUCIDAD
     Route::post('entrada_salida/buscar','EntradaSalidaController@buscar')->name('entrada_salida.buscar');
@@ -170,6 +171,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('entrada_salida/listproductos',  'EntradaSalidaController@listproductos')->name('entrada_salida.listproductos');
     Route::get('entrada_salida/listproductosalida',  'EntradaSalidaController@listproductosalida')->name('entrada_salida.listproductosalida');
     Route::get('entrada_salida/verdetalle/{id?}',  'EntradaSalidaController@verdetalle')->name('entrada_salida.verdetalle');
+    Route::get('entrada_salida/buscardes', 'EntradaSalidaController@buscardes')->name('entrada_salida.buscardes');
 
     //ENTRADAS Y SALIDAS
     Route::post('lotes_caducidad/buscar','lotescaducidadController@buscar')->name('lotes_caducidad.buscar');

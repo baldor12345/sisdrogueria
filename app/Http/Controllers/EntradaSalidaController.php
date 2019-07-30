@@ -38,7 +38,9 @@ class EntradaSalidaController extends Controller
             'delete'        => 'entrada_salida.eliminar',
             'search'        => 'entrada_salida.buscar',
             'index'         => 'entrada_salida.index',
-            'verdetalle'         => 'entrada_salida.verdetalle',
+            'verdetalle'    => 'entrada_salida.verdetalle',
+            'buscardes'     => 'entrada_salida.buscardes',
+
             'listproveedores'    => 'entrada_salida.listproveedores',
             'listproductos'    => 'entrada_salida.listproductos',
             'listproductosalida'    => 'entrada_salida.listproductosalida'
@@ -75,7 +77,7 @@ class EntradaSalidaController extends Controller
         $cabecera[]       = array('valor' => 'Fecha', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nro Documento', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Tipo', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -637,63 +639,43 @@ class EntradaSalidaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida_detalle');
         if ($existe !== true) {
             return $existe;
         }
-        $reglas = array(
-            'documento'       => 'required|max:50|unique:compra,documento,'.$id.',id,deleted_at,NULL',
-            'numero_documento' => 'required',
-            'serie_documento' => 'required',
-            'proveedor_id' => 'required',
-            );
+        $reglas = array();
         $validacion = Validator::make($request->all(),$reglas);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
-        $error = DB::transaction(function() use($request, $id){
-            $compra                 = Compra::find($id);
-            $compra->documento = $request->input('documento');
-            $compra->numero_documento = $request->input('numero_documento');
-            $compra->serie_documento = $request->input('serie_documento');
-            $compra->credito = $request->input('credito');
-            $compra->numero_dias = $request->input('numero_dias');
-            $compra->ruc = $request->input('ruc');
-            $compra->proveedor_id = $request->input('proveedor_id');
-            $compra->estado = $request->input('estado');
-            $compra->fecha = $request->input('fecha');
-            $compra->fecha_caducidad = $request->input('fecha_caducidad');
-
-            $compra->total  = $request->input('total');
-            $compra->igv = $request->input('igv');
-            $user           = Auth::user();
-            $compra->user_id = $user->id;
-            $compra->sucursal_id = $user->sucursal_id;
-            //$compra->caja_id = $user->caja_id;
-            $compra->save();
-        });
+        $error = null;
         return is_null($error) ? "OK" : $error;
     }
     //para vista de ver detalle
     public function verdetalle($id, Request $request)
     {
-        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
-        if ($existe !== true) {
-            return $existe;
-        }
-        $listar = Libreria::getParam($request->input('listar'), 'NO');
         $cboTipo       = array('E'=>'Entrada', 'S'=>'Salida');
         $entrada_salida       = EntradaSalida::find($id);
         $fecha = Date::parse($entrada_salida->fecha)->format('Y-m-d');
 
-        $list_detalle_es = EntradaSalida::listdetalleES($id)->get();
-        $entidad        = 'EntradaSalida';
-        $formData       = array('entrada_salida.update', $id);
-        $ruta           = $this->rutas;
-        $formData       = array('route' => $formData, 'method' => 'PUT', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton          = 'Modificar';
-        return view($this->folderview.'.verdetalle')->with(compact('fecha', 'ruta', 'entrada_salida', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_es','cboTipo'));
+        $entidad        = 'EntradaSalida1';
+
+        $ruta             = $this->rutas;
+        return view($this->folderview.'.verdetalle')->with(compact('titulo_eliminar','fecha', 'ruta', 'id', 'entrada_salida', 'proveedor', 'formData', 'entidad', 'boton', 'listar', 'list_detalle_es','cboTipo'));
     }
+
+    public function buscardes(Request $request){
+        $entidad ='EntradaSalida1';
+        $id =  Libreria::getParam($request->input('ides'));
+        $lista = EntradaSalida::listdetalleES($id)->get();
+        $inicio           = 0;
+        $ruta             = $this->rutas;
+        $titulo_eliminar = "Eliminar Registro";
+        return view($this->folderview.'.listdes')->with(compact('titulo_eliminar','lista', 'entidad', 'cabecera', 'ruta', 'inicio'));
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -703,45 +685,40 @@ class EntradaSalidaController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida_detalle');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $entrada_salida = EntradaSalida::find($id);
-            $detalle = EntradaSalidaDetalle::where('entrada_salida_id', $entrada_salida->id)->get();
-            if($entrada_salida->tipo == 'E'){
-                foreach ($detalle as $key => $value) {
-                    $entrada_ = Entrada::where('fecha_caducidad_string' , $value->fecha_caducidad_string)->where('lote', $value->lote)->where('producto_presentacion_id', $value->producto_presentacion_id)->get()[0];
-                    // echo "datos ".$entrada_ ;
-                    if(count($entrada_) != 0){
-                        if($entrada_->stock >= $value->cantidad){
-                            $entrada_->stock = ($entrada_->stock-$value->cantidad);
-                            $entrada_->save();
-                            $value->delete();
-                        }else{
-                            
-                        }
-                    }
-                }
-                $entrada_salida->delete();
-            }
-            if($entrada_salida->tipo == 'S'){
-                foreach ($detalle as $key => $value) {
-                    $entrada_s = Entrada::where('fecha_caducidad_string' , $value->fecha_caducidad_string)->where('lote', $value->lote)->where('producto_presentacion_id', $value->producto_presentacion_id)->get()[0];
-                    if(count($entrada_s) != 0){
-                        if($entrada_s->stock >= $value->cantidad){
-                            $entrada_s->stock = ($entrada_s->stock+$value->cantidad);
-                            $entrada_s->save();
-                            $value->delete();
-                        }else{
-                            
-                        }
-                    }
-                }
-                $entrada_salida->delete();
-            }
+            $entrada_salida_d = EntradaSalidaDetalle::find($id);
+            $e_s = EntradaSalida::find($entrada_salida_d->entrada_salida_id);
             
+            if($e_s->tipo == 'E'){
+                $entrada_ = Entrada::where('fecha_caducidad_string' , $entrada_salida_d->fecha_caducidad_string)->where('lote', $entrada_salida_d->lote)->where('producto_presentacion_id', $entrada_salida_d->producto_presentacion_id)->get()[0];
+                if(count($entrada_) != 0){
+                    $entrada_->stock = ($entrada_->stock-$entrada_salida_d->cantidad);
+                    $entrada_->save();
+                }
+                $entrada_salida_d->delete();
+                $e_s_d = EntradaSalidaDetalle::where('id', $entrada_salida_d->entrada_salida_id )->where('deleted_at', null)->count();
+                if($e_s_d ==0){
+                    $e_s->delete();
+                }
+            }
+            if($e_s->tipo == 'S'){
+
+
+                $entrada_ = Entrada::where('fecha_caducidad_string' , $entrada_salida_d->fecha_caducidad_string)->where('lote', $entrada_salida_d->lote)->where('producto_presentacion_id', $entrada_salida_d->producto_presentacion_id)->get()[0];
+                if(count($entrada_) != 0){
+                    $entrada_->stock = ($entrada_->stock+$entrada_salida_d->cantidad);
+                    $entrada_->save();
+                }
+                $entrada_salida_d->delete();
+                $e_s_d = EntradaSalidaDetalle::where('id', $entrada_salida_d->entrada_salida_id )->where('deleted_at', null)->count();
+                if($e_s_d ==0){
+                    $e_s->delete();
+                }
+            }
             
         });
         return is_null($error) ? "OK" : $error;
@@ -755,7 +732,7 @@ class EntradaSalidaController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $existe = Libreria::verificarExistencia($id, 'entrada_salida');
+        $existe = Libreria::verificarExistencia($id, 'entrada_salida_detalle');
         if ($existe !== true) {
             return $existe;
         }
@@ -763,11 +740,28 @@ class EntradaSalidaController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $modelo   = EntradaSalida::find($id);
-        $entidad  = 'EntradaSalida';
-        $formData = array('route' => array('entrada_salida.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
-        $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        $entidad  = 'EntradaSalida1';
+
+        $modelo   = EntradaSalidaDetalle::find($id);
+        $find_ES = EntradaSalida::find($modelo->entrada_salida_id);
+        $prod_pr = ProductoPresentacion::find($modelo->producto_presentacion_id);
+        if($find_ES->tipo == 'E'){
+            $delete_ent =  Entrada::where('lote',$modelo->lote)->where('fecha_caducidad_string',$modelo->fecha_caducidad_string)->where('deleted_at',null)->get()[0];
+            if($delete_ent->stock >= ($modelo->cantidad*$prod_pr->cant_unidad_x_presentacion)){
+                $formData = array('route' => array('entrada_salida.destroy', $modelo ->id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimientoEntradaSalida1', 'autocomplete' => 'off');
+                $boton    = 'Eliminar';
+                return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+            }else{
+                echo $delete_ent->stock;
+                return view($this->folderview.'.messageES')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+            }
+        }
+        if($find_ES->tipo == 'S'){
+            $formData = array('route' => array('entrada_salida.destroy', $modelo ->id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimientoEntradaSalida1', 'autocomplete' => 'off');
+            $boton    = 'Eliminar';
+            return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));
+        }
+
     }
 
 
