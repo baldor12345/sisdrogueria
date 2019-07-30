@@ -174,6 +174,7 @@ class ProductoController extends Controller
             $producto->tipo = $request->input('tipo');
             $producto->ubicacion = $request->input('ubicacion');
             $producto->stock_minimo = $request->input('stock_minimo');
+            $producto->unidad_id = $request->input('unidad_id');
             // $producto->puntos = $request->input('puntos');
             $producto->marca_id  = (intval($request->input('marca_id'))==0)?null:$request->input('marca_id');
             $producto->categoria_id = $request->input('categoria_id');

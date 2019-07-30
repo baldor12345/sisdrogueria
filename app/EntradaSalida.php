@@ -60,6 +60,7 @@ class EntradaSalida extends Model
                         'entrada_salida_detalle.cantidad as cantidad', 
                         'producto_presentacion.cant_unidad_x_presentacion as cantidad_unidad_x_presentacion', 
                         'entrada_salida_detalle.lote as lote',
+                        'entrada_salida_detalle.id as id',
                         'entrada_salida_detalle.fecha_completa as fecha_completa'
                 )
                 ->where('entrada_salida_detalle.entrada_salida_id', $id)

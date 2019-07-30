@@ -70,6 +70,7 @@ class Compra extends Model
                         'detalle_compra.fecha_caducidad as fecha_caducidad', 
                         'detalle_compra.fecha_caducidad_string as fecha_caducidad_string', 
                         'detalle_compra.cantidad as cantidad', 
+                        'detalle_compra.id as id', 
                         'presentacion.nombre as presentacion_nombre', 
                         'detalle_compra.precio_compra as precio_compra',
                         'detalle_compra.fecha_completa as fecha_completa'
