@@ -51,7 +51,8 @@
 						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-xs', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
-					{{-- <a target="_blank" href="{{ route('reportestockPDF') }}" class="btn btn-primary waves-effect waves-light btn-xs" ><i class="glyphicon glyphicon-download-alt" ></i> PDF</a> --}}
+					{{-- <a target="_blank" href="{{ route('reportepuntosPDF') }}" class="btn btn-primary waves-effect waves-light btn-xs" ><i class="glyphicon glyphicon-download-alt" ></i> PDF</a> --}}
+					{!! Form::button('<i class="glyphicon glyphicon-download-alt"></i> PDF', array('class' => 'btn btn-primary waves-effect waves-light btn-sm', 'id' => 'btnPDF'.$entidad, 'onclick' => 'imprimirReporte();')) !!}
 					{!! Form::close() !!}
 		 		</div>
             </div>
@@ -91,6 +92,21 @@
 			$('.f1').show();
 		}
 		buscar('{{ $entidad }}');
+	}
+
+	function imprimirReporte(){
+        
+        var rutareportecuotas = "{{ URL::route($ruta['reportepuntosPDF'], array()) }}";
+        rutareportecuotas += "?fei="+$('#fei').val()+"&fef="+$('#fef').val();
+        
+        imprimirpdf(rutareportecuotas);
+    }
+	function imprimirpdf(url_pdf) {
+		//console.log("ruta: "+url_pdf);
+		var a = document.createElement("a");
+		a.target = "_blank";
+		a.href = url_pdf;
+		a.click();
 	}
 
 </script>

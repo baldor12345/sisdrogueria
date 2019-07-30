@@ -77,23 +77,28 @@ class Venta extends Model
     public static function listarproductosvendidos($nombre, $fechai, $fechaf)
     {
         $user = Auth::user();
-        $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $fechai = date("Y-m-d",strtotime($fechai));
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
         return  DB::table('producto')
                 ->leftjoin('detalle_ventas', 'detalle_ventas.producto_id', '=', 'producto.id')
                 ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
                 ->leftjoin('producto_presentacion', 'detalle_ventas.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->leftjoin('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
                 ->select(
                      'producto.descripcion as descripcion',
+                     'presentacion.nombre as nombre_presentacion',
+                     'presentacion.sigla as sigla',
+                     'producto_presentacion.cant_unidad_x_presentacion as cantidad_x',
                     
-                    DB::raw("SUM(detalle_ventas.cantidad * producto_presentacion.cant_unidad_x_presentacion) as cantidad_unidades"),
+                    // DB::raw("SUM(detalle_ventas.cantidad * producto_presentacion.cant_unidad_x_presentacion) as cantidad_unidades")
                     DB::raw("SUM(detalle_ventas.cantidad) as cantidad_unidades")
+                    // DB::raw("SUM(detalle_ventas.cantidad) as cantidad_unidades")
             )
                 ->where('ventas.fecha', '>=',$fechai)
                 ->where('ventas.fecha', '<=',$fechaf)
                 ->where('ventas.sucursal_id','=',$user->sucursal_id)
                 // ->where('producto.descripcion', 'LIKE','%'.$nombre.'%')
-                ->groupBy('producto.id');
+                ->groupBy('producto.id','producto.descripcion','producto_presentacion.id','presentacion.nombre','presentacion.sigla','producto_presentacion.cant_unidad_x_presentacion');
                 // ->orderBy('cantidad_unidades', 'ASC')->get();
     }
 
@@ -148,7 +153,7 @@ class Venta extends Model
         $user = Auth::user();
         $fecha1 = null;
         $fecha2 = null;
-        $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $fechai = date("Y-m-d",strtotime($fechai));
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
         
         if($tipobusqueda == 'dia'){

@@ -29,7 +29,8 @@ class PuntosmedicosController extends Controller
             'edit'          => 'puntos_medicos.edit', 
             'delete'        => 'puntos_medicos.eliminar',
             'search'        => 'puntos_medicos.buscar',
-            'index'         => 'puntos_medicos.index'
+            'index'         => 'puntos_medicos.index',
+            'reportepuntosPDF'         => 'puntos_medicos.reportepuntosPDF'
         );
 
     /**
@@ -110,29 +111,19 @@ class PuntosmedicosController extends Controller
 
     public function reportepuntosPDF(Request $request)
     {   
+        
         $listapuntos  = Venta::puntos_acumulados_medico($request->get('fei'), $request->get('fef'), 'otros'); 
         // $list = MantenimientoProducto::listarstock_producto('', null);
         $lista = $listapuntos->get();
-        $titulo = "PUNTOS ACUMULADOS";
+        $titulo = "PUNTOS ACUMULADOS POR MÉDICO";
         $inicio =0;
         $fecha_inicio = $request->get('fei');
         $fecha_fin = $request->get('fef');
-        // $fecha = date("Y-m-d H:i:s");
-        // $id = Auth::id();
+        $fecha = date("Y-m-d H:i:s");
         $user = Auth::user();
-        
         $usuario = $user->persona;
         $sucursal = $user->sucursal;
-        // $usuario = DB::table('person')->join('user', 'user.person_id', '=', 'person.id')->select('nombres as nombres', 'apellidos as apellidos', 'dni as dni', 'ruc as ruc', 'direccion as direccion')->where('user.id',$id)->get();
-        // $sucursal = DB::table('user')->join('sucursal', 'user.sucursal_id', '=', 'sucursal.id')->select('nombre as nombre', 'telefono as telefono', 'direccion as direccion')->where('user.id',$id)->get();
-        // $listPresentaciones = array();
-
-        // foreach ($lista as $key => $producto) {
-        //     $listPre = ProductoPresentacion::where('producto_id','=',$producto->producto_id)->get();
-        //     $listPresentaciones[$producto->producto_id] = $listPre;
-        // }
-
-        $view = \View::make('app.puntos_medico.reportepuntosPDF')->with(compact('lista', 'titulo','inicio','usuario','fecha_inicio','fecha_fin', 'sucursal'));
+        $view = \View::make('app.puntos_medicos.reportepuntosPDF')->with(compact('lista', 'titulo','inicio','usuario','fecha_inicio','fecha_fin', 'sucursal','fecha'));
         $html_content = $view->render();      
  
         PDF::SetTitle($titulo);
