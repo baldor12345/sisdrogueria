@@ -144,4 +144,41 @@ class Venta extends Model
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
+    public  static function puntos_acumulados_medico($fechai, $fechaf, $tipobusqueda){
+        $user = Auth::user();
+        $fecha1 = null;
+        $fecha2 = null;
+        $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        
+        if($tipobusqueda == 'dia'){
+            $fecha1 = date('d', strtotime($fechai));
+        }else if($tipobusqueda == 'mes'){
+            $fecha1 = date('m', strtotime($fechai));
+        }else if($tipobusqueda == 'anio'){
+            $fecha1 = date('Y', strtotime($fechai));
+        }
+
+        return  DB::table('detalle_ventas')
+        ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+        ->leftjoin('medico', 'ventas.medico_id', '=', 'medico.id')
+        // ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
+        ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'detalle_ventas.producto_presentacion_id')
+        ->select(
+            'medico.nombres as nombres_medico', 
+            'medico.apellidos as apellidos_medico', 
+            'medico.codigo as codigo_medico', 
+            DB::raw('sum(detalle_ventas.puntos_acumulados) as puntos')
+        )
+        ->whereBetween('ventas.fecha', [$fechai, $fechaf])
+        // ->where('ventas.fecha', '>=',$fechai)
+        // ->where('ventas.fecha', '<=',$fechaf)
+        ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        // ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        ->where('detalle_ventas.deleted_at', '=',null)
+        ->groupBy('medico.nombres','medico.apellidos','medico.codigo');
+
+
+    }
+
 }

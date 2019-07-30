@@ -309,7 +309,7 @@ $(document).ready(function() {
 
 	$('#cboPresentacion').change(function(){
 		var producto_id = $('#cboProducto').val();
-		$.get("ventas/"+producto_id+"/"+$('#cboPresentacion').val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
+		$.get("ventas/"+producto_id+"/"+$('#cboPresentacion').val()+"",function(response, facultad){//
 			// console.log("Respuesta persona: "+response[3]);
 			var productoPresentacion = response;
 			var precio_unidad = productoPresentacion.precio_venta_unitario;

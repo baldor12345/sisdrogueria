@@ -28,10 +28,10 @@
 						<label for="descripcion" class="input-sm">Descripcion:</label>
 						{!! Form::text('descripcion', '', array('class' => 'form-control input-sm', 'id' => 'descripcion')) !!}
 					</div>
-					<div class="form-group">
+					{{-- <div class="form-group">
 						<label for="descripcion" class="input-sm">Presentacion:</label>
 						{!! Form::select('presentacion_id', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'presentacion_id')) !!}
-					</div>
+					</div> --}}
 					<div class="form-group">
 						<label for="filas" class="input-sm">Filas a Mostrar:</label>
 						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}

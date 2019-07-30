@@ -185,6 +185,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('stock_producto', 'StockController', array('except' => array('show')));
     Route::get('/reportestockPDF', 'StockController@reportestockPDF')->name('reportestockPDF');
     
+    //PUNTOS MEDICOS
+    Route::post('puntos_medicos/buscar','PuntosmedicosController@buscar')->name('puntos_medicos.buscar');
+    Route::get('puntos_medicos/eliminar/{id}/{listarluego}','PuntosmedicosController@eliminar')->name('puntos_medicos.eliminar');
+    Route::resource('puntos_medicos', 'PuntosmedicosController', array('except' => array('show')));
+    Route::get('/reportepuntosPDF', 'PuntosmedicosController@reportepuntosPDF')->name('reportepuntosPDF');
+    
     
     //VENTA
     Route::post('ventas/buscar','VentasController@buscar')->name('ventas.buscar');

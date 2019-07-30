@@ -258,6 +258,7 @@ function modif_pres(){
 	$('.'+fila).attr('preciocomp',precio);
 	$('.'+fila).attr('precioventaunit',precio_v_p );
 	$('.'+fila).attr('id_present',presentacion_id );
+	$('.'+fila).attr('pnts_v',puntos_v_p );
 
 	$('#pres_nombre'+num_fila).text(nombrepress);
 	$('#precio_c'+num_fila).text(precio);
