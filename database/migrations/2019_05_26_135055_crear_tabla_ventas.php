@@ -25,6 +25,7 @@ class CrearTablaVentas extends Migration
             $table->string('serie_doc', 4)->nullable();//serie de documento factura o voleta
             $table->string('numero_doc', 8)->nullable();//numero documento de factura o voleta
             $table->timestamp('fecha')->nullable();
+            $table->timestamp('fecha_venc')->nullable();
             $table->char('estado', 1)->nullable();//P=pendiente, E=Entregado
             $table->integer('user_id')->unsigned();
             $table->integer('caja_id')->unsigned();

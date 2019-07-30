@@ -67,24 +67,34 @@
 
         <tr>
             <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}FECHA Y HORA:</strong> </td>
-            <td style="font-size: 10px" colspan="5" cellpadding="2">{{ Date::parse( $fecha )->format('Y-m-d H:i') }}</td>
+            <td style="font-size: 10px" colspan="5" cellpadding="2">{{ Date::parse( $fecha )->format('d/m/Y H:i') }}</td>
         </tr>
 
         <tr>
-            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}USUARIO:</strong></td>
+            {{-- <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}USUARIO:</strong></td>
             <td style="font-size: 10px" colspan="5" cellpadding="2">{{ $usuario->apellidos.' '.$usuario->nombres }}<strong>   {{ '  DNI: '}} </strong>{{ $usuario->dni}}</td>
+        --}}
+            <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}USUARIO:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{  $usuario->apellidos.' '.$usuario->nombres  }}</td>
+            <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}DNI:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{  $usuario->dni }}</td>
         </tr>
 
         <tr>
-            <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}SUCURSAL:</strong> </td>
+            {{-- <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}SUCURSAL:</strong> </td>
             <td style="font-size: 10px" colspan="5" cellpadding="2">{{ $sucursal->nombre }}<strong>   {{ '  DIRECCION: '}} </strong>{{ $sucursal->direccion }}</td>
+    --}}
+            <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}SUCURSAL:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ $sucursal->nombre }}</td>
+            <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}DIRECCION:</strong> </td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{  $sucursal->direccion }}</td>
         </tr>
 
         <tr>
             <td cellspacing="9" cellpadding="2" colspan="2"><strong>{{ '     ' }}FECHA INICIO:</strong> </td>
-            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ $fecha_inicio }}</td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ Date::parse($fecha_inicio)->format('d/m/Y') }}</td>
             <td cellspacing="9" cellpadding="1" colspan="2"><strong>{{ '     ' }}FECHA FINAL:</strong> </td>
-            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ $fecha_fin }}</td>
+            <td style="font-size: 10px" colspan="2" cellpadding="2">{{ Date::parse($fecha_fin)->format('d/m/Y') }}</td>
         </tr>
         
     </table>

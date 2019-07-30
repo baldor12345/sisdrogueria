@@ -105,8 +105,9 @@ class PuntosmedicosController extends Controller
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
         $cboPresentacion     = [''=>'Todos'] + Presentacion::pluck('nombre', 'id')->all();
-        $fecha_defecto = date('Y-m-d');
-        return view($this->folderview.'.admin')->with(compact('entidad', 'cboPresentacion','title', 'titulo_registrar', 'ruta','fecha_defecto'));
+        $fecha_defecto = date('Y-m').'-01';
+        $fecha_defecto2 = date('Y-m-d');
+        return view($this->folderview.'.admin')->with(compact('entidad', 'cboPresentacion','title', 'titulo_registrar', 'ruta','fecha_defecto','fecha_defecto2'));
     }
 
     public function reportepuntosPDF(Request $request)
