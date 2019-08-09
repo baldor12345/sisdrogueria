@@ -40,7 +40,7 @@
 					</tr>
 				</thead>
 				<tbody>
-						@foreach ($detalle_ventas as $key => $value)
+					@foreach ($detalle_ventas as $key => $value)
 						<tr>
 							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
@@ -74,12 +74,12 @@
 		</div>
 		<div class="card-box col-4 col-md-4">
 			
-				<dl class="dl-horizontal">
-					{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
-					<dt style="">IGV</dt><dd>: <strong>{{ round($venta->igv,2) }}</strong></dd>
-					<dt style="">Sub Total</dt><dd>: <strong>{{ round($venta->total - $venta->igv,2) }}</strong></dd>
-					<dt style="">TOTAL</dt><dd>: <strong>{{ round($venta->total, 2) }}</strong></dd>
-				</dl>
+			<dl class="dl-horizontal">
+				{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
+				<dt style="">IGV</dt><dd>: <strong>{{ round($venta->igv,2) }}</strong></dd>
+				<dt style="">Sub Total</dt><dd>: <strong>{{ round($venta->total - $venta->igv,2) }}</strong></dd>
+				<dt style="">TOTAL</dt><dd>: <strong>{{ round($venta->total, 2) }}</strong></dd>
+			</dl>
 			
 		</div>
 	</div>

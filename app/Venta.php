@@ -149,6 +149,35 @@ class Venta extends Model
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
+    public static function list_detalle_ventas2($venta_id){
+        $user = Auth::user();
+        return  DB::table('detalle_ventas')
+        ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+        ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
+        ->leftjoin('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
+        ->leftjoin('marca', 'producto.marca_id', '=', 'marca.id')
+        ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'detalle_ventas.producto_presentacion_id')
+        ->leftjoin('presentacion as present', 'present.id', '=', 'producto_presentacion.presentacion_id')
+        ->select(
+            'producto.descripcion as nombre_producto', 
+            'producto.sustancia_activa as sustancia_activa', 
+            'detalle_ventas.lotes as lotes', 
+            'detalle_ventas.cantidad as cantidad', 
+            'detalle_ventas.precio_unitario as precio_unitario', 
+            'detalle_ventas.total as subtotal',
+            'marca.name as nombre_marca',
+            'producto.afecto as afecto',  
+            'presentacion.nombre as unidad_base',
+            'producto_presentacion.id as id_presentacion_v',
+            'producto_presentacion.cant_unidad_x_presentacion as cantidad_por_presentacion',
+            'present.nombre as nombre_presentacion',
+            'present.sigla as sigla_presentacioon'
+        )
+        ->where('detalle_ventas.ventas_id', '=',$venta_id)
+        ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        ->where('detalle_ventas.deleted_at', '=',null)->get();
+    }
+
     public  static function puntos_acumulados_medico($fechai, $fechaf, $tipobusqueda){
         $user = Auth::user();
         $fecha1 = null;

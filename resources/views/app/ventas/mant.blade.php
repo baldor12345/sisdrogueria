@@ -163,7 +163,7 @@
 	</div>
 </div>
 	
-</div>
+
 	<div class="row card-box">
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
 			<table id="tabla_temp" class="" style="">
