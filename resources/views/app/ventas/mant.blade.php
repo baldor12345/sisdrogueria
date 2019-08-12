@@ -87,6 +87,13 @@
 						{!! Form::date('fecha', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fecha')) !!}
 					</div>
 				</div>
+
+				<div class="form-group credito">
+					{!! Form::label('fechafi', 'Fecha Venc.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+					<div class="col-sm-9 col-xs-12" style="">
+						{!! Form::date('fechafi', $fecha_defecto, array('class' => 'form-control input-sm', 'id' => 'fechafi')) !!}
+					</div>
+				</div>
 				<div class="form-group ">
 					{!! Form::label('serie_documento', 'Nro Doc:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-3 col-xs-12" style="">
@@ -143,14 +150,20 @@
 			<div class="form-group " >
 				{!! Form::label('telefono', 'Telf./Cel.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 				<div class="col-sm-9 col-xs-12" style="">
-					{!! Form::text('telefono', 0, array('class' => 'form-control input-sm', 'id' => 'telefono', 'placeholder' => 'N° Telf. o Cel.')) !!}
+					{!! Form::text('telefono', '', array('class' => 'form-control input-sm', 'id' => 'telefono', 'placeholder' => 'N° Telf. o Cel.')) !!}
+				</div>
+			</div>
+			<div class="form-group " >
+				{!! Form::label('email', 'Email:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+				<div class="col-sm-9 col-xs-12" style="">
+					{!! Form::text('email', '', array('class' => 'form-control input-sm', 'id' => 'email', 'placeholder' => 'example@example.com')) !!}
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
 	
-</div>
+
 	<div class="row card-box">
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
 			<table id="tabla_temp" class="" style="">
@@ -162,24 +175,24 @@
 		</div>
 		<div class="form-group">
 
-			<div class="form-group col-5 col-md-5 col-sm-6 col-xs-12 text-left">
-				{!! Form::label('cboProducto', 'Producto:', array('class' => ' col-md-12 text-left')) !!}
+			<div class="form-group col-5 col-md-5 col-sm-12 col-xs-12 text-left">
+				{!! Form::label('cboProducto', 'Producto:', array('class' => ' col-sm-12 text-left')) !!}
 				{!! Form::select('cboProducto', $cboProducto, null, array('class' => 'form-control input-sm', 'id' => 'cboProducto')) !!}
 			</div>
-			<div class="form-group col-4 col-md-4 text-left" style="margin-left: 3px">
+			<div class="form-group col-4 col-md-4 col-sm-12 col-xs-12 text-left" style="margin-left: 3px">
 				{!! Form::label('cboPresentacion', 'Unidad:', array('class' => ' col-md-12 text-left')) !!}
 				{!! Form::select('cboPresentacion', $cboPresentacion, null, array('class' => 'form-control input-sm', 'id' => 'cboPresentacion')) !!}
 			</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-3 col-xs-12')) !!}
+				{!! Form::label('cantidad', 'Cantidad:', array('class' => 'col-sm-12 col-xs-12')) !!}
 				{!! Form::text('cantidad', null, array('class' => 'form-control input-sm', 'id' => 'cantidad', 'placeholder' => 'Cantidad',  'onkeypress'=>'return filterFloat(event,this)')) !!}
 			</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('precio_unidad', 'Precio:', array('class' => 'col-sm-3 col-xs-12')) !!}
+				{!! Form::label('precio_unidad', 'Precio:', array('class' => 'col-sm-12 col-xs-12')) !!}
 				{!! Form::text('precio_unidad', null, array('class' => 'form-control input-sm', 'id' => 'precio_unidad', 'placeholder' => 'Precio',  'onkeypress'=>'return filterFloat(event,this)')) !!}
 			</div>
 			<div class="form-group col-1 col-md-1 text-left" style="margin-left: 3px">
-				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-md-12 text-left')) !!}
+				{!! Form::label('btnAgregar', 'Agregar:', array('class' => 'col-sm-12 text-left')) !!}
 				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregar', 'onclick' => 'agregar()')) !!}
 			</div>
 			
@@ -348,6 +361,33 @@ $(document).ready(function() {
 		}
 	
 	});
+
+	$("#dias").keyup(function(e){
+		if($(this).val().length > 0){
+
+			var num_day = parseInt($('#dias').val())+1;
+
+			var fech = new Date($('#fecha').val());
+			fech.setDate(fech.getDate() + num_day);
+
+			var month =0;
+			var day =0;
+
+			if((fech.getMonth()+1)<10){
+				month = '0'+(fech.getMonth()+1);
+			}else{
+				month = (fech.getMonth()+1);
+			}
+			if(fech.getDate() < 10){
+				day = '0'+fech.getDate();
+			}else{
+				day = fech.getDate();
+			}
+
+			$('#fechafi').val(fech.getFullYear()+ '-' + month + '-' + day);
+		}
+	});
+
 }); 
 function getNumero_doc(tipo_doc){
 	
@@ -674,6 +714,7 @@ function consultaDOC(){
 				$('#nombrecompleto').val(nombrecompleto);
 				$('#direccioncliente').val(response[1].direccion);
 				$('#telefono').val(response[1].telefono);
+				$('#email').val(response[1].email);
 			}else{
 				$('#direccioncliente').val('');
 				if(tipodoc == 'B' && doc.length < 9){

@@ -3,8 +3,8 @@
 	<div class="row">
 		<div class="card-box">	
 			<table>
-				<tr><td>Fecha de Venc.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td><td style="padding-left: 18px;">Fecha de Emisión.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td></tr>
-				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">DNI/RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->ruc|$venta->cliente->dni|""}}</strong></td></tr>
+				<tr><td>Fecha de Emisión.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha)) }}</strong></td><td style="padding-left: 18px;">Fecha de Venc.</td><td style="padding-left: 18px;">: <strong>{{ date('d/m/Y',strtotime($venta->fecha_venc == null?$venta->fecha:$venta->fecha_venc )) }}</strong></td></tr>
+				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente->dni == null?$venta->cliente->razon_social:$venta->cliente->nombres.' '.$venta->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">DNI/RUC</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':($venta->cliente->ruc == null? $venta->cliente->dni:$venta->cliente->ruc)}}</strong></td></tr>
 				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $venta->cliente_id == null?'':$venta->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
 				<tr><td>Condicion de Pag.</td><td style="padding-left: 18px;">: <strong>{{ $venta->tipo_pago == 'CO'?'AL CONTADO':'A CRÉDITO'}}</strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $venta->serie_doc."-".$venta->numero_doc}}</strong></td></tr>
 				@if($venta->tipo_pago == 'CR')
@@ -40,7 +40,7 @@
 					</tr>
 				</thead>
 				<tbody>
-						@foreach ($detalle_ventas as $key => $value)
+					@foreach ($detalle_ventas as $key => $value)
 						<tr>
 							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
@@ -74,12 +74,12 @@
 		</div>
 		<div class="card-box col-4 col-md-4">
 			
-				<dl class="dl-horizontal">
-					{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
-					<dt style="">IGV</dt><dd>: <strong>{{ round($venta->igv,2) }}</strong></dd>
-					<dt style="">Sub Total</dt><dd>: <strong>{{ round($venta->total - $venta->igv,2) }}</strong></dd>
-					<dt style="">TOTAL</dt><dd>: <strong>{{ round($venta->total, 2) }}</strong></dd>
-				</dl>
+			<dl class="dl-horizontal">
+				{{-- <dt style="text-align: left">IGV</dt><dd>: <strong>{{ $venta->valor_igv }}</strong></dd> --}}
+				<dt style="">IGV</dt><dd>: <strong>{{ round($venta->igv,2) }}</strong></dd>
+				<dt style="">Sub Total</dt><dd>: <strong>{{ round($venta->total - $venta->igv,2) }}</strong></dd>
+				<dt style="">TOTAL</dt><dd>: <strong>{{ round($venta->total, 2) }}</strong></dd>
+			</dl>
 			
 		</div>
 	</div>
@@ -93,6 +93,7 @@
 $(document).ready(function() {
 	configurarAnchoModal('900');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+	
 }); 
 
 </script>

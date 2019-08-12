@@ -201,7 +201,7 @@ class VentasController extends Controller
             }
         }
         if($valido){
-
+            // $ventaId = null;
             $error = DB::transaction(function() use($request, $id_venta, $valor_total){
                 $user = Auth::user();
                 $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
@@ -221,11 +221,17 @@ class VentasController extends Controller
                     }
                     $clientenuevo->direccion = $request->input('direccioncliente');
                     $clientenuevo->telefono = $request->input('telefono');
+                    $clientenuevo->email = $request->input('email');
                     $clientenuevo->save();
 
                     $id_cliente = $clientenuevo->id;
                 }else{
-                    $id_cliente = $clientec[0]->id;
+                    $client = Cliente::find($clientec[0]->id);
+                    $client->direccion = $request->input('direccioncliente');
+                    $client->telefono = $request->input('telefono');
+                    $client->email = $request->input('email');
+                    $client->save();
+                    $id_cliente = $client->id;
                 }
 
                 $venta = new Venta();
@@ -235,12 +241,12 @@ class VentasController extends Controller
                 $venta->descuento = 0;//$request->input('descuento');
                 $venta->igv = $valor_igv;//IGV= de configuraciones
                 $venta->descripcion = "";//$request->input('descripcion');
-                $venta->fecha = date('Y-m-d H:i:s');
+                $venta->fecha =$request->input('fecha').' '.date('H:i:s');
+                $venta->fecha_venc =$request->input('fechafi').' '.date('H:i:s');
                 $venta->estado = 'P';//P=Pendiente, C=cancelado
                 $venta->user_id = $user->id;
                 $venta->caja_id = $caja->id;
                 $venta->sucursal_id = $user->sucursal_id;
-                
                 
                 $id_medico = $request->input('cboMedico');
                 $id_vendedor = $request->input('cboVendedor');
@@ -330,15 +336,20 @@ class VentasController extends Controller
                     $detalle_venta->save();
     
                 }
+                
+                return $venta->id;
             });
-            $venta01 = Venta::all()->last();
+
+            // $venta01 = Venta::all()->last();
+            $ventaId = $error;
+            $venta01 = Venta::find($ventaId == null?0:$ventaId);
             $codigo_medico = $venta01->medico_id != null? $venta01->medico->codigo: "";
             $iniciales_vendedor = $venta01->vendedor->iniciales;
             $datos_empresa = DatosEmpresa::find(1);
             // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
-            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion','telefono')->get()[0];
-            $detalle_ventas = Venta::list_detalle_ventas($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
-            $err01 = is_null($error) ? "OK" : $error;
+            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion','telefono','email')->get()[0];
+            $detalle_ventas = Venta::list_detalle_ventas2($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
+            $err01 = is_null($error) ? "OK" : (is_numeric($error)?"OK":$error);
             $bancos = array(
                 [
                     "nombre_banco"=>"BBVA Continental",

@@ -50,15 +50,15 @@ class ProdVendidosController extends Controller
         $filas            = $request->input('filas');
         $entidad          = 'ProdVenta';
         $nombre = Libreria::getParam($request->input('nombre'));
-        $fechai = Libreria::getParam($request->input('fecha_inicio'));
-        $fechaf = Libreria::getParam($request->input('fecha_fin'));
+        $fechai = Libreria::getParam($request->input('fechai'));
+        $fechaf = Libreria::getParam($request->input('fechaf'));
         $resultado  = Venta::listarproductosvendidos($nombre, $fechai, $fechaf);
         $lista      = $resultado->get();
         $cabecera   = array();
         $cabecera[] = array('valor' => '#', 'numero' => '1');
         $cabecera[] = array('valor' => 'NOMBRE PRODUCTO', 'numero' => '1');
         $cabecera[] = array('valor' => 'CANTIDAD VENDIDA', 'numero' => '1');
-        $cabecera[] = array('valor' => 'Operaciones', 'numero' => '2');
+        // $cabecera[] = array('valor' => 'Operaciones', 'numero' => '2');
         $fecha_defecto = date('Y-m-d');
         
         $ruta             = $this->rutas;

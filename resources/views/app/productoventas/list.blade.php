@@ -22,8 +22,8 @@
 			@foreach ($lista as $key => $value)
 			<tr>
 				<td>{{ $contador }}</td>
-				<td>{{ "nombre" }}</td>
-				<td>{{ $value->cantidad_unidades }}</td>
+				<td>{{ $value->descripcion.' X '.$value->cantidad_x }}</td>
+				<td>{{ $value->cantidad_unidades .' '.$value->sigla.'(S)'}}</td>
 			</tr>
 			<?php
 			$contador = $contador + 1;
