@@ -193,8 +193,8 @@ $(document).ready(function() {
 			console.log(response);
 			if(response.length !=0 ){
 				console.log("entro por la salidaaaaaaaa");
-				$('#preciocompra').prop("readonly", true);
-				$('#precioventa').prop("readonly", true);
+				// $('#preciocompra').prop("readonly", true);
+				//$('#precioventa').prop("readonly", true);
 				$('#fechavencimiento').prop("readonly", true);
 				$('#lote').prop("readonly", true);
 				$('#id_presentacion').prop("disabled", true);
