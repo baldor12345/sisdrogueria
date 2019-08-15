@@ -151,7 +151,7 @@ class EntradaSalidaController extends Controller
             $serie ="D".($count_entr+1);
             $numero ="00".($count_entr+1);
         }
-        $fecha_form = date('d-m-Y');
+        $fecha_form = date('d/m/Y');
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
@@ -445,7 +445,6 @@ class EntradaSalidaController extends Controller
                 $cantidad = $request->input('cantidad');
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
-
                         $entrada_salida_detalle    = new EntradaSalidaDetalle();
                         $entrada_salida_detalle->fecha_caducidad_string = $request->input("fecha_vencim".$i);
                         $fec_string = trim($request->input("fecha_vencim".$i));
@@ -469,10 +468,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -491,10 +490,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -513,10 +512,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -535,10 +534,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
