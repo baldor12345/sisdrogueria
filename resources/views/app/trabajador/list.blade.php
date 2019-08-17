@@ -17,15 +17,18 @@
 		/*COMO VA A TRAER LOS CLIENTES SON SUBTYPE S VALIDAMOS QUE SOLO SEAN PERSONAS */
 		?>
 		@foreach ($lista as $key => $value)
+		<?php
+		$nombreCompleto = $value->apellidos.' '.$value->nombres;
+		?>
 			<tr>
 				<td>{{ $contador }}</td>
 				<td>{{ $value->dni }}</td>
-				<td>{{ $value->nombres.' '.$value->apellidos}}</td>
+				<td>{{ $nombreCompleto}}</td>
 				<td>{{ $value->celular}}</td>
 				<td>{{ $value->telefono}}</td>
 				<td>{{ $value->direccion}}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.': '.$value->nombreCompleto.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.': '.$value->nombreCompleto.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 			</tr>
 		<?php
 		$contador = $contador + 1;

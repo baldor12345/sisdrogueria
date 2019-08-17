@@ -23,8 +23,8 @@
 				<td>{{ $value->producto }} </td>
 				<td>{{ $value->laboratorio }}</td>
 				<td>{{ $value->categoria }}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Edit.',array('onclick'=>'modal(\''.URL::route($ruta["edit"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_modificar.'\',this);', 'class'=>'btn btn-xs btn-warning')) !!}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Present.',array('onclick'=>'modal(\''.URL::route($ruta["presentacion"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_presentacion.'\',this);', 'class'=>'btn btn-xs btn-info')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Edit.',array('onclick'=>'modal(\''.URL::route($ruta["edit"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_modificar.': '.$value->descripcion.'\',this);', 'class'=>'btn btn-xs btn-warning')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Present.',array('onclick'=>'modal(\''.URL::route($ruta["presentacion"],array($value->producto_id,'listar'=>'SI')).'\',\''.$titulo_presentacion.': '.$value->descripcion.'\',this);', 'class'=>'btn btn-xs btn-info')) !!}</td>
 				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Elim.', array('onclick'=>'modal(\''.URL::route($ruta["delete"], array($value->producto_id, 'SI')).'\',\''.$titulo_eliminar.'\',this);','class'=>'btn btn-xs btn-danger')) !!}</td>
 				<?php
 				$contador = $contador+1;

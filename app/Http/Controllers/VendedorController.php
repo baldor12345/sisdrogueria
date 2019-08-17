@@ -54,6 +54,7 @@ class VendedorController extends Controller
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'DNI', 'numero' => '1');
         $cabecera[]       = array('valor' => 'INICIALES', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Nombres y Apellidos', 'numero' => '1');
         // $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');

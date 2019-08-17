@@ -25,8 +25,8 @@
 				<td>{{ $value->provincia->nombre }}</td>
 				<td>{{ $value->departamento->nombre }}</td>
 				<td>{{ $value->telefono}}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
-				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-pencil"></div> Editar', array('onclick' => 'modal (\''.URL::route($ruta["edit"], array($value->id, 'listar'=>'SI')).'\', \''.$titulo_modificar.': '.$value->nombre.'\', this);', 'class' => 'btn btn-xs btn-warning')) !!}</td>
+				<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Eliminar', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.': '.$value->nombre.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
 			</tr>
 			<?php
 			$contador = $contador + 1;
