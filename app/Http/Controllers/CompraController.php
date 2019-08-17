@@ -133,7 +133,7 @@ class CompraController extends Controller
         $numero_operacion   = Libreria::codigo_operacion();
         $igv            = $propiedades->igv;
         $ruta             = $this->rutas;
-        $fech_form = date('d-m-Y');
+        $fech_form = date('d/m/Y');
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
         return view($this->folderview.'.mant')->with(compact('fech_form', 'cboFecha','cboAfecto', 'numero_operacion', 'cboUnidad', 'cboCategoria', 'compra', 'cboPresentacion', 'cboLaboratorio','cboDocumento', 'igv', 'formData', 'ruta', 'entidad', 'boton', 'listar', 'cboCredito', 'cboProducto', 'cboProveedor', 'cboMarca','cboCategoria','cboUnidad'));

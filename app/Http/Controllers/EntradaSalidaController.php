@@ -127,7 +127,8 @@ class EntradaSalidaController extends Controller
         $cboProducto       = array(0=>'           Seleccione Producto........................................');
         $cboEntrada       = array(0=>'            Seleccione Producto.........................................');
         $cboProveedor        = array(0=>'Seleccione Proveedor...');
-        $cboPresentacion = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
+        $cboPresentacion = ['0'=>'Seleccione'];
+
         $cboLaboratorio = ['0'=>'Seleccione'] + Marca::pluck('name', 'id')->all();
         $cboFecha       = array('N'=>'NO', 'S'=>'SI');
         $numero_operacion   = Libreria::codigo_operacion();
@@ -151,7 +152,7 @@ class EntradaSalidaController extends Controller
             $serie ="D".($count_entr+1);
             $numero ="00".($count_entr+1);
         }
-        $fecha_form = date('d-m-Y');
+        $fecha_form = date('d/m/Y');
         $ruta             = $this->rutas;
         $formData       = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton          = 'Registrar'; 
@@ -445,7 +446,6 @@ class EntradaSalidaController extends Controller
                 $cantidad = $request->input('cantidad');
                 if($cantidad >0){
                     for($i=0;$i<$cantidad; $i++){
-
                         $entrada_salida_detalle    = new EntradaSalidaDetalle();
                         $entrada_salida_detalle->fecha_caducidad_string = $request->input("fecha_vencim".$i);
                         $fec_string = trim($request->input("fecha_vencim".$i));
@@ -469,10 +469,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -491,10 +491,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -513,10 +513,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -535,10 +535,10 @@ class EntradaSalidaController extends Controller
                             }
                             if(count($fech_explode) == 3){
                                 if(strlen($fech_explode[2]) == 2){
-                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("20".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }else{
-                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1].$fech_explode[0]));
+                                    $fecha_for = date("Y-m-d",strtotime("".$fech_explode[2]."-".$fech_explode[1]."-".$fech_explode[0]));
                                     $entrada_salida_detalle->fecha_caducidad = $fecha_for;
                                 }
                             }
@@ -596,7 +596,7 @@ class EntradaSalidaController extends Controller
     //listar el objeto persona por dni
     public function getEntrada(Request $request, $term){
         if($request->ajax()){
-            $tags = DB::table('entrada')
+            $salida_det = DB::table('entrada')
                     ->join('producto_presentacion','entrada.producto_presentacion_id','producto_presentacion.id')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
                     ->join('presentacion','producto.unidad_id','presentacion.id')
@@ -606,17 +606,44 @@ class EntradaSalidaController extends Controller
                         'entrada.fecha_caducidad_string as fecha_caducidad_string',
                         'producto_presentacion.precio_compra as precio_compra',
                         'producto_presentacion.precio_venta_unitario as precio_venta',
+                        'producto.id as prod_id',
+                        'producto.descripcion as descripcion',
                         'entrada.stock as stock',
                         'entrada.lote as lote'
                         )
-                    ->where("entrada.id",'=',$term)->get();
+                    ->where("entrada.id",'=',$term)->get()[0];
+            $producto_presentacion = ProductoPresentacion::where('producto_id','=',$salida_det->prod_id)->where('deleted_at','=',null)->get();
+            $cboPresentacion = '';
+            foreach ($producto_presentacion as $key => $value) {
+                $cboPresentacion =  $cboPresentacion.'<option value="'.$value->presentacion->id.'">'.$value->presentacion->nombre.'</option>';
+            }
+            $tags = array($salida_det, $cboPresentacion);
+            return response()->json($tags);
+        }
+    }
+
+    public function getprodpresentacion(Request $request, $presentacion_id, $prod_id){
+        $entrada_id_ = Entrada::find($prod_id);
+        $productpresent = ProductoPresentacion::find($entrada_id_->producto_presentacion_id);
+        if($request->ajax()){
+            $tags = DB::table('producto_presentacion')
+                    ->join('producto','producto_presentacion.producto_id','producto.id')
+                    ->join('presentacion','producto.unidad_id','presentacion.id')
+                    ->select(
+                        'producto_presentacion.precio_compra as precio_compra',
+                        'producto_presentacion.precio_venta_unitario as precio_venta',
+                        'producto_presentacion.cant_unidad_x_presentacion as cant_unidad_x_presentacion'
+                        )
+                    ->where("producto_presentacion.producto_id",'=',$productpresent->producto_id)
+                    ->where("producto_presentacion.presentacion_id",'=',$presentacion_id)
+                    ->where("producto_presentacion.deleted_at",'=',null)->get()[0];
             return response()->json($tags);
         }
     }
 
     public function getDetalleREntrada(Request $request, $term, $dni){
         if($request->ajax()){
-            $tags = DB::table('producto_presentacion')
+            $prodpre = DB::table('producto_presentacion')
                     ->join('producto','producto_presentacion.producto_id','producto.id')
                     ->join('presentacion','producto_presentacion.presentacion_id','presentacion.id')
                     ->select(
@@ -625,7 +652,13 @@ class EntradaSalidaController extends Controller
                         'producto_presentacion.precio_compra as precio_compra',
                         'producto_presentacion.precio_venta_unitario as precio_venta_unitario'
                         )
-                    ->where("producto_presentacion.id",'=',$term)->get();
+                    ->where("producto_presentacion.id",'=',$term)->get()[0];
+                $presentacion = Presentacion::All();
+                $cboPresent = '';
+                foreach ($presentacion as $key => $value) {
+                    $cboPresent =  $cboPresent.'<option value="'.$value->id.'">'.$value->nombre.'</option>';
+                }
+                $tags = array($prodpre, $cboPresent);
             return response()->json($tags);
         }
     }

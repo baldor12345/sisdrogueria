@@ -20,6 +20,9 @@ use App\Http\Controllers\CajaController;
 // Registration routes...
 // Route::get('auth/register', 'Auth\AuthController@getRegister');
 // Route::post('auth/register', ['as' => 'auth/register', 'uses' => 'Auth\AuthController@postRegister']);
+if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
+    error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+}
 
 Auth::routes();
 Route::get('logout', 'Auth\LoginController@logout');
@@ -261,6 +264,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::get('entrada/{id?}','EntradaSalidaController@getEntrada');
 Route::get('entrada/{id?}/{dni?}','EntradaSalidaController@getDetalleREntrada');
+Route::get('entrada/{id?}/{prod_id}/{x}','EntradaSalidaController@getprodpresentacion');
 Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto')->name('ventas.getProducto');
 Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion')->name('ventas.getProductoPresentacion');
