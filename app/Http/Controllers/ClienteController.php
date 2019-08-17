@@ -54,21 +54,22 @@ class ClienteController extends Controller
      */
     public function buscar(Request $request)
     {
-        $pagina           = $request->input('page');
-        $filas            = $request->input('filas');
-        $entidad          = 'Cliente';
-        $name             = Libreria::getParam($request->input('name'));
-        $dni             = Libreria::getParam($request->input('dni'));
-        $resultado        = Cliente::listar($name, $dni);
-        $lista            = $resultado->get();
-        $cabecera         = array();
-        $cabecera[]       = array('valor' => '#', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'DNI o RUC', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Nombres y Apellidos / Razon Social', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Celular', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Telefono', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Direccion', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
+        $pagina      = $request->input('page');
+        $filas       = $request->input('filas');
+        $entidad     = 'Cliente';
+        // $nombrescl   = Libreria::getParam($request->input('nombrescl'));
+        $dnicl       = Libreria::getParam($request->input('dnicl'));
+        // $apellidoscl = Libreria::getParam($request->input('apellidoscl'));
+        $resultado   = Cliente::listar($dnicl);
+        $lista       = $resultado->get();
+        $cabecera    = array();
+        $cabecera[]  = array('valor' => '#', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'DNI o RUC', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'Nombres y Apellidos / Razon Social', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'Celular', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'Telefono', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'Direccion', 'numero' => '1');
+        $cabecera[]  = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -94,7 +95,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $entidad          = 'cliente';
+        $entidad          = 'Cliente';
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
@@ -135,20 +136,24 @@ class ClienteController extends Controller
         if( $num_doc== 'dni'){
             $reglas = array(
                 
-                'doc'       => 'required|max:20',
+                'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
                 'nombres'    => 'required|max:100',
                 'apellidos'    => 'required|max:100',
+                'telefono'    => 'numeric',
                 );
         }else{
             $reglas = array(
-                'doc'       => 'required|max:20',
+                'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
                 'razon_social'    => 'required|max:100',
+                'telefono'    => 'numeric',
                 );
         }
        
             $mensajes   = array();
+            // echo($mensajes->toJson());
             $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
+            echo($validacion->messages()->toJson());
             return $validacion->messages()->toJson();
         }
         $error = DB::transaction(function() use($request){

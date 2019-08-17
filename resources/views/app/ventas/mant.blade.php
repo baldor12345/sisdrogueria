@@ -58,8 +58,9 @@
 				<div class="form-group credito " >
 					{!! Form::label('dias', 'N° Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('dias', 0, array('class' => 'form-control input-sm', 'id' => 'dias', 'placeholder' => 'N° dias')) !!}
+						{!! Form::text('dias', 0, array('class' => 'form-control input-sm', 'id' => 'dias', 'placeholder' => 'N° dias', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 					</div>
+					
 				</div>
 				<div class="form-group">
 					{!! Form::label('cboMedico', 'Medico:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
@@ -128,7 +129,7 @@
 			<div class="form-group" >
 				{!! Form::label('doccliente', 'DNI:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lbldniruc', 'style'=>'')) !!}
 				<div class="input-group" style="">
-					{!! Form::text('doccliente', null, array('class' => 'form-control input-sm', 'id' => 'doccliente', 'placeholder' => 'N° DNI', 'maxlength'=>'8')) !!}
+					{!! Form::text('doccliente', null, array('class' => 'form-control input-sm', 'id' => 'doccliente', 'placeholder' => 'N° DNI', 'maxlength'=>'8', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 					<span class="input-group-btn">
 						{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnConsultar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick' => 'consultaDOC();')) !!}
 						{!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!}
@@ -150,7 +151,7 @@
 			<div class="form-group " >
 				{!! Form::label('telefono', 'Telf./Cel.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 				<div class="col-sm-9 col-xs-12" style="">
-					{!! Form::text('telefono', '', array('class' => 'form-control input-sm', 'id' => 'telefono', 'placeholder' => 'N° Telf. o Cel.')) !!}
+					{!! Form::text('telefono', '', array('class' => 'form-control input-sm', 'id' => 'telefono', 'placeholder' => 'N° Telf. o Cel.', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 				</div>
 			</div>
 			<div class="form-group " >

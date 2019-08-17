@@ -11,21 +11,18 @@ class Cliente extends Model
     protected $table = 'cliente';
     protected $dates = ['deleted_at'];
     
-    public function scopelistar($query,$nombre_dni_ruc,$nombre="", $dni="")
+    public function scopelistar($query, $doc)
     {
-        
-      
-
-        return $query->where(function($subquery) use($nombre)
-		            {
-                        
-                        if (!is_null($nombre)) {
-                            $subquery->where('nombres', 'LIKE', '%'.$nombre.'%')->where('dni','=',$dni);
-                        }
-                        
-                    })
-                    ->where('deleted_at','=',null)
-        			->orderBy('nombres', 'ASC');
+        return $query->where(function($subquery) use( $doc)
+        {
+            
+            if (!is_null($doc)) {
+                $subquery->where('nombres', 'LIKE', '%'.$doc.'%')->orwhere('apellidos','LIKE', '%'.$doc.'%')->orwhere('razon_social','LIKE', '%'.$doc.'%')->orwhere('dni','LIKE', '%'.$doc.'%')->orwhere('ruc','LIKE', '%'.$doc.'%');
+            }
+            
+        })
+        ->where('deleted_at','=',null)
+        ->orderBy('apellidos', 'ASC');
         			
     }
 
