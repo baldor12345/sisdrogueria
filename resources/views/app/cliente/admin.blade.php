@@ -16,13 +16,17 @@
 						{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
 						{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 						{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
+						{{-- <div class="form-group">
+							{!! Form::label('nombrescl', 'Nombres/R.Social/DNI/RUC:') !!}
+							{!! Form::text('nombrescl', '', array('class' => 'form-control input-xs', 'id' => 'nombrescl')) !!}
+						</div> --}}
+						{{-- <div class="form-group">
+							{!! Form::label('apellidoscl', 'Apellidos:') !!}
+							{!! Form::text('apellidoscl', '', array('class' => 'form-control input-xs', 'id' => 'apellidoscl')) !!}
+						</div> --}}
 						<div class="form-group">
-							{!! Form::label('name', 'Nombre:') !!}
-							{!! Form::text('name', '', array('class' => 'form-control input-xs', 'id' => 'name')) !!}
-						</div>
-						<div class="form-group">
-							{!! Form::label('dni', 'DNI:') !!}
-							{!! Form::text('dni', '', array('class' => 'form-control input-xs', 'id' => 'dni')) !!}
+							{!! Form::label('dnicl', 'Nombres/R.Social/DNI/RUC:') !!}
+							{!! Form::text('dnicl', '', array('class' => 'form-control input-xs', 'id' => 'dnicl')) !!}
 						</div>
 						<div class="form-group">
 							{!! Form::label('filas', 'Filas a mostrar:')!!}
@@ -45,7 +49,7 @@
 		$(document).ready(function () {
 			buscar('{{ $entidad }}');
 			init(IDFORMBUSQUEDA+'{{ $entidad }}', 'B', '{{ $entidad }}');
-			$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombre"]').keyup(function (e) {
+			$(IDFORMBUSQUEDA + '{{ $entidad }} :input[id="nombres"]').keyup(function (e) {
 				var key = window.event ? e.keyCode : e.which;
 				if (key == '13') {
 					buscar('{{ $entidad }}');

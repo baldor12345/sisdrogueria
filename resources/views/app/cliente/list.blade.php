@@ -18,9 +18,11 @@
 		?>
 		@foreach ($lista as $key => $value)
 			<tr>
+
 				<td>{{ $contador }}</td>
+				
 				<td>{{ $value->dni ==null?$value->ruc :$value->dni   }}</td>
-				<td>{{ ($value->ruc ==null)?$value->nombres.' '.$value->apellidos :$value->razon_social }}</td>
+				<td>{{ $value->dni != null ? $value->nombres.' '.$value->apellidos :$value->razon_social }}</td>
 				<td>{{ $value->celular}}</td>
 				<td>{{ $value->telefono}}</td>
 				<td>{{ $value->direccion}}</td>
