@@ -10,7 +10,7 @@
 		@endif
 	</div>
 	<div class="form-group  col-6 col-md-6" style="margin-left: 3px;">
-		{!! Form::label('doc', 'DNI:', array('class' => 'control-label doclb')) !!}
+		{!! Form::label('doc', $cliente != null?($cliente->dni == null? 'RUC:': 'DNI:'):'DNI:', array('class' => 'control-label doclb')) !!}
 		<div class="input-group" style="">
 			{{-- {!! Form::text('doc', null, array('class' => 'form-control input-sm', 'id' => 'doc', 'placeholder' => 'N° DNI', 'maxlength'=>'8')) !!} --}}
 			{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-sm', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.','maxlength'=>'11', 'onkeypress'=>'return filterFloat(event,this)')) !!}
@@ -23,25 +23,66 @@
 		{!! Form::label('doc', 'N° Documento:', array('class' => ' control-label')) !!}
 		{!! Form::text('doc', $cliente != null?($cliente->dni == null? $cliente->ruc:$cliente->dni): '', array('class' => 'form-control input-xs', 'id' => 'doc', 'placeholder' => 'Ingrese numero doc.','maxlength'=>'11')) !!}
 	</div> --}}
-
-	<div class="form-group col-6 col-md-6 clas_dni">
+	@if($cliente != null)
+		@if($cliente->dni != null)
+			<div class="form-group col-6 col-md-6 clas_dni">
+				{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
+				{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
+			</div>
+			<div class="form-group col-6 col-md-6 clas_dni" style="margin-left: 3px;">
+				{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
+				{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
+			</div>
+			<div class="form-group col-12 col-md-12 clas_ruc" style="display: none;">
+				{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
+				{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
+			</div>
+		@else
+			<div class="form-group col-6 col-md-6 clas_dni" style="display: none;">
+				{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
+				{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
+			</div>
+			<div class="form-group col-6 col-md-6 clas_dni" style="margin-left: 3px; display: none;">
+				{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
+				{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
+			</div>
+			<div class="form-group col-12 col-md-12 clas_ruc">
+				{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
+				{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
+			</div>
+		@endif
+	@else
+		<div class="form-group col-6 col-md-6 clas_dni">
+			{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
+			{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
+		</div>
+		<div class="form-group col-6 col-md-6 clas_dni" style="margin-left: 3px;">
+			{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
+			{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
+		</div>
+		<div class="form-group col-12 col-md-12 clas_ruc" style="display: none;">
+			{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
+			{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
+		</div>
+	@endif
+	{{-- <div class="form-group col-6 col-md-6 clas_dni">
 		{!! Form::label('nombres', 'Nombres:', array('class' => ' control-label')) !!}
 		{!! Form::text('nombres', null, array('class' => 'form-control input-xs', 'id' => 'nombres', 'placeholder' => 'Ingrese nombre')) !!}
 	</div>
 	<div class="form-group col-6 col-md-6 clas_dni" style="margin-left: 3px;">
 		{!! Form::label('apellidos', 'Apellidos:', array('class' => ' control-label')) !!}
 		{!! Form::text('apellidos', null, array('class' => 'form-control input-xs', 'id' => 'apellidos', 'placeholder' => 'Ingrese apellidos')) !!}
-	</div>
+	</div> --}}
 
 	{{-- <div class="form-group col-12 col-md-12">
 		{!! Form::label('codigo_medico', 'Código de Médico Asignado:', array('class' => ' control-label')) !!}
 		{!! Form::text('codigo_medico', null, array('class' => 'form-control input-xs', 'id' => 'codigo_medico', 'placeholder' => 'Código Médico asignado')) !!}
 	</div> --}}
 
-	<div class="form-group col-12 col-md-12 clas_ruc">
+	{{-- <div class="form-group col-12 col-md-12 clas_ruc">
 		{!! Form::label('razon_social', 'Razon Social:', array('class' => ' control-label')) !!}
 		{!! Form::text('razon_social', null, array('class' => 'form-control input-xs', 'id' => 'razon_social', 'placeholder' => 'Ingrese Razon Social')) !!}
-	</div>
+	</div> --}}
 
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('direccion', 'Direccion:', array('class' => ' control-label')) !!}
@@ -74,8 +115,9 @@
 $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
+
 	
-	$('.clas_ruc').hide();
+	// $('.clas_ruc').hide();
 
 	
 	$('#cboTipoDocumento').change(function(){

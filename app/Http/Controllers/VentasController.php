@@ -242,7 +242,7 @@ class VentasController extends Controller
                 $venta->igv = $valor_igv;//IGV= de configuraciones
                 $venta->descripcion = "";//$request->input('descripcion');
                 $venta->fecha =$request->input('fecha').' '.date('H:i:s');
-                $venta->fecha_venc =$request->input('fechafi').' '.date('H:i:s');
+                $venta->fecha_venc = $request->input('fechafi').' '.date('H:i:s');
                 $venta->estado = 'P';//P=Pendiente, C=cancelado
                 $venta->user_id = $user->id;
                 $venta->caja_id = $caja->id;
