@@ -417,6 +417,7 @@ function agregar(){
 										$('#factor').val("");
 										$('#fechavencimiento').val("");
 										$('#lote').val("");
+										$('#detalle_prod').hide();
 									}else{
 										window.alert("ingrese lote!");
 										$('#lote').focus();
