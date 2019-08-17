@@ -36,7 +36,24 @@
 			</div>
 		</div>
 
-		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">    	
+		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 card-box">
+			<div class="alert alert-success col-12 col-md-12" id="detalle_prod">
+				<table id="tabla_temp" class="" style="">
+					<tr>
+						<td>Producto:</td><td style="padding-left: 10px;" colspan="6"><label id="producto_inf">: </label></td>
+					</tr>
+					<tr>
+						<td>Stock (Unidades):</td>
+						<td style="padding-left: 10px;"><label id="stock_inf" stock='0'>: </label></td>
+						<td style="padding-left: 10px;">Fecha Vencimiento:</td>
+						<td style="padding-left: 10px;"><label id="fecha_venc" f_venc=''>: </label></td>
+						<td style="padding-left: 10px;">Lote:</td>
+						<td style="padding-left: 10px;"><label id="lote_prod" lote=''>: </label></td>
+					</tr>
+				</table>
+			</div>
+
+
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id='oculto1' style="display:none;">
 				<div class="form-inline input-sm" style="height: 35px;" >
 					{!! Form::label('productod', 'Producto:', array('class' => 'col-sm-1 col-xs-12 control-label', 'style'=>'height: 35px')) !!}
@@ -66,7 +83,7 @@
 						<td class="form-control input-sm"><b>Cantidad</b></td>
 						<td><input class=" input-number" id="cantidad" size="3" name="cantidad" type="text">
 						<td class="form-control input-sm"><b>Factor</b></td>
-						<td><input class=" input-number" id="factor" size="3" name="factor" type="text">{!! Form::hidden('unidad_presentacion', null, array('id' => 'unidad_presentacion')) !!}</td>
+						<td><input class=" input-number" id="factor" size="3" name="factor" type="text">{!! Form::hidden('unidad_presentacion', null, array('id' => 'unidad_presentacion')) !!} {!! Form::hidden('cantidad_max', null, array('id' => 'cantidad_max')) !!}</td>
 						<td class="form-control input-sm"><b>Fecha Venc.</b></td>
 						<td><input class="" id="fechavencimiento" style="width:130px" size="6" name="fechavencimiento" type="text" placeholder="dd/mm/yyyy"></td>
 						<td class="form-control input-sm"><b>Lote</b></td>
@@ -105,6 +122,7 @@ $(document).ready(function() {
 	$('#fechavencimiento').val('{{ $fecha_form }}');
 	$('#fecha').val(fecha_horaApert);
 	$('#fecha_caducidad').val(fecha_horaApert);
+	$('#detalle_prod').hide();
 
 	$('#documento').change(function(event){
 		var documento = $('#documento').val();;
@@ -114,7 +132,6 @@ $(document).ready(function() {
 		}
 		if(documento == 'S'){
 			$('#oculto2').css('display','block');
-			$('#cantidad').prop("disabled", true);
 			$('#documento').prop("disabled", true);
 		}
 	});
@@ -145,11 +162,18 @@ $(document).ready(function() {
 	$('#producto_id').change(function(event){
 		$.get("entrada/"+$(this).val()+"/0219312", function(response, productos){
 			if(response.length !=0 ){
-				$('#preciocompra').val(response[0].precio_compra);
-				$('#precioventa').val(response[0].precio_venta_unitario);
-				$('#id_presentacion').val(response[0].presentacion_id);
-				$('#unidad_presentacion').val(response[0].cant_unidad_x_presentacion);
+				var entradas_ = response[0];
+				var cbo_present = response[1];
+				$('#id_presentacion').empty();
+				$('#id_presentacion').append('<option value="0">Seleccione.</option>');
+				$('#id_presentacion').append(cbo_present);
+
+				$('#preciocompra').val(entradas_.precio_compra);
+				$('#precioventa').val(entradas_.precio_venta_unitario);
+				$('#id_presentacion').val(entradas_.presentacion_id);
+				$('#unidad_presentacion').val(entradas_.cant_unidad_x_presentacion);
 				$('#id_presentacion').prop("disabled", true);
+				
 			}else{
 				window.alert("Producto no esta registrado en el inventario!");
 			}
@@ -180,37 +204,82 @@ $(document).ready(function() {
 		}
 	});
 
-	$("input[name=cantidad]").change(function(event){
-		var cant = parseInt($('#cantidad').val());
-		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
-		$('#factor').val('');
-		$('#factor').val(cant*cantidad_unidad);
-	});
-
-
 	$('#entrada_id').change(function(event){
 		$.get("entrada/"+$(this).val()+"", function(response, productos){
-			console.log(response);
+			var entrsalida = response[0];
+			var cbopresentacion = response[1];
 			if(response.length !=0 ){
-				console.log("entro por la salidaaaaaaaa");
-				// $('#preciocompra').prop("readonly", true);
-				//$('#precioventa').prop("readonly", true);
+				$('#id_presentacion').empty();
+				$('#id_presentacion').append('<option value="0">Seleccione.</option>');
+				$('#id_presentacion').append(cbopresentacion);
+
+				$('#producto_inf').text('');
+				$('#fecha_venc').text('');
+				$('#unidad_presentacion').val('');
+				$('#cantidad_max').val('');
+				$('#stock_inf').text('');
+				$('#lote_prod').text('');
+
+				$('#fechavencimiento').val('');
+				$('#lote').val('');
+				$('#factor').val('');
+				$('#cantidad').val('');
+
+
+				$('#producto_inf').text(entrsalida.descripcion);
+				$('#fecha_venc').text(entrsalida.fecha_caducidad_string);
+				$('#unidad_presentacion').val(entrsalida.stock);
+				$('#stock_inf').text(entrsalida.stock);
+				$('#cantidad_max').val(entrsalida.stock);
+				$('#lote_prod').text(entrsalida.lote);
+
 				$('#fechavencimiento').prop("readonly", true);
 				$('#lote').prop("readonly", true);
-				$('#id_presentacion').prop("disabled", true);
-				$('#preciocompra').val(response[0].precio_compra);
-				$('#precioventa').val(response[0].precio_venta);
-				$('#id_presentacion').val(response[0].presentacion_id);
-				$('#fechavencimiento').val(response[0].fecha_caducidad_string);
-				$('#unidad_presentacion').val(response[0].stock);
-				$('#factor').val(response[0].stock);
-				$('#lote').val(response[0].lote);
+				$('#fechavencimiento').val(entrsalida.fecha_caducidad_string);
+				$('#lote').val(entrsalida.lote);
 
+				$('#detalle_prod').show();
 			}else{
 				window.alert("Producto no esta registrado en el inventario!");
 			}
 		});
 	});
+
+	$('#id_presentacion').change(function(event){
+		var prod_id = parseInt($('#entrada_id').val());
+		$.get("entrada/"+$(this).val()+"/"+prod_id+"/234234", function(response, productos){
+			if(response.length !=0 ){
+				$('#preciocompra').val('');
+				$('#precioventa').val('');
+				$('#factor').val('');
+				$('#cantidad').val('');
+				$('#unidad_presentacion').val('');
+
+				$('#preciocompra').val(response.precio_compra);
+				$('#precioventa').val(response.precio_venta);
+				// $('#factor').val(response.cant_unidad_x_presentacion);
+				$('#unidad_presentacion').val(response.cant_unidad_x_presentacion);
+				$('#factor').prop("readonly", true);
+			}else{
+				window.alert("Producto no esta registrado en el inventario!");
+			}
+		});
+	});
+
+
+	$("input[name=cantidad]").change(function(event){
+		var cant = parseInt($('#cantidad').val());
+		var cantidad_unidad = parseInt($('#unidad_presentacion').val());
+		$('#factor').val('');
+		$('#factor').val(cant*cantidad_unidad);
+
+		var doc_ 				= $('#documento').val();
+
+		if(doc_=='S'){
+			$('#stock_inf').text(parseInt($('#cantidad_max').val())-parseInt($('#factor').val()));
+		}
+	});
+
 
 }); 
 
@@ -320,14 +389,15 @@ function agregar(){
 			if(id_presentacion !=""){
 				if(preciocompra !=""){
 					if(precioventa !=""){
-						if($('#factor').val()!=""){
-							if(parseInt($('#factor').val())<= parseInt($('#unidad_presentacion').val())){
+						if($('#cantidad').val()!=""){
+							console.log($('#factor').val()+"  "+$('#cantidad_max').val());
+							if(parseInt($('#factor').val()) <= parseInt($('#cantidad_max').val())){
 
 								if(fechavencimiento!=""){
 									if(lote!=""){
 										var subtotal ="";
 										subtotal = parseInt(parseInt($('#factor').val()))*parseFloat(preciocompra);
-										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
+										var d = '<tr class="datos-entrada" id_entrada="'+$('#entrada_id').val()+'" id_presentacion="'+id_presentacion+'" precio_compra="'+preciocompra+'" precio_venta="'+precioventa+'" cantidad_entrada="'+$('#factor').val()+'" c_entrada="'+$('#cantidad').val()+'"  fecha_venc="'+fechavencimiento+'" lot="'+lote+'">'+
 											'<td class="input-sm" width="45%">'+entrada_dat+'</td>'+
 											'<td class="input-sm" width="15%" align="center">'+presentacion_dat+'</td>'+
 											'<td class="input-sm" width="10%" align="center" >'+fechavencimiento+'</td>'+
@@ -361,7 +431,7 @@ function agregar(){
 								$('#factor').focus();	
 							}
 						}else{
-							window.alert("ingrese cantidad a comprar!");
+							window.alert("ingrese cantidad!");
 							$('#cantidad').focus();
 						}	
 					}else{
@@ -471,6 +541,7 @@ function submitForm_control(idformulario) {
 						"&precio_compra"	+i+"="+$(this).attr("precio_compra")+
 						"&precio_venta"		+i+"="+$(this).attr("precio_venta")+
 						"&cantid"				+i+"="+$(this).attr("cantidad_entrada")+
+						"&salida_c"				+i+"="+$(this).attr("c_entrada")+
 						"&fecha_vencim"			+i+"="+$(this).attr("fecha_venc")+
 						"&lot"			+i+"="+$(this).attr("lot");
 			i++;
