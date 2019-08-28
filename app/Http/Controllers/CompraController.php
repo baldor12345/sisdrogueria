@@ -589,8 +589,8 @@ class CompraController extends Controller
                 $caja_[0]->delete();
             }
 
-            $compra_d = DetalleCompra::where('id', $compra_d->compra_id )->where('deleted_at', null)->count();
-            if($compra_d ==0){
+            $compra_d = DetalleCompra::where('compra_id', $compra_d->compra_id )->where('deleted_at', null)->count();
+            if($compra_d <= 0){
                 $compra->delete();
             }
         });

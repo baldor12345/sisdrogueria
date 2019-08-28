@@ -416,7 +416,9 @@ function calcularPrecioCompra(){
 		tmp_valor_sub = precio * cantidad;
 		subtotal += tmp_valor_sub;
 		if(afecto == 'S'){
-			tmp_igv = porcent_igv*tmp_valor_sub;
+			//tmp_igv = porcent_igv*tmp_valor_sub;
+			tmp_igv = tmp_valor_sub/1.18;
+
 		}
 		igv += tmp_igv;
 	});
@@ -425,9 +427,9 @@ function calcularPrecioCompra(){
 
 	var res = [igv,subtotal, total];
 
-	$('#total').val(total);
+	$('#total').val( igv);
 	$('#total_n').val(subtotal);
-	$('#igv_t').val(igv);
+	$('#igv_t').val(total);
 	return res;
 }
 

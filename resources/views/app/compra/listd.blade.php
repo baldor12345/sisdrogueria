@@ -9,9 +9,9 @@
         <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">Presentacion</th>
         <th bgcolor="#E0ECF8" class="text-center input-sm" width="15%">F. Venc.</th>
         <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Cantidad</th>
-        <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio</th>
+        <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Precio sin IGV</th>
         <th bgcolor="#E0ECF8" class="text-center input-sm" width="10%">Subtotal</th>
-        <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Subtotal</th>
+        <th bgcolor="#E0ECF8" class="text-center input-sm" width="5%">Ope.</th>
         </tr>
     </thead>
 	<tbody>
@@ -25,8 +25,8 @@
             <td class="text-center input-xs">{{ $value->presentacion_nombre }}</td>
             <td class="text-center input-xs">{{ $value->fecha_caducidad_string }}</td>
             <td class="text-center input-xs">{{ $value->cantidad }}</td>
-            <td class="text-center input-xs">{{ $value->precio_compra }}</td>
-            <td class="text-center input-xs">{{ number_format($value->precio_compra*$value->cantidad,2) }}</td>
+            <td class="text-center input-xs">{{ number_format($value->precio_compra/1.18,2) }}</td>
+            <td class="text-center input-xs">{{ number_format($value->precio_compra*$value->cantidad/1.18,2) }}</td>
             <td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
         </tr>
 		<?php

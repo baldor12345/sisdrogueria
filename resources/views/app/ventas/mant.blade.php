@@ -442,8 +442,10 @@ function calcularPrecio(){
 		tmp_valor_sub = precio * cantidad;
 		subtotal += tmp_valor_sub;
 		if(afecto == 'S'){
-			tmp_igv = porcent_igv*tmp_valor_sub;
+			//tmp_igv = porcent_igv*tmp_valor_sub;
+			tmp_igv = tmp_valor_sub/1.18;
 		}
+
 		igv += tmp_igv;
 	});
 
@@ -454,8 +456,8 @@ function calcularPrecio(){
 	var res = [igv,subtotal, total];
 
 	$('#total').val(total);
-	$('#subtotal').val(subtotal);
-	$('#igv').val(igv);
+	$('#subtotal').val(igv);
+	$('#igv').val(subtotal);
 	return res;
 }
 
@@ -652,6 +654,7 @@ function submitForm_venta(idformulario) {
 		datos += 	"&prod_id"+i+"="+$(this).attr("producto_id")+
 					"&present_id"	+i+"="+$(this).attr("presentacion_id")+
 					"&cant_pres"	+i+"="+$(this).attr("cantidad_presentacion")+
+					"&precio_venta"	+i+"="+$(this).attr("precio_venta")+
 					"&cant_prod"+i+"="+$(this).attr("cantidad");
 		i++;
 	});

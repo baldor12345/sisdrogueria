@@ -138,8 +138,9 @@ class EntradaSalidaController extends Controller
 
         $serie =1;
         $numero =1;
-        $entr = EntradaSalida::All();
-        $count_entr = count($entr)== 0?0:count($entr);
+        //$entr = EntradaSalida::All();
+        $num_entradasSalidas = count(DB::table('entrada_salida')->where('id', '!=', null)->get());
+        $count_entr = $num_entradasSalidas;
         if(strlen($count_entr)==1){
             $serie ="D00".($count_entr+1);
             $numero ="00000".($count_entr+1);
@@ -725,18 +726,17 @@ class EntradaSalidaController extends Controller
         $error = DB::transaction(function() use($id){
             $entrada_salida_d = EntradaSalidaDetalle::find($id);
             $e_s = EntradaSalida::find($entrada_salida_d->entrada_salida_id);
-            
+            $num_registros_detalle = EntradaSalidaDetalle::where('entrada_salida_id', $entrada_salida_d->entrada_salida_id )->where('deleted_at', null)->count();
             if($e_s->tipo == 'E'){
                 $entrada_ = Entrada::where('fecha_caducidad_string' , $entrada_salida_d->fecha_caducidad_string)->where('lote', $entrada_salida_d->lote)->where('producto_presentacion_id', $entrada_salida_d->producto_presentacion_id)->get()[0];
                 if(count($entrada_) != 0){
                     $entrada_->stock = ($entrada_->stock-$entrada_salida_d->cantidad);
                     $entrada_->save();
                 }
+                
                 $entrada_salida_d->delete();
-                $e_s_d = EntradaSalidaDetalle::where('id', $entrada_salida_d->entrada_salida_id )->where('deleted_at', null)->count();
-                if($e_s_d ==0){
-                    $e_s->delete();
-                }
+                $num_registros_detalle = $num_registros_detalle -1;
+               
             }
             if($e_s->tipo == 'S'){
 
@@ -747,10 +747,12 @@ class EntradaSalidaController extends Controller
                     $entrada_->save();
                 }
                 $entrada_salida_d->delete();
-                $e_s_d = EntradaSalidaDetalle::where('id', $entrada_salida_d->entrada_salida_id )->where('deleted_at', null)->count();
-                if($e_s_d ==0){
-                    $e_s->delete();
-                }
+                $num_registros_detalle = $num_registros_detalle -1;
+            }
+
+            ///NUEVOOOOO *********************** }
+            if($num_registros_detalle <= 0){
+                $e_s->delete();
             }
             
         });

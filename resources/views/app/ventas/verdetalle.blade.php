@@ -35,7 +35,7 @@
 						<th class="text-center input-sm" width="40%">Descripción</th>
 						<th class="text-center input-sm" width="10%">Lote</th>
 						<th class="text-center input-sm" width="10%">F. VCTO</th>
-						<th class="text-center input-sm" width="10%">Valor Unitario</th>
+						<th class="text-center input-sm" width="10%">Valor Unit. sin IGV</th>
 						<th class="text-center input-sm" width="10%">Sub Total</th>
 					</tr>
 				</thead>
@@ -64,8 +64,8 @@
 							{{-- <td class="text-center input-sm" width="10%">{{ $value->lotes}}</td> --}}
 							<td class="text-center input-sm" width="10%">{{ $lot}}</td>
 							<td class="text-center input-sm" width="10%">{{ $fecha_v }}</td>
-							<td class="text-center input-sm" width="10%">{{ $value->precio_unitario }}</td>
-							<td class="text-center input-sm" width="10%">{{ $value->total }}</td>
+							<td class="text-center input-sm" width="10%">{{ round($value->precio_unitario/1.18, 2) }}</td>
+							<td class="text-center input-sm" width="10%">{{ round($value->total/1.18,2) }}</td>
 						</tr>
 					@endforeach
 
