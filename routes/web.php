@@ -131,6 +131,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('producto/listproveedores',  'ProductoController@listproveedores')->name('producto.listproveedores');
     Route::get('producto/listsucursales',  'ProductoController@listsucursales')->name('producto.listsucursales');
 
+    //PRODUCTO PRESENTACION
+    Route::get('producto/adminpresentacion/{id?}',  'ProductoController@adminpresentacion')->name('producto.adminpresentacion');
+    Route::get('producto/buscardes', 'ProductoController@buscardpresentacion')->name('producto.buscardpresentacion');
+    Route::get('producto/nuevapresentacion', 'ProductoController@nuevapresentacion')->name('producto.nuevapresentacion');
+    Route::get('producto/guardarpresentacion', 'ProductoController@guardarpresentacion')->name('producto.guardarpresentacion');
+    Route::get('producto/editarpresentacion/{id}', 'ProductoController@editarpresentacion')->name('producto.editarpresentacion');
+    Route::get('producto/modificarpresentacion', 'ProductoController@modificarpresentacion')->name('producto.modificarpresentacion');
+    Route::get('producto/deletepresentacion/{id}/{listarluego}','ProductoController@deletepresentacion')->name('producto.deletepresentacion');
+    Route::delete('producto/eliminarproductopresentacion/{id}','ProductoController@eliminarproductopresentacion')->name('producto.eliminarproductopresentacion');
+
+
     Route::get('producto/presentacion/{id?}',  'ProductoController@presentacion')->name('producto.presentacion');
     Route::post('producto/update_present/{id?}',  'ProductoController@update_present')->name('producto.update_present');
 
