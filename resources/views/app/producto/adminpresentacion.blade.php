@@ -2,7 +2,7 @@
 {!! Form::open(['route' => $ruta["buscardpresentacion"], 'method' => 'GET', 'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusquedaProductoPresentacion']) !!}
 	{!! Form::hidden('idpresentacion', $id, array('id' => 'idpresentacion')) !!}
 	{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
-	{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo',array('class'=>'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id'=>'btnNuevo','onclick'=>'modal(\''.URL::route($ruta["nuevapresentacion"], array('listar'=>'SI')).'\',\''.$titulo_registrarpresentacion.'\',this);')) !!}
+	{!! Form::button('<i class="glyphicon glyphicon-plus"></i> Nuevo',array('class'=>'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id'=>'btnNuevo','onclick'=>'modal(\''.URL::route($ruta["nuevapresentacion"], array('listar'=>'SI', 'idproducto'=>$id)).'\',\''.$titulo_registrarpresentacion.'\',this);')) !!}
 {!! Form::close() !!}
 
 <div id="listado{{ $entidad }}"></div>

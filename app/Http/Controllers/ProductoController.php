@@ -427,13 +427,14 @@ class ProductoController extends Controller
 
     public function nuevapresentacion(Request $request)
     {
+        $idproducto = $request->input('idproducto');
         $listar         = Libreria::getParam($request->input('listar'), 'NO');
         $entidad        = 'ProductoPresentacion';
         $productopresentacion       = null;
         $cboPresentacion     = ['0'=>'Seleccione'] + Presentacion::pluck('nombre', 'id')->all();
         $ruta             = $this->rutas;
         $boton          = 'Registrar'; 
-        return view($this->folderview.'.nuevapresentacion')->with(compact('productopresentacion', 'cboPresentacion', 'formData', 'ruta', 'entidad', 'boton', 'listar'));
+        return view($this->folderview.'.nuevapresentacion')->with(compact('productopresentacion','idproducto' ,'cboPresentacion', 'formData', 'ruta', 'entidad', 'boton', 'listar'));
     }
 
     public function guardarpresentacion(Request $request){
