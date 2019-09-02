@@ -204,7 +204,7 @@ class VentasController extends Controller
             // $ventaId = null;
             $error = DB::transaction(function() use($request, $id_venta, $valor_total){
                 $user = Auth::user();
-                $caja = Caja::where('estado','=','A')->where('deleted_at','=',null)->get()[0];
+                $caja = Caja::where('estado','=','A')->where('user_id','=', $user->id)->where('deleted_at','=',null)->get()[0];
 
                 $tipodoc = $request->input('documento');
                 $clientec = Cliente::where(( $tipodoc == 'B'?'dni':'ruc'),'=',$request->input('doccliente'))->where('deleted_at','=',null)->get();
