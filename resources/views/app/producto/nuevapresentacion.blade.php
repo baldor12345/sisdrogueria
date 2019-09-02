@@ -9,11 +9,11 @@
 </div>
 <div class="form-group col-12 col-md-12">
 	{!! Form::label('preciocompra', 'P.Compra:', array('class' => '')) !!}
-		{!! Form::text('preciocompra', null, array('class' => 'form-control input-xs', 'id' => 'preciocompra', 'placeholder' => 'Ingrese Precio de compra')) !!}
+		{!! Form::text('preciocompra', null, array('class' => 'form-control input-xs','id' => 'preciocompra', 'placeholder' => 'Ingrese Precio de compra')) !!}
 </div>
 <div class="form-group col-12 col-md-12">
 	{!! Form::label('unidad_x_presentacion', 'Cantidad:', array('class' => '')) !!}
-		{!! Form::text('unidad_x_presentacion', null, array('class' => 'form-control input-xs', 'id' => 'unidad_x_presentacion', 'placeholder' => 'Ingrese cantidad')) !!}
+		{!! Form::text('unidad_x_presentacion', null, array('class' => 'form-control input-xs input-number', 'id' => 'unidad_x_presentacion', 'placeholder' => 'Ingrese cantidad')) !!}
 </div>
 <div class="form-group col-12 col-md-12">
 	{!! Form::label('precioventaunitario', 'P.Venta:', array('class' => '')) !!}
@@ -21,7 +21,7 @@
 </div>
 <div class="form-group col-12 col-md-12">
 	{!! Form::label('puntos', 'Puntos:', array('class' => '')) !!}
-		{!! Form::text('puntos', null, array('class' => 'form-control input-xs', 'id' => 'puntos', 'placeholder' => 'Ingrese puntos')) !!}
+		{!! Form::text('puntos', null, array('class' => 'form-control input-xs input-number', 'id' => 'puntos', 'placeholder' => 'Ingrese puntos')) !!}
 </div>
 
 
@@ -40,6 +40,10 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('.input-number').on('input', function () { 
     	this.value = this.value.replace(/[^0-9]/g,'');
+	});
+
+	$("#modal"+(contadorModal-1)).on('hidden.bs.modal', function(){
+		$('.modal'+(contadorModal-2)).css('pointer-events','auto');
 	});
 
 }); 

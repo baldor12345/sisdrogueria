@@ -13,4 +13,7 @@
 		init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 		configurarAnchoModal('350');
 	}); 
+	$("#modal"+(contadorModal-1)).on('hidden.bs.modal', function(){
+		$('.modal'+(contadorModal-2)).css('pointer-events','auto');
+	});
 </script>
