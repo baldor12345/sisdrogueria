@@ -428,36 +428,54 @@ function contar_registros(){
 	return cont;
 }
 function calcularPrecio(){
-	var subtotal = 0;
-	var total = 0;
-	var igv = 0;
+	// var subtotal = 0;
+	// var total = 0;
+	// var igv = 0;
 	var porcent_igv = 0.18;
+
+	var totalAfecto = 0;
+	var totalInafecto = 0;
 	$('.datos-producto').each(function() {
-		var tmp_igv = 0;
-		var tmp_valor_sub = 0;
+		// var tmp_igv = 0;
+		// var tmp_valor_sub = 0;
 		var precio = parseFloat($(this).attr("precio_venta"));
 		// var cantidad = parseFloat($(this).attr("cantidad"));
 		var cantidad = parseFloat($(this).attr("cantidad_presentacion"));
-		var afecto = $(this).attr("afecto");
-		tmp_valor_sub = precio * cantidad;
-		subtotal += tmp_valor_sub;
-		if(afecto == 'S'){
-			//tmp_igv = porcent_igv*tmp_valor_sub;
-			tmp_igv = tmp_valor_sub/1.18;
+		var afecto = $(this).attr("afecto") == 'S'?true:false;
+		console.log('Precio: '+precio+' cant: '+cantidad+ ' afecto: '+afecto);
+		if(afecto){
+			totalAfecto += precio * cantidad;
+		}else{
+			totalInafecto += precio * cantidad;
 		}
 
-		igv += tmp_igv;
+		// tmp_valor_sub = precio * cantidad;
+		// subtotal += tmp_valor_sub;
+		// if(afecto){
+		// 	//tmp_igv = porcent_igv*tmp_valor_sub;
+		// 	tmp_igv = tmp_valor_sub/1.18;
+		// }
+
+		// igv += tmp_igv;
 	});
 
-	total = subtotal;
-	subtotal = total - igv;
-
-
+	// total = subtotal;
+	// subtotal = total - igv;
+	var total = totalAfecto + totalInafecto;
+	console.log('TotalInafect: '+totalInafecto);
+	console.log('TotalAfect: '+totalAfecto);
+	
+	var subtotal = (totalAfecto>0? totalAfecto/1.18: 0) + totalInafecto;
+	var igv = total - subtotal;
+	console.log('Total: '+total);
+	console.log('subTotal: '+subtotal);
+	console.log('igv: '+igv);
+	
 	var res = [igv,subtotal, total];
 
 	$('#total').val(total);
-	$('#subtotal').val(igv);
-	$('#igv').val(subtotal);
+	$('#subtotal').val(subtotal);
+	$('#igv').val(igv);
 	return res;
 }
 

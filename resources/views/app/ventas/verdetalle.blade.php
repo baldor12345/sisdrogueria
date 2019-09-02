@@ -64,8 +64,8 @@
 							{{-- <td class="text-center input-sm" width="10%">{{ $value->lotes}}</td> --}}
 							<td class="text-center input-sm" width="10%">{{ $lot}}</td>
 							<td class="text-center input-sm" width="10%">{{ $fecha_v }}</td>
-							<td class="text-center input-sm" width="10%">{{ round($value->precio_unitario/1.18, 2) }}</td>
-							<td class="text-center input-sm" width="10%">{{ round($value->total/1.18,2) }}</td>
+							<td class="text-center input-sm" width="10%">{{ round(($value->afecto == 'S'?$value->precio_unitario/1.18:$value->precio_unitario) , 2) }}</td>
+							<td class="text-center input-sm" width="10%">{{ round(($value->afecto == 'S'?$value->total/1.18:$value->total),2) }}</td>
 						</tr>
 					@endforeach
 
