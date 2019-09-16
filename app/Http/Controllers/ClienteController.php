@@ -9,6 +9,7 @@ use Validator;
 use App\Http\Requests;
 
 use App\Cliente;
+use App\Venta;
 // use App\Curl;
 // use App\Personamaestro;
 use App\Librerias\Libreria;
@@ -247,11 +248,14 @@ class ClienteController extends Controller
         }
         $error = DB::transaction(function() use($request , $id){
             $cliente  = Cliente::find($id);
+            
             if($request->input('cboTipoDocumento') == 'dni'){
+                
                 $cliente->dni        = $request->input('doc');
                 $cliente->nombres    = strtoupper($request->input('nombres'));
                 $cliente->apellidos  = strtoupper($request->input('apellidos'));
             }else{
+                
                 $cliente->ruc        = $request->input('doc');
                 $cliente->razon_social  = strtoupper($request->input('razon_social'));
             }
@@ -276,6 +280,7 @@ class ClienteController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+
         $error = DB::transaction(function() use($id){
             $cliente = Cliente::find($id);
             if(!is_null($cliente)){
@@ -294,7 +299,7 @@ class ClienteController extends Controller
      */
     public function eliminar($id, $listarLuego)
     {
-        $mensaje=null;
+       
         $existe = Libreria::verificarExistencia($id, 'cliente');
         if ($existe !== true) {
             return $existe;
@@ -303,12 +308,16 @@ class ClienteController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
+        $cantidad_ventas = Venta::where('cliente_id','=', $id)->get()->count();
+        if($cantidad_ventas >0){
+            return '<span style="color: red; font-size:20px;">El cliente no se puede eliminar, existe relación con ventas realizadas.</span>';
+        }
         $modelo   = Cliente::find($id);
         $entidad  = 'Cliente';
      
         $formData = array('route' => array('clientes.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
-        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
+        return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar' ));
     }
 
     function buscarclienteSunat(Request $request){
