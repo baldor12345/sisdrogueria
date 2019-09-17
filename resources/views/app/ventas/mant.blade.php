@@ -49,18 +49,18 @@
 						{!! Form::select('tipo_venta', $cboTipos, null, array('class' => 'form-control input-sm', 'id' => 'tipo_venta', 'onchange'=>'cambiarcredito();')) !!}
 					</div>
 				</div>
-				<div class="form-group contado">
-					{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'')) !!}
-					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
-					</div>
-				</div>
 				<div class="form-group credito " >
 					{!! Form::label('dias', 'N° Dias:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
 						{!! Form::text('dias', 0, array('class' => 'form-control input-sm', 'id' => 'dias', 'placeholder' => 'N° dias', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 					</div>
 					
+				</div>
+				<div class="form-group ">
+					{!! Form::label('forma_pago', 'Forma de Pago:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm contado', 'style'=>'')) !!}
+					<div class="col-sm-9 col-xs-12" style="">
+						{!! Form::select('forma_pago', $cboFormasPago, null, array('class' => 'form-control input-sm', 'id' => 'forma_pago', 'onchange'=>'cambiarcredito();')) !!}
+					</div>
 				</div>
 				<div class="form-group">
 					{!! Form::label('cboMedico', 'Medico:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', '')) !!}
@@ -289,10 +289,10 @@ $(document).ready(function() {
 	$('#tipo_venta').change(function(){
 		if($(this).val() == 'CO'){
 			$('.credito').hide();
-			$('.contado').show();
+			//$('.contado').show();
 			$('#dias').val(0);
 		}else{
-			$('.contado').hide();
+			//$('.contado').hide();
 			$('.credito').show();
 		}
 	});
@@ -462,15 +462,9 @@ function calcularPrecio(){
 	// total = subtotal;
 	// subtotal = total - igv;
 	var total = totalAfecto + totalInafecto;
-	console.log('TotalInafect: '+totalInafecto);
-	console.log('TotalAfect: '+totalAfecto);
-	
 	var subtotal = (totalAfecto>0? totalAfecto/1.18: 0) + totalInafecto;
 	var igv = total - subtotal;
-	console.log('Total: '+total);
-	console.log('subTotal: '+subtotal);
-	console.log('igv: '+igv);
-	
+
 	var res = [igv,subtotal, total];
 
 	$('#total').val(total);

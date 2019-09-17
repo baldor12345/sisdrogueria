@@ -402,6 +402,7 @@ function quitar_compra(t, subtotal){
 	}
 }
 
+/*
 function calcularPrecioCompra(){
 	var subtotal = 0;
 	var total = 0;
@@ -431,7 +432,33 @@ function calcularPrecioCompra(){
 	$('#total_n').val(subtotal);
 	$('#igv_t').val(total);
 	return res;
+}*/
+
+function calcularPrecioCompra(){
+	var porcent_igv = 0.18;
+
+	var totalAfecto = 0;
+	var totalInafecto = 0;
+	$('.datos-producto').each(function() {
+		var precio = parseFloat($(this).attr("precio_compra"));
+		var cantidad = parseFloat($(this).attr("canti"));
+		var afecto = $(this).attr("afect_") == 'S'?true:false;
+		if(afecto){
+			totalAfecto += precio * cantidad;
+		}else{
+			totalInafecto += precio * cantidad;
+		}
+	});
+	var total = totalAfecto + totalInafecto;
+	var subtotal = (totalAfecto>0? totalAfecto/1.18: 0) + totalInafecto;
+	var igv = total - subtotal;
+	var res = [igv,subtotal, total];
+	$('#total').val(subtotal);
+	$('#total_n').val(total);
+	$('#igv_t').val(igv);
+	return res;
 }
+
 
 function guardar_compra(entidad, idboton) {
 	$cont=0;
