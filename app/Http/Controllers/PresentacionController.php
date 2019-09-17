@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Requests;
 use App\Producto;
+use App\ProductoPresentacion;
 use App\Presentacion;
 use App\Librerias\Libreria;
 use App\Http\Controllers\Controller;
@@ -204,7 +205,7 @@ class PresentacionController extends Controller
         if (!is_null(Libreria::obtenerParametro($listarLuego))) {
             $listar = $listarLuego;
         }
-        $count_producto = Producto::where('presentacion_id', $id)->count();
+        $count_producto = ProductoPresentacion::where('presentacion_id', $id)->count();
         $modelo   = Presentacion::find($id);
         $entidad  = 'Presentacion';
         $boton    = 'Eliminar';
