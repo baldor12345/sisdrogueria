@@ -69,9 +69,9 @@ class VentasController extends Controller
         $fechaf   = Libreria::getParam($request->input('fechaf'));
         $estado   = Libreria::getParam($request->input('cboTipoVentas'));
         $numero_serie = Libreria::getParam($request->input('numero_serie'));
+        $doc_dni_ruc = Libreria::getParam($request->input('doc_dni_ruc'));
         $tipo = Libreria::getParam($request->input('cboTipoV'));
-        // $this_contr = $this;
-        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo);
+        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -117,9 +117,10 @@ class VentasController extends Controller
         $title            = $this->tituloAdmin;
         $titulo_registrar = $this->tituloRegistrar;
         $ruta             = $this->rutas;
+        $fecha_inicial = date('Y-m')."-01";
         $fecha_defecto = date('Y-m-d');
         
-        return view($this->folderview.'.admin')->with(compact('entidad', 'fecha_defecto','title', 'titulo_registrar', 'ruta'));
+        return view($this->folderview.'.admin')->with(compact('entidad', 'fecha_defecto','title', 'titulo_registrar', 'ruta', 'fecha_inicial'));
     }
 
     /**
@@ -213,11 +214,13 @@ class VentasController extends Controller
                     $clientenuevo = new Cliente();
                     if($tipodoc == 'B'){
                         $clientenuevo->dni = $request->input('doccliente');
-                        $clientenuevo->nombres = $request->input('nombrescliente');
-                        $clientenuevo->apellidos = $request->input('apellidoscliente');
+                        $clientenuevo->nombres = $request->input('nombrecompleto');
+                        $clientenuevo->apellidos = $request->input('apellidocompleto');
+                        // $clientenuevo->nombres = $request->input('nombrescliente');
+                        // $clientenuevo->apellidos = $request->input('apellidoscliente');
                     }else{
                         $clientenuevo->ruc = $request->input('doccliente');
-                        $clientenuevo->razon_social = $request->input('nombrescliente');
+                        $clientenuevo->razon_social = $request->input('razon_socialv');
                     }
                     $clientenuevo->direccion = $request->input('direccioncliente');
                     $clientenuevo->telefono = $request->input('telefono');

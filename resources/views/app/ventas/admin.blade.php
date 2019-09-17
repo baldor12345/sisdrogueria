@@ -15,9 +15,14 @@
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
 					<div class="form-group">
-						<label for="numero_serie" class="input-md">N° Doc.:</label>
+						<label for="numero_serie" class="input-md">N° Doc. B/F:</label>
 						{!! Form::text('numero_serie', '', array('class' => 'form-control input-md', 'id' => 'numero_serie')) !!}
 					</div>
+					<div class="form-group">
+						<label for="doc_dni_ruc" class="input-md">DNI o RUC:</label>
+						{!! Form::text('doc_dni_ruc', '', array('class' => 'form-control input-md', 'id' => 'doc_dni_ruc')) !!}
+					</div>
+					
 					<div class="form-group">
 							<label for="cboTipoVentas" class="input-md">Tipo ventas:</label>
 						{!! Form::select('cboTipoVentas', ['P'=>'Activas','A'=>'Anuladas'], 'P', array('class' => 'form-control input-md', 'id' => 'cboTipoVentas', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
@@ -32,7 +37,7 @@
 					</div> --}}
 					<div class="form-group">
 						<label for="fechai" class="input-md">Fecha Inicio:</label>
-						{!! Form::date('fechai', $fecha_defecto, array('class' => 'form-control input-md', 'id' => 'fechai', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+						{!! Form::date('fechai', $fecha_inicial, array('class' => 'form-control input-md', 'id' => 'fechai', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					<div class="form-group">
 						<label for="fechaf" class="input-md">Fecha Fin:</label>

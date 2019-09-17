@@ -55,16 +55,14 @@ class Venta extends Model
      * @param  string $name  nombre
      * @return sql        sql
      */
-    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo)
+    public function scopelistar02($query, $fechai, $fechaf, $numero_serie, $estado, $tipo)
     {
         // $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
         $user = Auth::user();
         $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
         return $query->where(function($subquery) use($fechai, $fechaf, $estado)
             {
-                if (!is_null($fechai)) {
-                    
-                }
+               
             })
             ->whereBetween('fecha', [$fechai, $fechaf])
             ->where('estado','=',$estado)
@@ -72,6 +70,63 @@ class Venta extends Model
             ->where('numero_doc','LIKE','%'.$numero_serie.'%')
             ->where('sucursal_id','=',$user->sucursal_id)
             ->orderBy('fecha', 'DSC');
+    }
+
+    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc)
+    {
+        // $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
+        $user = Auth::user();
+        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        // $doc_dni == ""? NULL: $doc_dni;
+        // $doc_ruc == ""? NULL: $doc_ruc;
+        return  DB::table('ventas')
+        ->leftjoin('cliente', 'ventas.cliente_id', '=', 'cliente.id')
+        ->select(
+            'ventas.id as id',
+            'ventas.serie_doc as serie_doc',
+            'ventas.numero_doc as numero_doc',
+            'cliente.nombres as nombres',
+            'cliente.apellidos as apellidos',
+            'cliente.razon_social as razon_social',
+            'cliente.dni as dni',
+            'cliente.ruc as ruc',
+            'ventas.total as total',
+            'ventas.subtotal as subtotal',
+            'ventas.comprobante as comprobante',
+            'ventas.tipo_pago as tipo_pago',
+            'ventas.forma_pago as forma_pago',
+            'ventas.fecha as fecha',
+            'ventas.fecha_venc as fecha_venc',
+            'ventas.dias as dias',
+            'ventas.cliente_id as cliente_id',
+            'ventas.sucursal_id as sucursal_id',
+            'ventas.estado as estado'
+            
+        )
+            ->whereBetween('ventas.fecha', [$fechai, $fechaf])
+            ->where(function($subquery) use($doc_dni_ruc)
+            {
+                if (!is_null($doc_dni_ruc)) {
+                    $subquery->where("cliente.ruc",'LIKE', '%'.$doc_dni_ruc.'%')->orwhere('cliente.dni','LIKE', '%'.$doc_dni_ruc.'%');
+                }
+            })
+            ->where('ventas.estado','=',$estado)
+            ->where('ventas.tipo_pago','=',$tipo)
+            ->where('ventas.numero_doc','LIKE','%'.$numero_serie.'%')
+            // ->where('cliente.ruc','LIKE','%'.$doc_ruc.'%')
+            // ->where('cliente.dni','LIKE','%'.$doc_dni.'%')
+            ->where('ventas.sucursal_id','=',$user->sucursal_id)
+            ->orderBy('ventas.fecha', 'DSC');
+
+        ///********************************* */
+        return $query->where(function($subquery) use($nombre_ini)
+        {
+            if (!is_null($nombre_ini)) {
+                $subquery->where("nombres",'LIKE', '%'.$nombre_ini.'%')->orwhere('apellidos','LIKE', '%'.$nombre_ini.'%')->orwhere('dni','LIKE', '%'.$nombre_ini.'%')->orwhere('iniciales','LIKE', '%'.$nombre_ini.'%');
+            }
+        })
+        ->where('deleted_at','=',null)
+        ->orderBy('nombres', 'ASC');//->get();
     }
 
     public static function listarproductosvendidos($nombre, $fechai, $fechaf)

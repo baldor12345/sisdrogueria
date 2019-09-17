@@ -136,10 +136,22 @@
 					</span>
 				</div>
 			</div>
-			<div class="form-group" >
-				{!! Form::label('nombrecompleto', 'Nombre Apellidos:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lblnombrerazon', 'style'=>'')) !!}
+			<div class="form-group razons" >
+				{!! Form::label('razon_socialv', 'Razon Social:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm razons','id'=>'lblnombrerazon', 'style'=>'')) !!}
 				<div class="col-sm-9 col-xs-12" style="">
-					{!! Form::text('nombrecompleto', "", array('class' => 'form-control input-sm', 'id' => 'nombrecompleto','readonly')) !!}
+					{!! Form::text('razon_socialv', "", array('class' => 'form-control input-sm', 'id' => 'razon_socialv')) !!}
+				</div>
+			</div>
+			<div class="form-group nomap" >
+				{!! Form::label('nombrecompleto', 'Nombres:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lblnombrerazon', 'style'=>'')) !!}
+				<div class="col-sm-9 col-xs-12" style="">
+					{!! Form::text('nombrecompleto', "", array('class' => 'form-control input-sm', 'id' => 'nombrecompleto')) !!}
+				</div>
+			</div>
+			<div class="form-group nomap" >
+				{!! Form::label('apellidocompleto', 'Apellidos:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lblnombrerazon', 'style'=>'')) !!}
+				<div class="col-sm-9 col-xs-12" style="">
+					{!! Form::text('apellidocompleto', "", array('class' => 'form-control input-sm', 'id' => 'apellidocompleto')) !!}
 				</div>
 			</div>
 			<div class="form-group" >
@@ -228,6 +240,7 @@ $(document).ready(function() {
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	$('#detalle_prod').hide();
 	$('.credito').hide();
+	$('.razons').hide();
 
 	$('#cboProducto').select2({
 		dropdownParent: $("#modal"+(contadorModal-1)),
@@ -304,18 +317,22 @@ $(document).ready(function() {
 			$('#doccliente').attr('maxlength',11);
 			$('#doccliente').attr('placeholder','N° RUC');
 			$('#lbldniruc').text('RUC:');
-			$('#lblnombrerazon').text('Razon Social:');
+			$('.razons').show();
+			$('.nomap').hide();
+			// $('#lblnombrerazon').text('Razon Social:');
 			// $('#doccliente').val("");
-			$("#nombrecompleto").val("");
+			// $("#nombrecompleto").val("");
 			 getNumero_doc('F');
 			
 		}else{
+			$('.razons').hide();
+			$('.nomap').show();
 			$('#doccliente').attr('maxlength',11);
 			$('#doccliente').attr('placeholder','N° DNI');
 			$('#lbldniruc').text('DNI');
-			$('#lblnombrerazon').text('Nombre Apellidos:');
+			// $('#lblnombrerazon').text('Nombre Apellidos:');
 			// $('#doccliente').val("");
-			$("#nombrecompleto").val("");
+			// $("#nombrecompleto").val("");
 			 getNumero_doc('B');
 			
 		}
@@ -341,7 +358,7 @@ $(document).ready(function() {
 		});      
 			
 	});
-	$("#doccliente").keyup(function(e){
+/*	$("#doccliente").keyup(function(e){
 		if($('#documento').val() == 'B'){
 
 			if($(this).val().length == 8){
@@ -361,7 +378,7 @@ $(document).ready(function() {
 			}
 		}
 	
-	});
+	});*/
 
 	$("#dias").keyup(function(e){
 		if($(this).val().length > 0){
@@ -727,13 +744,18 @@ function consultaDOC(){
 		$.get("clientes/"+doc+"/"+tipodoc,function(response, facultad){
 			if(response[0]=='OK'){
 				var nombrecompleto = "";
+				var apellidocompleto = "";
+				var rason_social = "";
 				if(tipodoc == 'B'){
-					nombrecompleto = response[1].nombres+" "+response[1].apellidos;
-				}else{
-					nombrecompleto = response[1].razon_social;
-				}
+					nombrecompleto = response[1].nombres;
+					apellidocompleto = response[1].apellidos;
+					$('#nombrecompleto').val(nombrecompleto);
+					$('#apellidocompleto').val(nombrecompleto);
 
-				$('#nombrecompleto').val(nombrecompleto);
+				}else{
+					rason_social = response[1].razon_social;
+					$('#razon_socialv').val(rason_social);
+				}
 				$('#direccioncliente').val(response[1].direccion);
 				$('#telefono').val(response[1].telefono);
 				$('#email').val(response[1].email);
