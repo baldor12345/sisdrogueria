@@ -20,6 +20,9 @@ class ProductoPresentacion extends Model
     public function presentacion(){
         return $this->belongsTo('App\Presentacion','presentacion_id');
     } 
+    public function producto(){
+        return $this->belongsTo('App\Producto','producto_id');
+    } 
     /**
      * Método para listar
      * @param  model $query modelo

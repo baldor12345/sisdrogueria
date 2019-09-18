@@ -1,21 +1,24 @@
 <?php
-
 namespace App;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use App\Librerias\Libreria;
-use Illuminate\Support\Facades\Auth;
 use DateTime;
+use App\Librerias\Libreria;
+// use App\ProductoPresentacion;
+use Illuminate\Auth\UserInterface;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Auth\Reminders\RemindableInterface;
 class Entrada extends Model
 {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 
     protected $table='entrada';
-
+    public function productoPresentacion(){
+        return $this->belongsTo('App\ProductoPresentacion','producto_presentacion_id');
+    } 
     /**
      * Método para listar
      * @param  model $query modelo
@@ -51,6 +54,17 @@ class Entrada extends Model
                 ->where('producto_presentacion.producto_id', '=',$producto_id)
                 ->where('entrada.stock', '>',0)
                 ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
+    }
+
+    public static function idEntrada($producto_id, $lote){
+        $result =  DB::table('entrada')
+                ->leftjoin('producto_presentacion', 'entrada.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->select(
+                    'entrada.id as id'
+                )
+                ->where('producto_presentacion.producto_id', '=',$producto_id)
+                ->where('entrada.lote', '=',$lote)->get()[0];
+        return $result->id;
     }
 
     public function scopelistarsalida($query,$term){

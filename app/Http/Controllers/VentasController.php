@@ -469,13 +469,16 @@ class VentasController extends Controller
             $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->where('deleted_at','=',null)->get();
             foreach ($detalle_ventas as $key => $value) {
                 $lotes = explode(';',$value->lotes);
-
-                $prod_presentacion_id = $value->producto_presentacion_id;
+                
+                // $prod_presentacion_id = $value->producto_presentacion_id;
                 for($j=0; $j<count($lotes); $j ++){
                     $lot = explode(':',$lotes[$j]);
                     $cant = $lot[0];
                     $lote = $lot[1];
-                    $entrada = Entrada::where('producto_presentacion_id', '=', $prod_presentacion_id)->where('lote','=',$lote)->get()[0];
+                    // echo("Present_id: ".$prod_presentacion_id." - Lote: ".$lote);
+                    $entrada = Entrada::find(Entrada::idEntrada($value->producto_id, $lote));
+                    // $entrada = Entrada::where('producto_presentacion_id', '=', $prod_presentacion_id)->leftjoin()->where('lote','=',$lote)->get()[0];
+                    // echo("entrada:v ". $entrada);
                     $entrada->stock = $entrada->stock + $cant;
                     $entrada->save();
                 }
