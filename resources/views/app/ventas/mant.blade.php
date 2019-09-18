@@ -602,7 +602,7 @@ function quitar(t, subtotal){
 
 function guardar_venta(entidad, idboton) {
 	var correcto = false;
-	if($('#nombrecompleto').val() != ""){
+	//if($('#nombrecompleto').val() != ""){
 		if(contar_registros() > 0){
 			if($('#cboCliente').val() != '0'){
 				if($('#cboVendedor').val() != '0'){
@@ -619,9 +619,9 @@ function guardar_venta(entidad, idboton) {
 		}else{
 			alert('No a seleccionado ningun producto');
 		}
-	}else{
-		alert('Asegurese de ingresar un dni válido');
-	}
+	//}else{
+		//alert('Asegurese de ingresar un dni válido');
+	//}
 	
 
 	var idformulario = IDFORMMANTENIMIENTO + entidad;
@@ -744,7 +744,7 @@ function consultaDOC(){
 					nombrecompleto = response[1].nombres;
 					apellidocompleto = response[1].apellidos;
 					$('#nombrecompleto').val(nombrecompleto);
-					$('#apellidocompleto').val(nombrecompleto);
+					$('#apellidocompleto').val(apellidocompleto);
 
 				}else{
 					rason_social = response[1].razon_social;

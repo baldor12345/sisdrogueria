@@ -132,20 +132,27 @@ class ClienteController extends Controller
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
         $respuesta = "";
         $num_doc = $request->input('cboTipoDocumento');
+
+        $xiste = false;
         
         if( $num_doc== 'dni'){
+            $existe = count(Cliente::where('dni','=', $request->input('doc'))->where('deleted_at','=',null)->get()) >0?true:false;
+
             $reglas = array(
                 
-                'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
+                // 'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
+                'doc'       => 'required|numeric',
                 'nombres'    => 'required|max:100',
                 'apellidos'    => 'required|max:100',
-                'telefono'    => 'numeric',
+                // 'telefono'    => 'numeric',
                 );
         }else{
+            $existe = count(Cliente::where('ruc','=', $request->input('doc'))->where('deleted_at','=',null)->get()) >0?true:false;
             $reglas = array(
-                'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
+                // 'doc'       => 'required|numeric|unique:cliente,dni,NULL,id,deleted_at,NULL',
+                'doc'       => 'required|numeric',
                 'razon_social'    => 'required|max:100',
-                'telefono'    => 'numeric',
+                // 'telefono'    => 'numeric',
                 );
         }
        
@@ -155,6 +162,9 @@ class ClienteController extends Controller
         if ($validacion->fails()) {
             echo($validacion->messages()->toJson());
             return $validacion->messages()->toJson();
+        }
+        if($existe){
+            return '<span style="color: red; font-size: 20px;">Ya existe un cliente con el N° Doc. Ingresado</span>';
         }
         $error = DB::transaction(function() use($request){
             $cliente  = new Cliente();

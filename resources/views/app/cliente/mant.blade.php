@@ -135,11 +135,11 @@ $(document).ready(function() {
 	});
 	
 	
-	$('#doc').keyup(function(e){
+	/*$('#doc').keyup(function(e){
 		if($(this).val().length >= 8){
 			consultaDNIRUC();
 		}
-	});
+	});*/
 
 	$("#modal"+(contadorModal - 1)).on('hidden.bs.modal', function () {
 		$('.modal' + (contadorModal-2)).css('pointer-events','auto'); 
@@ -171,7 +171,7 @@ function consultaDNIRUC(){
 	$.get("clientes/"+doc+"/"+tipodoc,function(response, facultad){
 		if(response[0]=='OK'){
 			$('#btnGuardarcl').prop('disabled',true);
-			var nombrecompleto = "";
+			// var nombrecompleto = "";
 			if(tipodoc == 'dni'){
 				$('#nombres').val(response[1].nombres);
 				$('#apellidos').val(response[1].apellidos);
@@ -226,11 +226,6 @@ function consultaDNIRUC(){
 			}
 		}
 	});
-
-
-	
-	
-
 	
 }
 
