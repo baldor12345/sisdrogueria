@@ -216,6 +216,14 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
     Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
 
+    //GUIA DE REMISION
+    Route::post('guias/buscar','GuiaRemisionController@buscar')->name('guias.buscar');
+    Route::get('guias/eliminar/{id}/{listarluego}','GuiaRemisionController@eliminar')->name('guias.eliminar');
+    Route::resource('guias', 'GuiaRemisionController', array('except' => array('show')));
+    Route::get('guias/listproductos',  'GuiaRemisionController@listproductos')->name('guias.listproductos');
+    Route::get('guias/verdetalle_g/{guia_id}',  'GuiaRemisionController@verdetalle_g')->name('guias.verdetalle_g');
+    Route::get('/pdfGuia', 'GuiaRemisionController@pdfGuia')->name('guias.pdfGuia');
+    
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
     Route::get('sucursal/eliminar/{id}/{listarluego}','SucursalController@eliminar')->name('sucursal.eliminar');

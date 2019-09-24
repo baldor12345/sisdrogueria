@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+  
 use Hash;
 use Validator;
 use App\Http\Requests;
@@ -257,7 +257,9 @@ class ClienteController extends Controller
         }
         $error = DB::transaction(function() use($request , $id){
             $cliente  = Cliente::find($id);
+            
             if($request->input('cboTipoDocumento') == 'dni'){
+           
                 $cliente->dni        = $request->input('doc');
                 $cliente->nombres    = strtoupper($request->input('nombres'));
                 $cliente->apellidos  = strtoupper($request->input('apellidos'));

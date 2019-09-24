@@ -120,7 +120,7 @@
                     <td width="20%" align="center" class="">{{ $value->codigo_medico }}</td>
                     <td width="40%" align="left" class="">{{ $value->apellidos_medico.' '.$value->nombres_medico }}</td>
                     {{-- <td width="5%" align="center" class="fondo">{{ $value->nombres_medico }}</td> --}}
-                    <td width="34%" align="centes" >{{ $value->puntos }}</td>
+                    <td width="34%" align="center" >{{ $value->puntos }}</td>
                 </tr>
                 
                 <?php
