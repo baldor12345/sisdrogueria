@@ -187,6 +187,10 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Puntos Acumulados',
 					'link'   => 'puntos_medicos'
 				),
+				array(
+					'name' => 'Guia de Remisión',
+					'link'   => 'guias'
+				),
 				/*array(
 					'name' => 'Productos mas Vendidas',
 					'link'   => 'productos_mas_vendidas'

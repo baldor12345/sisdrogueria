@@ -59,14 +59,20 @@
 						<td style= "background-color: #171717;  color:#fff; ">Unidad de Medida</td>
 						<td style= "background-color: #171717;  color:#fff; ">Cantidad</td>
 					</tr>
+					<?php
+					$contador =1;
+					?>
 					@foreach ($bienes as $key => $value)
 						<tr>
-							<td class="text-center input-sm" >-</td>
+							<td class="text-center input-sm" >{{ $contador }}</td>
 							<td class="text-center input-sm" > - </td>
 							<td class="text-center input-sm" >{{ strtoupper($value->presentacion->producto->descripcion) }}</td>
 							<td class="text-center input-sm" >{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
 							<td class="text-center input-sm" >{{ $value->cantidad }}</td>
 						</tr>
+						<?php
+						$contador ++;
+						?>
 					@endforeach
 			</table>
 			<table>

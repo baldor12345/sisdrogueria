@@ -23,11 +23,11 @@
 </style>
 
 <div id="divMensajeError{!! $entidad !!}"></div>
-{!! Form::model($venta, $formData) !!}	
-	{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
-	{!! Form::hidden('afecto', null, array('id' => 'afecto')) !!}
-	{!! Form::hidden('stockg', null, array('id' => 'stockg')) !!}
-	{!! Form::hidden('fecha_vencg', null, array('id' => 'fecha_vencg')) !!}
+{!! Form::model($guia, $formData) !!}
+{!! Form::hidden('listar', $listar, array('id' => 'listar')) !!}
+{!! Form::hidden('afecto', null, array('id' => 'afecto')) !!}
+{!! Form::hidden('stockg', null, array('id' => 'stockg')) !!}
+{!! Form::hidden('fecha_vencg', null, array('id' => 'fecha_vencg')) !!}
 <div class="row">				
 	<div class="mb-3 col-12 col-md-12">
 		<div class="panel-title">Datos de Guia</div>
@@ -52,14 +52,14 @@
 						{!! Form::text('serie', 'G'.$serie, array('class' => 'form-control input-sm', 'id' => 'serie', 'placeholder' => 'serie')) !!}
 					</div>
 					<div class="col-sm-6 col-xs-12" style="">
-						{!! Form::text('numero', $numero_doc, array('class' => 'form-control input-sm', 'id' => 'numero', 'placeholder' => 'num documento')) !!}
+						{!! Form::text('numero', $numero_doc, array('class' => 'form-control input-sm', 'id' => 'numero', 'placeholder' => 'numero de documento')) !!}
 					</div>
 				</div>
 				
 				<div class="form-group text-right">
-					{!! Form::label('motivo', 'Motivo de Traslado:', array('class' => 'col-sm-3 col-xs-12 control-label input-md', 'style'=>'')) !!}
+					{!! Form::label('motivo_traslado', 'Motivo de Traslado:', array('class' => 'col-sm-3 col-xs-12 control-label input-md', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('motivo', null, array('class' => 'form-control input-md', 'id' => 'motivo', 'placeholder' => '')) !!}
+						{!! Form::select('motivo_traslado', $cboMotivos, null, array('class' => 'form-control input-sm', 'id' => 'motivo_traslado')) !!}
 					</div>
 				</div>
 			</div>
@@ -67,7 +67,7 @@
 				<div class="form-group " >
 					{!! Form::label('modalidad_transporte', 'Modalidad de transporte:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('modalidad_transporte', '', array('class' => 'form-control input-sm', 'id' => 'modalidad_transporte', 'placeholder' => 'Ibgrese modalidad de transporte')) !!}
+						{!! Form::select('modalidad_transporte', $cboTransportes, null, array('class' => 'form-control input-sm', 'id' => 'modalidad_transporte')) !!}
 					</div>
 				</div>
 				<div class="form-group " >
@@ -77,29 +77,46 @@
 					</div>
 				</div>
 				<div class="form-group " >
-					{!! Form::label('nombres_destinatario', 'Apellidos y nombres:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+					{!! Form::label('tipo_doc_d', 'Tipo Doc.:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('nombres_destinatario', '', array('class' => 'form-control input-sm', 'id' => 'nombres_destinatario', 'placeholder' => 'Apellidos y Nombres, denominacion o razon', 'onkeypress'=>'')) !!}
+						{!! Form::select('tipo_doc_d', ['dni'=>'DNI', 'ruc'=>'RUC'], 'dni', array('class' => 'form-control input-sm', 'id' => 'tipo_doc_d')) !!}
 					</div>
 				</div>
-				<div class="form-group " >
+				<div class="form-group" >
+					{!! Form::label('doc_identidad', 'Doc. Identidad:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lbldniruc', 'style'=>'')) !!}
+					<div class="input-group" style="">
+						{!! Form::text('doc_identidad', null, array('class' => 'form-control input-sm', 'id' => 'doc_identidad', 'placeholder' => 'Ingrese N° documento de identidad', 'maxlength'=>'8', 'onkeypress'=>'return filterFloat(event,this)')) !!}
+						<span class="input-group-btn">
+							{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnBuscar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar', 'onclick' => 'consultaDOC();')) !!}
+							{{-- {!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!} --}}
+						</span>
+					</div>
+				</div>
+				{{-- <div class="form-group " >
 					{!! Form::label('doc_identidad', 'Doc. Identidad:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
 						{!! Form::text('doc_identidad', '', array('class' => 'form-control input-sm', 'id' => 'doc_identidad', 'placeholder' => 'Ingrese documento de identidad ', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 					</div>
+				</div> --}}
+				<div class="form-group ">
+					{!! Form::label('nombres_destinatario', 'Apellidos y nombres, denominacion o razón:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+					<div class="col-sm-9 col-xs-12" style="">
+						{!! Form::text('nombres_destinatario', '', array('class' => 'form-control input-sm', 'id' => 'nombres_destinatario', 'placeholder' => 'Apellidos y Nombres, denominacion o razon', 'onkeypress'=>'')) !!}
+					</div>
 				</div>
+				
 			</div>
 			<div class="col-4 col-md-4">
 				<div class="form-group " >
 					{!! Form::label('direccion_partida', 'Direccion Partida:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('direccion_partida', '', array('class' => 'form-control input-sm', 'id' => 'direccion_partida', 'placeholder' => 'Ibgrese direccion de partida', 'onkeypress'=>'')) !!}
+						{!! Form::text('direccion_partida', '', array('class' => 'form-control input-sm', 'id' => 'direccion_partida', 'placeholder' => 'Ingrese dirección de partida', 'onkeypress'=>'')) !!}
 					</div>
 				</div>
 				<div class="form-group " >
 					{!! Form::label('direccion_llegada', 'Direccion llegada:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('direccion_llegada', '', array('class' => 'form-control input-sm', 'id' => 'direccion_llegada', 'placeholder' => 'Direccion de llegada', 'onkeypress'=>'')) !!}
+						{!! Form::text('direccion_llegada', '', array('class' => 'form-control input-sm', 'id' => 'direccion_llegada', 'placeholder' => 'Dirección de llegada', 'onkeypress'=>'')) !!}
 					</div>
 				</div>
 				<div class="form-group " >
@@ -111,7 +128,9 @@
 				<div class="form-group " >
 					{!! Form::label('tipodoc_conductor', 'Tipo Doc. conductor:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('tipodoc_conductor', '', array('class' => 'form-control input-sm', 'id' => 'tipodoc_conductor', 'placeholder' => 'Ingrese tipo de documento (DNI, RUC, CARNET, ETC..)', 'onkeypress'=>'return filterFloat(event,this)')) !!}
+						{!! Form::select('tipodoc_conductor', $cboTiposDocDestino, 'DNI', array('class' => 'form-control input-sm', 'id' => 'tipodoc_conductor')) !!}
+					
+						{{-- {!! Form::text('tipodoc_conductor', '', array('class' => 'form-control input-sm', 'id' => 'tipodoc_conductor', 'placeholder' => 'Ingrese tipo de documento (DNI, RUC, CARNET, ETC..)', 'onkeypress'=>'return filterFloat(event,this)')) !!} --}}
 					</div>
 				</div>
 				<div class="form-group " >
@@ -128,7 +147,6 @@
 		<div class="alert alert-success col-12 col-md-12" id="detalle_prodg">
 			<table id="tabla_temp" class="" style="">
 				<tr><td>Producto</td><td style="padding-left: 10px;"><label id="producto_infg">: </label></td></tr>
-				{{-- <tr><td>Fecha Venc.:</td><td><label id="fecha_v_infg" fecha_v=''></label></td></tr> --}}
 				<tr><td style="padding-left: 10px;"> Stock (Unidades)</td><td style="padding-left: 10px;"><label id="stock_infg" stock='0'>: </label></td><td style="padding-left: 10px;"> Fecha Venc.</td><td style="padding-left: 10px;"><label id="fecha_v_infg" fecha_v=''>: </label></td></tr>
 				<tr><td>Unidad</td><td><label id="unidad_infg" lote=''>: </label></td><td id="cant_unidades_titulog" style="padding-left: 10px;">Cantidad Unidades</td><td style="padding-left: 10px;"><label cantidad_u="0" id="cant_unidades_infg">: </label></td><td style="padding-left: 10px;"> Afecto</td><td style="padding-left: 10px;"><label id='afecto_infg' afecto=''>: </label></td></tr>
 			</table>
@@ -152,32 +170,53 @@
 				{!! Form::label('btnAgregarg', 'Agregar:', array('class' => 'col-sm-12 text-left')) !!}
 				{!! Form::button('<i class="fa fa-plus fa-lg"></i> Agregar', array('class' => 'btn btn-success btn-sm', 'id' => 'btnAgregarg', 'onclick' => 'agregar()')) !!}
 			</div>
-			
 		</div>
 		<div class="table-responsive">
 			<table id="tablag" class="table table-bordered table-striped table-condensed table-hover">
 				<thead>
 					<tr>
-						<th bgcolor="#E0ECF8" class="text-center input-sm" 	>Lote</th>
+						<th bgcolor="#E0ECF8" class="text-center input-sm" 	>Nro.</th>
+						<th bgcolor="#E0ECF8" class="text-center input-sm" 	>Cod. Bien</th>
 						<th bgcolor="#E0ECF8" class="text-center input-sm" 	>Descripción</th>
 						<th bgcolor="#E0ECF8" class="text-center input-sm"	>Unidad de medida</th>
 						<th bgcolor="#E0ECF8" class="text-center input-sm" 	>Cantidad</th>
 						<th bgcolor="#E0ECF8" class="text-center input-sm"	>Elim</th>
 					</tr>
 				</thead>
+				<tbody>
+					@if($listado_bienes != null)
+						<?php
+						$contador = 1;
+						?>
+						@foreach ($listado_bienes as $item)
+						<tr class="datos_bienes" cantidad="{{ $item->cantidad}}" prod_pres_id="{{  $item->producto_presentacion_id }}">
+							<td>{{ $contador }}</td>
+							<td></td>
+							<td>{{ $item->producto->descripcion }}</td>
+							<td>{{ $item->presentacion->presentacion->nombre }}</td>
+							<td>{{ $item->cantidad }}</td>
+							<td>
+								{!! Form::button('<i class="fa fa-elim fa-lg"></i> X', array('class' => 'btn btn-danger btn-sm', 'id' => 'btnquitar', 'onclick' => 'quitar();')) !!}
+							</td>
+						</tr>
+						<?php
+							$contador ++;
+						?>
+						@endforeach
+					@endif
+					
+				</tbody>
 			</table>
 		</div>
 		<div class="form-group col-6 col-md-6 text-left" style="margin-left: 3px">
 			{!! Form::label('observaciones', 'Observaciones:', array('class' => 'col-sm-12 col-xs-12')) !!}
-			{!! Form::text('observaciones', null, array('class' => 'form-control input-sm', 'id' => 'observaciones', 'placeholder' => 'Precio')) !!}
+			{!! Form::text('observaciones', null, array('class' => 'form-control input-sm', 'id' => 'observaciones', 'placeholder' => 'Observaciones')) !!}
 		</div> 
 	</div>
-
 	<div class="col-lg-12 col-md-12 col-sm-12 text-right">
 		{!! Form::button('<i class="fa fa-check fa-lg"></i> '.$boton, array('class' => 'btn btn-success btn-sm', 'id' => 'btnGuardarVentag', 'onclick' => 'guardar_guia(\''.$entidad.'\', this)')) !!}
 		{!! Form::button('<i class="fa fa-exclamation fa-lg"></i> Cancelar', array('class' => 'btn btn-warning btn-sm', 'id' => 'btnCancelarg'.$entidad, 'onclick' => 'cerrarModal();')) !!}
 	</div>
-
 {!! Form::close() !!}
 
 <script type="text/javascript">
@@ -204,14 +243,10 @@ $(document).ready(function() {
 			}
 		}
 	});
-
-
 	$('#cboProductog').change(function(){
-
 		$.get("ventas/"+$(this).val()+"",function(response, facultad){//obtener el producto, su stock, precio_venta
 			var producto = response[0];
 			var total_seleccionado = cantidad_seleccionado(producto.id);
-
 			var stock = response[1] - total_seleccionado;
 			var precio_unidad = response[2];
 			var cboPresentacion = response[3];
@@ -232,7 +267,6 @@ $(document).ready(function() {
 				$('#cboPresentaciong').empty();
 				$('#cboPresentaciong').append('<option value="0">Seleccione.</option>');
 				$('#cboPresentaciong').append(cboPresentacion);
-				$('#detalle_prodg').show();
 		});
 	});
 
@@ -249,18 +283,13 @@ $(document).ready(function() {
 			$('#cant_unidades_infg').attr('cantidad_u',cantidad_unidades_presentacion);
 			$('#cant_unidades_titulog').text("Cantidad Unidades/"+$('#cboPresentaciong option:selected').html()+" ");
 		});      
-			
 	});
-
 }); 
 function getNumero_doc(tipo_doc){
-	
 	$.get("ventas/numerodoc/"+tipo_doc+"/1",function(response, facultad){//obtener cod_numero
 		 numero_doc = response+"";
 		 $('#numero_documento').val(numero_doc);
 	}); 
-	;
-	
 }
 
 function cantidad_seleccionado(producto_id){
@@ -277,7 +306,7 @@ function cantidad_seleccionado(producto_id){
 }
 function contar_registros(){
 	var cont =0;
-	$('.datos-producto').each(function() {
+	$('.datos_bienes').each(function() {
 		cont ++;
 	});
 	return cont;
@@ -293,18 +322,17 @@ function agregar(){
 	var producto_id = parseInt($('#cboProductog').val());
 
 	var cantidad = parseInt($('#cantidadg').val());
-	var cantidad_total = cantidad * cant_u_present;
 	var fechavencimiento = $('#fecha_vencg').val();
-
 	var lote = $('#unidad_infg').attr('lote');
 	var stock = $('#stockg').val();
-	if(stock >= cantidad_total){
+	var cont = contar_registros();
 	if(producto_id!= '0'){
 		if(presentacion_id !='0'){
 			if(cantidad!=""){
 				
-				var d = '<tr class="datos-producto" producto_id="'+producto_id+'" cantidad="'+cantidad_total+'" cantidad_presentacion="'+cantidad+'" presentacion_id="'+presentacion_id+'" fecha_venc="'+fechavencimiento+'" afecto="'+afecto+'" >'+
-					'<td class="input-sm" align="center">'+lote+'</td>'+
+				var d = '<tr class="datos_bienes"   cantidad="'+cantidad+'" prod_pres_id="'+presentacion_id+'" >'+
+					'<td class="input-sm" align="center">'+(cont +1)+'</td>'+
+					'<td class="input-sm" align="center"></td>'+
 					'<td class="input-sm" >'+nombre_producto+'</td>'+
 					'<td class="input-sm"  align="center">'+nombre_presentacion+'</td>'+
 					'<td class="input-sm"  align="center">'+cantidad+'</td>'+
@@ -342,11 +370,6 @@ function agregar(){
 		alert("seleccione Un Producto!");
 		$('#cboProducto').focus();
 	}
-	}else{
-		alert("No hay stock suficiente para la cantidad solicitada!");
-		$('#cantidad').focus();
-	}
-
 }
 
 function quitar(t){
@@ -359,12 +382,10 @@ function quitar(t){
 		table.removeChild(tr);
 		var valores = calcularPrecio();
 	}
-
 }
 
 function guardar_guia(entidad, idboton) {
 	var correcto = false;
-
 		if(contar_registros() > 0){
 			correcto = true;
 		}else{
@@ -391,34 +412,26 @@ function guardar_guia(entidad, idboton) {
 			$(idboton).removeAttr('disabled');
 			$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
 		}).always(function() {
-			if(respuesta === 'ERROR'){
-			}else{
-				if (respuesta[0] === 'OK') {
-
-					cerrarModal();
-					if (listar === 'SI') {
-						buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
-					}        
-				} else {
-				$('#divMensajeError'+entidad).html('<div class="alert alert-danger"><strong>'+respuesta[0]+'</strong></div>');
+			if (respuesta === 'OK') {
+				cerrarModal();
+				if (listar === 'SI') {
+					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+				}
+			} else {
+				$('#divMensajeError'+entidad).html('<div class="alert alert-danger"><strong>'+respuesta+'</strong></div>');
 				$(idboton).removeClass('disabled');
 				$(idboton).removeAttr('disabled');
 				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
-				}
-				
 			}
 		});
 	}
-	
 }
 function submitForm_guia(idformulario) {
 	var i=0;
 	var datos="";
-	$('.datos-producto').each(function() {
-		datos += 	"&prod_id"+i+"="+$(this).attr("producto_id")+
-					"&present_id"	+i+"="+$(this).attr("presentacion_id")+
-					"&cant_pres"	+i+"="+$(this).attr("cantidad_presentacion")+
-					"&cant_prod"+i+"="+$(this).attr("cantidad");
+	$('.datos_bienes').each(function() {
+		datos += "&prod_pres_id"	+i+"="+$(this).attr("prod_pres_id")+
+				"&cant_pro_pres"	+i+"="+$(this).attr("cantidad");
 		i++;
 	});
 
@@ -427,7 +440,6 @@ function submitForm_guia(idformulario) {
 	parametros += datos;
 	var accion     = $(idformulario).attr('action').toLowerCase();
 	var metodo     = $(idformulario).attr('method').toLowerCase();
-	
 	var respuesta  = $.ajax({
 		url : accion,
 		type: metodo,
@@ -435,7 +447,6 @@ function submitForm_guia(idformulario) {
 	});
 	return respuesta;
 }
-
 
 $('.input-number').on('input', function () { 
 	this.value = this.value.replace(/[^0-9]/g,'');
@@ -474,6 +485,83 @@ function filter(__val__){
 	}else{
 	return false;
 	}
+	
+}
+
+function consultaDOC(){
+	var tipo_doc = $('#tipo_doc_d').val();
+	var doc = $('#doc_identidad').val();
+	var ibtn = "ibtnBuscar";
+	var btn = "btnBuscar";
+
+	if(tipo_doc == "dni"){
+		
+	consultaDNI(doc, btn, ibtn,'nombres_destinatario');
+		// console.log('RESPUESTA: '+respuesta);
+		// $('#nombres_destinatario').val(respuesta[0]+' '+respuesta[1]+' '+respuesta[2]);
+	}else{
+		 consultaRUC(doc, btn, ibtn,'nombres_destinatario');
+		// ('#nombres_destinatario').val(respuesta[0]);
+	}
+
+}
+function consultaDNI(doc, idbtn, idibtn, idTextnombres){
+	
+	param = "accion=consultaDNI&dni="+doc;
+	$.ajax({
+		url: 'clientes/buscarclienteSunat',
+		headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+		type: 'POST',
+		data: ""+param,
+		beforeSend: function(){ 
+			$('#'+idibtn).addClass('glyphicon-refresh-animate');
+			$('#'+idbtn).addClass('btn-warning');
+			$('#'+idbtn).removeClass('btn-success');
+		},
+		success: function(res){
+			$('#'+idibtn).removeClass('glyphicon-refresh-animate');
+			$('#'+idbtn).addClass('btn-success');
+			$('#'+idbtn).removeClass('btn-warning');
+			if(res.apepat == undefined){
+				$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>"+res.mensaje+"</div>");
+				$('#divMensajeError{{ $entidad }}').show();
+				
+				
+			}else{
+				$('#divMensajeError{{ $entidad }}').hide();
+				$('#'+idTextnombres).val(res.nombres+' '+res.apepat+' '+res.apemat);
+			
+			}
+		}
+	}).fail(function(){
+		$('#'+idibtn).removeClass('glyphicon-refresh-animate');
+		$('#'+idbtn).addClass('btn-success');
+		$('#'+idbtn).removeClass('btn-warning');
+	});
+	
+	
+}
+function consultaRUC(doc, idbtn, idibtn,  idTextnombres){
+    $.ajax({
+        type: 'GET',
+        url: "http://localhost/SunatPHP/demo.php",
+        data: "ruc="+doc,
+        beforeSend(){
+        	$('#'+idibtn).addClass('glyphicon-refresh-animate');
+			$('#'+idbtn).addClass('btn-warning');
+			$('#'+idbtn).removeClass('btn-success');
+        },
+        success: function (data, textStatus, jqXHR) {
+		$('#'+idTextnombres).val(data.RazonSocial+' ');
+			$('#'+idibtn).removeClass('glyphicon-refresh-animate');
+			$('#'+idbtn).removeClass('btn-warning');
+			$('#'+idbtn).addClass('btn-success');
+        }
+    }).fail(function(){
+		$('#'+idibtn).addClass('glyphicon-refresh-animate btn-success');
+		$('#'+idibtn).removeClass('glyphicon-refresh-animate');
+		// $('#ibtnConsultar').removeClass('btn-warning');
+	});
 	
 }
 

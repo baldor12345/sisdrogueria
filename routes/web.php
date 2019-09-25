@@ -215,6 +215,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ventas/listvendedores',  'VentasController@listvendedores')->name('ventas.listvendedores');
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
     Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
+    Route::get('ventas/generarGuia/{venta_id}',  'VentasController@generarGuia')->name('ventas.generarGuia');
 
     //GUIA DE REMISION
     Route::post('guias/buscar','GuiaRemisionController@buscar')->name('guias.buscar');
