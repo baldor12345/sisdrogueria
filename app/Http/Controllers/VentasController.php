@@ -53,6 +53,7 @@ class VentasController extends Controller
             'create_med' => 'medico.create',
             'create_vend' => 'vendedor.create',
             'verdetalle_v' => 'ventas.verdetalle_v',
+            'generarGuia' => 'ventas.generarGuia',
         );
 
     public function __construct()
@@ -649,6 +650,57 @@ class VentasController extends Controller
         $diferencia = $fecha_inicial->diff($fecha_final);
         $numeroDias = $diferencia->format('%R%a días');
         return $numeroDias;
+    }
+
+    function generarGuia($venta_id){
+        $existe = Libreria::verificarExistencia($venta_id, 'ventas');
+        if ($existe !== true) {
+            return $existe;
+        }
+        $listado_bienes = Detalle_venta::where('ventas_id','=',$venta_id)->get();
+       
+        $listar  = Libreria::getParam('NO', 'NO');
+        $entidad = 'Guia';
+        $guia  = null;
+        $formData  = array('guias.store');
+        $formData  = array('route' => $formData, 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $boton  = 'Registrar'; 
+        $user = Auth::user();
+        $serie = $user->sucursal->serie;
+        $numero_doc = Libreria::numero_doc_guia();
+        $ruta = $this->rutas;
+        $fecha_defecto = date('Y-m-d');
+        $cboPresentacion = ['0'=>'Seleccione'];
+        $cboProducto = ['0'=>'Seleccione'];
+       
+        $empresa = DatosEmpresa::all()->first();
+
+        $cboMotivos = [
+            'VENTA' => 'VENTA',
+            'COMPRA' => 'COMPRA',
+            'TRASLADO ENTRE ESTABLECIMIENTOS DE LA MISMA EMPRESA' => 'TRASLADO ENTRE ESTABLECIMIENTOS DE LA MISMA EMPRESA',
+            'TRASLADO DE BIENES PARA TRANSFORMACION' => 'TRASLADO DE BIENES PARA TRANSFORMACION',
+            'TRASLADO EMISOR ITINERANTE DE COMPROBANTES DE PAGO' => 'TRASLADO EMISOR ITINERANTE DE COMPROBANTES DE PAGO',
+            'TRASLADO ZONA PRIMARIA' => 'TRASLADO ZONA PRIMARIA',
+            'IMPORTACION' => 'IMPORTACION',
+            'EXPORTACION' => 'EXPORTACION',
+            'OTROS MOTIVOS' => 'OTROS MOTIVOS',
+            ];
+        $cboTiposDocDestino = [
+            'DNI'=>'DNI',
+            'RUC'=>'RUC',
+            'PASAPORTE'=>'PASAPORTE',
+            'DT.S/RUC'=>'DT.S/RUC',
+            'C.EXT'=>'C.EXT',
+            'CED.DIPL'=>'CED.DIPL',
+        ];
+        $cboTransportes = [
+            'PUBLICO' => 'PUBLICO',
+            'PRIVADO' => 'PRIVADO',
+        ];
+
+        return view('app.guia.mant')->with(compact('guia','serie','formData', 'entidad', 'boton', 'listar','ruta','cboPresentacion','cboProducto','fecha_defecto','numero_doc','cboMotivos','cboTiposDocDestino','cboTransportes','listado_bienes','empresa'));
+    
     }
 
   

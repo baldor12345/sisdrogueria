@@ -5,6 +5,7 @@ use Validator;
 use App\Menuoption;
 use App\DetalleCaja;
 use App\Caja;
+use App\GuiaRemision;
 use App\Sucursal;
 use App\Venta;
 use Illuminate\Support\Facades\Auth;
@@ -506,6 +507,28 @@ class Libreria
 		}else{
 			$numero_transacciones = count(Venta::where('comprobante','=', 'F')->get()) + 1;
 		}
+		
+		$codigo_generado ="";
+		if($numero_transacciones > 0){
+			$digitos = strlen($numero_transacciones);
+			$ceros =  "";
+			for($i=0; $i< (8 - $digitos) ; $i ++){
+				$ceros = $ceros."0";
+			}
+			$codigo_generado = $ceros.$numero_transacciones;
+		}else {
+			$codigo_generado = "00000001";
+		}
+		return $codigo_generado;
+	}
+
+
+
+	public static function numero_doc_guia(){
+		$numero_transacciones = 0;
+		$user = Auth::user();
+
+		$numero_transacciones = count(GuiaRemision::where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
 		
 		$codigo_generado ="";
 		if($numero_transacciones > 0){

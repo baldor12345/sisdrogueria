@@ -4,7 +4,8 @@
 	<div class="form-group col-6 col-md-6" >
 		{!! Form::label('cboTipoDocumento', 'Tipo Documento: ', array('class' => '')) !!}
 		@if($cliente != null)
-		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento','disabled'=>true)) !!}
+		{!! Form::select('cboTipoDocumento1', $cboTipoDocumento,$cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento1','disabled'=>true)) !!}
+		{!! Form::hidden('cboTipoDocumento', $cliente != null?($cliente->dni == null? 'ruc': 'dni'):'dni', array('id' => 'cboTipoDocumento')) !!}
 		@else
 		{!! Form::select('cboTipoDocumento', $cboTipoDocumento,'dni' , array('class' => 'form-control input-sm', 'id' => 'cboTipoDocumento')) !!}
 		@endif
@@ -116,7 +117,7 @@ $(document).ready(function() {
 	configurarAnchoModal('750');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 
-	
+	console.log('Gastelo');
 	// $('.clas_ruc').hide();
 
 	
