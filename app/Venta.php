@@ -156,6 +156,32 @@ class Venta extends Model
                 ->groupBy('producto.id','producto.descripcion','producto_presentacion.id','presentacion.nombre','presentacion.sigla','producto_presentacion.cant_unidad_x_presentacion');
                 // ->orderBy('cantidad_unidades', 'ASC')->get();
     }
+    public static function prod_vendidos_medico($medico_id, $anio, $mes)
+    {
+        $user = Auth::user();
+        // $fechai = date("Y-m-d",strtotime($fechai));
+        // $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        return  DB::table('producto')
+                ->leftjoin('detalle_ventas', 'detalle_ventas.producto_id', '=', 'producto.id')
+                ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+                ->leftjoin('producto_presentacion', 'detalle_ventas.producto_presentacion_id', '=', 'producto_presentacion.id')
+                ->leftjoin('presentacion', 'producto_presentacion.presentacion_id', '=', 'presentacion.id')
+                ->select(
+                     'producto.descripcion as descripcion',
+                     'producto.codigo as codigo',
+                     'presentacion.nombre as nombre_presentacion',
+                     'presentacion.sigla as sigla',
+                     'producto_presentacion.cant_unidad_x_presentacion as cantidad_x',
+                     'producto_presentacion.puntos as puntos',
+                    DB::raw("SUM(detalle_ventas.cantidad) as cantidad_unidades"),
+                    DB::raw("SUM(detalle_ventas.puntos_acumulados) as puntos_acumulados")
+            )
+                ->whereYear('ventas.fecha',$anio)
+                ->whereMonth('ventas.fecha',$mes)
+                ->where('ventas.sucursal_id','=',$user->sucursal_id)
+                ->where('ventas.medico_id','=',$medico_id)
+                ->groupBy('producto.id','producto.descripcion','producto_presentacion.id','presentacion.nombre','presentacion.sigla','producto_presentacion.cant_unidad_x_presentacion','producto_presentacion.puntos','producto.codigo')->get();
+    }
 
     public static function listarentradas( $producto_id){
         $user = Auth::user();
@@ -233,20 +259,8 @@ class Venta extends Model
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
-    public  static function puntos_acumulados_medico($fechai, $fechaf, $tipobusqueda){
+    public  static function puntos_acumulados_medico($anio, $mes){
         $user = Auth::user();
-        $fecha1 = null;
-        $fecha2 = null;
-        $fechai = date("Y-m-d",strtotime($fechai));
-        $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
-        
-        if($tipobusqueda == 'dia'){
-            $fecha1 = date('d', strtotime($fechai));
-        }else if($tipobusqueda == 'mes'){
-            $fecha1 = date('m', strtotime($fechai));
-        }else if($tipobusqueda == 'anio'){
-            $fecha1 = date('Y', strtotime($fechai));
-        }
 
         return  DB::table('detalle_ventas')
         ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
@@ -259,9 +273,35 @@ class Venta extends Model
             'medico.codigo as codigo_medico', 
             DB::raw('sum(detalle_ventas.puntos_acumulados) as puntos')
         )
-        ->whereBetween('ventas.fecha', [$fechai, $fechaf])
-        // ->where('ventas.fecha', '>=',$fechai)
-        // ->where('ventas.fecha', '<=',$fechaf)
+        
+        ->whereYear('ventas.fecha',$anio)
+        ->whereMonth('ventas.fecha',$mes)
+        ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        ->where('detalle_ventas.deleted_at', '=',null)
+        ->groupBy('medico.nombres','medico.apellidos','medico.codigo');
+
+
+    }
+
+    public  static function puntos_acumulados_medico_mes($anio, $mes){
+        $user = Auth::user();
+        // $fechai = date("Y-m-d",strtotime($fechai));
+        // $fechaf = date("Y-m-d",strtotime($fechaf."+ 1 day"));
+        
+        
+        return  DB::table('detalle_ventas')
+        ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+        ->leftjoin('medico', 'ventas.medico_id', '=', 'medico.id')
+        ->leftjoin('producto', 'detalle_ventas.producto_id', '=', 'producto.id')
+        // ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'detalle_ventas.producto_presentacion_id')
+        ->select(
+            'medico.nombres as nombres_medico', 
+            'medico.apellidos as apellidos_medico', 
+            'medico.codigo as codigo_medico', 
+            DB::raw('sum(detalle_ventas.puntos_acumulados) as puntos')
+        )
+        ->whereYear('ventas.fecha', $anio)
+        ->whereMonth('ventas.fecha', $mes)
         ->where('ventas.sucursal_id','=',$user->sucursal_id)
         // ->where('ventas.sucursal_id','=',$user->sucursal_id)
         ->where('detalle_ventas.deleted_at', '=',null)

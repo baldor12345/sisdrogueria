@@ -204,6 +204,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('puntos_medicos/eliminar/{id}/{listarluego}','PuntosmedicosController@eliminar')->name('puntos_medicos.eliminar');
     Route::resource('puntos_medicos', 'PuntosmedicosController', array('except' => array('show')));
     Route::get('/reportepuntosPDF', 'PuntosmedicosController@reportepuntosPDF')->name('puntos_medicos.reportepuntosPDF');
+    Route::get('/reportepuntosmedicoPDF', 'PuntosmedicosController@reportepuntosmedicoPDF')->name('puntos_medicos.reportepuntosmedicoPDF');
     
     
     //VENTA
