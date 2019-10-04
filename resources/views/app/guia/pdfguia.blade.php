@@ -8,11 +8,11 @@
 	<body>
 	
 		<table width="100%" border="0px">
-			<tr><td style="vertical-align:middle;" rowspan="5" width="60%">OSTEOMEDIC PERU E.I.R.L</td></tr>
-			<tr><td align="center" style="border-left: 1px dotted #000;border-top: 1px dotted #000;border-right: 1px dotted #000;" >GUÍA DE REMISION</td></tr>
-			<tr><td align="center" style="border-left: 1px dotted #000;border-right: 1px dotted #000;">ELECTRONICA - REMITENTE</td></tr>
-			<tr><td align="center" style="border-left: 1px dotted #000;border-right: 1px dotted #000;">RUC: {{ $empresa->ruc}}</td></tr>
-			<tr><td align="center" style="border-left: 1px dotted #000;border-bottom: 1px dotted #000;border-right: 1px dotted #000;">{{ $guia->serie.' - '.$guia->numero}}</td></tr>
+			{{-- <tr><td style="vertical-align:middle;" rowspan="5" width="60%">OSTEOMEDIC PERU E.I.R.L</td></tr> --}}
+			<tr><td width="60%"></td><td width="36%" align="center" style="border-left: 1px dotted #000;border-top: 1px dotted #000;border-right: 1px dotted #000;" >GUÍA DE REMISION</td></tr>
+			<tr><td style="vertical-align:middle;" width="60%">OSTEOMEDIC PERU E.I.R.L</td><td width="36%" align="center" style="border-left: 1px dotted #000;border-right: 1px dotted #000;">ELECTRONICA - REMITENTE</td></tr>
+			<tr><td width="60%"></td><td width="36%" align="center" style="border-left: 1px dotted #000;border-right: 1px dotted #000;">RUC: {{ $empresa->ruc}}</td></tr>
+			<tr><td width="60%"></td><td width="36%" align="center" style="border-left: 1px dotted #000;border-bottom: 1px dotted #000;border-right: 1px dotted #000;">{{ $guia->serie.' - '.$guia->numero}}</td></tr>
 		</table>
 		<br>
 		<br>
@@ -60,23 +60,28 @@
 		<table id="tabla" width="100%" border="0px">
 			<thead>
 				<tr>
-					<th style= "background-color: #171717;  color:#fff; " align="center">Nro.</th>
-					<th style= "background-color: #171717;  color:#fff; " align="center">Cod. Bien</th>
-					<th style= "background-color: #171717;  color:#fff; " align="center">Descripción</th>
-					<th style= "background-color: #171717;  color:#fff; " align="center">Unidad de Medida</th>
-					<th style= "background-color: #171717;  color:#fff; " align="center">Cantidad</th>
+					<th width="8%" style= "background-color: #171717;  color:#fff; " align="center">Nro.</th>
+					<th width="10%" style= "background-color: #171717;  color:#fff; " align="center">Cod. Bien</th>
+					<th width="53%" style= "background-color: #171717;  color:#fff; " align="center">Descripción</th>
+					<th width="20%" style= "background-color: #171717;  color:#fff; " align="center">Unidad de Medida</th>
+					<th width="10%" style= "background-color: #171717;  color:#fff; " align="center">Cantidad</th>
 				</tr>
 			</thead>
 			<tbody>
-				
+				<?php
+					$contador =1;
+				?>
 				@foreach ($bienes as $key => $value)
 					<tr>
-						<td align="center" >-</td>
-						<td align="center" > - </td>
-						<td align="center" >{{ strtoupper($value->presentacion->producto->descripcion) }}</td>
-						<td align="center" >{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
-						<td align="center" >{{ $value->cantidad }}</td>
+						<td width="8%" align="center"  style="font-size: 10px">{{ $contador }}</td>
+						<td width="10%" align="center" style="font-size: 10px"> - </td>
+						<td width="53%" align="center" style="font-size: 10px">{{ strtoupper($value->presentacion->producto->descripcion) }}</td>
+						<td width="20%" align="center" style="font-size: 10px">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
+						<td width="10%" align="center" style="font-size: 10px">{{ $value->cantidad }}</td>
 					</tr>
+					<?php
+					$contador ++;
+					?>
 				@endforeach
 
 			</tbody>

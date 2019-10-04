@@ -7,6 +7,7 @@ use App\Sucursal;
 use App\Producto;
 use App\Presentacion;
 use App\Entrada;
+use App\DatosEmpresa;
 use App\Caja;
 use App\Venta;
 use App\Bienes;
@@ -124,20 +125,47 @@ class GuiaRemisionController extends Controller
         $fecha_defecto = date('Y-m-d');
         $cboPresentacion = ['0'=>'Seleccione'];
         $cboProducto = ['0'=>'Seleccione'];
-        return view($this->folderview.'.mant')->with(compact('guia','serie','formData', 'entidad', 'boton', 'listar','ruta','cboPresentacion','cboProducto','fecha_defecto','numero_doc'));
+        $listado_bienes = null;
+        $empresa = DatosEmpresa::all()->first();
+
+        $cboMotivos = [
+            'VENTA' => 'VENTA',
+            'COMPRA' => 'COMPRA',
+            'TRASLADO ENTRE ESTABLECIMIENTOS DE LA MISMA EMPRESA' => 'TRASLADO ENTRE ESTABLECIMIENTOS DE LA MISMA EMPRESA',
+            'TRASLADO DE BIENES PARA TRANSFORMACION' => 'TRASLADO DE BIENES PARA TRANSFORMACION',
+            'TRASLADO EMISOR ITINERANTE DE COMPROBANTES DE PAGO' => 'TRASLADO EMISOR ITINERANTE DE COMPROBANTES DE PAGO',
+            'TRASLADO ZONA PRIMARIA' => 'TRASLADO ZONA PRIMARIA',
+            'IMPORTACION' => 'IMPORTACION',
+            'EXPORTACION' => 'EXPORTACION',
+            'OTROS MOTIVOS' => 'OTROS MOTIVOS',
+            ];
+        $cboTiposDocDestino = [
+            'DNI'=>'DNI',
+            'RUC'=>'RUC',
+            'PASAPORTE'=>'PASAPORTE',
+            'DT.S/RUC'=>'DT.S/RUC',
+            'C.EXT'=>'C.EXT',
+            'CED.DIPL'=>'CED.DIPL',
+        ];
+        $cboTransportes = [
+            'PUBLICO' => 'PUBLICO',
+            'PRIVADO' => 'PRIVADO',
+        ];
+
+        return view($this->folderview.'.mant')->with(compact('guia','serie','formData', 'entidad', 'boton', 'listar','ruta','cboPresentacion','cboProducto','fecha_defecto','numero_doc','cboMotivos','cboTiposDocDestino','cboTransportes','listado_bienes','empresa'));
     }
   
 
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas     = array(
-        );
-        $mensajes  = array();
-        $validacion = Validator::make($request->all(), $reglas, $mensajes);
-        if ($validacion->fails()) {
-            return $validacion->messages()->toJson();
-        }
+        // $reglas     = array(
+        // );
+        // $mensajes  = array();
+        // $validacion = Validator::make($request->all(), $reglas, $mensajes);
+        // if ($validacion->fails()) {
+        //     return $validacion->messages()->toJson();
+        // }
         $respuesta=array();
         $id_guia=null;
         $valido =true;
@@ -168,43 +196,19 @@ class GuiaRemisionController extends Controller
     
                 $cantidad_registros = $request->input('cantidad_registros_prod');
                 for($i=0;$i< $cantidad_registros; $i++){
-                    // $cant = 0;
-                    $producto = Producto::find($request->get('prod_id'.$i.''));
-                    $cant = $request->get('cant_prod'.$i.'');
-                    $cant_pres = $request->get('cant_pres'.$i.'');
-                    $producto_presentacion = ProductoPresentacion::find($request->get('present_id'.$i));
+                    $cant_pres = $request->get('cant_pro_pres'.$i.'');
+                    $producto_presentacion = ProductoPresentacion::find($request->get('prod_pres_id'.$i));
                     $id_prodPresent = $producto_presentacion->id; 
-                    
                     $bien = new Bienes();
                     $bien->cantidad =$cant_pres;
                     $bien->producto_presentacion_id =$producto_presentacion->id;
                     $bien->guiaremision_id = $id_guia;
-                    $entradas = Venta::listarentradas($producto->id);//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-                    $lotes = "";
-                    for ($j=0; $j< count($entradas) ; $j++) {
-                        $entrad = Entrada::find($entradas[$j]->id);
-                        $cant_actual = $entrad->stock;
-                            if($cant > 0){
-                                if($cant > $cant_actual){
-                                    $entrad->stock = 0;
-                                    $entrad->save();
-                                    $cant = $cant - $cant_actual;
-                                    $lotes = $lotes.$cant.":".$entrad->lote.":".$entrad->fecha_caducidad_string.";";
-                                }else{
-                                    $entrad->stock = $cant_actual - $cant;
-                                    $entrad->save();
-                                    $lotes = $lotes.$cant.":".$entrad->lote.":".$entrad->fecha_caducidad_string."";
-                                    $cant = 0;
-                                }
-                            }
-                    }
-                    $bien->lotes = $lotes;
                     $bien->save();
                 }
               
             });
-        $err01 = is_null($error) ? "OK" : (is_numeric($error)?"OK":$error);
-        return $err01; 
+        //  is_null($error) ? "OK" : (is_numeric($error)?"OK":$error);
+        return is_null($error) ? "OK" : $error; 
     }
 
     /**
@@ -280,34 +284,18 @@ class GuiaRemisionController extends Controller
      */
     public function destroy($id)
     {
-        $existe = Libreria::verificarExistencia($id, 'ventas');
+        $existe = Libreria::verificarExistencia($id, 'guia_remisions');
         if ($existe !== true) {
             return $existe;
         }
         $error = DB::transaction(function() use($id){
-            $venta = Venta::find($id);
-            $venta->estado = 'A';//A= Anulado
-           
-            $venta->save();
-            $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->where('deleted_at','=',null)->get();
-            foreach ($detalle_ventas as $key => $value) {
-                $lotes = explode(';',$value->lotes);
-                
-                // $prod_presentacion_id = $value->producto_presentacion_id;
-                for($j=0; $j<count($lotes); $j ++){
-                    $lot = explode(':',$lotes[$j]);
-                    $cant = $lot[0];
-                    $lote = $lot[1];
-                    // echo("Present_id: ".$prod_presentacion_id." - Lote: ".$lote);
-                    $entrada = Entrada::find(Entrada::idEntrada($value->producto_id, $lote));
-                    // $entrada = Entrada::where('producto_presentacion_id', '=', $prod_presentacion_id)->leftjoin()->where('lote','=',$lote)->get()[0];
-                    // echo("entrada:v ". $entrada);
-                    $entrada->stock = $entrada->stock + $cant;
-                    $entrada->save();
-                }
+            $bienes = Bienes::where('guiaremision_id','=',$id)->get();
+            // $detalle_ventas = Detalle_venta::where('ventas_id','=',$venta->id)->where('deleted_at','=',null)->get();
+            foreach ($bienes as $key => $value) {
+                $value->delete();
             }
-            $detalle_caja = DetalleCaja::where('codigo_operacion','=', $venta->numero_operacion)->get()[0];
-            $detalle_caja->delete();
+            $guia = GuiaRemision::find($id);
+            $guia->delete();
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -321,7 +309,7 @@ class GuiaRemisionController extends Controller
     public function eliminar($id, $listarLuego)
     {
         $mensaje = null;
-        $existe = Libreria::verificarExistencia($id, 'ventas');
+        $existe = Libreria::verificarExistencia($id, 'guia_remisions');
         if ($existe !== true) {
             return $existe;
         }
@@ -330,8 +318,8 @@ class GuiaRemisionController extends Controller
             $listar = $listarLuego;
         }
         $modelo   = Venta::find($id);
-        $entidad  = 'Ventas';
-        $formData = array('route' => array('ventas.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
+        $entidad  = 'Guia';
+        $formData = array('route' => array('guias.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Anular';
         return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar','mensaje'));
     }
@@ -428,11 +416,12 @@ class GuiaRemisionController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+        $empresa = DatosEmpresa::all()->first();
         $entidad = 'Guia';
         $guia  = GuiaRemision::find($guia_id);
         $bienes = Bienes::where('guiaremision_id','=',$guia->id)->get();
         $user = Auth::user();
-        return view($this->folderview.'.verdetalle')->with(compact('guia','bienes', 'entidad'));
+        return view($this->folderview.'.verdetalle')->with(compact('guia','bienes', 'entidad','empresa'));
     }
 
     public function pdfGuia(Request $request)
@@ -443,10 +432,10 @@ class GuiaRemisionController extends Controller
 
         $guia  = GuiaRemision::find($request->get('guia_id'));
         $bienes = Bienes::where('guiaremision_id','=',$guia->id)->get();
-      
+        $empresa = DatosEmpresa::all()->first();
         
         $titulo = $guia->serie.'-'.$guia->numero;
-        $view = \View::make('app.guia.pdfguia')->with(compact('bienes', 'guia','fecha','titulo'));
+        $view = \View::make('app.guia.pdfguia')->with(compact('bienes', 'guia','fecha','titulo','empresa'));
         $html_content = $view->render();      
  
         PDF::SetTitle($titulo);

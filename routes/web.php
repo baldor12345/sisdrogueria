@@ -204,6 +204,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('puntos_medicos/eliminar/{id}/{listarluego}','PuntosmedicosController@eliminar')->name('puntos_medicos.eliminar');
     Route::resource('puntos_medicos', 'PuntosmedicosController', array('except' => array('show')));
     Route::get('/reportepuntosPDF', 'PuntosmedicosController@reportepuntosPDF')->name('puntos_medicos.reportepuntosPDF');
+    Route::get('/reportepuntosmedicoPDF', 'PuntosmedicosController@reportepuntosmedicoPDF')->name('puntos_medicos.reportepuntosmedicoPDF');
     
     
     //VENTA
@@ -215,6 +216,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('ventas/listvendedores',  'VentasController@listvendedores')->name('ventas.listvendedores');
     Route::get('ventas/listproductos',  'VentasController@listproductos')->name('ventas.listproductos');
     Route::get('ventas/verdetalle_v/{venta_id}',  'VentasController@verdetalle_v')->name('ventas.verdetalle_v');
+    Route::get('ventas/generarGuia/{venta_id}',  'VentasController@generarGuia')->name('ventas.generarGuia');
 
     //GUIA DE REMISION
     Route::post('guias/buscar','GuiaRemisionController@buscar')->name('guias.buscar');

@@ -41,6 +41,7 @@
 			{{-- <td>{{ $value->estado == 'P'?'Pendiente':($value->estado == 'C'?'Cancelado':'Anulado') }}</td> --}}
 			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> generar Guia', array('onclick' => 'modal (\''.URL::route($ruta["generarGuia"], array($value->id)).'\', \''.'Registrar Guia'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> PDF', array('onclick' => 'window.open(\'http://localhost/clifacturacion/controlador/contComprobante.php?funcion=generarPDF&numero='.$value->serie_doc.'-'.$value->numero_doc.'\',\'_blank\');', 'class' => 'btn btn-xs btn-info')) !!}</td>
 			@if($value->estado == 'P')
 			<td>{!! Form::button('<div class="glyphicon glyphicon-remove"></div> Anular', array('onclick' => 'modal (\''.URL::route($ruta["delete"], array($value->id, 'SI')).'\', \''.$titulo_eliminar.': '.$value->serie_doc.'-'.$value->numero_doc.'\', this);', 'class' => 'btn btn-xs btn-danger')) !!}</td>
