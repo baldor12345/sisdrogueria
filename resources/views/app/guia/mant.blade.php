@@ -85,19 +85,13 @@
 				<div class="form-group" >
 					{!! Form::label('doc_identidad', 'Doc. Identidad:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm','id'=>'lbldniruc', 'style'=>'')) !!}
 					<div class="input-group" style="">
-						{!! Form::text('doc_identidad', null, array('class' => 'form-control input-sm', 'id' => 'doc_identidad', 'placeholder' => 'Ingrese N° documento de identidad', 'maxlength'=>'8', 'onkeypress'=>'return filterFloat(event,this)')) !!}
+						{!! Form::text('doc_identidad', null, array('class' => 'form-control input-sm', 'id' => 'doc_identidad', 'placeholder' => 'Ingrese N° documento de identidad', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 						<span class="input-group-btn">
 							{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnBuscar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar', 'onclick' => 'consultaDOC();')) !!}
-							{{-- {!! Form::button('<i class="glyphicon glyphicon-plus"></i>', array('class' => 'btn btn-info waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnNuevoCli', 'onclick' => 'modal (\''.URL::route($ruta["create_new"], array('listar'=>'SI')).'\', \''."Registrar Cliente".'\', this);')) !!} --}}
 						</span>
 					</div>
 				</div>
-				{{-- <div class="form-group " >
-					{!! Form::label('doc_identidad', 'Doc. Identidad:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
-					<div class="col-sm-9 col-xs-12" style="">
-						{!! Form::text('doc_identidad', '', array('class' => 'form-control input-sm', 'id' => 'doc_identidad', 'placeholder' => 'Ingrese documento de identidad ', 'onkeypress'=>'return filterFloat(event,this)')) !!}
-					</div>
-				</div> --}}
+				
 				<div class="form-group ">
 					{!! Form::label('nombres_destinatario', 'Apellidos y nombres, denominacion o razón:', array('class' => 'col-sm-3 col-xs-12 control-label input-sm', 'style'=>'')) !!}
 					<div class="col-sm-9 col-xs-12" style="">
@@ -130,7 +124,6 @@
 					<div class="col-sm-9 col-xs-12" style="">
 						{!! Form::select('tipodoc_conductor', $cboTiposDocDestino, 'DNI', array('class' => 'form-control input-sm', 'id' => 'tipodoc_conductor')) !!}
 					
-						{{-- {!! Form::text('tipodoc_conductor', '', array('class' => 'form-control input-sm', 'id' => 'tipodoc_conductor', 'placeholder' => 'Ingrese tipo de documento (DNI, RUC, CARNET, ETC..)', 'onkeypress'=>'return filterFloat(event,this)')) !!} --}}
 					</div>
 				</div>
 				<div class="form-group " >
