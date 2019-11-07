@@ -72,7 +72,7 @@ class Venta extends Model
             ->orderBy('fecha', 'DSC');
     }
 
-    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc)
+    public function scopelistar($query, $fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc,$tipoComp)
     {
         // $fechai = date("Y-m-d",strtotime($fechai."- 1 day"));
         $user = Auth::user();
@@ -112,6 +112,7 @@ class Venta extends Model
             })
             ->where('ventas.estado','=',$estado)
             ->where('ventas.tipo_pago','=',$tipo)
+            ->where('ventas.comprobante',($tipoComp !='T')?'=':'!=',$tipoComp)
             ->where('ventas.numero_doc','LIKE','%'.$numero_serie.'%')
             // ->where('cliente.ruc','LIKE','%'.$doc_ruc.'%')
             // ->where('cliente.dni','LIKE','%'.$doc_dni.'%')
@@ -278,6 +279,8 @@ class Venta extends Model
         ->whereMonth('ventas.fecha',$mes)
         ->where('ventas.sucursal_id','=',$user->sucursal_id)
         ->where('detalle_ventas.deleted_at', '=',null)
+        ->where('ventas.deleted_at', '=',null)
+        ->where('ventas.estado', '!=','A')
         ->groupBy('medico.nombres','medico.apellidos','medico.codigo');
 
 
@@ -305,6 +308,8 @@ class Venta extends Model
         ->where('ventas.sucursal_id','=',$user->sucursal_id)
         // ->where('ventas.sucursal_id','=',$user->sucursal_id)
         ->where('detalle_ventas.deleted_at', '=',null)
+        ->where('ventas.deleted_at', '=',null)
+        ->where('ventas.estado', '!=','A')
         ->groupBy('medico.nombres','medico.apellidos','medico.codigo');
 
 

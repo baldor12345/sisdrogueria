@@ -72,7 +72,8 @@ class VentasController extends Controller
         $numero_serie = Libreria::getParam($request->input('numero_serie'));
         $doc_dni_ruc = Libreria::getParam($request->input('doc_dni_ruc'));
         $tipo = Libreria::getParam($request->input('cboTipoV'));
-        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc);
+        $tipoComp = Libreria::getParam($request->input('cboTipoComprobante'));
+        $resultado        = Venta::listar($fechai, $fechaf, $numero_serie, $estado, $tipo, $doc_dni_ruc,$tipoComp);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');

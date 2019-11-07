@@ -31,6 +31,10 @@
 							<label for="cboTipoV" class="input-md"></label>
 						{!! Form::select('cboTipoV', ['CO'=>'Contado','CR'=>'Crédito'], 'CO', array('class' => 'form-control input-md', 'id' => 'cboTipoV', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
+					<div class="form-group">
+							<label for="cboTipoComprobante" class="input-md"></label>
+						{!! Form::select('cboTipoComprobante', ['T'=>'Todos','B'=>'Boletas','F'=>'Facturas'], 'T', array('class' => 'form-control input-md', 'id' => 'cboTipoComprobante', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+					</div>
 					{{-- <div class="form-group">
 						<label for="proveedor" class="input-sm">Proveedor:</label>
 						{!! Form::text('proveedor', '', array('class' => 'form-control input-sm', 'id' => 'proveedor')) !!}

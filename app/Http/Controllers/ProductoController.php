@@ -498,7 +498,7 @@ class ProductoController extends Controller
             return $validacion->messages()->toJson();
         } 
         $error = DB::transaction(function() use($request, $id){
-            $producto_presentacion                  = ProductoPresentacion::find($id);
+            $producto_presentacion = ProductoPresentacion::find($id);
             $producto_presentacion->precio_compra   =  $request->input("preciocompra");
             $producto_presentacion->cant_unidad_x_presentacion =  $request->input("unidad_x_presentacion");
             $producto_presentacion->precio_venta_unitario =  $request->input("precioventaunitario");
