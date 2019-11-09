@@ -8,6 +8,7 @@ use App\Caja;
 use App\GuiaRemision;
 use App\Sucursal;
 use App\Venta;
+use App\NotaCredito;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -543,4 +544,28 @@ class Libreria
 		}
 		return $codigo_generado;
 	}
+
+	public static function numero_documento_nota_credito($tipo){
+		$numero_transacciones = 0;
+		$user = Auth::user();
+		if($tipo == 'B'){
+			$numero_transacciones = count(NotaCredito::where('comprobante','=', 'B')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
+		}else{
+			$numero_transacciones = count(NotaCredito::where('comprobante','=', 'F')->get()) + 1;
+		}
+		
+		$codigo_generado ="";
+		if($numero_transacciones > 0){
+			$digitos = strlen($numero_transacciones);
+			$ceros =  "";
+			for($i=0; $i< (8 - $digitos) ; $i ++){
+				$ceros = $ceros."0";
+			}
+			$codigo_generado = $ceros.$numero_transacciones;
+		}else {
+			$codigo_generado = "00000001";
+		}
+		return $codigo_generado;
+	}
+
 }

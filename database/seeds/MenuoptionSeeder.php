@@ -191,10 +191,11 @@ class MenuoptionSeeder extends Seeder
 					'name' => 'Guia de Remisión',
 					'link'   => 'guias'
 				),
-				/*array(
-					'name' => 'Productos mas Vendidas',
-					'link'   => 'productos_mas_vendidas'
+				array(
+					'name' => 'Nota de Crédito',
+					'link'   => 'notacreditos'
 				),
+				/*
 				array(
 					'name' => 'Devoluciones',
 					'link'   => 'devoluciones'
