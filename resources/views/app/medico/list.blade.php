@@ -22,7 +22,7 @@
 		?>
 			<tr>
 				<td>{{ $contador }}</td>
-				<td>{{ $value->codigo ==null?" - " :$value->dni }}</td>
+				<td>{{ $value->codigo ==null?" - " :$value->codigo }}</td>
 				<td>{{ $nombreCompleto}}</td>
 				<td>{{ $value->telefono == null? " - ": $value->telefono}}</td>
 				<td>{{ $value->direccion == null? " - ": $value->direccion}}</td>
