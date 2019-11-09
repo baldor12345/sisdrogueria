@@ -892,11 +892,11 @@ function filterFloat(evt,input){
 }
 
 function filter(__val__){
-	var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
+	var preg = /^([0-9]+\.?[0-9]{0,4})$/; 
 	if(preg.test(__val__) === true){
 		return true;
 	}else{
-	return false;
+	 return false;
 	}
 	
 }

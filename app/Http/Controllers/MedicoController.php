@@ -263,7 +263,7 @@ class MedicoController extends Controller
             $listar = $listarLuego;
         }
         $modelo   = Medico::find($id);
-        $entidad  = 'medico';
+        $entidad  = 'Medico';
      
         $formData = array('route' => array('medico.destroy', $id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimiento'.$entidad, 'autocomplete' => 'off');
         $boton    = 'Eliminar';
