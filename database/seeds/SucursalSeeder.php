@@ -22,6 +22,7 @@ class SucursalSeeder extends Seeder
                 'distrito_id' =>1,
                 'provincia_id' =>1,
                 'serie' =>'001',
+                'serie_notacredito' =>'01',
                 'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now
@@ -34,6 +35,7 @@ class SucursalSeeder extends Seeder
                 'distrito_id' =>1,
                 'provincia_id' =>1,
                 'serie' =>'002',
+                'serie_notacredito' =>'02',
                 'departamento_id' =>1,
                 'created_at'     => $now,
                 'updated_at'     => $now

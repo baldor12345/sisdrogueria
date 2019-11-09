@@ -225,6 +225,16 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('guias/listproductos',  'GuiaRemisionController@listproductos')->name('guias.listproductos');
     Route::get('guias/verdetalle_g/{guia_id}',  'GuiaRemisionController@verdetalle_g')->name('guias.verdetalle_g');
     Route::get('/pdfGuia', 'GuiaRemisionController@pdfGuia')->name('guias.pdfGuia');
+
+    //NOTA DE CREDITO
+    Route::post('notacreditos/buscar','NotaCreditoController@buscar')->name('notacreditos.buscar');
+    Route::get('notacreditos/eliminar/{id}/{listarluego}','NotaCreditoController@eliminar')->name('notacredito.eliminar');
+    Route::resource('notacreditos', 'NotaCreditoController', array('except' => array('show')));
+    Route::get('notacreditos/listclientes',  'NotaCreditoController@listclientes')->name('notacreditos.listclientes');
+    Route::get('notacreditos/listmedicos',  'NotaCreditoController@listmedicos')->name('notacreditos.listmedicos');
+    Route::get('notacreditos/listproductos',  'NotaCreditoController@listproductos')->name('notacreditos.listproductos');
+    Route::get('notacreditos/verdetalle_v/{venta_id}',  'NotaCreditoController@verdetalle_v')->name('notacreditos.verdetalle_v');
+    Route::get('notacreditos/generarGuia/{venta_id}',  'NotaCreditoController@generarGuia')->name('notacreditos.generarGuia');
     
     //SUCURSAL
     Route::post('sucursal/buscar','SucursalController@buscar')->name('sucursal.buscar');
@@ -290,6 +300,9 @@ Route::get('compra/{id?}','CompraController@getProductoPresentacion');
 Route::get('ventas/{producto_id?}','VentasController@getProducto')->name('ventas.getProducto');
 Route::get('ventas/{producto_id?}/{presentacion_id?}','VentasController@getProductoPresentacion')->name('ventas.getProductoPresentacion');
 Route::get('ventas/numerodoc/{tipo_doc?}/{opcional}','VentasController@getNumeroBoleta_Factura')->name('ventas.getNumeroBoleta_Factura');
+
+Route::get('notacreditos/{serie_documento}/{numero_documento}','NotaCreditoController@getDetalletransaccion')->name('notacreditos.getDetalletransaccion');
+Route::get('notacreditos/numerodoc/{tipo_doc?}/{opcional}','NotaCreditoController@getNumeroBoleta_Factura')->name('notacreditos.getNumeroBoleta_Factura');
 // Route::get('provincia/{id}','ProvinciaController@getProvincias');
 Route::get('provincia/{departamento_id?}','ProvinciaController@getProvinciasDep');
 // Route::get('distrito/{id}','DistritoController@getDistritos');
