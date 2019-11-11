@@ -36,6 +36,10 @@
 	{!! Form::hidden('fecha_venc', null, array('id' => 'fecha_venc')) !!}
 
 	{!! Form::hidden('idventas', null, array('id' => 'idventas')) !!}
+
+	{!! Form::hidden('serieventa', null, array('id' => 'serieventa')) !!}
+	{!! Form::hidden('numdocventa', null, array('id' => 'numdocventa')) !!}
+
 	{!! Form::hidden('idcliente', null, array('id' => 'idcliente')) !!}
 	{!! Form::hidden('idmedico', null, array('id' => 'idmedico')) !!}
 	{!! Form::hidden('idvendedor', null, array('id' => 'idvendedor')) !!}
@@ -47,16 +51,16 @@
 <div class="row">	
 	<div class="mb-12 col-12 col-md-12">
 		<div class="form-group">
-			{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+			{!! Form::label('documento', 'Documento:', array('class' => 'col-sm-2 col-xs-12 control-label input-md', 'style'=>'')) !!}
 			<div class="col-sm-3 col-xs-12" style="">
-				{!! Form::select('documento', $cboDocumento, null, array('class' => 'form-control input-sm', 'id' => 'documento')) !!}
+				{!! Form::select('documento', $cboDocumento, null, array('class' => 'form-control input-md', 'id' => 'documento')) !!}
 			</div>
-			{!! Form::label('serie_documento_v', 'Nro Doc:', array('class' => 'col-sm-2 col-xs-12 control-label input-sm', 'style'=>'')) !!}
+			{!! Form::label('serie_documento_v', 'Nro Doc:', array('class' => 'col-sm-2 col-xs-12 control-label input-md', 'style'=>'')) !!}
 			<div class="col-sm-2 col-xs-12" style="">
-				{!! Form::text('serie_documento_v', 'B'.$serie_v, array('class' => 'form-control input-sm', 'id' => 'serie_documento_v', 'placeholder' => 'Serie...','readonly')) !!}
+				{!! Form::text('serie_documento_v', 'B'.$serie_v, array('class' => 'form-control input-md', 'id' => 'serie_documento_v', 'placeholder' => 'Serie...','readonly')) !!}
 			</div>
 			<div class="input-group" class="col-sm-3 col-xs-12" style="">
-				{!! Form::text('numero_documento_v', null, array('class' => 'form-control input-sm', 'id' => 'numero_documento_v', 'placeholder' => 'Num Doc...', 'onkeypress'=>'return filterFloat(event,this)')) !!}
+				{!! Form::text('numero_documento_v', null, array('class' => 'form-control input-md', 'id' => 'numero_documento_v', 'placeholder' => 'Num Doc...', 'onkeypress'=>'return filterFloat(event,this)')) !!}
 				<span class="input-group-btn">
 					{!! Form::button('<i class="glyphicon glyphicon-refresh" id="ibtnConsultar"></i>', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnConsultar', 'onclick' => 'consultarDet();')) !!}
 				</span>
@@ -66,6 +70,7 @@
 </div>
 <div class="row">
 	<div class="card-box mb-3 col-3 col-md-3">
+		<hr>
 		<table id="">
 			<tr><td>Serie.</td><td style="padding-left: 18px;" id="serie_doc_vista">: <strong>{{ 'BC'.$serie }}</strong></td></tr>
 			<tr><td>Numero</td><td style="padding-left: 18px;" id="numero_doc_vista">: <strong>{{ $numero_doc }}</strong></td></tr>
@@ -76,10 +81,16 @@
 		</table>
 	</div>
 	<div class="card-box mb-9 col-9 col-md-9">
-		<h5 class="card-subtitle mb-2 text-muted">Detalles del Número de documento buscado:</h5>
 		<table id="detalle_transaccion">
 		<h3 class="text-warning" id="mensaje_det">...</h3>
 		</table>
+		<hr>
+		<div class="mb-12 col-12 col-md-12">
+			{!! Form::label('motivo', 'Motivo:', array('class' => 'col-sm-1 col-xs-12 control-label input-md', 'style'=>'')) !!}
+			<div class="col-sm-11 col-xs-12" style="">
+				{!! Form::text('motivo', null, array('class' => 'form-control input-sm', 'id' => 'motivo', 'placeholder' => 'Ingreso motivo')) !!}
+			</div>
+		</div>
 	</div>	
 </div>
 	<div class="row">
@@ -196,6 +207,9 @@ function consultarDet(){
 				'</tr>';
 			$("#detalle_transaccion").append(d);
 			$("#idventas").val(response[0].ventas_id);
+			$("#serieventa").val(response[0].serie_doc);
+			$("#numdocventa").val(response[0].numero_doc);
+			$("#idventas").val(response[0].ventas_id);
 			$("#idcliente").val(response[0].cliente_id);
 			$("#idmedico").val(response[0].medico_id);
 			$("#idvendedor").val(response[0].vendedor_id);
@@ -208,27 +222,32 @@ function consultarDet(){
 			var data_js = JSON.parse(data_d);
 			console.log(response);
 			for(var i=0; i<data_js.length; i++){
-				var dato_split = data_js[i].lote.split(':');
-				for(var j=0; j<dato_split.length; j++){
-					var cantidad_total = 0.0;
-					var lote =  "";
-					var fecha_v = "";
-					cantidad_total = dato_split[j];
-					lote =  dato_split[j+1];
-					fecha_v = dato_split[j+2];
-					j = j+3;
-					var table_d = 	'<tr class="datos-producto" id="dat-prod'+i+'" producto_id="'+data_js[i].producto_id+'" cantidad="'+data_js[i].cantidad_total+'" cantidad_presentacion="'+data_js[i].cantidad+'" presentacion_id="'+data_js[i].presentacion_id+'"  precio_venta="'+data_js[i].precio_unitario+'" fecha_venc="'+fecha_v+'" afecto="'+data_js[i].producto_afecto+'" lote_producto="'+lote+'"  detalle_venta_id="'+data_js[i].detalle_venta_id+'">'+
+				var dato_splitpc = data_js[i].lote.split(';');
+				var cant_un =  0;
+				var lote =  "";
+				var fecha_v = "";
+
+				for(var k=0; k<dato_splitpc.length; k++){
+					var dato_splitdp = dato_splitpc[k].split(':');
+					cant_un    =  (dato_splitdp[0]/data_js[i].cant_unidad_x_presentacion);
+					lote 		= dato_splitdp[1];
+					fecha_v 	= dato_splitdp[2];
+					var dat_cant_lot_fv = ""+dato_splitdp[0]+":"+dato_splitdp[1]+":"+dato_splitdp[2]+"";
+
+					var table_d = 	'<tr class="datos-producto" id="dat-prod'+i+''+k+'" producto_id="'+data_js[i].producto_id+'" cantidad="'+data_js[i].cantidad_total+'" cantidad_presentacion="'+cant_un+'" presentacion_id="'+data_js[i].presentacion_id+'"  precio_venta="'+data_js[i].precio_unitario+'" fecha_venc="'+fecha_v+'" afecto="'+data_js[i].producto_afecto+'" lote_producto="'+dat_cant_lot_fv+'"  detalle_venta_id="'+data_js[i].detalle_venta_id+'">'+
 									'<td class="input-sm" width="35%">'+data_js[i].producto_descripcion+' - '+data_js[i].presentacion_nombre+' x '+data_js[i].cant_unidad_x_presentacion+' Unidades'+'</td>'+
 									'<td class="input-sm" width="15%" align="center">'+data_js[i].presentacion_nombre+'</td>'+
 									'<td class="input-sm" width="10%" align="center" >'+fecha_v+'</td>'+
 									'<td class="input-sm" width="5%" align="center">'+lote+'</td>'+
 									'<td class="input-sm" width="10%" align="center">'+data_js[i].precio_unitario+'</td>'+
-									'<td class="input-sm" width="10%" align="center"><input type="number" value='+data_js[i].cantidad+' id="cantidad_updated'+i+'" name="cantidad_updated'+i+'" onclick="cambiarCant('+i+','+data_js[i].cantidad+','+data_js[i].precio_unitario+')" onkeyup="cambiarCant('+i+','+data_js[i].cantidad+')" min="1" max="'+data_js[i].cantidad+'"></td>'+
-									'<td class="input-sm" width="10%" align="center" id="dat-subtotal'+i+'" >'+parseFloat((parseInt(data_js[i].cantidad)*parseFloat(data_js[i].precio_unitario)))+'</td>'+
-									'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+(parseInt(data_js[i].cantidad)*parseFloat(data_js[i].precio_unitario))+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
+									'<td class="input-sm" width="10%" align="center"><input type="number" readonly="true" value='+cant_un+' id="cantidad_updated'+i+''+k+'" name="cantidad_updated'+i+''+k+'" onclick="cambiarCant('+i+','+k+','+cant_un+','+data_js[i].precio_unitario+')"  min="1" max="'+cant_un+'"></td>'+
+									'<td class="input-sm" width="10%" align="center" id="dat-subtotal'+i+''+k+'" >'+parseFloat((parseInt(cant_un)*parseFloat(data_js[i].precio_unitario)))+'</td>'+
+									'<td width="5%" align="center"><button id="btnQuitar" name="btnQuitar"  class="btn btn-danger btn-xs" onclick="quitar(this, '+(parseInt(cant_un)*parseFloat(data_js[i].precio_unitario))+');" title="" type="button"><i class="glyphicon glyphicon-remove"></i></button></td>'+
 								'</tr>';
 					$("#tabla").append(table_d);
+					cant_un =  (data_js[i].cantidad - (dato_splitdp[0]/data_js[i].cant_unidad_x_presentacion));
 				}
+				
 			}
 			calcularPrecio();
 		});
@@ -290,52 +309,60 @@ function quitar(t, subtotal){
 function guardar_notacredito(entidad, idboton) {
 	var correcto = false;
 
-	var idformulario = IDFORMMANTENIMIENTO + entidad;
-	var data         = submitForm_venta(idformulario);
-	var respuesta    = '';
-	var listar       = 'NO';
-	if ($(idformulario + ' :input[id = "listar"]').length) {
-		var listar = $(idformulario + ' :input[id = "listar"]').val()
-	};
-	data.done(function(msg) {
-		respuesta = msg;
-		if(respuesta[0]== 'OK'){
-			$(idboton).button('loading');
-		}
-		
-	}).fail(function(xhr, textStatus, errorThrown) {
-		respuesta = 'ERROR';
-		$(idboton).removeClass('disabled');
-		$(idboton).removeAttr('disabled');
-		$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
-	}).always(function() {
-		if(respuesta === 'ERROR'){
-		}else{
-			if (respuesta[0] === 'OK') {
-
-				var venta = JSON.stringify(respuesta[1]);
-				var cliente = JSON.stringify(respuesta[2]);
-				var detalla_ventas = JSON.stringify(respuesta[3]);
-				var codigo_medico = JSON.stringify(respuesta[4]);
-				var iniciales_vendedor = JSON.stringify(respuesta[5]);
-				// var lsentradas = respuesta[4];
-				declarar(venta,cliente,detalla_ventas,$("#documento").val(),codigo_medico,iniciales_vendedor);
-				
-				cerrarModal();
-				if (listar === 'SI') {
-					buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
-				}        
-			} else {
-			// alert(respuesta[0]);
-			$('#divMensajeError'+entidad).html('<div class="alert alert-danger"><strong>'+respuesta[0]+'</strong></div>');
-			//mostrarErrores(respuesta, idformulario, entidad);
+	var comentario = $('#motivo').val();
+	if(comentario !== ""){
+		var idformulario = IDFORMMANTENIMIENTO + entidad;
+		var data         = submitForm_venta(idformulario);
+		var respuesta    = '';
+		var listar       = 'NO';
+		if ($(idformulario + ' :input[id = "listar"]').length) {
+			var listar = $(idformulario + ' :input[id = "listar"]').val()
+		};
+		data.done(function(msg) {
+			respuesta = msg;
+			if(respuesta[0]== 'OK'){
+				$(idboton).button('loading');
+			}
+			
+		}).fail(function(xhr, textStatus, errorThrown) {
+			respuesta = 'ERROR';
 			$(idboton).removeClass('disabled');
 			$(idboton).removeAttr('disabled');
 			$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+		}).always(function() {
+			if(respuesta === 'ERROR'){
+			}else{
+				if (respuesta[0] === 'OK') {
+
+					var numserie_venta 		= JSON.stringify(respuesta[1]);
+					var numdoc_venta		= JSON.stringify(respuesta[2]);
+					var notacredito 		= JSON.stringify(respuesta[3]);
+					var cliente 			= JSON.stringify(respuesta[4]);
+					var detalle_notacredito = JSON.stringify(respuesta[5]);
+					var codigo_medico 		= JSON.stringify(respuesta[6]);
+					var iniciales_vendedor 	= JSON.stringify(respuesta[7]);
+
+					// var lsentradas = respuesta[4];
+					declarar(numserie_venta, numdoc_venta, notacredito,cliente,detalle_notacredito,$("#documento").val(),codigo_medico,iniciales_vendedor);
+					
+					cerrarModal();
+					if (listar === 'SI') {
+						buscarCompaginado('', 'Accion realizada correctamente', entidad, 'OK');
+					}        
+				} else {
+				// alert(respuesta[0]);
+				$('#divMensajeError'+entidad).html('<div class="alert alert-danger"><strong>'+respuesta[0]+'</strong></div>');
+				//mostrarErrores(respuesta, idformulario, entidad);
+				$(idboton).removeClass('disabled');
+				$(idboton).removeAttr('disabled');
+				$(idboton).html('<i class="fa fa-check fa-lg"></i>Guardar');
+				}
+				
 			}
-			
-		}
-	});
+		});
+	}else{
+		$('#divMensajeError{{ $entidad }}').html("<div class='alert alert-danger'>por favor ingrese motivo, es obligatorio</div>");
+	}
 	
 }
 
@@ -406,10 +433,10 @@ $('.input-number').on('input', function () {
 	this.value = this.value.replace(/[^0-9]/g,'');
 });
 
-function cambiarCant(i, cant, precio_unitario) {
-	var idcontatenado = '#'+'dat-prod'+i;
-	var idcontatevalor = '#'+'cantidad_updated'+i;
-	var idcontatevalorsub = "dat-subtotal"+i;
+function cambiarCant(i, k, cant, precio_unitario) {
+	var idcontatenado = '#'+'dat-prod'+i+k;
+	var idcontatevalor = '#'+'cantidad_updated'+i+k;
+	var idcontatevalorsub = "dat-subtotal"+i+k;
 
 	$(idcontatevalor).val("");
 	var dat = prompt('Ingrese cantidad menor que '+cant);

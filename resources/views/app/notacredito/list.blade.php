@@ -25,7 +25,8 @@
 			<td>{{ $value->comprobante == 'B'?'Boleta':'Factura' }}</td>
 			
 			<td>{{ Date::parse( $value->fecha )->format('d/m/Y H:i:s') }}</td>
-			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver Detalle', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Venta'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-eye-open"></div> Ver Detalle', array('onclick' => 'modal (\''.URL::route($ruta["verdetalle_v"], array($value->id)).'\', \''.'Detalle de Nota de Crédito'.'\', this);', 'class' => 'btn btn-xs btn-info')) !!}</td>
+			<td>{!! Form::button('<div class="glyphicon glyphicon-print"></div> PDF', array('onclick' => 'window.open(\'http://localhost/clifacturacion/controlador/contComprobante.php?funcion=generarPDF&numero='.$value->serie_doc.'-'.$value->numero_doc.'\',\'_blank\');', 'class' => 'btn btn-xs btn-info')) !!}</td>
 		</tr>
 		<?php
 		$contador = $contador + 1;
