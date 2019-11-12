@@ -117,10 +117,10 @@
                     <td width="50%" align="center" ><strong>{{$value->descripcion." ".$value->nombre_presentacion." x ".$value->cantidad_x  }}</strong></td>
                     <td width="10%" align="center" ><strong>{{$value->puntos}}</strong></td>
                     <td width="10%" align="center" ><strong>{{$value->cantidad_unidades}}</strong></td>
-                    <td width="10%" align="center" ><strong>{{$value->puntos_acumulados}}</strong></td>
+                    <td width="10%" align="center" ><strong>{{$value->puntos*$value->cantidad_unidades}}</strong></td>
                 </tr>
                 <?php
-                $cont_puntos += $value->puntos_acumulados;
+                $cont_puntos += $value->puntos*$value->cantidad_unidades;
                     $item ++;
                 ?>
                 @endforeach

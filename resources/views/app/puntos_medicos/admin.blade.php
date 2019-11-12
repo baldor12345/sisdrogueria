@@ -42,7 +42,7 @@
 					</div>
 					<div class="form-group">
 						<label for="filas" class="input-sm">Filas a Mostrar:</label>
-						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+						{!! Form::selectRange('filas', 1, 30, 5, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
 					{{-- <a target="_blank" href="{{ route('reportepuntosPDF') }}" class="btn btn-primary waves-effect waves-light btn-xs" ><i class="glyphicon glyphicon-download-alt" ></i> PDF</a> --}}

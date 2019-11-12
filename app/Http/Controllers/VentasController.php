@@ -340,9 +340,7 @@ class VentasController extends Controller
     
                     $detalle_venta->lotes = $lotes;
                     $detalle_venta->save();
-    
                 }
-                
                 return $venta->id;
             });
 

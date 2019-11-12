@@ -55,14 +55,15 @@ class PuntosmedicosController extends Controller
     {
         $pagina           = $request->input('page');
         $filas            = $request->input('filas');
-        $entidad          = 'StockProducto';
+        $entidad          = 'PuntosMedico';
         // $cod_medico      = Libreria::getParam($request->input('cod_medico'));
         // $nombre_medico      = Libreria::getParam($request->input('nombre_medico'));
         // $tipo_busqueda      = Libreria::getParam($request->input('tip_busqueda'));
         $anio      = Libreria::getParam($request->input('anio'));
         $mes      = Libreria::getParam($request->input('mes'));
 
-        $resultado        = Venta::puntos_acumulados_medico($anio, $mes);
+        // $resultado        = Venta::puntos_acumulados_medico($anio, $mes);
+        $resultado        = Venta::medicos_puntos($anio, $mes);
         $lista            = $resultado->get();
         $cabecera         = array();
         $cabecera[]       = array('valor' => '#', 'numero' => '1');
@@ -88,7 +89,20 @@ class PuntosmedicosController extends Controller
             $lista           = $resultado->paginate($filas);
             $request->replace(array('page' => $paginaactual));
 
-            return view($this->folderview.'.list')->with(compact('lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta','titulo_ver'));
+            //*****************************************modficadoo-- */
+        $res= array();
+        $indice =0;
+        foreach ($lista as $key => $medico) {
+           $listapuntos  = Venta::prod_vendidos_medico($medico->id, $anio, $mes); 
+           if(count($listapuntos) > 0){
+            $res[$indice][0] = $medico;
+            $res[$indice][1] = $listapuntos;
+            $indice ++;
+           }
+           
+        }
+
+            return view($this->folderview.'.list')->with(compact('res','lista', 'paginacion', 'inicio', 'fin', 'entidad', 'cabecera', 'titulo_modificar', 'titulo_eliminar', 'ruta','titulo_ver'));
         }
         return view($this->folderview.'.list')->with(compact('lista', 'entidad'));
     }
@@ -132,7 +146,7 @@ class PuntosmedicosController extends Controller
         // return view($this->folderview.'.admin')->with(compact('entidad', 'cboPresentacion','title', 'titulo_registrar', 'ruta','fecha_defecto','fecha_defecto2'));
         return view($this->folderview.'.admin')->with(compact('entidad', 'cboPresentacion','title', 'titulo_registrar', 'ruta','anios','meses','anio_actual','mes_actual'));
     }
-
+    /*
     public function reportepuntosPDF(Request $request)
     {   
         
@@ -158,7 +172,7 @@ class PuntosmedicosController extends Controller
         PDF::SetDisplayMode('fullpage');
         PDF::writeHTML($html_content, true, false, true, false, '');
         PDF::Output($titulo.'.pdf', 'I');
-    }
+    }*/
     public function reportepuntosmedicoPDF(Request $request)
     {   
 

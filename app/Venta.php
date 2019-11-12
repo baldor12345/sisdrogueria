@@ -260,7 +260,7 @@ class Venta extends Model
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
-    public  static function puntos_acumulados_medico($anio, $mes){
+  /*  public  static function puntos_acumulados_medico($anio, $mes){
         $user = Auth::user();
 
         return  DB::table('detalle_ventas')
@@ -284,6 +284,29 @@ class Venta extends Model
         ->groupBy('medico.nombres','medico.apellidos','medico.codigo');
 
 
+    }*/
+    public  static function medicos_puntos($anio, $mes){
+        $user = Auth::user();
+
+        return  DB::table('detalle_ventas')
+        ->leftjoin('ventas', 'detalle_ventas.ventas_id', '=', 'ventas.id')
+        ->leftjoin('medico', 'ventas.medico_id', '=', 'medico.id')
+        ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'detalle_ventas.producto_presentacion_id')
+        ->select(
+            'medico.id as id', 
+            'medico.nombres as nombres', 
+            'medico.apellidos as apellidos', 
+            'medico.codigo as codigo', 
+            DB::raw('sum(detalle_ventas.puntos_acumulados) as puntos')
+        )
+        
+        ->whereYear('ventas.fecha',$anio)
+        ->whereMonth('ventas.fecha',$mes)
+        ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        ->where('detalle_ventas.deleted_at', '=',null)
+        ->where('ventas.deleted_at', '=',null)
+        ->where('ventas.estado', '!=','A')
+        ->groupBy('medico.nombres','medico.apellidos','medico.codigo','medico.id');
     }
 
     public  static function puntos_acumulados_medico_mes($anio, $mes){
