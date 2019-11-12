@@ -7,7 +7,10 @@
 				<tr><td>Señor(es)</td><td style="padding-left: 18px;">: <strong>{{ $notacredito->cliente->dni == null?$notacredito->cliente->razon_social:$notacredito->cliente->nombres.' '.$notacredito->cliente->apellidos }}</strong></td><td style="padding-left: 18px;">DNI/RUC</td><td style="padding-left: 18px;">: <strong>{{ $notacredito->cliente_id == null?'':($notacredito->cliente->ruc == null? $notacredito->cliente->dni:$notacredito->cliente->ruc)}}</strong></td></tr>
 				<tr><td>Direccion del Cliente</td><td style="padding-left: 18px;">: <strong>{{ $notacredito->cliente_id == null?'':$notacredito->cliente->direccion}}</strong></td><td style="padding-left: 18px;">Tipo de Moneda</td><td style="padding-left: 18px;">: <strong>SOLES</strong></td></tr>
 				<tr><td>Condicion de Pag.</td><td style="padding-left: 18px;">: <strong></strong></td><td style="padding-left: 18px;">Serie-Numero</td><td style="padding-left: 18px;">: <strong>{{ $notacredito->serie_doc."-".$notacredito->numero_doc}}</strong></td></tr>
-				
+			</table>
+			<hr>
+			<table>
+				<tr><td>Motivo.</td><td style="padding-left: 18px;">: <strong>{{ $notacredito->comentario }}</strong></td></tr>
 			</table>
 		</div>
 	</div>
@@ -31,8 +34,20 @@
 							<td class="text-center input-sm" width="10%">{{ $value->cantidad }}</td>
 							<td class="text-center input-sm" width="10%">{{ strtoupper($value->presentacion->presentacion->nombre) }}</td>
 							<td class=" input-sm" width="40%">{{ strtoupper($value->productopresentacion->producto->descripcion.' - '.$value->presentacion->presentacion->nombre.' x '.$value->presentacion->cant_unidad_x_presentacion.' Unidades') }}</td>
-							<td class="text-center input-sm" width="10%">{{ $value->lotes}}</td>
-							<td class="text-center input-sm" width="10%">{{ $value->lotes }}</td>
+							
+							<?php
+								$lot = "";
+								$cant = 0;
+								$fecha_v = "";
+								$tmp = explode(':',$value->lotes);
+
+								$cant = $tmp[0];
+								$lot = $tmp[1];
+								$fecha_v = $tmp[2];
+							?>
+							
+							<td class="text-center input-sm" width="10%">{{ $lot }}</td>
+							<td class="text-center input-sm" width="10%">{{ $fecha_v }}</td>
 							<td class="text-center input-sm" width="10%">{{ round(($value->productopresentacion->producto->afecto == 'S'?$value->precio_unitario/1.18:$value->precio_unitario) , 2) }}</td>
 							<td class="text-center input-sm" width="10%">{{ round(($value->productopresentacion->producto->afecto == 'S'?$value->total/1.18:$value->total),2) }}</td>
 						</tr>
@@ -60,7 +75,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	configurarAnchoModal('900');
+	configurarAnchoModal('1000');
 	init(IDFORMMANTENIMIENTO+'{!! $entidad !!}', 'M', '{!! $entidad !!}');
 	
 }); 

@@ -130,4 +130,33 @@ class NotaCredito extends Model
         return $query; 
     }
 
+    public static function list_detalle_notacredito2($nota_credito_id){
+        $user = Auth::user();
+        return  DB::table('nota_credito_detalles')
+        ->leftjoin('nota_creditos', 'nota_credito_detalles.nota_credito_id', '=', 'nota_creditos.id')
+        ->leftjoin('producto_presentacion', 'producto_presentacion.id', '=', 'nota_credito_detalles.producto_presentacion_id')
+        ->leftjoin('producto', 'producto_presentacion.producto_id', '=', 'producto.id')
+        ->leftjoin('presentacion', 'producto.unidad_id', '=', 'presentacion.id')
+        ->leftjoin('marca', 'producto.marca_id', '=', 'marca.id')
+        ->leftjoin('presentacion as present', 'present.id', '=', 'producto_presentacion.presentacion_id')
+        ->select(
+            'producto.descripcion as nombre_producto', 
+            'producto.sustancia_activa as sustancia_activa', 
+            'nota_credito_detalles.lotes as lotes', 
+            'nota_credito_detalles.cantidad as cantidad', 
+            'nota_credito_detalles.precio_unitario as precio_unitario', 
+            'nota_credito_detalles.total as subtotal',
+            'marca.name as nombre_marca',
+            'producto.afecto as afecto',  
+            'presentacion.nombre as unidad_base',
+            'producto_presentacion.id as id_presentacion_v',
+            'producto_presentacion.cant_unidad_x_presentacion as cantidad_por_presentacion',
+            'present.nombre as nombre_presentacion',
+            'present.sigla as sigla_presentacioon'
+        )
+        ->where('nota_credito_detalles.nota_credito_id', '=',$nota_credito_id)
+        ->where('nota_creditos.sucursal_id','=',$user->sucursal_id)
+        ->where('nota_credito_detalles.deleted_at', '=',null)->get();
+    }
+
 }

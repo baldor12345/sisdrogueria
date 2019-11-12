@@ -78,7 +78,7 @@ class NotaCreditoController extends Controller
         $cabecera[]       = array('valor' => 'Conprobante', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Total S/.', 'numero' => '1');
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '1');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '2');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -185,12 +185,13 @@ class NotaCreditoController extends Controller
     public function store(Request $request)
     {
         $listar     = Libreria::getParam($request->input('listar'), 'NO');
-        $reglas     = array(
-            // 'nombre' => 'required|max:50',
-            //                 'direccion' => 'required|max:100',
-            //                 'telefono' => 'required|max:15'
-                        );
-        $mensajes  = array();
+        $reglas = array( 
+            'motivo' => 'required',
+        );
+        $mensajes = [
+            'motivo.required' => 'Campo motivo es obligatorio.'
+        ];
+
         $validacion = Validator::make($request->all(), $reglas, $mensajes);
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
@@ -202,8 +203,9 @@ class NotaCreditoController extends Controller
         $valido =true;
         $mensaje_err ="";
 
+        
+
         if($valido){
-            // $ventaId = null;
             $error = DB::transaction(function() use($request, $id_notacredito, $valor_total){
                 $user = Auth::user();
                 $caja = Caja::where('estado','=','A')->where('user_id','=', $user->id)->where('deleted_at','=',null)->get()[0];
@@ -229,10 +231,9 @@ class NotaCreditoController extends Controller
                 $notacredito->serie_doc  =  $request->input('seriedoc_nc');
                 $notacredito->numero_doc  = $request->input('numdoc_nc');
                 $notacredito->comprobante = $request->input('documento');
-                // $notacredito->comentario  = '';
+                $notacredito->comentario = $request->input('motivo');
                 $notacredito->save();
                 $id_notacredito = $notacredito->id;
-    
                 $cantidad_registros = $request->input('cantidad');
                 for($i=0;$i< $cantidad_registros; $i++){
                     $cant =                         $request->get('cant_prod'.$i.'');
@@ -248,29 +249,38 @@ class NotaCreditoController extends Controller
                     $notacredito_detalle->nota_credito_id = $notacredito->id;
                     $notacredito_detalle->sucursal_id =      $user->sucursal_id;
                     $notacredito_detalle->producto_presentacion_id = $producto_presentacion->id;
-                    $notacredito_detalle->lotes =                    $request->get('lote_'.$i);
-               
-                    $entrada_encontrada = Entrada::where('lote',$request->get('lote_'.$i))->where('fecha_caducidad_string',$request->get('fecha_vcto'.$i))->get()[0];//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
+                    
+                    $lote_fechav = $request->get('lote_'.$i);
+                    $cant_ = 0;
+                    $lot = "";
+                    $fecha_v = "";
+
+                    $tmp = explode(':',$lote_fechav);
+                    $cant_ =    $tmp[0];
+                    $lot =      $tmp[1];
+                    $fecha_v =  $tmp[2];
+
+                    $entrada_encontrada = Entrada::where('lote',$lot)->where('fecha_caducidad_string',$fecha_v)->get()[0];//Entrada::where('producto_id','=',$producto->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
                     $entrada = Entrada::find($entrada_encontrada->id);
-                    $entrada->stock = $entrada_encontrada->stock+$cant_pres;
+                    $entrada->stock = $entrada_encontrada->stock+$cant_;
                     $entrada->save();
-    
+                    $notacredito_detalle->lotes =   $request->get('lote_'.$i);
                     $notacredito_detalle->save();
-    
                 }
                 
                 return $notacredito->id;
             });
+            //serie y numero de venta 
+            $seriedoc_venta = $request->input('serieventa');
+            $numerodoc_venta = $request->input('numdocventa');
 
-            // $venta01 = Venta::all()->last();
-            $ventaId = $error;
-            $venta01 = NotaCredito::find($ventaId == null?0:$ventaId);
-            $codigo_medico = $venta01->medico_id != null? $venta01->medico->codigo: "";
-            $iniciales_vendedor = $venta01->vendedor->iniciales;
+            $idnotacredito = $error;
+            $notacredito01 = NotaCredito::find($idnotacredito == null?0:$idnotacredito);
+            $codigo_medico = $notacredito01->medico_id != null? $notacredito01->medico->codigo: "";
+            $iniciales_vendedor = $notacredito01->vendedor->iniciales;
             $datos_empresa = DatosEmpresa::find(1);
-            // $venta01 = Venta::where('id','=', 1)->select('cliente_id','id','fecha', 'serie_doc','numero_doc','total','subtotal','igv')->get()[0];
-            $cliente = Cliente::where('id','=',$venta01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion','telefono','email')->get()[0];
-            $detalle_ventas = Venta::list_detalle_ventas2($venta01->id);//where('ventas_id','=',$venta01->id)->selecT('producto_id','producto_presentacion_id','cantidad')->get();
+            $cliente = Cliente::where('id','=',$notacredito01->cliente_id)->select('dni','nombres','apellidos','ruc','razon_social','direccion','telefono','email')->get()[0];
+            $detalle_notacredito = NotaCredito::list_detalle_notacredito2($notacredito01->id);
             $err01 = is_null($error) ? "OK" : (is_numeric($error)?"OK":$error);
             $bancos = array(
                 [
@@ -285,8 +295,7 @@ class NotaCreditoController extends Controller
                 ]
 
             );
-            // $entradas = Entrada::where('producto_presentacion_id','=', $producto_presentacion->id)->where('stock','>',0)->where('deleted_at','=',null)->orderBy('fecha_caducidad', 'ASC')->get();
-            $respuesta = array($err01,$venta01,$cliente,$detalle_ventas,$codigo_medico, $iniciales_vendedor,$datos_empresa,$bancos );
+            $respuesta = array($err01, $seriedoc_venta, $numerodoc_venta, $notacredito01, $cliente, $detalle_notacredito, $codigo_medico, $iniciales_vendedor,$datos_empresa,$bancos );
         }else{
             $respuesta = array($mensaje_err);
         }

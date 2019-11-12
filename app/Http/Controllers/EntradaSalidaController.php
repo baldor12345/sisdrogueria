@@ -723,6 +723,7 @@ class EntradaSalidaController extends Controller
         if ($existe !== true) {
             return $existe;
         }
+
         $error = DB::transaction(function() use($id){
             $entrada_salida_d = EntradaSalidaDetalle::find($id);
             $e_s = EntradaSalida::find($entrada_salida_d->entrada_salida_id);
@@ -782,7 +783,8 @@ class EntradaSalidaController extends Controller
         $prod_pr = ProductoPresentacion::find($modelo->producto_presentacion_id);
         if($find_ES->tipo == 'E'){
             $delete_ent =  Entrada::where('lote',$modelo->lote)->where('fecha_caducidad_string',$modelo->fecha_caducidad_string)->where('deleted_at',null)->get()[0];
-            if($delete_ent->stock >= ($modelo->cantidad*$prod_pr->cant_unidad_x_presentacion)){
+            // if($delete_ent->stock >= ($modelo->cantidad*$prod_pr->cant_unidad_x_presentacion)){
+            if($delete_ent->stock >= ($modelo->cantidad)){
                 $formData = array('route' => array('entrada_salida.destroy', $modelo ->id), 'method' => 'DELETE', 'class' => 'form-horizontal', 'id' => 'formMantenimientoEntradaSalida1', 'autocomplete' => 'off');
                 $boton    = 'Eliminar';
                 return view('app.confirmarEliminar')->with(compact('modelo', 'formData', 'entidad', 'boton', 'listar'));

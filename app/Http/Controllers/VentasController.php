@@ -327,7 +327,7 @@ class VentasController extends Controller
                                         $entrad->save();
                                         $cant = $cant - $cant_actual;
                                         // $lotes = $lotes.$cant.":".$entrad->lote.":".date('d/m/Y',strtotime($entrad->fecha_caducidad)).";";
-                                        $lotes = $lotes.$cant.":".$entrad->lote.":".$entrad->fecha_caducidad_string.";";
+                                        $lotes = $lotes.$cant_actual.":".$entrad->lote.":".$entrad->fecha_caducidad_string.";";
                                     }else{
                                         $entrad->stock = $cant_actual - $cant;
                                         $entrad->save();
