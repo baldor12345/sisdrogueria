@@ -117,6 +117,7 @@ class Venta extends Model
             // ->where('cliente.ruc','LIKE','%'.$doc_ruc.'%')
             // ->where('cliente.dni','LIKE','%'.$doc_dni.'%')
             ->where('ventas.sucursal_id','=',$user->sucursal_id)
+            ->where('ventas.deleted_at','=',null)
             ->orderBy('ventas.fecha', 'DSC');
 
         ///********************************* */
@@ -153,6 +154,8 @@ class Venta extends Model
                 ->where('ventas.fecha', '>=',$fechai)
                 ->where('ventas.fecha', '<=',$fechaf)
                 ->where('ventas.sucursal_id','=',$user->sucursal_id)
+                ->where('ventas.deleted_at','=',null)
+                ->where('ventas.estado','!=','A')
                 // ->where('producto.descripcion', 'LIKE','%'.$nombre.'%')
                 ->groupBy('producto.id','producto.descripcion','producto_presentacion.id','presentacion.nombre','presentacion.sigla','producto_presentacion.cant_unidad_x_presentacion');
                 // ->orderBy('cantidad_unidades', 'ASC')->get();
@@ -181,6 +184,8 @@ class Venta extends Model
                 ->whereMonth('ventas.fecha',$mes)
                 ->where('ventas.sucursal_id','=',$user->sucursal_id)
                 ->where('ventas.medico_id','=',$medico_id)
+                ->where('ventas.deleted_at','=',null)
+                ->where('ventas.estado','!=','A')
                 ->groupBy('producto.id','producto.descripcion','producto_presentacion.id','presentacion.nombre','presentacion.sigla','producto_presentacion.cant_unidad_x_presentacion','producto_presentacion.puntos','producto.codigo')->get();
     }
 
@@ -204,6 +209,7 @@ class Venta extends Model
                 ->where('producto_presentacion.producto_id', '=',$producto_id)
                 ->where('entrada.stock', '>',0)
                 ->where('entrada.sucursal_id','=',$user->sucursal_id)
+                ->where('entrada.deleted_at', '=', null)
                 ->orderBy('entrada.fecha_caducidad', 'ASC')->get();
     }
     public static function list_detalle_ventas($venta_id){
@@ -257,6 +263,7 @@ class Venta extends Model
         )
         ->where('detalle_ventas.ventas_id', '=',$venta_id)
         ->where('ventas.sucursal_id','=',$user->sucursal_id)
+        ->where('ventas.deleted_at','=',null)
         ->where('detalle_ventas.deleted_at', '=',null)->get();
     }
 
