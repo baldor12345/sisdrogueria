@@ -24,25 +24,31 @@
 					{!! Form::open(['route' => $ruta["search"], 'method' => 'POST' ,'onsubmit' => 'return false;', 'class' => 'form-inline', 'role' => 'form', 'autocomplete' => 'off', 'id' => 'formBusqueda'.$entidad]) !!}
 					{!! Form::hidden('page', 1, array('id' => 'page')) !!}
 					{!! Form::hidden('accion', 'listar', array('id' => 'accion')) !!}
-					<!-- <div class="form-group">
+					<div class="form-group">
 						<label for="cod_medico" class="input-sm">Código:</label>
 						{!! Form::text('cod_medico', '', array('class' => 'form-control input-sm', 'id' => 'cod_medico')) !!}
-					</div> -->
-					<!-- <div class="form-group">
+					</div>
+					<div class="form-group">
 						<label for="nombre_medico" class="input-sm">Nombre:</label>
 						{!! Form::text('nombre_medico', '', array('class' => 'form-control input-sm', 'id' => 'nombre_medico')) !!}
-					</div> -->
-					<div class="form-group">
-						<label for="tip_busqueda" class="input-sm">Por:</label>
-						{!! Form::select('anio',  $anios, $anio_actual, array('class' => 'form-control input-sm', 'id' => 'anio', 'onchange' => 'buscar_por(\''.$entidad.'\', this)')) !!}
 					</div>
-					<div class="form-group">
+					{{-- <div class="form-group">
 						<label for="tip_busqueda" class="input-sm">Por:</label>
-						{!! Form::select('mes',  $meses, $mes_actual, array('class' => 'form-control input-sm', 'id' => 'mes', 'onchange' => 'buscar_por(\''.$entidad.'\', this)')) !!}
+						{!! Form::select('tip_busqueda',  ['dia'=>'Día', 'mes'=>'Més', 'anio'=>'Año', 'rango'=>'Rango'] , 'dia', array('class' => 'form-control input-sm', 'id' => 'tip_busqueda', 'onchange' => 'buscar_por(\''.$entidad.'\', this)')) !!}
+					</div> --}}
+
+					<div class="form-group f1">
+						<label for="fei" class="input-md">Fecha Inicio:</label>
+						{!! Form::date('fei', $fecha_defecto, array('class' => 'form-control input-md', 'id' => 'fei', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
+					<div class="form-group f2">
+						<label for="fef" class="input-md">Fecha Fin:</label>
+						{!! Form::date('fef', $fecha_defecto2, array('class' => 'form-control input-md', 'id' => 'fef',  'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+					</div>
+
 					<div class="form-group">
 						<label for="filas" class="input-sm">Filas a Mostrar:</label>
-						{!! Form::selectRange('filas', 1, 30, 5, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
+						{!! Form::selectRange('filas', 1, 30, 10, array('class' => 'form-control input-sm', 'onchange' => 'buscar(\''.$entidad.'\')')) !!}
 					</div>
 					{!! Form::button('<i class="glyphicon glyphicon-search"></i> Buscar', array('class' => 'btn btn-success waves-effect waves-light m-l-10 btn-sm', 'id' => 'btnBuscar', 'onclick' => 'buscar(\''.$entidad.'\')')) !!}
 					{{-- <a target="_blank" href="{{ route('reportepuntosPDF') }}" class="btn btn-primary waves-effect waves-light btn-xs" ><i class="glyphicon glyphicon-download-alt" ></i> PDF</a> --}}
@@ -90,8 +96,8 @@
 
 	function imprimirReporte(){
         
-        var rutareportecuotas = "{{ URL::route($ruta['reportepuntosmedicoPDF'], array()) }}";
-        rutareportecuotas += "?anio="+$('#anio').val()+"&mes="+$('#mes').val();
+        var rutareportecuotas = "{{ URL::route($ruta['reportepuntosPDF'], array()) }}";
+        rutareportecuotas += "?fei="+$('#fei').val()+"&fef="+$('#fef').val();
         
         imprimirpdf(rutareportecuotas);
     }

@@ -88,7 +88,7 @@ class VentasController extends Controller
         }
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
        
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '4');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -265,8 +265,12 @@ class VentasController extends Controller
                 $venta->comprobante =  $request->input('documento');
                 $venta->tipo_pago   =  $request->input('tipo_venta');
                 $venta->forma_pago  =  $request->input('forma_pago');
+                // $serie_doc = $request->input('serie_documento');
                 $venta->serie_doc  =  $request->input('serie_documento');
+                $numero_documento = $request->input('numero_documento');
+                // $ventas = Venta::where('serie','=',$serie_doc)->where('')
                 $venta->numero_doc  =  $request->input('numero_documento');
+
                 $venta->dias = $request->input('dias');
                 
                 
@@ -337,9 +341,12 @@ class VentasController extends Controller
                                     }
                                 }
                         }
+    
                     $detalle_venta->lotes = $lotes;
                     $detalle_venta->save();
+    
                 }
+                
                 return $venta->id;
             });
 
@@ -371,7 +378,9 @@ class VentasController extends Controller
         }else{
             $respuesta = array($mensaje_err);
         }
+
         return $respuesta; 
+
     }
 
     /**
@@ -435,7 +444,9 @@ class VentasController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
+       
         $error = DB::transaction(function() use($request, $id){
+            
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -483,6 +494,7 @@ class VentasController extends Controller
         });
         return is_null($error) ? "OK" : $error;
     }
+
     /**
      * Función para confirmar la eliminación de un registrlo
      * @param  integer $id          id del registro a intentar eliminar

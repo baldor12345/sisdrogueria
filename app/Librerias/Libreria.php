@@ -504,11 +504,11 @@ class Libreria
 		$numero_transacciones = 0;
 		$user = Auth::user();
 		if($tipo == 'B'){
-			// $numero_transacciones = count(Venta::where('comprobante','=', 'B')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
 			$numero_transacciones = count(Venta::withTrashed()->where('comprobante','=', 'B')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
+			// $numero_transacciones = count(Venta::where('comprobante','=', 'B')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
 		}else{
-			// $numero_transacciones = count(Venta::where('comprobante','=', 'F')->get()) + 1;
 			$numero_transacciones = count(Venta::withTrashed()->where('comprobante','=', 'F')->where('sucursal_id','=',$user->sucursal_id)->get()) + 1;
+			// $numero_transacciones = count(Venta::where('comprobante','=', 'F')->get()) + 1;
 		}
 		
 		$codigo_generado ="";

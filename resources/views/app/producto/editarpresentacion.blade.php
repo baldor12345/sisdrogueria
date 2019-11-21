@@ -23,7 +23,7 @@
 </div>
 <div class="form-group col-12 col-md-12">
 	{!! Form::label('puntos', 'Puntos:', array('class' => '')) !!}
-		{!! Form::text('puntos', $productopresentacion->puntos, array('class' => 'form-control input-xs', 'id' => 'puntos', 'placeholder' => 'Ingrese puntos')) !!}
+		{!! Form::text('puntos', $productopresentacion->puntos, array('class' => 'form-control input-xs input-number', 'id' => 'puntos', 'placeholder' => 'Ingrese puntos')) !!}
 </div>
 
 <div class="form-group">
