@@ -88,7 +88,7 @@ class VentasController extends Controller
         }
         $cabecera[]       = array('valor' => 'Fecha/Hora', 'numero' => '1');
        
-        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '3');
+        $cabecera[]       = array('valor' => 'Operaciones', 'numero' => '4');
         
         $titulo_modificar = $this->tituloModificar;
         $titulo_eliminar  = $this->tituloEliminar;
@@ -337,12 +337,9 @@ class VentasController extends Controller
                                     }
                                 }
                         }
-    
                     $detalle_venta->lotes = $lotes;
                     $detalle_venta->save();
-    
                 }
-                
                 return $venta->id;
             });
 
@@ -374,9 +371,7 @@ class VentasController extends Controller
         }else{
             $respuesta = array($mensaje_err);
         }
-
         return $respuesta; 
-
     }
 
     /**
@@ -440,9 +435,7 @@ class VentasController extends Controller
         if ($validacion->fails()) {
             return $validacion->messages()->toJson();
         } 
-       
         $error = DB::transaction(function() use($request, $id){
-            
         });
         return is_null($error) ? "OK" : $error;
     }
@@ -490,7 +483,6 @@ class VentasController extends Controller
         });
         return is_null($error) ? "OK" : $error;
     }
-
     /**
      * Función para confirmar la eliminación de un registrlo
      * @param  integer $id          id del registro a intentar eliminar
